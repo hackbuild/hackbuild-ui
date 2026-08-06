@@ -10,7 +10,7 @@ const demos = [
   {
     to: '#/demos/zine',
     label: 'zine page',
-    text: 'The page idiom: marker hero with an ink block, alternating paper and ink sections, tape, stickers and one pink call to action.',
+    text: 'The page idiom: marker hero with an ink block, alternating paper and ink sections, stickers and one pink call to action.',
   },
   {
     to: '#/demos/settings',

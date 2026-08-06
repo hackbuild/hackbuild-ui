@@ -747,11 +747,13 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   vertical-align:-2px;
 }
 
-/* Stat row. Inline meta counts: views, likes, comments. Icon then figure. */
+/* Stat row. Inline meta counts: views, likes, comments. Icon then figure,
+   and the figure is VT323 like every other number in the system. */
 .hb-stats{ display:flex; align-items:center; gap:14px; flex-wrap:wrap }
 .hb-stats > span{
   display:inline-flex; align-items:center; gap:5px;
-  font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3);
+  font-family:var(--hb-readout); font-size:15px; line-height:1;
+  color:var(--hb-ink-3); font-variant-numeric:tabular-nums;
 }
 
 /* Stat block. The big figure: projects shipped, boards spun, samples lost. */
@@ -822,16 +824,6 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
    16. ZINE DECOR
    Page and sticker garnish. Never inside tool chrome, never on a stage.
    ========================================================================== */
-
-/* Tape. A translucent paper strip over a corner, slightly rotated. */
-.hb-tape{
-  position:absolute; width:82px; height:22px;
-  background:rgba(245,240,230,.82);
-  border:1px solid rgba(26,26,26,.25);
-  transform:rotate(-6deg);
-  pointer-events:none;
-}
-.hb-tape.is-r{ transform:rotate(5deg) }
 
 /* Tilt. Sparing rotation for stickers, tags and hero blocks. At most one or
    two tilted things per view, or the page reads as broken rather than made. */
@@ -1017,8 +1009,11 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   transition:transform var(--hb-t-fast), box-shadow var(--hb-t-fast);
 }
 a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
+/* The hover every source page agreed on: lift, a half degree of rotation,
+   and the pink shadow. */
 a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
-  transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--hb-pink);
+  transform:translate(-2px,-4px) rotate(-.5deg);
+  box-shadow:7px 7px 0 var(--hb-pink);
 }
 /* On an ink band the card's ink border, ink shadow and ink media plate all
    vanish into the background. Flip the border to paper and rest flat; the
@@ -1056,9 +1051,26 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 /* standalone, outside a media plate */
 :not(.hb-media) > .hb-cover{ position:relative; aspect-ratio:16/9 }
 .hb-media-body{ padding:var(--hb-s4); display:flex; flex-direction:column; gap:10px; flex:1 }
-.hb-media-body p{ margin:0; color:var(--hb-ink-2); font-size:13px }
+.hb-media-body h3{ font-size:19px; line-height:1.25 }
+.hb-media-body h3 a{ color:var(--hb-ink); text-decoration:none }
+.hb-media-body h3 a:hover{ color:var(--hb-pink) }
+/* Descriptions clamp to two lines so a grid of cards stays level. */
+.hb-media-body p{
+  margin:0; color:var(--hb-ink-2); font-size:13px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
 .hb-media-tags{ display:flex; flex-wrap:wrap; gap:6px }
 .hb-media-links{ display:flex; flex-wrap:wrap; gap:var(--hb-s4); margin-top:auto }
+/* Author and stats row along the bottom, dashed rule above it. */
+.hb-media-foot{
+  display:flex; align-items:center; gap:8px;
+  margin-top:auto; padding-top:10px;
+  border-top:1px dashed rgba(26,26,26,.18);
+}
+.hb-media-foot a{ color:var(--hb-ink-3); text-decoration:none; display:inline-flex; align-items:center; gap:8px }
+.hb-media-foot a:hover{ color:var(--hb-pink) }
+.hb-media-foot .hb-stats{ margin-left:auto }
 
 /* Video frame. The one pink border in a video section, void backing, a
    16 by 9 well for an embed or a file. */

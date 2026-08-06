@@ -47,10 +47,6 @@ const principles = [
           read the zine
         </HbButton>
       </template>
-      <template #decor>
-        <span class="hb-tape" style="top: 28px; left: 8%" aria-hidden="true" />
-        <span class="hb-tape is-r" style="bottom: 40px; right: 6%" aria-hidden="true" />
-      </template>
     </HbHero>
 
     <section class="hb-on-ink" style="padding: 48px 0">

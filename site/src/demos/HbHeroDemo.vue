@@ -14,16 +14,13 @@ const code = `<HbHero kicker="hardware · tools · tutorials">
     <HbButton size="lg" variant="danger">see the projects</HbButton>
     <HbButton size="lg" variant="secondary">read the zine</HbButton>
   </template>
-  <template #decor>
-    <span class="hb-tape" style="top: 24px; left: 8%" aria-hidden="true" />
-  </template>
 </HbHero>`
 </script>
 
 <template>
   <DemoSection
     title="Hero"
-    note="Kicker on an ink plate, the big marker headline with a solid ink block behind one phrase, prose under 68ch, and a single pink action. Tilt one thing at most. Tape goes in the decor slot, zine pages only."
+    note="Kicker on an ink plate, the big marker headline with a solid ink block behind one phrase, prose under 68ch, and a single pink action. Tilt one thing at most. The decor slot takes absolutely positioned garnish when a page calls for it."
     :code="code"
   >
     <div style="margin: -16px">
@@ -37,9 +34,6 @@ const code = `<HbHero kicker="hardware · tools · tutorials">
         <template #actions>
           <HbButton size="lg" variant="danger">see the projects</HbButton>
           <HbButton size="lg" variant="secondary">read the zine</HbButton>
-        </template>
-        <template #decor>
-          <span class="hb-tape" style="top: 24px; left: 8%" aria-hidden="true" />
         </template>
       </HbHero>
     </div>

@@ -134,7 +134,7 @@ thing. `class: hb-hero, hb-kicker, hb-ink-block`
 | `kickerPink` | `boolean` | `false` | |
 | `shell` | `boolean` | `true` | wraps content in HbShell |
 
-Slots: `title`, default (sub copy), `actions`, `decor` (tape, zine only).
+Slots: `title`, default (sub copy), `actions`, `decor` (absolutely positioned garnish).
 
 ### HbSectionHead
 
@@ -693,7 +693,6 @@ classes without a component:
 
 | Class | What it is |
 |---|---|
-| `hb-tape` | translucent paper strip over a corner. Zine pages only |
 | `hb-tilt-l`, `hb-tilt-l2`, `hb-tilt-r`, `hb-tilt-r2` | sparing rotation. One or two tilted things per view |
 | `hb-spacer` | `margin-left:auto` inside bars and rows |
 | `hb-label`, `hb-readout`, `hb-tagline` | the type roles |

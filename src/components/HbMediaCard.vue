@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
       <div v-if="$slots.links" class="hb-media-links">
         <slot name="links" />
       </div>
-      <div v-if="$slots.footer" style="display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 4px">
+      <div v-if="$slots.footer" class="hb-media-foot">
         <slot name="footer" />
       </div>
     </div>

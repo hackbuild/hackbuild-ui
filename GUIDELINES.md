@@ -374,7 +374,6 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-empty` | Dashed well that says what is missing and what to do |
 | `.hb-pages` / `.hb-page` | Pagination chips, current page pink |
 | `.hb-panel-hd-inst` | The instrument panel head: VT323 caps on a full-bleed ink bar |
-| `.hb-tape` | Translucent paper strip decor. Zine pages only, never tool chrome |
 | `.hb-tilt-l` / `.hb-tilt-l2` / `.hb-tilt-r` / `.hb-tilt-r2` | Sparing rotation. One or two tilted things per view |
 | `.hb-icon` / `.hb-iconbtn` | The shipped stroke icon set and the square icon-only action button |
 | `.hb-nav` / `.hb-nav-link` / `.hb-nav-cta` | Page navigation. Links collapse into a drawer below 760 px |
