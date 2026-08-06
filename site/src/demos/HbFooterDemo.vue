@@ -16,9 +16,8 @@ const code = `<HbFooter tagline="make things. break things. repeat."
     <a href="/rss">rss</a>
   </div>
   <template #social>
+    <a class="hb-iconbtn" href="https://github.com/hackbuild" aria-label="github"><HbIcon name="github" /></a>
     <a class="hb-iconbtn" href="/rss" aria-label="rss"><HbIcon name="rss" /></a>
-    <!-- brand glyphs via Font Awesome: -->
-    <!-- <a class="hb-iconbtn" aria-label="github"><i class="fa-brands fa-github"></i></a> -->
   </template>
 </HbFooter>`
 </script>
@@ -44,9 +43,10 @@ const code = `<HbFooter tagline="make things. break things. repeat."
           <a href="#">rss</a>
         </div>
         <template #social>
+          <a class="hb-iconbtn" href="#" aria-label="github"><HbIcon name="github" :size="16" /></a>
+          <a class="hb-iconbtn" href="#" aria-label="youtube"><HbIcon name="youtube" :size="16" /></a>
+          <a class="hb-iconbtn" href="#" aria-label="mastodon"><HbIcon name="mastodon" :size="16" /></a>
           <a class="hb-iconbtn" href="#" aria-label="rss feed"><HbIcon name="rss" :size="16" /></a>
-          <a class="hb-iconbtn" href="#" aria-label="video channel"><HbIcon name="video" :size="16" /></a>
-          <a class="hb-iconbtn" href="#" aria-label="source code"><HbIcon name="code" :size="16" /></a>
         </template>
         <template #bottom>
           <span style="margin-left: auto">no list, no tracking</span>

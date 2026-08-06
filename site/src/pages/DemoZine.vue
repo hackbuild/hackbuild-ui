@@ -129,7 +129,7 @@ const principles = [
       Got a weird hardware project? Want to collaborate on tools? Hit me up.
       <template #actions>
         <HbButton size="lg" variant="danger">
-          <template #icon><HbIcon name="comment" /></template>
+          <template #icon><HbIcon name="envelope" /></template>
           get in touch
         </HbButton>
         <HbButton size="lg" variant="ghost">see the source</HbButton>
@@ -150,9 +150,10 @@ const principles = [
         <a href="#">rss</a>
       </div>
       <template #social>
+        <a class="hb-iconbtn" href="#" aria-label="github"><HbIcon name="github" :size="16" /></a>
+        <a class="hb-iconbtn" href="#" aria-label="youtube"><HbIcon name="youtube" :size="16" /></a>
+        <a class="hb-iconbtn" href="#" aria-label="mastodon"><HbIcon name="mastodon" :size="16" /></a>
         <a class="hb-iconbtn" href="#" aria-label="rss feed"><HbIcon name="rss" :size="16" /></a>
-        <a class="hb-iconbtn" href="#" aria-label="video channel"><HbIcon name="video" :size="16" /></a>
-        <a class="hb-iconbtn" href="#" aria-label="source code"><HbIcon name="code" :size="16" /></a>
       </template>
       <template #bottom>
         <span style="margin-left: auto">no list, no tracking</span>

@@ -18,11 +18,11 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <!-- Award plaque: recognition, achievements, badges earned. The diamond
-       pin carries the accent; everything else stays ink. -->
+  <!-- Award plaque: recognition, achievements, badges earned. The pinned
+       diamond and the icon carry the accent, the way the live site does. -->
   <div class="hb-plaque" :class="props.pin === 'right' ? 'is-right' : 'is-left'">
     <span class="hb-plaque-pin" aria-hidden="true" />
-    <HbIcon :name="props.icon" :size="30" />
+    <HbIcon :name="props.icon" :size="34" style="color: var(--hb-pink)" />
     <div>
       <h3 style="margin: 0">{{ props.title }}</h3>
       <div v-if="props.meta" class="hb-plaque-meta">{{ props.meta }}</div>

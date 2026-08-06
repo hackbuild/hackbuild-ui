@@ -20,7 +20,7 @@ export const registry: RegistryGroup[] = [
     entries: [
       { name: 'HbMark', blurb: 'the canonical two-path mark' },
       { name: 'HbWordmark', blurb: 'hack in ink, dot and build in pink' },
-      { name: 'HbIcon', blurb: 'the shipped stroke icon set' },
+      { name: 'HbIcon', blurb: 'font awesome solid, baked in' },
     ],
   },
   {

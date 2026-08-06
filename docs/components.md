@@ -39,14 +39,14 @@ Never redraw or trace the mark.
 
 ### HbIcon
 
-The shipped stroke icon set. `class: hb-icon`, plus `.hb-iconbtn` for
-icon-only actions. Full list and usage patterns in docs/icons.md.
+Font Awesome 6 solid and brands, baked in as path data. `class: hb-icon`,
+plus `.hb-iconbtn` for icon-only actions. Full list and usage patterns in
+docs/icons.md.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `name` | `IconName` | | required |
-| `size` | `number \| string` | `16` | |
-| `strokeWidth` | `number` | `2` | |
+| `name` | `IconName` | | required, solid or brand name |
+| `size` | `number \| string` | `16` | height; width follows the glyph |
 | `label` | `string` | | without it the icon is decorative |
 
 ## Chrome

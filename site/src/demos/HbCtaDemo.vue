@@ -7,7 +7,7 @@ const code = `<HbCta title="let's build something">
   Got a weird hardware project? Want to collaborate on tools?
   <template #actions>
     <HbButton size="lg" variant="danger">
-      <template #icon><HbIcon name="comment" /></template>
+      <template #icon><HbIcon name="envelope" /></template>
       get in touch
     </HbButton>
     <HbButton size="lg" variant="ghost">see the source</HbButton>
@@ -26,7 +26,7 @@ const code = `<HbCta title="let's build something">
         Got a weird hardware project? Want to collaborate on tools? Hit me up.
         <template #actions>
           <HbButton size="lg" variant="danger">
-            <template #icon><HbIcon name="comment" /></template>
+            <template #icon><HbIcon name="envelope" /></template>
             get in touch
           </HbButton>
           <HbButton size="lg" variant="ghost">see the source</HbButton>

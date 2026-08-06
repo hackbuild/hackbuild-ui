@@ -11,8 +11,8 @@ export * from './brand/mark'
 
 // icons
 export { default as HbIcon } from './components/HbIcon.vue'
-export { icons, iconNames } from './icons'
-export type { IconName } from './icons'
+export { icons, brandIcons, iconNames, brandIconNames, iconDef } from './icons'
+export type { IconName, SolidIconName, BrandIconName, IconDef } from './icons'
 
 // chrome
 export { default as HbHeader } from './components/HbHeader.vue'

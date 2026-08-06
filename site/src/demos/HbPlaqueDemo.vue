@@ -6,7 +6,7 @@ import PropsTable from '../components/PropsTable.vue'
 const code = `<HbPlaque title="Top Intel Software Innovator" meta="2015" icon="trophy">
   Recognized for tools and contributions to the developer community.
 </HbPlaque>
-<HbPlaque title="Young Maker Competition" meta="2017 · beijing" icon="rocket" pin="right">
+<HbPlaque title="Young Maker Competition" meta="2017 · beijing" icon="medal" pin="right">
   Finalist. One of ten US teams competing against sixty in Beijing.
 </HbPlaque>`
 </script>
@@ -14,14 +14,14 @@ const code = `<HbPlaque title="Top Intel Software Innovator" meta="2015" icon="t
 <template>
   <DemoSection
     title="Award plaques"
-    note="Recognition, achievements, badges earned. The pink diamond pinned at a corner carries the accent; the icon and border stay ink. Alternate the pin side across a grid."
+    note="Recognition, achievements, badges earned. The pinned diamond and the solid icon carry the pink, the way the live site does; the border stays ink. Alternate the pin side across a grid."
     :code="code"
   >
     <div class="demo-grid" style="gap: 24px">
       <HbPlaque title="Top Intel Software Innovator" meta="2015" icon="trophy">
         Recognized for tools and contributions to the developer community.
       </HbPlaque>
-      <HbPlaque title="Young Maker Competition" meta="2017 · beijing" icon="rocket" pin="right">
+      <HbPlaque title="Young Maker Competition" meta="2017 · beijing" icon="medal" pin="right">
         Finalist. One of ten US teams competing against sixty in Beijing.
       </HbPlaque>
     </div>
