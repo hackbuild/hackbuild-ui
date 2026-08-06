@@ -166,8 +166,12 @@ body.hb::before{
    4. SURFACES
    ========================================================================== */
 
+/* Paper surfaces always declare their own ink text. A surface that inherits
+   its color from an ink band behind it goes unreadable, the same lesson the
+   pill taught. */
 .hb-panel{
   background:var(--hb-paper-raised);
+  color:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink);
   box-shadow:var(--hb-shadow-lg);
   padding:var(--hb-s4) var(--hb-s5);
@@ -191,6 +195,7 @@ body.hb::before{
 
 .hb-card{
   background:var(--hb-paper-raised);
+  color:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink);
   box-shadow:var(--hb-shadow-lg);
   padding:var(--hb-s4);
@@ -211,6 +216,12 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 }
 .hb-on-ink{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-on-ink .hb-label{ color:var(--hb-paper); opacity:.6 }
+/* Labels inside a paper surface stay ink even when the surface sits on an
+   ink band. */
+.hb-on-ink .hb-panel .hb-label,.hb-on-ink .hb-card .hb-label,
+.hb-on-ink .hb-media-card .hb-label,.hb-on-ink .hb-tl-item .hb-label{
+  color:var(--hb-ink-3); opacity:1;
+}
 
 /* Callout. Pink left rule by default. Signal variants for data commentary. */
 .hb-callout{
@@ -561,7 +572,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-slider > input[type=range]{ grid-column:1/-1; accent-color:var(--hb-pink); width:100% }
 
 /* Rows: bookmarks, device lists, capture sessions. */
-.hb-list{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb-list{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); color:var(--hb-ink) }
 .hb-row{
   display:flex; align-items:center; gap:var(--hb-s3);
   padding:7px var(--hb-s3); border-bottom:1px dashed rgba(26,26,26,.25);
@@ -958,15 +969,21 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
    project card every page rebuilt. */
 .hb-media-card{
   background:var(--hb-paper-raised);
+  color:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink);
   box-shadow:var(--hb-shadow-lg);
   display:flex; flex-direction:column;
   transition:transform var(--hb-t-fast), box-shadow var(--hb-t-fast);
 }
-a.hb-media-card{ color:inherit; text-decoration:none }
+a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--hb-pink);
 }
+/* On an ink band the card's ink border, ink shadow and ink media plate all
+   vanish into the background. Flip the border to paper and rest flat; the
+   pink lift on hover stays. */
+.hb-on-ink .hb-media-card{ border-color:var(--hb-paper); box-shadow:none }
+.hb-on-ink .hb-media{ border-bottom-color:var(--hb-paper) }
 .hb-media{
   aspect-ratio:16/9; overflow:hidden;
   background:var(--hb-ink); color:var(--hb-paper);
@@ -996,6 +1013,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-timeline{ display:flex; flex-direction:column; gap:var(--hb-s3) }
 .hb-tl-item{
   background:var(--hb-paper-raised);
+  color:var(--hb-ink);
   border:1px solid rgba(26,26,26,.3);
   border-left:4px solid var(--hb-pink);
   padding:var(--hb-s4);
