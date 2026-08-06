@@ -40,8 +40,10 @@
   },
   "scripts": {
     "dev": "vite playground",
+    "dev:site": "vite site",
     "build": "vite build && npm run build:styles",
     "build:styles": "mkdir -p dist/styles && cp src/styles/*.css dist/styles/",
+    "build:site": "vite build site",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "preview": "vite preview playground"
   },
@@ -54,6 +56,7 @@
     "vite": "^6.0.0",
     "vite-plugin-dts": "^4.3.0",
     "vue": "^3.5.0",
+    "vue-router": "^4.6.4",
     "vue-tsc": "^2.1.0"
   }
 }

@@ -81,6 +81,7 @@ in your own markup. See docs/tailwind.md.
 | `assets/brand/` | The mark, lockups, wordmark, favicon. Outlined paths. |
 | `docs/` | Getting started, tokens, components, Tailwind, brand. |
 | `playground/` | Vite app exercising every component. |
+| `site/` | The design system website: component gallery, tokens, brand, full page demos. |
 | `hackbuild-design-system.html` | The living style guide, self contained. |
 | `hackbuild-kerf-replica.html` | The acceptance test: KERF rebuilt from system classes. |
 | `GUIDELINES.md` | The design law. Where files disagree, it wins. |
@@ -101,8 +102,10 @@ in your own markup. See docs/tailwind.md.
 ```sh
 npm install
 npm run dev        # playground at the printed port
-npm run typecheck  # vue-tsc over library and playground
+npm run dev:site   # the design system website
+npm run typecheck  # vue-tsc over library, playground and site
 npm run build      # dist: ES modules, d.ts, styles
+npm run build:site # static site into site/dist
 ```
 
 Before shipping anything, run the checklist at the end of GUIDELINES.md,

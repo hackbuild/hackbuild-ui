@@ -152,7 +152,7 @@ body.hb::before{
   background:transparent; color:var(--hb-paper);
   border:0; border-bottom:var(--hb-border-hd) solid transparent;
   padding:9px 14px; cursor:pointer; opacity:.6;
-  flex:0 0 auto; white-space:nowrap;
+  flex:0 0 auto; white-space:nowrap; text-decoration:none;
 }
 .hb-tab:hover{ opacity:1 }
 .hb-tab[aria-selected="true"],.hb-tab.is-active{
@@ -572,6 +572,8 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-row:last-child{ border-bottom:0 }
 .hb-row:hover{ background:var(--hb-pink-10) }
 .hb-row.is-on{ background:var(--hb-pink); color:var(--hb-paper) }
+/* A pink readout inside a pink row is invisible. Flip it to paper. */
+.hb-row.is-on .hb-readout,.hb-row.is-on .hb-label{ color:var(--hb-paper) }
 .hb-row .hb-spacer{ margin-left:auto }
 
 /* Disclosure. Fiddly controls fold away instead of being deleted. */
@@ -592,8 +594,16 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
    button does nothing. This bug shipped once. */
 .hb-modal{ position:fixed; inset:0; z-index:var(--hb-z-modal); display:flex; align-items:center; justify-content:center; padding:var(--hb-s5) }
 .hb-modal[hidden]{ display:none }
-.hb-modal::before{ content:""; position:absolute; inset:0; background:rgba(10,10,10,.72) }
-.hb-modal > .hb-panel{ position:relative; max-width:640px; width:100%; max-height:82vh; overflow:auto; box-shadow:var(--hb-shadow-xl) }
+.hb-modal::before{
+  content:""; position:absolute; inset:0; background:rgba(10,10,10,.72);
+  animation:hb-fade var(--hb-t-slow);
+}
+.hb-modal > .hb-panel{
+  position:relative; max-width:640px; width:100%; max-height:82vh; overflow:auto;
+  box-shadow:var(--hb-shadow-xl);
+  animation:hb-drop var(--hb-t-slow);
+}
+@keyframes hb-drop{ from{ transform:translateY(-14px); opacity:0 } }
 @media(max-width:640px){ .hb-modal{ padding:var(--hb-s3) } }
 
 /* Toast. Bottom center, ink plate, pink rule, gone in about a second. */
@@ -680,17 +690,25 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
    of the rail, and of any nav that will not fit a bar. */
 .hb-drawer{ position:fixed; inset:0; z-index:var(--hb-z-drawer) }
 .hb-drawer[hidden]{ display:none }
-.hb-drawer::before{ content:""; position:absolute; inset:0; background:rgba(10,10,10,.72) }
+.hb-drawer::before{
+  content:""; position:absolute; inset:0; background:rgba(10,10,10,.72);
+  animation:hb-fade var(--hb-t-slow);
+}
 .hb-drawer > .hb-drawer-panel{
   position:absolute; top:0; bottom:0; right:0; width:min(340px, 88vw);
   background:var(--hb-paper);
   border-left:var(--hb-border-hd) solid var(--hb-ink);
   overflow:auto; padding:var(--hb-s4);
+  animation:hb-slide-r var(--hb-t-slow);
 }
 .hb-drawer.is-left > .hb-drawer-panel{
   right:auto; left:0;
   border-left:0; border-right:var(--hb-border-hd) solid var(--hb-ink);
+  animation-name:hb-slide-l;
 }
+@keyframes hb-fade{ from{opacity:0} }
+@keyframes hb-slide-r{ from{transform:translateX(100%)} }
+@keyframes hb-slide-l{ from{transform:translateX(-100%)} }
 
 /* ==========================================================================
    15. IDENTITY AND STATES

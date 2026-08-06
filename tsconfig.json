@@ -19,5 +19,12 @@
       "@hackbuild/ui": ["./src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "playground/src/**/*.ts", "playground/src/**/*.vue"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "playground/src/**/*.ts",
+    "playground/src/**/*.vue",
+    "site/src/**/*.ts",
+    "site/src/**/*.vue"
+  ]
 }

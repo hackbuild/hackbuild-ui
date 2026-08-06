@@ -45,6 +45,7 @@ they never mix inside one artifact.
 | `hackbuild-kerf-replica.html` | The KERF radio shell rebuilt from nothing but system classes. The acceptance test. |
 | `docs/` | Getting started, tokens, components, Tailwind, brand. |
 | `playground/` | Vite app exercising every Vue component. |
+| `site/` | The design system website: storybook style component gallery, token and brand pages, and full page demos rendered in the system itself. |
 | `GUIDELINES.md` | This file. |
 
 Every SVG carrying type has that type converted to outlined paths, so no file
