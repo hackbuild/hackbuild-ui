@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KERF, rebuilt from the design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&family=VT323&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   hack.build design system
+   Version 1.2
+
+   One accent. Paper and ink. Four faces with four jobs. Hard shadows, no blur,
+   no radius. Everything here is derived from the favicon and from tools that
+   already shipped in this language.
+
+   Fonts (Google Fonts):
+   https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&family=VT323&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Baskerville:ital@1&display=swap
+
+   Icons: Font Awesome 6 solid, or inline SVG. Never emoji.
+   ========================================================================== */
+
+:root{
+  /* ---- surface ---------------------------------------------------------- */
+  --hb-paper:        #f5f0e6;   /* page background, the default surface */
+  --hb-paper-raised: #fffdf7;   /* cards and panels that sit above the page */
+  --hb-paper-sunk:   #efe9db;   /* wells, inset panels, table stripes */
+  --hb-paper-edge:   #e8e0d0;   /* code blocks, disabled fills */
+
+  /* ---- ink -------------------------------------------------------------- */
+  --hb-ink:       #1a1a1a;      /* text, borders, dark panels, silkscreen black */
+  --hb-ink-2:     #444444;      /* secondary text */
+  --hb-ink-3:     #6b6459;      /* labels, captions, muted copy */
+  --hb-ink-4:     #9a9184;      /* placeholders, disabled text */
+  --hb-void:      #0a0a0a;      /* deepest background: canvases, scopes, consoles */
+
+  /* ---- the one accent --------------------------------------------------- */
+  --hb-pink:      #FE0386;      /* favicon value. This is the only correct pink. */
+  --hb-pink-deep: #c70269;      /* pressed and hover on pink fills */
+  --hb-pink-10:   rgba(254,3,134,.10);
+  --hb-pink-18:   rgba(254,3,134,.18);
+
+  /* ---- signal colors. Data only, never chrome. -------------------------- */
+  --hb-ok:    #1f9d55;
+  --hb-warn:  #c77700;
+  --hb-err:   #c3251f;
+  --hb-info:  #2b6cb0;
+
+  /* ---- type ------------------------------------------------------------- */
+  --hb-display:  'Permanent Marker', cursive;                 /* headlines only */
+  --hb-body:     'Special Elite', 'Courier New', monospace;   /* prose */
+  --hb-utility:  'IBM Plex Mono', ui-monospace, monospace;    /* labels, UI, wordmark */
+  --hb-readout:  'VT323', ui-monospace, monospace;            /* numbers, console */
+  --hb-tagline:  'Libre Baskerville', Georgia, serif;         /* the tagline only */
+
+  /* ---- structure -------------------------------------------------------- */
+  --hb-border:    2px;
+  --hb-border-hd: 3px;          /* header rule, active tab, emphasis */
+  --hb-shadow:    3px 3px 0 var(--hb-ink);
+  --hb-shadow-lg: 5px 5px 0 var(--hb-ink);
+  --hb-shadow-xl: 7px 7px 0 var(--hb-ink);
+  --hb-shadow-pink: 5px 5px 0 var(--hb-pink);
+
+  --hb-s1: 4px;  --hb-s2: 8px;  --hb-s3: 12px; --hb-s4: 16px;
+  --hb-s5: 24px; --hb-s6: 32px; --hb-s7: 48px; --hb-s8: 64px;
+
+  --hb-measure: 68ch;           /* prose line length ceiling */
+  --hb-wide:    1180px;         /* app and page shell width */
+}
+
+/* ==========================================================================
+   1. FOUNDATION
+   ========================================================================== */
+
+*,*::before,*::after{ box-sizing:border-box }
+html,body{ margin:0; padding:0 }
+
+body.hb{
+  background:var(--hb-paper);
+  color:var(--hb-ink);
+  font-family:var(--hb-body);
+  font-size:14px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Grain. One fixed overlay, never per element. 0.05 on paper, 0.07 on ink. */
+body.hb::before{
+  content:"";
+  position:fixed; inset:0; z-index:9999;
+  pointer-events:none; opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Halftone dot field. The app-chrome alternative to grain. Use one, not both. */
+.hb-halftone{
+  background-image:radial-gradient(rgba(26,26,26,.045) 1px, transparent 1px);
+  background-size:4px 4px;
+}
+
+/* Graph rule, for canvases and scope backdrops on ink. */
+.hb-graph{
+  background-image:
+    linear-gradient(rgba(254,3,134,.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(254,3,134,.10) 1px, transparent 1px);
+  background-size:32px 32px;
+}
+
+.hb-shell{ max-width:var(--hb-wide); margin:0 auto; padding:0 var(--hb-s5) }
+.hb-prose{ max-width:var(--hb-measure) }
+
+/* ==========================================================================
+   2. TYPE
+   Four faces, four jobs. Setting everything in one face kills the system.
+   ========================================================================== */
+
+.hb h1,.hb h2,.hb h3,.hb-display{
+  font-family:var(--hb-display);
+  font-weight:400;
+  letter-spacing:.5px;
+  margin:0;
+}
+.hb h1{ font-size:44px; line-height:1.05 }
+.hb h2{ font-size:28px; line-height:1.15 }
+.hb h3{ font-size:20px; line-height:1.2 }
+@media(max-width:640px){ .hb h1{ font-size:32px } .hb h2{ font-size:23px } }
+
+.hb p{ margin:0 0 var(--hb-s4) }
+
+/* Utility text: every label, button, tab, chip, table header, form label. */
+.hb-label{
+  font-family:var(--hb-utility);
+  font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em;
+  color:var(--hb-ink-3);
+}
+
+/* Readouts: any live number, timer, coordinate, console line, counter. */
+.hb-readout{
+  font-family:var(--hb-readout);
+  font-size:20px; line-height:1.1;
+  color:var(--hb-pink);
+  font-variant-numeric:tabular-nums;
+}
+
+/* The tagline, and nothing else. */
+.hb-tagline{
+  font-family:var(--hb-tagline);
+  font-style:italic;
+  font-size:15px;
+  color:var(--hb-ink-3);
+}
+
+.hb-mark{ background:var(--hb-pink-18); padding:1px 5px }
+.hb-accent{ color:var(--hb-pink) }
+.hb code,.hb .hb-code{
+  font-family:var(--hb-utility); font-size:12.5px;
+  background:var(--hb-paper-edge); border:1px solid var(--hb-ink);
+  padding:1px 5px;
+}
+.hb pre{
+  font-family:var(--hb-utility); font-size:12.5px; line-height:1.55;
+  background:var(--hb-ink); color:var(--hb-paper);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow);
+  padding:var(--hb-s4); overflow:auto; margin:0 0 var(--hb-s5);
+}
+.hb pre code{ background:none; border:0; padding:0; color:inherit }
+
+/* Wordmark. hack in ink, then the dot AND build both pink. Never dot only. */
+.hb-wordmark{
+  font-family:var(--hb-utility); font-weight:700;
+  letter-spacing:-.01em; color:var(--hb-ink);
+}
+.hb-wordmark b{ color:var(--hb-pink); font-weight:700 }
+.hb-on-ink .hb-wordmark{ color:var(--hb-paper) }
+
+/* ==========================================================================
+   3. CHROME
+   ========================================================================== */
+
+.hb-header{
+  background:var(--hb-ink);
+  color:var(--hb-paper);
+  border-bottom:var(--hb-border-hd) solid var(--hb-pink);
+  padding:var(--hb-s3) var(--hb-s5);
+  display:flex; align-items:center; gap:var(--hb-s4); flex-wrap:wrap;
+}
+.hb-header .hb-logo{ width:28px; height:28px; flex:0 0 auto }
+.hb-header h1{ font-size:24px; color:var(--hb-paper) }
+.hb-header h1 span{ color:var(--hb-pink) }
+.hb-header .hb-tagline{ margin-left:auto; color:var(--hb-paper); opacity:.55 }
+
+.hb-tabs{ display:flex; gap:2px; flex-wrap:wrap; background:var(--hb-ink) }
+.hb-tab{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em;
+  background:transparent; color:var(--hb-paper);
+  border:0; border-bottom:var(--hb-border-hd) solid transparent;
+  padding:9px 14px; cursor:pointer; opacity:.6;
+}
+.hb-tab:hover{ opacity:1 }
+.hb-tab[aria-selected="true"],.hb-tab.is-active{
+  opacity:1; color:var(--hb-pink); border-bottom-color:var(--hb-pink);
+}
+
+.hb-rule{ border:0; border-top:var(--hb-border) dashed var(--hb-ink); margin:var(--hb-s6) 0 }
+.hb-rule-hd{ border:0; border-top:var(--hb-border-hd) solid var(--hb-ink); margin:var(--hb-s6) 0 }
+
+/* ==========================================================================
+   4. SURFACES
+   ========================================================================== */
+
+.hb-panel{
+  background:var(--hb-paper-raised);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow-lg);
+  padding:var(--hb-s4) var(--hb-s5);
+}
+.hb-panel-sunk{ background:var(--hb-paper-sunk); box-shadow:none }
+.hb-panel-hd{
+  font-family:var(--hb-display); font-size:18px;
+  margin:0 0 var(--hb-s3); padding-bottom:var(--hb-s2);
+  border-bottom:var(--hb-border) solid var(--hb-ink);
+}
+.hb-panel:hover{ }                     /* panels do not move. only cards do. */
+
+.hb-card{
+  background:var(--hb-paper-raised);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow-lg);
+  padding:var(--hb-s4);
+  transition:transform .08s, box-shadow .08s;
+}
+a.hb-card:hover,.hb-card.is-interactive:hover{
+  transform:translate(-2px,-2px); box-shadow:var(--hb-shadow-xl);
+}
+
+/* Dark instrument surface: canvases, scopes, waterfalls, consoles, 3D views. */
+.hb-stage{
+  background:var(--hb-void);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow-pink);
+  color:var(--hb-paper);
+  padding:var(--hb-s3);
+}
+.hb-on-ink{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-on-ink .hb-label{ color:var(--hb-paper); opacity:.6 }
+
+/* Callout. Pink left rule, nothing else. */
+.hb-callout{
+  border-left:4px solid var(--hb-pink);
+  background:var(--hb-pink-10);
+  padding:var(--hb-s3) var(--hb-s4);
+  margin:0 0 var(--hb-s5);
+}
+
+/* Section number badge. One of only two places a radius is allowed. */
+.hb-num{
+  width:34px; height:34px; border-radius:50%;
+  background:var(--hb-ink); color:var(--hb-paper);
+  font-family:var(--hb-utility); font-size:14px; font-weight:700;
+  display:inline-flex; align-items:center; justify-content:center;
+  flex:0 0 auto;
+}
+
+/* ==========================================================================
+   5. CONTROLS
+   ========================================================================== */
+
+.hb-btn{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em;
+  background:var(--hb-ink); color:var(--hb-paper);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow);
+  padding:8px 14px; cursor:pointer;
+  display:inline-flex; align-items:center; gap:var(--hb-s2);
+  transition:transform .06s, box-shadow .06s, background .12s;
+}
+.hb-btn:hover{ background:var(--hb-pink); border-color:var(--hb-pink) }
+.hb-btn:active{ transform:translate(3px,3px); box-shadow:0 0 0 var(--hb-ink) }
+.hb-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-btn[disabled]{
+  background:var(--hb-paper-edge); color:var(--hb-ink-4);
+  border-color:var(--hb-ink-4); box-shadow:none; cursor:not-allowed;
+}
+.hb-btn-2{ background:var(--hb-paper-raised); color:var(--hb-ink) }
+.hb-btn-2:hover{ background:var(--hb-pink); color:var(--hb-paper) }
+.hb-btn-danger{ background:var(--hb-pink); border-color:var(--hb-pink) }
+.hb-btn-danger:hover{ background:var(--hb-pink-deep); border-color:var(--hb-pink-deep) }
+.hb-btn-ghost{
+  background:transparent; color:var(--hb-paper);
+  border:1px solid rgba(245,240,230,.35); box-shadow:none;
+}
+.hb-btn-ghost:hover{ background:transparent; border-color:var(--hb-pink); color:var(--hb-pink) }
+
+/* Chips: filters and multi-select toggles. */
+.hb-chip{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.08em;
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:2px 2px 0 var(--hb-ink);
+  padding:5px 10px; cursor:pointer; user-select:none;
+}
+.hb-chip.is-on{ background:var(--hb-pink); color:var(--hb-paper) }
+
+/* Status pill. Always carry an explicit color: a light pill on a light panel
+   inherited paper text once and became unreadable. */
+.hb-pill{
+  font-family:var(--hb-utility); font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.1em;
+  color:var(--hb-ink); background:var(--hb-paper-raised);
+  border:var(--hb-border) solid var(--hb-ink);
+  padding:3px 9px; display:inline-flex; align-items:center; gap:6px;
+}
+.hb-pill::before{
+  content:""; width:7px; height:7px; border-radius:50%;
+  background:var(--hb-ink-4); flex:0 0 auto;
+}
+.hb-pill.is-live{ border-color:var(--hb-pink); color:var(--hb-pink) }
+.hb-pill.is-live::before{ background:var(--hb-pink); animation:hb-pulse 1.5s infinite }
+.hb-pill.is-ok::before{ background:var(--hb-ok) }
+.hb-pill.is-err{ border-color:var(--hb-err); color:var(--hb-err) }
+.hb-pill.is-err::before{ background:var(--hb-err) }
+@keyframes hb-pulse{ 0%,100%{opacity:1} 50%{opacity:.25} }
+
+/* Fields */
+.hb-field{ display:flex; flex-direction:column; gap:5px; margin-bottom:var(--hb-s3) }
+.hb-input,.hb-select,.hb-textarea{
+  font-family:var(--hb-utility); font-size:13px;
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:var(--hb-border) solid var(--hb-ink);
+  padding:8px 10px; width:100%;
+}
+.hb-input:focus,.hb-select:focus,.hb-textarea:focus{
+  outline:none; border-color:var(--hb-pink); box-shadow:2px 2px 0 var(--hb-pink);
+}
+.hb-input::placeholder{ color:var(--hb-ink-4) }
+.hb input[type=range],.hb-range{ accent-color:var(--hb-pink); width:100% }
+.hb input[type=checkbox],.hb input[type=radio]{ accent-color:var(--hb-pink) }
+
+/* Switch row: label left, value readout right. The workhorse of every panel. */
+.hb-kv{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--hb-s4);
+  padding:5px 0; border-bottom:1px dashed rgba(26,26,26,.25);
+}
+.hb-kv:last-child{ border-bottom:0 }
+.hb-kv .hb-readout{ font-size:18px }
+
+/* ==========================================================================
+   6. DATA
+   ========================================================================== */
+
+.hb-table{ width:100%; border-collapse:collapse; font-family:var(--hb-utility); font-size:12.5px }
+.hb-table th{
+  text-align:left; font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.09em;
+  background:var(--hb-ink); color:var(--hb-paper);
+  padding:7px 10px;
+}
+.hb-table td{ padding:7px 10px; border-bottom:1px solid rgba(26,26,26,.2) }
+.hb-table tbody tr:nth-child(even){ background:var(--hb-paper-sunk) }
+.hb-table tbody tr:hover{ background:var(--hb-pink-10) }
+.hb-table .num{ text-align:right; font-variant-numeric:tabular-nums }
+
+/* Console / log. Newest line at the top, one color per severity. */
+.hb-console{
+  background:var(--hb-void); color:var(--hb-paper);
+  border:var(--hb-border) solid var(--hb-ink);
+  font-family:var(--hb-readout); font-size:16px; line-height:1.35;
+  padding:var(--hb-s3); height:180px; overflow:auto;
+}
+.hb-console .t{ color:var(--hb-ink-4); margin-right:8px }
+.hb-console .ok{ color:var(--hb-ok) }
+.hb-console .warn{ color:var(--hb-warn) }
+.hb-console .err{ color:var(--hb-err) }
+.hb-console .hit{ color:var(--hb-pink) }
+
+/* Meter. Pink fill on an ink track, hard edges. */
+.hb-meter{ height:10px; background:var(--hb-ink); border:1px solid var(--hb-ink) }
+.hb-meter > i{ display:block; height:100%; background:var(--hb-pink) }
+
+/* ==========================================================================
+   7. STICKER AND SEAL
+   Contained single shapes only. Nothing floats, so it cuts and weeds clean.
+   ========================================================================== */
+
+.hb-seal{ display:block }
+.hb-seal-face{ fill:var(--hb-paper) }
+.hb-seal-band{ fill:none; stroke:var(--hb-ink); stroke-width:5 }
+.hb-seal-keyline{ fill:none; stroke:var(--hb-pink); stroke-width:2 }
+
+/* ==========================================================================
+   8. ACCESSIBILITY AND OUTPUT
+   ========================================================================== */
+
+.hb :focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
+
+@media (prefers-reduced-motion:reduce){
+  .hb *,.hb *::before,.hb *::after{ animation:none !important; transition:none !important }
+}
+
+@media print{
+  body.hb::before{ display:none }
+  .hb-panel,.hb-card,.hb-btn{ box-shadow:none }
+  .hb-stage,.hb-console{ background:#fff; color:#000 }
+}
+
+/* Radius is zero everywhere except .hb-num and nav dots. If a component here
+   grows a border-radius, it has left the system. */
+.hb button,.hb input,.hb select,.hb textarea,
+.hb .hb-panel,.hb .hb-card,.hb .hb-chip,.hb .hb-pill,.hb .hb-stage{ border-radius:0 }
+
+/* ==========================================================================
+   9. INSTRUMENT PALETTE
+   The signal colors above are tuned for text on paper. On the void they go
+   muddy. Anything drawn on a stage uses the lit set instead. This is the
+   split every shipped tool arrived at independently.
+   ========================================================================== */
+
+:root{
+  --hb-slime:  #a6e22e;   /* on-void ok, meter fill below threshold */
+  --hb-lit-warn: #ffb020;
+  --hb-lit-err:  #ff5c4d;
+  --hb-lit-info: #58a6ff;
+  --hb-lit-dim:  rgba(245,240,230,.35);   /* ghost paths, graticules, axes */
+}
+.hb-stage .hb-ok,.hb-console .ok{ color:var(--hb-slime) }
+.hb-stage .hb-warn{ color:var(--hb-lit-warn) }
+.hb-stage .hb-err{ color:var(--hb-lit-err) }
+.hb-console .warn{ color:var(--hb-lit-warn) }
+.hb-console .err{ color:var(--hb-lit-err) }
+
+/* ==========================================================================
+   10. BARS
+   Four bar types, stacked in this order, never reordered:
+   header, tabs, toolbar, then content, with the status strip last.
+   ========================================================================== */
+
+/* Toolbar. Sunk paper, sits under the tabs, holds connect, chips, readouts.
+   The header is branding, the toolbar is verbs. Do not mix them. */
+.hb-bar{
+  display:flex; align-items:center; gap:var(--hb-s3); flex-wrap:wrap;
+  background:var(--hb-paper-sunk);
+  border-bottom:var(--hb-border) solid var(--hb-ink);
+  padding:var(--hb-s2) var(--hb-s5);
+  min-height:46px;
+}
+.hb-bar .hb-spacer{ margin-left:auto }
+.hb-bar-ink{ background:var(--hb-ink); color:var(--hb-paper); border-bottom-color:var(--hb-pink) }
+
+/* Status strip. Thin, VT323, counts and rates only. Never actions. */
+.hb-statusbar{
+  display:flex; align-items:center; gap:var(--hb-s5); flex-wrap:wrap;
+  background:var(--hb-ink); color:var(--hb-paper);
+  font-family:var(--hb-readout); font-size:15px; line-height:1;
+  padding:6px var(--hb-s5); border-top:var(--hb-border-hd) solid var(--hb-pink);
+}
+.hb-statusbar b{ color:var(--hb-pink); font-weight:400 }
+
+/* Segmented control. Mode switches, polarity, easy versus advanced.
+   Two or three options only; past that it is a select. */
+.hb-seg{ display:inline-flex; border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow) }
+.hb-seg > button{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em;
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:0; border-right:var(--hb-border) solid var(--hb-ink);
+  padding:7px 13px; cursor:pointer;
+}
+.hb-seg > button:last-child{ border-right:0 }
+.hb-seg > button.is-on{ background:var(--hb-pink); color:var(--hb-paper) }
+.hb-bar-ink .hb-seg,.hb-header .hb-seg{ box-shadow:none; border-color:var(--hb-paper) }
+.hb-bar-ink .hb-seg > button,.hb-header .hb-seg > button{
+  background:transparent; color:var(--hb-paper); border-right-color:var(--hb-paper);
+}
+.hb-bar-ink .hb-seg > button.is-on,.hb-header .hb-seg > button.is-on{
+  background:var(--hb-pink); color:var(--hb-paper);
+}
+
+/* ==========================================================================
+   11. INSTRUMENT COMPONENTS
+   The parts a bench tool needs that a page does not.
+   ========================================================================== */
+
+/* The dial. One giant primary readout per tool, and only one.
+   VT323 at display size, ink plate, pink digits, tabular so it stops jittering. */
+.hb-dial{
+  background:var(--hb-ink); color:var(--hb-pink);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow-lg);
+  font-family:var(--hb-readout);
+  font-size:clamp(38px,9vw,84px); line-height:1;
+  letter-spacing:.02em; font-variant-numeric:tabular-nums;
+  padding:var(--hb-s3) var(--hb-s4);
+  display:flex; align-items:baseline; justify-content:center; gap:2px;
+  user-select:none;
+}
+.hb-dial .u{ font-size:.32em; color:var(--hb-paper); opacity:.65; margin-left:.35em }
+.hb-dial .sep{ color:var(--hb-paper); opacity:.4 }
+/* Digits are individually clickable: click the top half to raise, bottom to lower. */
+.hb-dial .d{ cursor:ns-resize; padding:0 1px }
+.hb-dial .d:hover{ background:var(--hb-pink); color:var(--hb-ink) }
+
+/* Band sticker. A rotated hand-lettered tag, the one place Permanent Marker
+   is allowed at small size. One per view, never more. */
+.hb-sticker{
+  display:inline-block;
+  font-family:var(--hb-display); font-size:15px;
+  background:var(--hb-pink); color:var(--hb-paper);
+  padding:3px 12px; transform:rotate(-2.5deg);
+  box-shadow:var(--hb-shadow);
+}
+.hb-sticker-2{ background:var(--hb-paper-raised); color:var(--hb-ink); border:var(--hb-border) solid var(--hb-ink) }
+
+/* Preset tiles. Big tap targets for the easy path. Marker for the name,
+   Plex for the sub. Minimum 96 px so a finger can hit them. */
+.hb-tiles{ display:grid; grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); gap:var(--hb-s3) }
+.hb-tile{
+  background:var(--hb-paper-raised);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow);
+  padding:var(--hb-s3); min-height:96px; cursor:pointer; text-align:left;
+  display:flex; flex-direction:column; gap:4px; justify-content:flex-end;
+  transition:transform .06s, box-shadow .06s;
+}
+.hb-tile:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--hb-pink) }
+.hb-tile:active{ transform:translate(1px,1px); box-shadow:1px 1px 0 var(--hb-ink) }
+.hb-tile.is-on{ background:var(--hb-pink); color:var(--hb-paper); border-color:var(--hb-ink) }
+.hb-tile .n{ font-family:var(--hb-display); font-size:17px; line-height:1.05 }
+.hb-tile .s{ font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.08em; opacity:.6 }
+.hb-tile.is-on .s{ opacity:.85 }
+
+/* Segmented meter. Reads as an instrument, not a progress bar. Fills slime
+   until it crosses the threshold, then the whole lit run turns pink. */
+.hb-segmeter{ display:flex; gap:2px; height:16px; background:var(--hb-void); padding:2px; border:var(--hb-border) solid var(--hb-ink) }
+.hb-segmeter i{ flex:1; background:rgba(245,240,230,.10) }
+.hb-segmeter i.on{ background:var(--hb-slime) }
+.hb-segmeter.is-over i.on{ background:var(--hb-pink) }
+
+/* Slider row: label, track, live value. The default control of every panel. */
+.hb-slider{ display:grid; grid-template-columns:1fr auto; gap:4px var(--hb-s3); align-items:center; margin-bottom:var(--hb-s3) }
+.hb-slider > .hb-label{ grid-column:1 }
+.hb-slider > .hb-readout{ grid-column:2; grid-row:1; font-size:17px }
+.hb-slider > input[type=range]{ grid-column:1/-1; accent-color:var(--hb-pink); width:100% }
+
+/* Rows: bookmarks, device lists, capture sessions. */
+.hb-list{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb-row{
+  display:flex; align-items:center; gap:var(--hb-s3);
+  padding:7px var(--hb-s3); border-bottom:1px dashed rgba(26,26,26,.25);
+  cursor:pointer; font-family:var(--hb-utility); font-size:12.5px;
+}
+.hb-row:last-child{ border-bottom:0 }
+.hb-row:hover{ background:var(--hb-pink-10) }
+.hb-row.is-on{ background:var(--hb-pink); color:var(--hb-paper) }
+.hb-row .hb-spacer{ margin-left:auto }
+
+/* Disclosure. Fiddly controls fold away instead of being deleted. */
+.hb-fold{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); margin-bottom:var(--hb-s3) }
+.hb-fold > summary{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em;
+  padding:8px var(--hb-s3); cursor:pointer; list-style:none;
+  display:flex; align-items:center; gap:var(--hb-s2);
+}
+.hb-fold > summary::-webkit-details-marker{ display:none }
+.hb-fold > summary::before{ content:"+"; color:var(--hb-pink); font-weight:700 }
+.hb-fold[open] > summary::before{ content:"-" }
+.hb-fold[open] > summary{ border-bottom:var(--hb-border) solid var(--hb-ink) }
+.hb-fold > div{ padding:var(--hb-s3) }
+
+/* Modal. The display rule must be beaten by [hidden] explicitly or the close
+   button does nothing. This bug shipped once. */
+.hb-modal{ position:fixed; inset:0; z-index:900; display:flex; align-items:center; justify-content:center; padding:var(--hb-s5) }
+.hb-modal[hidden]{ display:none }
+.hb-modal::before{ content:""; position:absolute; inset:0; background:rgba(10,10,10,.72) }
+.hb-modal > .hb-panel{ position:relative; max-width:640px; width:100%; max-height:82vh; overflow:auto; box-shadow:var(--hb-shadow-xl) }
+
+/* Toast. Bottom center, ink plate, pink rule, gone in about a second. */
+.hb-toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+  background:var(--hb-ink); color:var(--hb-paper);
+  font-family:var(--hb-utility); font-size:11px;
+  text-transform:uppercase; letter-spacing:.09em;
+  padding:9px 16px; border:var(--hb-border) solid var(--hb-pink);
+  opacity:0; transition:opacity .18s; pointer-events:none; z-index:1000;
+}
+.hb-toast.is-on{ opacity:1 }
+
+/* Keyboard hint. */
+.hb-kbd{
+  font-family:var(--hb-utility); font-size:10px; font-weight:700;
+  background:var(--hb-paper-raised); border:1px solid var(--hb-ink);
+  box-shadow:1px 1px 0 var(--hb-ink); padding:1px 5px;
+}
+
+/* ==========================================================================
+   12. APP SHELL
+   Full-height tool layout. Header and tabs pinned, one scrolling work column
+   beside one scrolling rail of panels.
+   ========================================================================== */
+
+.hb-app{ display:flex; flex-direction:column; height:100vh; overflow:hidden }
+.hb-app > .hb-work{ flex:1; min-height:0; display:grid; grid-template-columns:1fr 340px; gap:var(--hb-s4); padding:var(--hb-s4); overflow:hidden }
+.hb-app .hb-main{ min-width:0; overflow:auto; display:flex; flex-direction:column; gap:var(--hb-s4) }
+.hb-app .hb-rail{ min-width:0; overflow:auto; display:flex; flex-direction:column; gap:var(--hb-s4) }
+@media(max-width:900px){
+  .hb-app{ height:auto; overflow:visible }
+  .hb-app > .hb-work{ grid-template-columns:1fr; overflow:visible }
+  .hb-app .hb-main,.hb-app .hb-rail{ overflow:visible }
+}
+
+/* Canvas inside a stage always fills it and stays block, or it leaves a
+   baseline gap under itself and the pink shadow looks wrong. */
+.hb-scope{ display:block; width:100%; background:var(--hb-void) }
+
+
+/* The only rules in this file that are not the design system. Layout glue
+   for this specific tool, nothing that redefines a token or a component. */
+.k-dialwrap{ position:relative; text-align:center }
+.k-dialwrap .hb-sticker{ position:absolute; left:50%; bottom:-13px; transform:translateX(-50%) rotate(-2.5deg) }
+.k-seek{ display:flex; align-items:stretch; gap:var(--hb-s3) }
+.k-seek .hb-btn{ font-size:20px; padding:0 18px }
+.k-scopes{ display:flex; flex-direction:column; gap:2px }
+.k-maps{ display:grid; grid-template-columns:repeat(auto-fill,minmax(64px,1fr)); gap:6px }
+.k-map{ border:var(--hb-border) solid var(--hb-ink); cursor:pointer; padding:0 }
+.k-map canvas{ display:block; width:100%; height:18px }
+.k-map.is-on{ box-shadow:0 0 0 3px var(--hb-pink) }
+.k-map span{ display:block; font-family:var(--hb-utility); font-size:9px; text-transform:uppercase; letter-spacing:.07em; background:var(--hb-ink); color:var(--hb-paper); padding:1px 3px }
+</style>
+</head>
+<body class="hb hb-halftone hb-app">
+
+<!-- 1. HEADER. brand only. mark, name, state, mode. -->
+<div class="hb-header">
+  <svg class="hb-logo" width="28" height="28" viewBox="117 103 800 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="hack.build mark"><path transform="translate(490,121)" fill="#f5f0e6" d="m0 0h38l34 3 29 5 25 6 26 8 21 8 20 9 20 10 23 14 19 13 12 10 11 9 16 15 9 9 7 8 9 10 15 20 18 27 13 23 13 28 10 26 8 26 6 27 4 27 2 25v29l-2 28-5 32-6 27-8 27-10 25-12 25-10 17-13 19-10 13-11 13-7 8-9 10-20 20-8 7-15 13-16 12-19 13-13 8-18 10-27 13-29 11-24 7-24 5-27 4-24 2h-25l-27-3-20-4-16-5-12-6-8-7-7-10-4-8-2-10v-13l4-13 7-12 11-11 14-8 12-3h16l24 3 23 1 25-1 22-3 30-7 18-6 25-11 22-12 21-14 10-8 13-11 13-13 9-11 10-13 10-15 12-22 9-20 10-30 6-27 3-19 2-26v-20l-3-29-6-26-8-24-8-18-11-21-14-21-11-14-9-10-7-8-16-16-11-9-15-12-17-11-14-8-16-8-14-6-24-8-22-5-21-3-12-1h-37l-25 3-20 4-20 6-21 8-24 12-19 12-12 9-11 9-10 9-17 17-9 11-14 19-11 18-11 21-10 26-6 21-4 19-2 15-1 14v25l2 22 3 20v10l-4 16-7 11-6 7-13 9-13 5-5 1h-14l-12-3-12-6-10-9-6-7-7-14-4-18-3-26-1-16v-36l3-30 5-28 8-29 11-29 13-28 14-24 14-21 10-14 13-16 12-14 30-30 11-9 15-12 24-16 21-12 23-11 27-10 23-7 27-6 27-4z"/><path transform="translate(498,314)" fill="#FE0386" d="m0 0h25l14 3 6 4 3 4 1 8-4 8-11 10-20 16-14 12-14 14-10 14-8 16-4 15-1 6v20l4 18 5 13 6 11 9 12 6 7 11 9 14 9 16 7 16 4 8 1h15l16-3 16-6 14-8 13-10 13-12 9-9 2-3h2l2-4 11-12 7-9 5-4 9-2 9 3 6 7 2 5 1 9-3 25-5 23-7 21-13 27-10 15-8 10-9 10-12 12-14 11-18 11-23 11-19 6-23 5-21 2h-17l-23-2-14-2h-19l-16 4-12 7-10 8-63 63-9 8-13 8-13 6-11 3h-20l-15-4-17-9-11-9-9-11-7-15-2-10v-16l3-13 6-11 11-14 16-16 7-8 69-69 6-9 4-13-1-9-7-24-3-21v-31l3-22 6-21 7-17 11-19 10-13 11-12 13-13 16-12 16-10 19-10 19-7 19-5z"/></svg>
+  <h1>KERF<span>.</span></h1>
+  <span class="hb-pill is-live" id="pill">streaming</span>
+  <div class="hb-seg hb-spacer" id="mode" style="margin-left:auto">
+    <button class="is-on" data-m="easy">easy</button>
+    <button data-m="pro">advanced</button>
+  </div>
+  <span class="hb-tagline">make things. break things. repeat.</span>
+</div>
+
+<!-- 2. TABS. destinations. -->
+<nav class="hb-tabs" aria-label="modes">
+  <button class="hb-tab is-active">radio</button>
+  <button class="hb-tab">sky</button>
+  <button class="hb-tab">ghost</button>
+  <button class="hb-tab">scanner</button>
+  <button class="hb-tab">bench</button>
+</nav>
+
+<!-- 3. TOOLBAR. verbs. -->
+<div class="hb-bar">
+  <button class="hb-btn" id="connect"><i class="fa"></i>connect dongle</button>
+  <div class="hb-seg" id="demod">
+    <button class="is-on">wfm</button><button>nfm</button><button>am</button><button>usb</button>
+  </div>
+  <span class="hb-chip is-on" id="chipSq">squelch</span>
+  <span class="hb-chip">peak hold</span>
+  <span class="hb-spacer"></span>
+  <span class="hb-label">rtl2832u &middot; r820t</span>
+  <span class="hb-readout" id="rate">2.048 MSPS</span>
+</div>
+
+<div class="hb-work">
+
+  <!-- MAIN COLUMN -->
+  <div class="hb-main">
+
+    <div class="hb-panel">
+      <div class="k-dialwrap">
+        <div class="hb-dial" id="dial"></div>
+        <span class="hb-sticker" id="band">FM broadcast</span>
+      </div>
+
+      <div class="k-seek" style="margin-top:var(--hb-s5)">
+        <button class="hb-btn hb-btn-2" id="down">&lt;</button>
+        <div style="flex:1">
+          <div class="hb-label" style="margin-bottom:5px">signal</div>
+          <div class="hb-segmeter" id="meter"></div>
+        </div>
+        <button class="hb-btn hb-btn-2" id="up">&gt;</button>
+      </div>
+
+      <div class="hb-slider" style="margin-top:var(--hb-s4)">
+        <span class="hb-label">volume</span><span class="hb-readout" id="volv">72</span>
+        <input type="range" id="vol" min="0" max="100" value="72">
+      </div>
+      <div class="hb-slider">
+        <span class="hb-label">hush the static</span><span class="hb-readout" id="sqv">-62 dB</span>
+        <input type="range" id="sq" min="-110" max="-20" value="-62">
+      </div>
+    </div>
+
+    <div class="hb-stage">
+      <div class="hb-label" style="color:var(--hb-paper);opacity:.6;display:flex;gap:var(--hb-s4)">
+        <span>spectrum</span><span>&middot;</span><span>waterfall</span>
+        <span style="margin-left:auto" class="hb-ok">locked</span>
+      </div>
+      <div class="k-scopes" style="margin-top:6px">
+        <canvas class="hb-scope" id="spec" width="1200" height="180" style="height:180px"></canvas>
+        <canvas class="hb-scope" id="fall" width="1200" height="150" style="height:150px"></canvas>
+      </div>
+    </div>
+
+    <div class="hb-panel" id="tilepanel">
+      <div class="hb-panel-hd">Tap and listen</div>
+      <div class="hb-tiles" id="tiles"></div>
+    </div>
+
+  </div>
+
+  <!-- RAIL -->
+  <div class="hb-rail">
+
+    <div class="hb-panel">
+      <div class="hb-panel-hd">Instrument</div>
+      <div class="hb-kv"><span class="hb-label">center</span><span class="hb-readout" id="kvCenter">101.100</span></div>
+      <div class="hb-kv"><span class="hb-label">peak</span><span class="hb-readout" id="kvPeak">-31 dBm</span></div>
+      <div class="hb-kv"><span class="hb-label">floor</span><span class="hb-readout" id="kvFloor">-97 dBm</span></div>
+      <div class="hb-kv"><span class="hb-label">samples lost</span><span class="hb-readout">0</span></div>
+    </div>
+
+    <div class="hb-panel">
+      <div class="hb-panel-hd">Palette</div>
+      <div class="k-maps" id="maps"></div>
+    </div>
+
+    <div class="hb-panel">
+      <div class="hb-panel-hd">Bookmarks</div>
+      <div class="hb-list" id="marks"></div>
+    </div>
+
+    <details class="hb-fold" id="adv">
+      <summary>the fiddly bits</summary>
+      <div>
+        <div class="hb-slider">
+          <span class="hb-label">tuner gain</span><span class="hb-readout">28.0 dB</span>
+          <input type="range" min="0" max="49" value="28">
+        </div>
+        <div class="hb-slider">
+          <span class="hb-label">ppm correction</span><span class="hb-readout">+2</span>
+          <input type="range" min="-40" max="40" value="2">
+        </div>
+        <div class="hb-field">
+          <label class="hb-label" for="fft">fft size</label>
+          <select class="hb-select" id="fft"><option>2048</option><option selected>4096</option><option>8192</option></select>
+        </div>
+        <div class="hb-row" style="border:0;padding-left:0"><input type="checkbox" id="bias"><label for="bias" class="hb-label">bias tee on gpio0</label></div>
+        <div class="hb-row" style="border:0;padding-left:0"><input type="checkbox" id="ds"><label for="ds" class="hb-label">direct sampling, q branch</label></div>
+      </div>
+    </details>
+
+    <div class="hb-panel">
+      <div class="hb-panel-hd">Console</div>
+      <div class="hb-console" id="con"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 4. STATUS STRIP. counts only, never actions. -->
+<div class="hb-statusbar">
+  <span>fps <b id="stFps">60</b></span>
+  <span>fft <b>4096</b></span>
+  <span>audio <b>48k</b></span>
+  <span>dropped <b>0</b></span>
+  <span style="margin-left:auto">kerf 1.4 <b>webusb</b></span>
+</div>
+
+<div class="hb-toast" id="toast">tuned</div>
+
+<script>
+(function(){
+  var $ = function(i){ return document.getElementById(i); };
+
+  var PRESETS = [
+    ['FM radio','101.1 wfm',101.1,'FM broadcast'],
+    ['weather','162.55 nfm',162.55,'NOAA weather'],
+    ['airplanes','124.4 am',124.4,'airband'],
+    ['walkies','462.5 nfm',462.5,'FRS and GMRS'],
+    ['ham 2m','146.52 nfm',146.52,'2 metre calling'],
+    ['ham 70cm','446.0 nfm',446.0,'70 cm'],
+    ['aprs','144.39 nfm',144.39,'packet, no decoder'],
+    ['marine 16','156.8 nfm',156.8,'distress and calling'],
+    ['doorbells','433.92 spec',433.92,'ISM 433'],
+    ['plane pings','1090.0 spec',1090.0,'ADS-B'],
+    ['time beeps','10.0 am',10.0,'WWV, needs direct sampling'],
+    ['shortwave','7.2 usb',7.2,'40 metre band']
+  ];
+
+  var MAPS = {
+    kerf:   [[26,26,26],[254,3,134],[245,240,230]],
+    slime:  [[8,12,8],[46,120,30],[166,226,46]],
+    goo:    [[10,6,20],[120,20,140],[255,180,60]],
+    xerox:  [[250,248,242],[120,120,120],[10,10,10]],
+    turbo:  [[24,20,90],[30,200,180],[250,220,40]]
+  };
+  var mapName = 'kerf';
+
+  function lut(name){
+    var s = MAPS[name], out = new Uint8Array(768);
+    for (var i = 0; i < 256; i++){
+      var t = i/255, a, b, f;
+      if (t < 0.5){ a = s[0]; b = s[1]; f = t*2; } else { a = s[1]; b = s[2]; f = (t-0.5)*2; }
+      out[i*3]   = a[0] + (b[0]-a[0])*f;
+      out[i*3+1] = a[1] + (b[1]-a[1])*f;
+      out[i*3+2] = a[2] + (b[2]-a[2])*f;
+    }
+    return out;
+  }
+  var LUT = {}; Object.keys(MAPS).forEach(function(k){ LUT[k] = lut(k); });
+
+  /* ---- toast ---- */
+  var tt;
+  function toast(m){
+    var t = $('toast'); t.textContent = m; t.className = 'hb-toast is-on';
+    clearTimeout(tt); tt = setTimeout(function(){ t.className = 'hb-toast'; }, 1100);
+  }
+
+  /* ---- console ---- */
+  function log(msg, cls){
+    var c = $('con'), d = new Date();
+    var ts = String(d.getMinutes()).padStart(2,'0') + ':' + String(d.getSeconds()).padStart(2,'0');
+    var row = document.createElement('div');
+    row.innerHTML = '<span class="t">' + ts + '</span><span class="' + (cls||'') + '">' + msg + '</span>';
+    c.insertBefore(row, c.firstChild);
+    while (c.childNodes.length > 60) c.removeChild(c.lastChild);
+  }
+
+  /* ---- dial ---- */
+  var freq = 101.1;
+  function renderDial(){
+    var s = freq.toFixed(3), out = '';
+    for (var i = 0; i < s.length; i++){
+      out += (s[i] === '.')
+        ? '<span class="sep">.</span>'
+        : '<span class="d" data-i="' + i + '">' + s[i] + '</span>';
+    }
+    $('dial').innerHTML = out + '<span class="u">MHz</span>';
+    $('kvCenter').textContent = s;
+  }
+  function tune(f, label, quiet){
+    freq = Math.max(0.1, Math.min(1800, f));
+    renderDial();
+    if (label) $('band').textContent = label;
+    if (!quiet){ toast('tuned ' + freq.toFixed(3)); log('vfo ' + freq.toFixed(3) + ' MHz', 'hit'); }
+    paintTiles();
+  }
+  $('dial').addEventListener('click', function(e){
+    var d = e.target.closest('.d'); if (!d) return;
+    var s = freq.toFixed(3), i = +d.getAttribute('data-i');
+    var dot = s.indexOf('.');
+    var place = i < dot ? Math.pow(10, dot - i - 1) : Math.pow(10, -(i - dot));
+    var r = d.getBoundingClientRect();
+    tune(freq + (e.clientY < r.top + r.height/2 ? place : -place));
+  });
+  $('up').onclick = function(){ tune(freq + 0.2); };
+  $('down').onclick = function(){ tune(freq - 0.2); };
+
+  /* ---- tiles ---- */
+  function paintTiles(){
+    [].forEach.call($('tiles').children, function(el){
+      el.classList.toggle('is-on', Math.abs(+el.getAttribute('data-f') - freq) < 0.0005);
+    });
+  }
+  PRESETS.forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'hb-tile'; b.setAttribute('data-f', p[2]);
+    b.innerHTML = '<span class="n">' + p[0] + '</span><span class="s">' + p[1] + '</span>';
+    b.onclick = function(){ tune(p[2], p[3]); };
+    $('tiles').appendChild(b);
+  });
+
+  /* ---- meter ---- */
+  var segs = [];
+  for (var i = 0; i < 24; i++){ var s = document.createElement('i'); $('meter').appendChild(s); segs.push(s); }
+  function meter(v){
+    var n = Math.round(v * segs.length);
+    segs.forEach(function(s,i){ s.classList.toggle('on', i < n); });
+    $('meter').classList.toggle('is-over', v > 0.72);
+  }
+
+  /* ---- sliders ---- */
+  $('vol').oninput = function(){ $('volv').textContent = this.value; };
+  $('sq').oninput  = function(){ $('sqv').textContent = this.value + ' dB'; };
+
+  /* ---- palette picker ---- */
+  Object.keys(MAPS).forEach(function(k){
+    var w = document.createElement('button');
+    w.className = 'k-map' + (k === mapName ? ' is-on' : '');
+    var cv = document.createElement('canvas'); cv.width = 64; cv.height = 18;
+    var g = cv.getContext('2d'), L = LUT[k];
+    for (var x = 0; x < 64; x++){
+      var j = Math.round(x/63*255)*3;
+      g.fillStyle = 'rgb(' + L[j] + ',' + L[j+1] + ',' + L[j+2] + ')';
+      g.fillRect(x,0,1,18);
+    }
+    var lab = document.createElement('span'); lab.textContent = k;
+    w.appendChild(cv); w.appendChild(lab);
+    w.onclick = function(){
+      mapName = k;
+      [].forEach.call($('maps').children, function(e){ e.classList.remove('is-on'); });
+      w.classList.add('is-on');
+      log('palette ' + k);
+    };
+    $('maps').appendChild(w);
+  });
+
+  /* ---- bookmarks ---- */
+  [['NOAA 1',162.55],['ATC tower',124.4],['2m calling',146.52],['ISM 433',433.92]].forEach(function(m){
+    var r = document.createElement('div');
+    r.className = 'hb-row';
+    r.innerHTML = '<span>' + m[0] + '</span><span class="hb-spacer"></span><span class="hb-accent">' + m[1].toFixed(3) + '</span>';
+    r.onclick = function(){
+      [].forEach.call($('marks').children, function(e){ e.classList.remove('is-on'); });
+      r.classList.add('is-on'); tune(m[1], m[0]);
+    };
+    $('marks').appendChild(r);
+  });
+
+  /* ---- mode switch. easy hides the rail folds and the instrument panel ---- */
+  [].forEach.call($('mode').children, function(b){
+    b.onclick = function(){
+      [].forEach.call($('mode').children, function(o){ o.classList.remove('is-on'); });
+      b.classList.add('is-on');
+      var easy = b.getAttribute('data-m') === 'easy';
+      $('adv').style.display = easy ? 'none' : '';
+      $('tilepanel').style.display = easy ? '' : 'none';
+      log(easy ? 'easy mode, the fiddly bits are put away' : 'advanced mode, everything is on the bench');
+    };
+  });
+  $('adv').style.display = 'none';
+
+  [].forEach.call(document.querySelectorAll('.hb-seg#demod button'), function(b){
+    b.onclick = function(){
+      [].forEach.call(b.parentNode.children, function(o){ o.classList.remove('is-on'); });
+      b.classList.add('is-on'); log('demodulator ' + b.textContent);
+    };
+  });
+  [].forEach.call(document.querySelectorAll('.hb-bar .hb-chip'), function(c){
+    c.onclick = function(){ c.classList.toggle('is-on'); };
+  });
+  [].forEach.call(document.querySelectorAll('.hb-tab'), function(t){
+    t.onclick = function(){
+      [].forEach.call(document.querySelectorAll('.hb-tab'), function(o){ o.classList.remove('is-active'); });
+      t.classList.add('is-active');
+    };
+  });
+  $('connect').onclick = function(){ log('device claimed, interface 0, endpoint 0x81', 'ok'); toast('dongle claimed'); };
+
+  /* ---- scopes ---- */
+  var sp = $('spec'), fa = $('fall');
+  var gs = sp.getContext('2d'), gf = fa.getContext('2d');
+  var W = sp.width, H = sp.height, FW = fa.width, FH = fa.height;
+  var N = 300, spec = new Float32Array(N), t = 0;
+
+  function step(){
+    /* synthetic spectrum in real dBm: a noise floor with three gaussian
+       carriers laid on top, the main one breathing across the squelch line so
+       the meter visibly flips from slime to pink. */
+    for (var i = 0; i < N; i++){
+      var x = i/N;
+      var v = -99 + Math.random()*3;
+      var main = 40 + 22*Math.sin(t*0.9);
+      v += main * Math.exp(-Math.pow((x-0.5)*22,2));
+      v += 26   * Math.exp(-Math.pow((x-0.28)*34,2));
+      v += 20*(0.5+0.5*Math.sin(t*1.7)) * Math.exp(-Math.pow((x-0.74)*30,2));
+      spec[i] = v;
+    }
+    t += 0.02;
+  }
+
+  function draw(){
+    step();
+    var lo = -100, hi = -25;
+    gs.clearRect(0,0,W,H);
+    gs.fillStyle = '#0a0a0a'; gs.fillRect(0,0,W,H);
+    gs.strokeStyle = 'rgba(254,3,134,.10)'; gs.lineWidth = 1;
+    for (var gx = 0; gx <= W; gx += W/10){ gs.beginPath(); gs.moveTo(gx,0); gs.lineTo(gx,H); gs.stroke(); }
+    for (var gy = 0; gy <= H; gy += H/4){ gs.beginPath(); gs.moveTo(0,gy); gs.lineTo(W,gy); gs.stroke(); }
+    gs.beginPath();
+    for (var i = 0; i < N; i++){
+      var y = H - (spec[i]-lo)/(hi-lo)*H;
+      var x = i/(N-1)*W;
+      i ? gs.lineTo(x,y) : gs.moveTo(x,y);
+    }
+    gs.lineTo(W,H); gs.lineTo(0,H); gs.closePath();
+    gs.fillStyle = 'rgba(254,3,134,.13)'; gs.fill();
+    gs.strokeStyle = '#FE0386'; gs.lineWidth = 2; gs.stroke();
+    gs.strokeStyle = 'rgba(245,240,230,.35)'; gs.setLineDash([4,6]); gs.lineWidth = 1;
+    gs.beginPath(); gs.moveTo(W/2,0); gs.lineTo(W/2,H); gs.stroke(); gs.setLineDash([]);
+
+    var img = gf.getImageData(0,0,FW,FH-1);
+    gf.putImageData(img,0,1);
+    var row = gf.createImageData(FW,1), L = LUT[mapName];
+    for (var x2 = 0; x2 < FW; x2++){
+      var v = spec[Math.floor(x2/FW*N)];
+      var n = Math.max(0, Math.min(255, Math.round((v-lo)/(hi-lo)*255)));
+      row.data[x2*4]   = L[n*3];
+      row.data[x2*4+1] = L[n*3+1];
+      row.data[x2*4+2] = L[n*3+2];
+      row.data[x2*4+3] = 255;
+    }
+    gf.putImageData(row,0,0);
+
+    var pk = -300; for (var k = 0; k < N; k++) if (spec[k] > pk) pk = spec[k];
+    $('kvPeak').textContent = pk.toFixed(0) + ' dBm';
+    meter(Math.max(0, Math.min(1, (pk+100)/75)));
+    requestAnimationFrame(draw);
+  }
+
+  renderDial(); paintTiles();
+  gf.fillStyle = '#0a0a0a'; gf.fillRect(0,0,FW,FH);
+  draw();
+  log('kerf is awake. plug in a dongle and hit listen.', 'ok');
+  log('webusb available', 'ok');
+})();
+</script>
+</body>
+</html>

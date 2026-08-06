@@ -1,0 +1,8 @@
+/* ==========================================================================
+   hack.build fonts
+   Optional convenience import. Pulls the four faces plus the tagline face
+   from Google Fonts. Skip this file if you self-host, and keep the same
+   families and weights.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&family=VT323&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Baskerville:ital@1&display=swap");

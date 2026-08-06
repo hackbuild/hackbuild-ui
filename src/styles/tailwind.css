@@ -1,0 +1,76 @@
+/* ==========================================================================
+   hack.build Tailwind bridge
+   Version 1.2, for Tailwind CSS v4.
+
+   Maps the design tokens into Tailwind theme variables so app code can say
+   bg-paper, text-ink, font-display, shadow-hard and get system values.
+
+   Usage, in the app stylesheet:
+
+     @import "tailwindcss";
+     @import "@hackbuild/ui/styles.css";
+     @import "@hackbuild/ui/theme.css";
+
+   The component classes stay in hackbuild.css and do not depend on Tailwind,
+   so nothing here needs @source scanning of this package. This file only
+   feeds the consumer's own utility generation.
+
+   The radius scale is zeroed on purpose. Rounded corners are how an artifact
+   leaves the system.
+   ========================================================================== */
+
+@theme {
+  /* surfaces */
+  --color-paper:        #f5f0e6;
+  --color-paper-raised: #fffdf7;
+  --color-paper-sunk:   #efe9db;
+  --color-paper-edge:   #e8e0d0;
+
+  /* ink */
+  --color-ink:   #1a1a1a;
+  --color-ink-2: #444444;
+  --color-ink-3: #6b6459;
+  --color-ink-4: #9a9184;
+  --color-void:  #0a0a0a;
+
+  /* the one accent */
+  --color-pink:      #FE0386;
+  --color-pink-deep: #c70269;
+
+  /* signal, paper set */
+  --color-ok:   #1f9d55;
+  --color-warn: #c77700;
+  --color-err:  #c3251f;
+  --color-info: #2b6cb0;
+
+  /* signal, lit set, for marks drawn on the void */
+  --color-slime:    #a6e22e;
+  --color-lit-warn: #ffb020;
+  --color-lit-err:  #ff5c4d;
+  --color-lit-info: #58a6ff;
+
+  /* four faces, four jobs */
+  --font-display: "Permanent Marker", cursive;
+  --font-body:    "Special Elite", "Courier New", monospace;
+  --font-utility: "IBM Plex Mono", ui-monospace, monospace;
+  --font-readout: "VT323", ui-monospace, monospace;
+  --font-tagline: "Libre Baskerville", Georgia, serif;
+
+  /* hard offset shadows, no blur */
+  --shadow-hard:      3px 3px 0 var(--color-ink);
+  --shadow-hard-lg:   5px 5px 0 var(--color-ink);
+  --shadow-hard-xl:   7px 7px 0 var(--color-ink);
+  --shadow-hard-pink: 5px 5px 0 var(--color-pink);
+
+  /* label tracking */
+  --tracking-label: .09em;
+
+  /* zero radius, everywhere */
+  --radius-none: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+}
