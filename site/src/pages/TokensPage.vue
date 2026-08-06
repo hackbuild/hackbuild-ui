@@ -23,6 +23,14 @@ const signals = [
   { name: '--hb-info', hex: '#2b6cb0', note: 'neutral series' },
 ]
 
+const platesList = [
+  { name: '--hb-plate-teal', hex: '#14b8a6', note: 'paper foreground' },
+  { name: '--hb-plate-purple', hex: '#8b5cf6', note: 'paper foreground' },
+  { name: '--hb-plate-blue', hex: '#3b82f6', note: 'paper foreground' },
+  { name: '--hb-plate-amber', hex: '#f59e0b', note: 'ink foreground' },
+  { name: '--hb-plate-green', hex: '#22c55e', note: 'ink foreground' },
+]
+
 const lits = [
   { name: '--hb-slime', hex: '#a6e22e', note: 'on-void ok' },
   { name: '--hb-lit-warn', hex: '#ffb020', note: 'on-void caution' },
@@ -81,6 +89,19 @@ const tailwind = `/* app.css */
     <h3 style="margin-top: 28px">signal, paper set</h3>
     <div class="tok-grid" style="margin-top: 10px">
       <div v-for="token in signals" :key="token.name" class="tok-swatch">
+        <div class="chip" :style="{ background: token.hex }" />
+        <div class="meta"><b>{{ token.hex }}</b><span>{{ token.note }}<br />{{ token.name }}</span></div>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 28px">the plate palette</h3>
+    <p class="hb-prose" style="margin-top: 6px">
+      Identity colors for media plates, avatars and category coding. Solid
+      fills behind a paper icon or marker initials, never chrome, never
+      text. The pink and the ink complete the set.
+    </p>
+    <div class="tok-grid" style="margin-top: 10px">
+      <div v-for="token in platesList" :key="token.name" class="tok-swatch">
         <div class="chip" :style="{ background: token.hex }" />
         <div class="meta"><b>{{ token.hex }}</b><span>{{ token.note }}<br />{{ token.name }}</span></div>
       </div>

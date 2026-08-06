@@ -36,6 +36,16 @@
   --hb-err:   #c3251f;
   --hb-info:  #2b6cb0;
 
+  /* ---- the plate palette. Identity colors for media plates, avatars and
+     category coding, the way the magazine and resume cards use them.
+     Solid fills behind a paper icon or marker initials. Never chrome,
+     never text, never a page background. ---------------------------------- */
+  --hb-plate-teal:   #14b8a6;
+  --hb-plate-purple: #8b5cf6;
+  --hb-plate-blue:   #3b82f6;
+  --hb-plate-amber:  #f59e0b;
+  --hb-plate-green:  #22c55e;
+
   /* ---- the lit set. On-void replacements for the signal colors. --------- */
   --hb-slime:    #a6e22e;               /* on-void ok, meter fill below threshold */
   --hb-lit-warn: #ffb020;

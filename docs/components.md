@@ -170,15 +170,18 @@ set `cover` false to drop the plate entirely.
 
 ### HbCover
 
-Placeholder for projects with no image yet: a seeded icon ghosted on the
-ink plate. Same seed, same icon. `class: hb-cover`
+Placeholder for projects with no image yet: a solid identity plate from
+the palette with a big paper icon, the way the magazine and resume cards
+do it. Same seed, same icon, same color. `class: hb-cover`
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `seed` | `string` | | picks the icon deterministically |
+| `seed` | `string` | | picks the icon and plate color deterministically |
 | `icon` | `IconName` | | explicit, beats the seed |
-| `graph` | `boolean` | `false` | faint pink graticule |
-| `size` | `number` | `56` | icon size |
+| `color` | `PlateName \| string` | | ink, pink, teal, purple, blue, amber, green, or any css color |
+| `ghost` | `boolean` | `false` | the quiet app style: faded icon on ink |
+| `graph` | `boolean` | `false` | faint graticule |
+| `size` | `number` | `64` | icon size |
 
 ### HbPlaylist
 
@@ -556,16 +559,21 @@ Preset tap targets, 96 px minimum. `class: hb-tiles, hb-tile`
 ### HbAvatar
 
 A square. This system does not crop people into circles. Pass a `seed`,
-usually the username, and it draws a deterministic little character: same
-seed, same face, no server, no image. Fallback order: image, critter,
-initials. `class: hb-avatar`
+usually the username, and it renders the same DiceBear avataaars little
+person hack-build seeds its users with, on a plate color picked from the
+same seed. The `critter` variant is the offline alternative: a local
+pixel robot, no third party, and the automatic fallback when the person
+generator cannot be reached. Fallback order: image, person, critter,
+marker initials. `class: hb-avatar`
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `src` | `string` | | |
 | `alt` | `string` | | |
-| `seed` | `string` | | draws the critter |
+| `seed` | `string` | | generates the face and picks the plate |
+| `variant` | `'person' \| 'critter'` | `'person'` | avataaars, or the offline robot |
 | `initials` | `string` | | two characters at most |
+| `plate` | `PlateName` | | explicit plate color |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | |
 
 The generator is exported as `critterFromSeed` and `hashSeed` for drawing

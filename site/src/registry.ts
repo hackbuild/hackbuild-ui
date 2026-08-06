@@ -93,7 +93,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbConsole', blurb: 'void, VT323, newest line first' },
       { name: 'HbDial', blurb: 'the one giant readout per tool' },
       { name: 'HbTile', blurb: 'preset tap target, 96 px minimum' },
-      { name: 'HbAvatar', blurb: 'square, with seeded critter faces' },
+      { name: 'HbAvatar', blurb: 'seeded little people on plates' },
       { name: 'HbVerified', blurb: 'pink check next to a name' },
       { name: 'HbStat', blurb: 'the big VT323 figure with a label' },
       { name: 'HbDots', blurb: 'square pips: difficulty, skill' },

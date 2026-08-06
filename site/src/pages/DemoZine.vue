@@ -57,7 +57,6 @@ const principles = [
         </div>
         <div class="home-grid">
           <HbMediaCard v-for="project in projects" :key="project.name" :title="project.name" interactive>
-            <template #media><HbIcon :name="project.icon" :size="52" /></template>
             <template #tags>
               <HbTag>{{ project.sub }}</HbTag>
             </template>

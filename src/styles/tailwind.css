@@ -43,6 +43,13 @@
   --color-err:  #c3251f;
   --color-info: #2b6cb0;
 
+  /* plate palette, identity fills for media plates and avatars */
+  --color-plate-teal:   #14b8a6;
+  --color-plate-purple: #8b5cf6;
+  --color-plate-blue:   #3b82f6;
+  --color-plate-amber:  #f59e0b;
+  --color-plate-green:  #22c55e;
+
   /* signal, lit set, for marks drawn on the void */
   --color-slime:    #a6e22e;
   --color-lit-warn: #ffb020;

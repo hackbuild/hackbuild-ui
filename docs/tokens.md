@@ -56,6 +56,25 @@ The paper set goes muddy on the void, so anything drawn inside a stage or
 console uses the lit set. The stylesheet swaps them automatically for
 `.hb-ok` and friends inside `.hb-stage` and `.hb-console`.
 
+## The plate palette
+
+Identity colors for media plates, avatars and category coding, the way the
+magazine and resume cards use them. Solid fills behind a paper icon or
+marker initials. Never chrome, never text, never a page background.
+
+| Token | Value | Foreground |
+|---|---|---|
+| `--hb-plate-teal` | `#14b8a6` | paper |
+| `--hb-plate-purple` | `#8b5cf6` | paper |
+| `--hb-plate-blue` | `#3b82f6` | paper |
+| `--hb-plate-amber` | `#f59e0b` | ink |
+| `--hb-plate-green` | `#22c55e` | ink |
+
+The pink and the ink complete the set of plates. Amber and green carry ink
+foregrounds; paper on those fills was one of the readability problems in
+the originals. Seeded picks come from `plateFromSeed` and rotate through
+teal, purple, blue, amber, green and pink.
+
 ## Type
 
 | Token | Face | Job |

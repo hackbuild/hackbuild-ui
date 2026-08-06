@@ -142,6 +142,24 @@ independently before it was written down.
 --hb-lit-dim:  rgba(245,240,230,.35)  /* ghost paths, graticules, axes */
 ```
 
+### The plate palette
+
+Identity colors for media plates, avatars and category coding, the way the
+magazine and resume cards use them: a solid fill behind a paper icon or
+marker initials.
+
+```css
+--hb-plate-teal:   #14b8a6   --hb-plate-purple: #8b5cf6
+--hb-plate-blue:   #3b82f6   --hb-plate-amber:  #f59e0b
+--hb-plate-green:  #22c55e
+```
+
+The pink and the ink complete the set. Amber and green take ink
+foregrounds; paper on those fills was one of the readability problems in
+the older pages. Plates never become chrome, text color, or a page
+background; a seeded pick keeps a project or user on the same color
+forever.
+
 ### The one-accent rule
 
 The pink is punctuation, not paint. It marks the single most important thing in

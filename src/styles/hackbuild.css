@@ -725,19 +725,21 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
    15. IDENTITY AND STATES
    ========================================================================== */
 
-/* Avatar. A square. This system does not crop people into circles. */
+/* Avatar. A square. This system does not crop people into circles. Without
+   an image it carries a seeded plate color with paper marker initials or a
+   paper critter, the way the mockups color-code every user. */
 .hb-avatar{
   width:36px; height:36px; flex:0 0 auto;
-  background:var(--hb-paper-sunk);
+  background:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink);
   display:inline-flex; align-items:center; justify-content:center;
-  font-family:var(--hb-utility); font-size:13px; font-weight:700;
-  text-transform:uppercase; color:var(--hb-ink);
+  font-family:var(--hb-display); font-size:14px;
+  text-transform:uppercase; color:var(--hb-paper);
   overflow:hidden; user-select:none;
 }
 .hb-avatar img{ width:100%; height:100%; object-fit:cover; display:block }
 .hb-avatar-sm{ width:26px; height:26px; font-size:10px }
-.hb-avatar-lg{ width:56px; height:56px; font-size:19px }
+.hb-avatar-lg{ width:56px; height:56px; font-size:22px }
 
 /* Verified. A small pink square with a check, next to a name. */
 .hb-verified{
@@ -1003,7 +1005,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-media-card{
   background:var(--hb-paper-raised);
   color:var(--hb-ink);
-  border:var(--hb-border) solid var(--hb-ink);
+  border:var(--hb-border-hd) solid var(--hb-ink);
   box-shadow:var(--hb-shadow-lg);
   display:flex; flex-direction:column;
   transition:transform var(--hb-t-fast), box-shadow var(--hb-t-fast);
@@ -1022,41 +1024,44 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-on-ink .hb-media{ border-bottom-color:var(--hb-paper) }
 .hb-media{
   position:relative;
-  aspect-ratio:16/9; overflow:hidden;
+  height:180px; overflow:hidden;
   background:var(--hb-ink); color:var(--hb-paper);
-  border-bottom:var(--hb-border) solid var(--hb-ink);
+  border-bottom:var(--hb-border-hd) solid var(--hb-ink);
   display:flex; align-items:center; justify-content:center;
 }
 .hb-media img{ width:100%; height:100%; object-fit:cover; display:block }
 /* Overlay badges pinned to the plate: official, featured, wip. */
 .hb-media-badges{
-  position:absolute; top:8px; left:8px;
+  position:absolute; top:10px; left:10px;
   display:flex; gap:6px; flex-wrap:wrap;
 }
 
-/* Placeholder cover. A seeded icon ghosted on the ink plate, for projects
-   that have no image yet. The mockups all faded a big icon to 15 percent. */
+/* Placeholder cover. A solid identity plate from the palette with a big
+   paper icon at full strength, the way the magazine and resume cards do
+   it. The ghost variant is the quieter app style: faded icon on ink. */
 .hb-cover{
   width:100%; height:100%; position:absolute; inset:0;
   display:flex; align-items:center; justify-content:center;
   background:var(--hb-ink); color:var(--hb-paper);
 }
-.hb-cover .hb-icon{ opacity:.18 }
+.hb-cover.is-ghost .hb-icon{ opacity:.16 }
 .hb-cover.is-graph{
   background-image:
-    linear-gradient(rgba(254,3,134,.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(254,3,134,.08) 1px, transparent 1px);
+    linear-gradient(rgba(245,240,230,.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,240,230,.12) 1px, transparent 1px);
   background-size:24px 24px;
 }
 /* standalone, outside a media plate */
-:not(.hb-media) > .hb-cover{ position:relative; aspect-ratio:16/9 }
-.hb-media-body{ padding:var(--hb-s4); display:flex; flex-direction:column; gap:10px; flex:1 }
-.hb-media-body h3{ font-size:19px; line-height:1.25 }
+:not(.hb-media) > .hb-cover{ position:relative; height:180px }
+.hb-media-body{ padding:var(--hb-s4) var(--hb-s4) var(--hb-s4); display:flex; flex-direction:column; gap:10px; flex:1 }
+/* Bigger than the originals, which ran titles at 17 and copy at 13 on
+   muted gray and got hard to read. */
+.hb-media-body h3{ font-size:22px; line-height:1.25 }
 .hb-media-body h3 a{ color:var(--hb-ink); text-decoration:none }
 .hb-media-body h3 a:hover{ color:var(--hb-pink) }
 /* Descriptions clamp to two lines so a grid of cards stays level. */
 .hb-media-body p{
-  margin:0; color:var(--hb-ink-2); font-size:13px;
+  margin:0; color:var(--hb-ink-2); font-size:13.5px; line-height:1.55;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
   overflow:hidden;
 }

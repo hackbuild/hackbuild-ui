@@ -95,6 +95,8 @@ export { useToast } from './composables/useToast'
 export { cx } from './utils/cx'
 export { critterFromSeed, hashSeed } from './utils/critter'
 export type { Critter } from './utils/critter'
+export { plates, plateFromSeed, seededPlateNames } from './utils/plates'
+export type { Plate, PlateName } from './utils/plates'
 
 // types
 export type { ClassValue } from './utils/cx'
