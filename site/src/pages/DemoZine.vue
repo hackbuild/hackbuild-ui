@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import { HbButton, HbCallout, HbCard, HbMark, HbNum, HbShell, HbSticker, HbWordmark } from '@hackbuild/ui'
+import {
+  HbButton, HbCallout, HbCta, HbFooter, HbHero, HbIcon, HbMediaCard, HbNav,
+  HbNum, HbSectionHead, HbShell, HbTag, HbTimeline, HbTimelineItem,
+  HbVideoFrame,
+} from '@hackbuild/ui'
+
+const links = [
+  { label: 'projects', href: '#', active: true },
+  { label: 'zine', href: '#' },
+  { label: 'videos', href: '#' },
+  { label: 'contact', href: '#', cta: true },
+]
 
 const projects = [
-  { name: 'kerf', sub: 'web sdr in the browser', text: 'A software radio that runs on webusb. Plug a dongle in, tap a preset, listen.' },
-  { name: 'detent', sub: 'laser rotary tool', text: 'Rotary attachment calculator and job runner for the shop laser. Angles land on the mark.' },
-  { name: 'burr', sub: 'board viewer', text: 'Drop a kicad board in, spin it around, check the silk before you order.' },
+  { name: 'kerf', sub: 'web sdr in the browser', text: 'A software radio that runs on webusb. Plug a dongle in, tap a preset, listen.', icon: 'wave' as const },
+  { name: 'detent', sub: 'laser rotary tool', text: 'Rotary attachment calculator and job runner for the shop laser. Angles land on the mark.', icon: 'bolt' as const },
+  { name: 'burr', sub: 'board viewer', text: 'Drop a kicad board in, spin it around, check the silk before you order.', icon: 'microchip' as const },
 ]
 
 const principles = [
@@ -16,54 +27,89 @@ const principles = [
 
 <template>
   <div>
-    <header class="hb-header">
-      <HbMark reversed :size="28" class="hb-logo" />
-      <span class="hb-on-ink"><HbWordmark :size="20" /></span>
-      <span class="hb-tagline" style="margin-left: auto; color: var(--hb-paper); opacity: 0.55">
-        make things. break things. repeat.
-      </span>
-    </header>
+    <HbNav :links="links" />
 
-    <section style="position: relative; padding: 72px 0 56px; overflow: hidden">
-      <span class="hb-tape" style="top: 28px; left: 8%" aria-hidden="true" />
-      <span class="hb-tape is-r" style="bottom: 40px; right: 6%" aria-hidden="true" />
+    <HbHero kicker="hardware · tools · tutorials">
+      <template #title>
+        if it doesn't exist,<br />
+        <span class="hb-ink-block hb-tilt-r">build it.</span>
+      </template>
+      Open tools, hardware notes, and the occasional radio that should not
+      exist. Everything documented, everything repeatable, everything a
+      little bit pink.
+      <template #actions>
+        <HbButton size="lg" variant="danger">
+          <template #icon><HbIcon name="rocket" /></template>
+          see the projects
+        </HbButton>
+        <HbButton size="lg" variant="secondary">
+          <template #icon><HbIcon name="book" /></template>
+          read the zine
+        </HbButton>
+      </template>
+      <template #decor>
+        <span class="hb-tape" style="top: 28px; left: 8%" aria-hidden="true" />
+        <span class="hb-tape is-r" style="bottom: 40px; right: 6%" aria-hidden="true" />
+      </template>
+    </HbHero>
+
+    <section class="hb-on-ink" style="padding: 48px 0">
       <HbShell>
-        <div style="font-family: var(--hb-readout); font-size: 15px; background: var(--hb-ink); color: var(--hb-paper); display: inline-block; padding: 3px 10px" class="hb-tilt-l">
-          hardware · tools · tutorials
+        <div class="hb-sechead">
+          <h2 style="color: var(--hb-paper)">the bench<span class="hb-accent">.</span></h2>
+          <a class="hb-sechead-link" href="#">all projects</a>
         </div>
-        <h1 style="font-size: clamp(44px, 9vw, 96px); line-height: 1.05; margin-top: 16px">
-          if it doesn't exist,<br />
-          <span style="background: var(--hb-ink); color: var(--hb-paper); display: inline-block; padding: 0 18px" class="hb-tilt-r">build it.</span>
-        </h1>
-        <p class="hb-prose" style="font-size: 17px; margin-top: 22px">
-          Open tools, hardware notes, and the occasional radio that should not
-          exist. Everything documented, everything repeatable, everything a
-          little bit pink.
-        </p>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px">
-          <HbButton size="lg" variant="danger">see the projects</HbButton>
-          <HbButton size="lg" variant="secondary">read the zine</HbButton>
+        <div class="home-grid">
+          <HbMediaCard v-for="project in projects" :key="project.name" :title="project.name" interactive>
+            <template #media><HbIcon :name="project.icon" :size="52" /></template>
+            <template #tags>
+              <HbTag>{{ project.sub }}</HbTag>
+            </template>
+            {{ project.text }}
+            <template #links>
+              <a class="hb-link" href="#">open the tool <HbIcon name="arrow-right" :size="12" /></a>
+            </template>
+          </HbMediaCard>
         </div>
       </HbShell>
     </section>
 
-    <section class="hb-on-ink" style="padding: 48px 0">
+    <section style="padding: 48px 0 8px">
       <HbShell>
-        <h2 style="color: var(--hb-paper)">the bench<span class="hb-accent">.</span></h2>
-        <div class="home-grid" style="margin-top: 20px">
-          <HbCard v-for="project in projects" :key="project.name" interactive>
-            <HbSticker variant="secondary" style="transform: rotate(-2deg)">{{ project.name }}</HbSticker>
-            <div class="hb-label" style="margin-top: 10px">{{ project.sub }}</div>
-            <p style="margin: 8px 0 0; color: var(--hb-ink-2)">{{ project.text }}</p>
-          </HbCard>
+        <HbSectionHead kicker="watch and learn" title="the talk" align="center" underline />
+        <div style="max-width: 720px; margin: 0 auto">
+          <HbVideoFrame title="hacking your hackerspace">
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--hb-paper)">
+              <HbIcon name="play" :size="42" />
+              <span style="font-family: var(--hb-readout); font-size: 17px">hacking your hackerspace, 28 min</span>
+            </div>
+          </HbVideoFrame>
         </div>
+      </HbShell>
+    </section>
+
+    <section style="padding: 40px 0 8px">
+      <HbShell>
+        <HbSectionHead kicker="the changelog" title="recent drops" />
+        <HbTimeline style="max-width: 640px">
+          <HbTimelineItem title="kerf 1.4" sub="release" period="jul 2026">
+            Waterfall palettes, band stickers, and the ghost tab.
+            <template #tags>
+              <HbTag variant="outline">sdr</HbTag>
+              <HbTag variant="outline">webusb</HbTag>
+            </template>
+          </HbTimelineItem>
+          <HbTimelineItem title="detent 0.9" sub="beta" period="mar 2026">
+            Rotary calculator lands. Angles finally land on the mark.
+          </HbTimelineItem>
+        </HbTimeline>
       </HbShell>
     </section>
 
     <section style="padding: 48px 0">
       <HbShell>
-        <h2>how it runs</h2>
-        <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 20px; max-width: 640px">
+        <HbSectionHead kicker="how it runs" title="three rules" />
+        <div style="display: flex; flex-direction: column; gap: 18px; max-width: 640px">
           <div v-for="principle in principles" :key="principle.n" style="display: flex; gap: 14px; align-items: flex-start">
             <HbNum>{{ principle.n }}</HbNum>
             <div>
@@ -79,15 +125,39 @@ const principles = [
       </HbShell>
     </section>
 
-    <footer class="hb-on-ink" style="padding: 24px 0; border-top: 3px solid var(--hb-pink)">
-      <HbShell style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
-        <HbMark reversed :size="22" />
-        <span class="hb-on-ink"><HbWordmark :size="14" /></span>
-        <span style="margin-left: auto; font-family: var(--hb-utility); font-size: 11px; opacity: 0.6">
-          built with the hack.build design system
-        </span>
-      </HbShell>
-    </footer>
+    <HbCta title="let's build something">
+      Got a weird hardware project? Want to collaborate on tools? Hit me up.
+      <template #actions>
+        <HbButton size="lg" variant="danger">
+          <template #icon><HbIcon name="comment" /></template>
+          get in touch
+        </HbButton>
+        <HbButton size="lg" variant="ghost">see the source</HbButton>
+      </template>
+    </HbCta>
+
+    <HbFooter tagline="make things. break things. repeat." stamp="built with the hack.build design system">
+      <div class="hb-footer-col">
+        <span class="hb-label">tools</span>
+        <a href="#">kerf</a>
+        <a href="#">detent</a>
+        <a href="#">burr</a>
+      </div>
+      <div class="hb-footer-col">
+        <span class="hb-label">zine</span>
+        <a href="#">latest</a>
+        <a href="#">archive</a>
+        <a href="#">rss</a>
+      </div>
+      <template #social>
+        <a class="hb-iconbtn" href="#" aria-label="rss feed"><HbIcon name="rss" :size="16" /></a>
+        <a class="hb-iconbtn" href="#" aria-label="video channel"><HbIcon name="video" :size="16" /></a>
+        <a class="hb-iconbtn" href="#" aria-label="source code"><HbIcon name="code" :size="16" /></a>
+      </template>
+      <template #bottom>
+        <span style="margin-left: auto">no list, no tracking</span>
+      </template>
+    </HbFooter>
 
     <HbButton class="demo-back" size="sm" variant="danger" as="a" href="#/demos">exit demo</HbButton>
   </div>

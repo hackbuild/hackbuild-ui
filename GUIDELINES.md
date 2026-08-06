@@ -9,7 +9,10 @@ wins.
 Version 1.2 adds the Vue 3 component library, the Tailwind v4 bridge,
 motion, stacking and layout tokens, and a set of components the app
 projects kept rebuilding: switch, dropdown menu, drawer, avatar, skeleton,
-spinner, empty state, pagination, and the zine decor classes.
+spinner, empty state, pagination, and the zine decor classes. It also bakes
+in the shipped icon set (`HbIcon`, docs/icons.md) and the page section
+anatomy every marketing page kept rebuilding: nav, hero, section head,
+media card, video frame, timeline, call to action band and footer.
 
 ## What this is
 
@@ -370,6 +373,17 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-panel-hd-inst` | The instrument panel head: VT323 caps on a full-bleed ink bar |
 | `.hb-tape` | Translucent paper strip decor. Zine pages only, never tool chrome |
 | `.hb-tilt-l` / `.hb-tilt-l2` / `.hb-tilt-r` / `.hb-tilt-r2` | Sparing rotation. One or two tilted things per view |
+| `.hb-icon` / `.hb-iconbtn` | The shipped stroke icon set and the square icon-only action button |
+| `.hb-nav` / `.hb-nav-link` / `.hb-nav-cta` | Page navigation. Links collapse into a drawer below 760 px |
+| `.hb-hero` / `.hb-kicker` / `.hb-ink-block` | The zine hero: VT323 kicker on an ink plate, marker headline, ink block behind one phrase |
+| `.hb-sechead` / `.hb-sechead-link` | Section head: title left, one quiet link pushed right. Centered variant for standalone bands |
+| `.hb-footer` and children | Ink footer: link columns, ghost social squares, dashed stamp line |
+| `.hb-tag` | Static VT323 tag on a plate: category, badge, year. The interactive cousin is the chip |
+| `.hb-link` | Quiet utility-face link, pink, usually with a trailing arrow icon |
+| `.hb-media-card` / `.hb-media` | Project card: media plate, tags, marker title, copy, quiet links |
+| `.hb-vframe` | Video frame: the one pink border in a video section, a 16 by 9 well on the void |
+| `.hb-timeline` / `.hb-tl-item` | Left pink rule entries: jobs, releases, changelog |
+| `.hb-cta` / `.hb-stripes` | Closing ink band with colorless caution stripes. The pink stays on the button |
 
 Status pills must always declare their own color. A pill inheriting paper text
 onto a light panel became unreadable once; `.hb-pill` sets `color` explicitly
@@ -441,6 +455,22 @@ italic scattered through prose; filler openers.
 Icons are Font Awesome 6 solid or hand-written inline SVG at 1.5 to 2.4 stroke
 width, `currentColor`, no fills. Never emoji, and never an icon where a two-word
 label is clearer.
+
+Version 1.2 ships its own hand-drawn stroke set, rendered by `HbIcon` and
+listed in `docs/icons.md`. It covers the verbs and nouns the shipped pages
+actually used (the most-used FA icons across the resume, the mockups and the
+app were plus, eye, heart, check, bolt, xmark, arrow-right, clock, star,
+user, trophy and rocket, and all of them are in the set). Prefer it for UI:
+zero dependencies, square caps, works offline. Font Awesome remains the
+source for brand and social glyphs, which the set leaves out on purpose.
+
+The usage patterns, proven across every shipped page:
+
+- Icons lead labels in buttons, never trail them.
+- Icon-only actions sit in the square `.hb-iconbtn` and always carry an
+  `aria-label`. On ink and in footers it goes ghost automatically.
+- Decorative icons stay out of the accessibility tree.
+- No icons in running prose.
 
 ```html
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">

@@ -37,6 +37,18 @@ Never redraw or trace the mark.
 |---|---|---|
 | `size` | `number \| string` | `18` |
 
+### HbIcon
+
+The shipped stroke icon set. `class: hb-icon`, plus `.hb-iconbtn` for
+icon-only actions. Full list and usage patterns in docs/icons.md.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `name` | `IconName` | | required |
+| `size` | `number \| string` | `16` | |
+| `strokeWidth` | `number` | `2` | |
+| `label` | `string` | | without it the icon is decorative |
+
 ## Chrome
 
 ### HbHeader
@@ -91,6 +103,120 @@ Centered content column. `class: hb-shell`
 | Prop | Type | Default |
 |---|---|---|
 | `width` | `'wide' \| 'narrow'` | `'wide'` |
+
+## Page sections
+
+The recurring anatomy of a marketing page or zine. Tool chrome uses the
+bars above instead.
+
+### HbNav
+
+Page navigation: ink bar, mark plus wordmark left, links right, one pink
+call to action at most. Below 760 px the links collapse into a drawer.
+`class: hb-nav, hb-nav-link, hb-nav-cta`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `links` | `Array<{label, href, active?, cta?}>` | | |
+| `homeHref` | `string` | `'/'` | brand link target |
+
+Slots: `brand`, default (custom links), `drawer` (custom drawer content).
+
+### HbHero
+
+Kicker on an ink plate, the big marker headline, prose, one pink action.
+Put an ink plate behind one phrase with `.hb-ink-block`, tilt at most one
+thing. `class: hb-hero, hb-kicker, hb-ink-block`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `kicker` | `string` | | VT323 tag above the headline |
+| `kickerPink` | `boolean` | `false` | |
+| `shell` | `boolean` | `true` | wraps content in HbShell |
+
+Slots: `title`, default (sub copy), `actions`, `decor` (tape, zine only).
+
+### HbSectionHead
+
+Opens a page section: optional kicker, marker title, one quiet link pushed
+right. `class: hb-sechead, hb-sechead-link, hb-title-underline`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `title` | `string` | | required, or use the default slot |
+| `kicker` | `string` | | |
+| `linkLabel`, `linkHref` | `string` | | the quiet link, left align only |
+| `align` | `'left' \| 'center'` | `'left'` | centered heads for standalone bands |
+| `underline` | `boolean` | `false` | 4 px rule under the title |
+
+### HbMediaCard
+
+The project card: media plate on top, tag row, marker title, copy, quiet
+links along the bottom. `class: hb-media-card, hb-media, hb-media-body`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `title` | `string` | | required, or use the title slot |
+| `interactive` | `boolean` | `false` | pink shadow lift on hover |
+| `as` | `string` | `'div'` | `'a'` with `href` for links |
+
+Slots: `media` (image, icon, anything), `tags` (HbTag row), default (copy),
+`links` (`.hb-link` anchors with a trailing arrow icon).
+
+### HbVideoFrame
+
+The one pink border in a video section: a 16 by 9 well on the void.
+YouTube embeds through youtube-nocookie with modest branding.
+`class: hb-vframe, hb-vframe-media`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `youtube` | `string` | | id or url |
+| `vimeo` | `string` | | id or url |
+| `src` | `string` | | file url, native video element |
+| `title` | `string` | `'video'` | accessible name |
+
+Default slot renders inside the well when no source prop is given.
+
+### HbTimeline, HbTimelineItem
+
+Left pink rule entries: jobs, releases, changelog.
+`class: hb-timeline, hb-tl-item`
+
+| Prop (item) | Type | Notes |
+|---|---|---|
+| `title` | `string` | required, marker face |
+| `sub` | `string` | uppercase line under the title |
+| `period` | `string` | VT323, pushed right |
+
+Slots: default (body), `tags`.
+
+### HbCta
+
+The closing band: ink, centered, colorless caution stripes on the edges.
+The pink stays on the single primary button, never the band.
+`class: hb-cta, hb-stripes`
+
+| Prop | Type | Default |
+|---|---|---|
+| `title` | `string` | required, or use the title slot |
+| `stripes` | `boolean` | `true` |
+
+Slots: default (sub copy), `actions`.
+
+### HbFooter
+
+Ink footer with the pink top rule: brand and tagline left, link columns
+(`.hb-footer-col`), social icon squares, stamp along the dashed bottom.
+`class: hb-footer` and children
+
+| Prop | Type | Notes |
+|---|---|---|
+| `tagline` | `string` | |
+| `stamp` | `string` | the dashed bottom line |
+
+Slots: `brand`, default (link columns), `social` (`.hb-iconbtn` links),
+`bottom`.
 
 ## Surfaces
 
@@ -273,6 +399,15 @@ Emits `select` with the item value. Slots: `trigger` (receives `toggle`
 and `open`), default (custom menu content, receives `close`).
 
 ## Data
+
+### HbTag
+
+Static VT323 tag on a plate: category, badge, year. Not a control; the
+interactive cousin is HbChip. `class: hb-tag`
+
+| Prop | Type | Default |
+|---|---|---|
+| `variant` | `'ink' \| 'pink' \| 'outline'` | `'ink'` |
 
 ### HbKv
 

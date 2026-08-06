@@ -9,6 +9,11 @@ export { default as HbMark } from './components/HbMark.vue'
 export { default as HbWordmark } from './components/HbWordmark.vue'
 export * from './brand/mark'
 
+// icons
+export { default as HbIcon } from './components/HbIcon.vue'
+export { icons, iconNames } from './icons'
+export type { IconName } from './icons'
+
 // chrome
 export { default as HbHeader } from './components/HbHeader.vue'
 export { default as HbTabs } from './components/HbTabs.vue'
@@ -16,6 +21,18 @@ export { default as HbToolbar } from './components/HbToolbar.vue'
 export { default as HbStatusBar } from './components/HbStatusBar.vue'
 export { default as HbAppShell } from './components/HbAppShell.vue'
 export { default as HbShell } from './components/HbShell.vue'
+
+// page sections
+export { default as HbNav } from './components/HbNav.vue'
+export { default as HbHero } from './components/HbHero.vue'
+export { default as HbSectionHead } from './components/HbSectionHead.vue'
+export { default as HbFooter } from './components/HbFooter.vue'
+export { default as HbCta } from './components/HbCta.vue'
+export { default as HbMediaCard } from './components/HbMediaCard.vue'
+export { default as HbVideoFrame } from './components/HbVideoFrame.vue'
+export { default as HbTimeline } from './components/HbTimeline.vue'
+export { default as HbTimelineItem } from './components/HbTimelineItem.vue'
+export type { HbNavLink } from './components/HbNav.vue'
 
 // surfaces
 export { default as HbPanel } from './components/HbPanel.vue'
@@ -41,6 +58,7 @@ export { default as HbSlider } from './components/HbSlider.vue'
 export { default as HbDropdown } from './components/HbDropdown.vue'
 
 // data
+export { default as HbTag } from './components/HbTag.vue'
 export { default as HbKv } from './components/HbKv.vue'
 export { default as HbTable } from './components/HbTable.vue'
 export { default as HbList } from './components/HbList.vue'

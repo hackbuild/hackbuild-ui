@@ -20,6 +20,20 @@ export const registry: RegistryGroup[] = [
     entries: [
       { name: 'HbMark', blurb: 'the canonical two-path mark' },
       { name: 'HbWordmark', blurb: 'hack in ink, dot and build in pink' },
+      { name: 'HbIcon', blurb: 'the shipped stroke icon set' },
+    ],
+  },
+  {
+    category: 'page sections',
+    entries: [
+      { name: 'HbNav', blurb: 'page nav with drawer collapse' },
+      { name: 'HbHero', blurb: 'kicker, marker headline, one pink action' },
+      { name: 'HbSectionHead', blurb: 'kicker, title, quiet link right' },
+      { name: 'HbMediaCard', blurb: 'media plate, tags, quiet links' },
+      { name: 'HbVideoFrame', blurb: 'pink framed embed on the void' },
+      { name: 'HbTimeline', blurb: 'left rule entries: jobs, releases' },
+      { name: 'HbCta', blurb: 'closing ink band, caution stripes' },
+      { name: 'HbFooter', blurb: 'ink footer with columns and stamp' },
     ],
   },
   {
@@ -65,6 +79,7 @@ export const registry: RegistryGroup[] = [
   {
     category: 'data',
     entries: [
+      { name: 'HbTag', blurb: 'static VT323 tag on a plate' },
       { name: 'HbKv', blurb: 'label left, readout right' },
       { name: 'HbTable', blurb: 'ink head, stripes, pink wash on hover' },
       { name: 'HbList', blurb: 'bordered stack of rows' },

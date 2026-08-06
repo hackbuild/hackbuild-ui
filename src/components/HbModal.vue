@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onUnmounted, ref, watch } from 'vue'
+import HbIcon from './HbIcon.vue'
 
 interface Props {
   title?: string
@@ -101,11 +102,11 @@ onUnmounted(() => {
           <button
             v-if="props.closable"
             type="button"
-            class="hb-btn hb-btn-2 hb-btn-sm"
+            class="hb-iconbtn"
             aria-label="close"
             @click="close"
           >
-            x
+            <HbIcon name="x" :size="16" />
           </button>
         </div>
         <slot />

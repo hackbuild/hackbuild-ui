@@ -116,5 +116,6 @@ and look at the playground in a real browser at desktop width and 390 px.
 - docs/getting-started.md
 - docs/tokens.md
 - docs/components.md
+- docs/icons.md
 - docs/tailwind.md
 - docs/brand.md

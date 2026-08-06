@@ -42,7 +42,7 @@
 
 /* floating back link on bare demo pages */
 .demo-back{
-  position:fixed; top:14px; right:14px; z-index:var(--hb-z-sticky);
+  position:fixed; bottom:14px; right:14px; z-index:var(--hb-z-sticky);
 }
 
 /* home hero */
