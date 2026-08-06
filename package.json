@@ -1,6 +1,6 @@
 {
-  "name": "@hackbuild/ui",
-  "version": "0.1.0",
+  "name": "@virgilvox/hackbuild-ui",
+  "version": "0.2.0",
   "description": "The hack.build design system and Vue component library. Paper and ink, one pink, hard shadows, zero radius.",
   "license": "MIT",
   "type": "module",
@@ -61,5 +61,8 @@
     "vue": "^3.5.0",
     "vue-router": "^4.6.4",
     "vue-tsc": "^2.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
