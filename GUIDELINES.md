@@ -10,9 +10,12 @@ Version 1.2 adds the Vue 3 component library, the Tailwind v4 bridge,
 motion, stacking and layout tokens, and a set of components the app
 projects kept rebuilding: switch, dropdown menu, drawer, avatar, skeleton,
 spinner, empty state, pagination, and the zine decor classes. It also bakes
-in the shipped icon set (`HbIcon`, docs/icons.md) and the page section
-anatomy every marketing page kept rebuilding: nav, hero, section head,
-media card, video frame, timeline, call to action band and footer.
+in the shipped icon set (`HbIcon`, docs/icons.md), the page section
+anatomy every marketing page kept rebuilding (nav, hero, section head,
+media card, video frame, playlist, timeline, plaque, call to action band,
+footer), and the identity pieces the app kept rebuilding: seeded critter
+avatars, placeholder covers, verified badge, stats, level dots and the
+countdown.
 
 ## What this is
 
@@ -380,7 +383,14 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-footer` and children | Ink footer: link columns, ghost social squares, dashed stamp line |
 | `.hb-tag` | Static VT323 tag on a plate: category, badge, year. The interactive cousin is the chip |
 | `.hb-link` | Quiet utility-face link, pink, usually with a trailing arrow icon |
-| `.hb-media-card` / `.hb-media` | Project card: media plate, tags, marker title, copy, quiet links |
+| `.hb-media-card` / `.hb-media` | Project card: media plate, overlay badges, tags, marker title, copy, quiet links, author footer |
+| `.hb-cover` | Seeded placeholder cover: an icon ghosted on the ink plate for projects with no image |
+| `.hb-verified` | Small pink check next to a display name |
+| `.hb-stats` / `.hb-stat-block` | Inline meta counts, and the big VT323 figure with a label |
+| `.hb-dots` | Square pips filled pink up to the level. Difficulty and skill |
+| `.hb-countdown` | Ticking VT323 blocks on ink plates |
+| `.hb-plaque` | Award plaque with a pink diamond pinned at a corner |
+| `.hb-playlist` / `.hb-track` | Video player beside a numbered track list |
 | `.hb-vframe` | Video frame: the one pink border in a video section, a 16 by 9 well on the void |
 | `.hb-timeline` / `.hb-tl-item` | Left pink rule entries: jobs, releases, changelog |
 | `.hb-cta` / `.hb-stripes` | Closing ink band with colorless caution stripes. The pink stays on the button |

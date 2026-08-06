@@ -160,8 +160,53 @@ links along the bottom. `class: hb-media-card, hb-media, hb-media-body`
 | `interactive` | `boolean` | `false` | pink shadow lift on hover |
 | `as` | `string` | `'div'` | `'a'` with `href` for links |
 
-Slots: `media` (image, icon, anything), `tags` (HbTag row), default (copy),
-`links` (`.hb-link` anchors with a trailing arrow icon).
+Slots: `media` (image, icon, anything), `badges` (overlay tags pinned to
+the plate), `tags` (HbTag row), default (copy), `links` (`.hb-link`
+anchors with a trailing arrow icon), `footer` (author avatar plus an
+`.hb-stats` count row).
+
+With no media slotted the plate carries an `HbCover` seeded by the title;
+set `cover` false to drop the plate entirely.
+
+### HbCover
+
+Placeholder for projects with no image yet: a seeded icon ghosted on the
+ink plate. Same seed, same icon. `class: hb-cover`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `seed` | `string` | | picks the icon deterministically |
+| `icon` | `IconName` | | explicit, beats the seed |
+| `graph` | `boolean` | `false` | faint pink graticule |
+| `size` | `number` | `56` | icon size |
+
+### HbPlaylist
+
+The resume video section as one component: pink framed player beside a
+numbered VT323 track list, playing track flipped pink, prev and next, and
+an autoplay chip. `class: hb-playlist, hb-track`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `items` | `Array<{title, youtube?, vimeo?, src?, duration?, date?}>` | | required |
+| `v-model` | `number` | `0` | playing track index |
+| `v-model:autoplay` | `boolean` | `false` | next wraps to the first track |
+| `heading` | `string` | `'playlist'` | |
+
+Emits `change` with the new index. Slot `empty` fills the well when a
+track has no source.
+
+### HbPlaque
+
+Award plaque: recognition, achievements, badges earned. The pink diamond
+pinned at a corner carries the accent. `class: hb-plaque`
+
+| Prop | Type | Default |
+|---|---|---|
+| `title` | `string` | required |
+| `meta` | `string` | VT323 line: year, place, event |
+| `icon` | `IconName` | `'trophy'` |
+| `pin` | `'left' \| 'right'` | `'left'` |
 
 ### HbVideoFrame
 
@@ -510,15 +555,59 @@ Preset tap targets, 96 px minimum. `class: hb-tiles, hb-tile`
 
 ### HbAvatar
 
-A square. This system does not crop people into circles.
-`class: hb-avatar`
+A square. This system does not crop people into circles. Pass a `seed`,
+usually the username, and it draws a deterministic little character: same
+seed, same face, no server, no image. Fallback order: image, critter,
+initials. `class: hb-avatar`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `src` | `string` | | |
+| `alt` | `string` | | |
+| `seed` | `string` | | draws the critter |
+| `initials` | `string` | | two characters at most |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | |
+
+The generator is exported as `critterFromSeed` and `hashSeed` for drawing
+critters outside the avatar.
+
+### HbVerified
+
+A small pink check next to a display name. `class: hb-verified`
 
 | Prop | Type | Default |
 |---|---|---|
-| `src` | `string` | |
-| `alt` | `string` | |
-| `initials` | `string` | fallback, two characters |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` |
+| `label` | `string` | `'verified'` |
+
+### HbStat
+
+The big VT323 figure with a label under it: about pages, profile headers,
+dashboards. `class: hb-stat-block`
+
+| Prop | Type |
+|---|---|
+| `value` | `string \| number`, required |
+| `label` | `string`, required |
+
+### HbDots
+
+Square pips filled pink up to the level: difficulty, skill.
+`class: hb-dots`
+
+| Prop | Type | Default |
+|---|---|---|
+| `value` | `number` | required |
+| `max` | `number` | `5` |
+| `label` | `string` | `'level'` |
+
+### HbCountdown
+
+Ticking VT323 blocks on ink plates: contest deadlines, drop timers.
+Emits `done` once at zero. `class: hb-countdown`
+
+| Prop | Type | Notes |
+|---|---|---|
+| `until` | `Date \| number \| string` | required |
 
 ### HbKbd
 

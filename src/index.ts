@@ -29,10 +29,14 @@ export { default as HbSectionHead } from './components/HbSectionHead.vue'
 export { default as HbFooter } from './components/HbFooter.vue'
 export { default as HbCta } from './components/HbCta.vue'
 export { default as HbMediaCard } from './components/HbMediaCard.vue'
+export { default as HbCover } from './components/HbCover.vue'
 export { default as HbVideoFrame } from './components/HbVideoFrame.vue'
+export { default as HbPlaylist } from './components/HbPlaylist.vue'
+export { default as HbPlaque } from './components/HbPlaque.vue'
 export { default as HbTimeline } from './components/HbTimeline.vue'
 export { default as HbTimelineItem } from './components/HbTimelineItem.vue'
 export type { HbNavLink } from './components/HbNav.vue'
+export type { HbPlaylistItem } from './components/HbPlaylist.vue'
 
 // surfaces
 export { default as HbPanel } from './components/HbPanel.vue'
@@ -71,6 +75,10 @@ export { default as HbDial } from './components/HbDial.vue'
 export { default as HbTiles } from './components/HbTiles.vue'
 export { default as HbTile } from './components/HbTile.vue'
 export { default as HbAvatar } from './components/HbAvatar.vue'
+export { default as HbVerified } from './components/HbVerified.vue'
+export { default as HbStat } from './components/HbStat.vue'
+export { default as HbDots } from './components/HbDots.vue'
+export { default as HbCountdown } from './components/HbCountdown.vue'
 export { default as HbKbd } from './components/HbKbd.vue'
 
 // feedback
@@ -85,6 +93,8 @@ export { default as HbPagination } from './components/HbPagination.vue'
 // composables and utilities
 export { useToast } from './composables/useToast'
 export { cx } from './utils/cx'
+export { critterFromSeed, hashSeed } from './utils/critter'
+export type { Critter } from './utils/critter'
 
 // types
 export type { ClassValue } from './utils/cx'

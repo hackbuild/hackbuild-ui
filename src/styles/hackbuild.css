@@ -739,6 +739,47 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-avatar-sm{ width:26px; height:26px; font-size:10px }
 .hb-avatar-lg{ width:56px; height:56px; font-size:19px }
 
+/* Verified. A small pink square with a check, next to a name. */
+.hb-verified{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:14px; height:14px; flex:0 0 auto;
+  background:var(--hb-pink); color:var(--hb-paper);
+  vertical-align:-2px;
+}
+
+/* Stat row. Inline meta counts: views, likes, comments. Icon then figure. */
+.hb-stats{ display:flex; align-items:center; gap:14px; flex-wrap:wrap }
+.hb-stats > span{
+  display:inline-flex; align-items:center; gap:5px;
+  font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3);
+}
+
+/* Stat block. The big figure: projects shipped, boards spun, samples lost. */
+.hb-stat-block{ text-align:center }
+.hb-stat-block .hb-stat-value{
+  font-family:var(--hb-readout); font-size:36px; line-height:1;
+  color:var(--hb-pink); font-variant-numeric:tabular-nums;
+}
+.hb-stat-block .hb-label{ display:block; margin-top:4px }
+
+/* Difficulty dots. Square pips, filled pink up to the level. */
+.hb-dots{ display:inline-flex; align-items:center; gap:4px }
+.hb-dots i{ width:8px; height:8px; background:var(--hb-paper-edge); border:1px solid var(--hb-ink-4) }
+.hb-dots i.on{ background:var(--hb-pink); border-color:var(--hb-ink) }
+
+/* Countdown. VT323 blocks on ink plates: contest deadlines, drop timers. */
+.hb-countdown{ display:flex; gap:var(--hb-s3); flex-wrap:wrap }
+.hb-countdown-cell{ text-align:center }
+.hb-countdown-cell .n{
+  display:block; min-width:62px;
+  font-family:var(--hb-readout); font-size:32px; line-height:1.1;
+  background:var(--hb-ink); color:var(--hb-pink);
+  font-variant-numeric:tabular-nums;
+  padding:6px 10px;
+}
+.hb-countdown-cell .hb-label{ display:block; margin-top:5px }
+.hb-countdown.is-done .n{ color:var(--hb-paper); opacity:.6 }
+
 /* Skeleton. A paper-edge block that breathes while the real thing loads. */
 .hb-skeleton{
   display:block; height:1em; width:100%;
@@ -985,12 +1026,35 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-on-ink .hb-media-card{ border-color:var(--hb-paper); box-shadow:none }
 .hb-on-ink .hb-media{ border-bottom-color:var(--hb-paper) }
 .hb-media{
+  position:relative;
   aspect-ratio:16/9; overflow:hidden;
   background:var(--hb-ink); color:var(--hb-paper);
   border-bottom:var(--hb-border) solid var(--hb-ink);
   display:flex; align-items:center; justify-content:center;
 }
 .hb-media img{ width:100%; height:100%; object-fit:cover; display:block }
+/* Overlay badges pinned to the plate: official, featured, wip. */
+.hb-media-badges{
+  position:absolute; top:8px; left:8px;
+  display:flex; gap:6px; flex-wrap:wrap;
+}
+
+/* Placeholder cover. A seeded icon ghosted on the ink plate, for projects
+   that have no image yet. The mockups all faded a big icon to 15 percent. */
+.hb-cover{
+  width:100%; height:100%; position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--hb-ink); color:var(--hb-paper);
+}
+.hb-cover .hb-icon{ opacity:.18 }
+.hb-cover.is-graph{
+  background-image:
+    linear-gradient(rgba(254,3,134,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(254,3,134,.08) 1px, transparent 1px);
+  background-size:24px 24px;
+}
+/* standalone, outside a media plate */
+:not(.hb-media) > .hb-cover{ position:relative; aspect-ratio:16/9 }
 .hb-media-body{ padding:var(--hb-s4); display:flex; flex-direction:column; gap:10px; flex:1 }
 .hb-media-body p{ margin:0; color:var(--hb-ink-2); font-size:13px }
 .hb-media-tags{ display:flex; flex-wrap:wrap; gap:6px }
@@ -1030,6 +1094,63 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 }
 .hb-tl-item p{ margin:8px 0 0; font-size:13px; color:var(--hb-ink-2) }
 .hb-tl-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px }
+
+/* Award plaque. Paper card with a pink diamond pinned at a top corner,
+   icon left, marker title, meta line, body. The resume awards idiom. */
+.hb-plaque{
+  position:relative;
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow-lg);
+  padding:var(--hb-s4) var(--hb-s5);
+  display:flex; gap:var(--hb-s4); align-items:flex-start;
+}
+.hb-plaque-pin{
+  position:absolute; top:-8px; width:14px; height:14px;
+  background:var(--hb-pink); border:2px solid var(--hb-ink);
+  transform:rotate(45deg);
+}
+.hb-plaque.is-left .hb-plaque-pin{ left:-8px }
+.hb-plaque.is-right .hb-plaque-pin{ right:-8px }
+.hb-plaque > .hb-icon{ margin-top:3px }
+.hb-plaque .hb-plaque-meta{
+  font-family:var(--hb-readout); font-size:15px; color:var(--hb-ink-3);
+}
+.hb-plaque p{ margin:6px 0 0; font-size:13px; color:var(--hb-ink-2) }
+
+/* Playlist. The video frame beside a numbered track list. Below 800 px the
+   list drops under the player. */
+.hb-playlist{ display:grid; grid-template-columns:2fr 1fr; gap:var(--hb-s4); align-items:start }
+@media(max-width:800px){ .hb-playlist{ grid-template-columns:1fr } }
+.hb-playlist-tracks{
+  border:var(--hb-border) solid var(--hb-ink);
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  max-height:420px; overflow:auto;
+}
+.hb-track{
+  display:flex; align-items:baseline; gap:var(--hb-s3); width:100%;
+  padding:9px var(--hb-s3); cursor:pointer; text-align:left;
+  background:none; border:0; border-bottom:1px dashed rgba(26,26,26,.25);
+  border-left:4px solid transparent; color:inherit;
+  font-family:var(--hb-utility); font-size:12.5px;
+}
+.hb-track:last-child{ border-bottom:0 }
+.hb-track:hover{ background:var(--hb-pink-10); border-left-color:var(--hb-pink) }
+.hb-track.is-on{ background:var(--hb-pink); color:var(--hb-paper); border-left-color:var(--hb-ink) }
+.hb-track .no{
+  font-family:var(--hb-readout); font-size:19px; color:var(--hb-ink-4);
+  flex:0 0 auto;
+}
+.hb-track.is-on .no{ color:var(--hb-paper) }
+.hb-track .dur{
+  margin-left:auto; font-family:var(--hb-readout); font-size:15px;
+  color:var(--hb-ink-3); flex:0 0 auto;
+}
+.hb-track.is-on .dur{ color:var(--hb-paper) }
+.hb-playlist-bar{
+  display:flex; gap:var(--hb-s2); align-items:center; flex-wrap:wrap;
+  margin-top:var(--hb-s3);
+}
 
 /* Call to action band. Ink, centered, one pink action, colorless caution
    stripes on the edges. The pink stays on the button, never the band. */
