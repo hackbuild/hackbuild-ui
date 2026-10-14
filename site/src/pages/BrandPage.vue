@@ -30,7 +30,7 @@ const cells = [
       The mark is two paths taken verbatim from the site favicon: a broken arc
       and a wrench. Calibrated viewBox 117 103 800 800. Every file carrying
       type has it converted to outlined paths, so nothing depends on a font.
-      All files ship in the package under <code>@hackbuild/ui/brand/*</code>.
+      All files ship in the package under <code>@virgilvox/hackbuild-ui/brand/*</code>.
     </p>
 
     <div class="brand-grid" style="margin-top: 24px">

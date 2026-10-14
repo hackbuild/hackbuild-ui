@@ -5,3 +5,11 @@ dist/
 *.tsbuildinfo
 .vite/
 site/dist
+# test runners, coverage, local secrets
+test-results/
+playwright-report/
+coverage/
+.env
+.env.*
+!.env.example
+*.key

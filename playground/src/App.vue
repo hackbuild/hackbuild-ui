@@ -97,6 +97,7 @@ const tiles = [
         <HbSeg v-model="band" :options="['wfm', 'nfm', 'am']" />
         <HbChip v-model="squelch">squelch</HbChip>
         <HbChip v-model="peakHold">peak hold</HbChip>
+        <a class="hb-link" href="./bench.html">bench layer</a>
         <span class="hb-spacer" />
         <span class="hb-readout">2.048 msps</span>
       </HbToolbar>

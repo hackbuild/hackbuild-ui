@@ -8,8 +8,8 @@
    Usage, in the app stylesheet:
 
      @import "tailwindcss";
-     @import "@hackbuild/ui/styles.css";
-     @import "@hackbuild/ui/theme.css";
+     @import "@virgilvox/hackbuild-ui/styles.css";
+     @import "@virgilvox/hackbuild-ui/theme.css";
 
    The component classes stay in hackbuild.css and do not depend on Tailwind,
    so nothing here needs @source scanning of this package. This file only

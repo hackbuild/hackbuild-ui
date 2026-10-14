@@ -2,11 +2,11 @@
 import { HbButton, HbCard, HbCallout, HbShell, HbSticker, HbWordmark } from '@hackbuild/ui'
 import CodeBlock from '../components/CodeBlock.vue'
 
-const install = `npm install @hackbuild/ui`
+const install = `npm install @virgilvox/hackbuild-ui`
 
 const usage = `import { createApp } from 'vue'
-import '@hackbuild/ui/fonts.css'
-import '@hackbuild/ui/styles.css'
+import '@virgilvox/hackbuild-ui/fonts.css'
+import '@virgilvox/hackbuild-ui/styles.css'
 import App from './App.vue'
 
 createApp(App).mount('#app')`
@@ -26,7 +26,7 @@ const layers = [
   },
   {
     title: 'vue components',
-    sub: '@hackbuild/ui',
+    sub: '@virgilvox/hackbuild-ui',
     text: 'Behavior bound to the classes: v-model wiring, focus traps, keyboard handling, ARIA state. No styles of their own.',
     to: '/components',
   },

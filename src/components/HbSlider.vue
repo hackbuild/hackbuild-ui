@@ -10,12 +10,14 @@ interface Props {
   unit?: string
   /** Custom readout formatter. */
   format?: (value: number) => string
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   min: 0,
   max: 100,
   step: 1,
+  disabled: false,
 })
 
 const model = defineModel<number>({ default: 0 })
@@ -38,6 +40,7 @@ const readout = computed(() => {
       :max="props.max"
       :step="props.step"
       :aria-label="props.label"
+      :disabled="props.disabled"
     />
   </div>
 </template>

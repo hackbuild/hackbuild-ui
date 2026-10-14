@@ -9,8 +9,8 @@ exists so your own app markup can speak the system through utilities.
 ```css
 /* app.css */
 @import "tailwindcss";
-@import "@hackbuild/ui/styles.css";
-@import "@hackbuild/ui/theme.css";
+@import "@virgilvox/hackbuild-ui/styles.css";
+@import "@virgilvox/hackbuild-ui/theme.css";
 ```
 
 `theme.css` is a v4 `@theme` block mapping the tokens to Tailwind theme

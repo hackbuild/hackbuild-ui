@@ -1,0 +1,9 @@
+{
+  "about": "The list of AI tool names and credit wording the house rules refuse (CLAUDE.md Attribution). A copy of hackbuild-fab tools/ai-names.json; keep the two in step. Read by tools/lint-voice.mjs (commit messages), tools/lint-commits.mjs (author and committer) and tools/test/publish.test.mjs (package.json). Each entry is a regex fragment matched case-insensitively on whole words.",
+  "tools": ["claude", "anthropic", "chatgpt", "openai", "copilot", "gemini", "sonnet", "opus", "haiku", "codex", "gpt-?\\d[\\w.]*", "llm", "ai assistant", "cursor (?:ai|agent|ide)"],
+  "identityOnly": ["noreply@anthropic", "cursor"],
+  "generic": ["ai"],
+  "creditStrong": ["wrote", "written", "generated", "assisted", "authored", "drafted", "made with", "created with", "help", "helped", "thanks", "courtesy of", "powered by", "paired", "pairing"],
+  "creditWeak": ["with", "via", "pair"],
+  "creditKeys": ["authors?", "co-authors?", "credits?", "assistant", "writer", "thanks", "model", "ai", "agent", "tool"]
+}

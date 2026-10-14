@@ -10,7 +10,7 @@ required. Sizes and variants are unions, not free strings.
 Import everything from the package root:
 
 ```ts
-import { HbButton, HbPanel, useToast } from '@hackbuild/ui'
+import { HbButton, HbPanel, useToast } from '@virgilvox/hackbuild-ui'
 ```
 
 ## Brand
@@ -26,7 +26,7 @@ The canonical two-path mark. `class: none, inline svg`
 | `label` | `string` | `hack.build mark` | accessible name |
 
 The paths are exported from the package as `ARC_D`, `WRENCH_D`,
-`MARK_VIEWBOX` and friends if you need to place them in your own SVG.
+`MARK_VIEWBOX` and the other constants if you need to place them in your own SVG.
 Never redraw or trace the mark.
 
 ### HbWordmark
@@ -60,7 +60,9 @@ Ink bar with the pink bottom rule. Identity and state only, no verbs.
 |---|---|---|---|
 | `title` | `string` | | the tool name, not hack.build |
 | `accent` | `string` | `''` | trailing part rendered pink |
+| `suffix` | `string` | `''` | rendered after the accent in paper: `PIP` `.` `bench` |
 | `tagline` | `string` | `''` | dropped below 900 px |
+| `taglineKind` | `'brand' \| 'tool'` | `'brand'` | `tool` sets a tool tagline in Special Elite; the brand line stays Libre Baskerville italic |
 | `mark` | `boolean` | `true` | hide when slotting a custom logo |
 
 Slots: `logo`, default (status pill, mode switch), and the tagline renders
@@ -353,6 +355,9 @@ Filter and multi-select toggle. `class: hb-chip`
 |---|---|---|
 | `v-model` | `boolean` | on state, optional |
 | `disabled` | `boolean` | |
+| `toggle` | `boolean` | ink fill when on, for toggles inside a bench; pink stays for the one primary selection |
+
+Text on the pink on-state is ink.
 
 ### HbSeg
 
@@ -431,6 +436,7 @@ Label, track, live value. The default control of every panel.
 | `min`, `max`, `step` | `number` | `0`, `100`, `1` |
 | `unit` | `string` | appended to the readout |
 | `format` | `(value: number) => string` | custom readout |
+| `disabled` | `boolean` | `false` |
 
 ### HbDropdown
 
@@ -455,7 +461,10 @@ interactive cousin is HbChip. `class: hb-tag`
 
 | Prop | Type | Default |
 |---|---|---|
-| `variant` | `'ink' \| 'pink' \| 'outline'` | `'ink'` |
+| `variant` | `'ink' \| 'pink' \| 'outline' \| 'lit-ok' \| 'lit-warn' \| 'lit-err'` | `'ink'` |
+
+The lit variants are outlined status tags for ink bars and the void:
+slime, lit warn, lit err.
 
 ### HbKv
 
@@ -694,6 +703,100 @@ Chips in a row, current page pink. `class: hb-pages, hb-page`
 | `pages` (required) | `number` | total |
 | `window` | `number` | `1` pages shown around the current |
 
+## Bench layer
+
+The strips, stage overlays and rail rows of a design bench (GUIDELINES
+section 9). Each composes the components above and carries no styles.
+
+### HbSteps
+
+The steps strip on the HbTabs markup. Numbered, equal width, ok badge on
+done steps. Swaps itself for an HbSelect before a tile would clip.
+`class: hb-tabs hb-steps`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `steps` (required) | `Array<{label, value, done?} \| string>` | | the last is the export step |
+| `label` | `string` | `'steps'` | accessible name |
+| `v-model` | `string \| number` | | current step |
+
+Emits `change(value)`. Arrow keys, Home and End move between steps.
+
+### HbGuide
+
+The guide strip inside HbToolbar: `STEP N NAME`, the goal, the verbs at the
+right end. `class: hb-bar hb-guide`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `step` (required) | `number` | | one-based |
+| `name` (required) | `string` | | step name |
+| `goal` | `string` | `''` | one sentence, dropped under 640 px |
+| `verbs` | `Array<{id, label, icon, disabled?, title?}>` | undo, redo, open, save, guide | icon squares under 640 px |
+
+Emits `verb(id)`. Default slot sits between the goal and the verbs.
+
+### HbStageOverlay
+
+HbStage with positioned slots. `class: hb-stage hb-stage-ov`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `graph` | `boolean` | `false` | the pink graticule |
+| `quiet` | `boolean` | `false` | drops the pink shadow while the welcome card holds it |
+
+Slots: default (the canvas), `tl` (cams, `.hb-cams`), `tr` (legend),
+`bl` (hud, `.hb-hud`), `br` (busy), `center` (welcome).
+
+### HbMaterials
+
+Slot table as the rail panel, the stage legend, or slot chips. Props only;
+it never reads a profile. `class: hb-mat`, `hb-legend`, `hb-legend-chips`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `slots` (required) | `Array<{slot, color, material, parts?, role?}>` | | |
+| `variant` | `'rail' \| 'legend' \| 'chips'` | `'rail'` | chips go in the status strip; they show under 640 px where the legend hides |
+| `label` | `string` | `'materials'` | accessible name |
+
+The legend variant has a default slot for mode notes in the lit set.
+
+### HbWelcome
+
+First-run card over the stage centre, on HbTiles for the starts. A
+non-modal dialog: it covers the stage, not the page. `class: hb-welcome`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `title` (required) | `string` | | the tool name |
+| `accent` | `string` | `'.'` | pink |
+| `suffix` | `string` | `''` | ink, usually `bench` |
+| `note` | `string` | `''` | two lines in Special Elite |
+| `steps` | `Array<{name, text}>` | `[]` | |
+| `starts` (required) | `Array<{id, name, sub?, primary?}>` | | one primary, the focal pink |
+| `v-model:open` | `boolean` | `true` | |
+
+Emits `start(id)` (and closes) and `close`. Escape closes.
+
+### HbParamRow
+
+One parameter. HbSlider with a paired number, or HbSelect, HbSwitch or
+HbSeg by `type`. `class: hb-prow`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `label` (required) | `string` | | the 96 px column |
+| `type` | `'range' \| 'select' \| 'switch' \| 'seg'` | `'range'` | |
+| `min`, `max`, `step` | `number` | `0`, `100`, `1` | the number clamps to these |
+| `unit` | `string` | `''` | |
+| `options` | `Array` | `[]` | select and seg |
+| `defaultValue` | `number \| string \| boolean` | | shows the reset mark once the value differs |
+| `disabled`, `reason` | `boolean`, `string` | `false`, `''` | the reason shows under the row |
+| `v-model` (required) | `number \| string \| boolean` | | |
+
+Emits `touch(value)` on each range input (preview only), `commit(value)`
+when the value settles, and `reset(value)`.
+
 ## Class-only pieces
 
 Some things are positioning-specific decor or one-liners and ship as CSS
@@ -708,6 +811,8 @@ classes without a component:
 | `hb-scope` | canvas inside a stage, block and full width |
 | `hb-halftone`, `hb-graph` | textures. One per artifact, graph only on the void |
 | `hb-scroll-x` | horizontal scroll wrapper for wide content |
+| `hb-stagebar` | ink strip across the top of a paper stage |
+| `hb-cams`, `hb-hud` | stage overlay content: the cam strip and the bottom-left hud |
 
 ## Growing the system
 

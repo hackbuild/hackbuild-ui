@@ -1,8 +1,8 @@
 // hack.build UI. Import a stylesheet alongside these components:
-//   import '@hackbuild/ui/styles.css'
+//   import '@virgilvox/hackbuild-ui/styles.css'
 // Optionally the fonts and the Tailwind v4 bridge:
-//   import '@hackbuild/ui/fonts.css'
-//   @import '@hackbuild/ui/theme.css'  (in the app css, after tailwindcss)
+//   import '@virgilvox/hackbuild-ui/fonts.css'
+//   @import '@virgilvox/hackbuild-ui/theme.css'  (in the app css, after tailwindcss)
 
 // brand
 export { default as HbMark } from './components/HbMark.vue'
@@ -21,6 +21,19 @@ export { default as HbToolbar } from './components/HbToolbar.vue'
 export { default as HbStatusBar } from './components/HbStatusBar.vue'
 export { default as HbAppShell } from './components/HbAppShell.vue'
 export { default as HbShell } from './components/HbShell.vue'
+
+// bench layer: the strips, stage overlays and rail rows of a design bench
+export { default as HbSteps } from './components/HbSteps.vue'
+export { default as HbGuide } from './components/HbGuide.vue'
+export { default as HbStageOverlay } from './components/HbStageOverlay.vue'
+export { default as HbMaterials } from './components/HbMaterials.vue'
+export { default as HbWelcome } from './components/HbWelcome.vue'
+export { default as HbParamRow } from './components/HbParamRow.vue'
+export type { HbStepOption } from './components/HbSteps.vue'
+export type { HbGuideVerb } from './components/HbGuide.vue'
+export type { HbMaterialSlot } from './components/HbMaterials.vue'
+export type { HbWelcomeStep, HbWelcomeStart } from './components/HbWelcome.vue'
+export type { HbParamValue } from './components/HbParamRow.vue'
 
 // page sections
 export { default as HbNav } from './components/HbNav.vue'
