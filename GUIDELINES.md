@@ -1,6 +1,6 @@
 # hack.build design system
 
-Version 1.2. This document supersedes the hack.build sections of
+Version 1.3. This document supersedes the hack.build sections of
 `hackbuild-explainer`, `brand-forge`, and `board-forge`, and the styling of
 every earlier project (`hack-build`, `hack-build-vue`, `hackbuild-stack`,
 `hackbuild-resume`). Where any of those disagree with this file, this file
@@ -16,6 +16,15 @@ media card, video frame, playlist, timeline, plaque, call to action band,
 footer), and the identity pieces the app kept rebuilding: seeded critter
 avatars, placeholder covers, verified badge, stats, level dots and the
 countdown.
+
+Version 1.3 adds the bench layer (section 9): the steps strip, the guide
+strip, stage overlays, the materials panel, the param row and the welcome
+card, as classes and as six Vue components, plus the tokens a design bench
+needs (on-ink lines, a solid on-void label, the stage part palette, the
+board render colors, rail and tray widths). It also makes the pink budget
+countable, puts the bench verbs on the guide strip, sets ink text on every
+pink fill, adds an ink on-state for toggle chips, and sets 44 px touch
+targets for icon buttons and ranges.
 
 ## What this is
 
@@ -140,6 +149,40 @@ independently before it was written down.
 --hb-lit-err:  #ff5c4d
 --hb-lit-info: #58a6ff
 --hb-lit-dim:  rgba(245,240,230,.35)  /* ghost paths, graticules, axes */
+--hb-lit-label: #9a9184             /* solid small labels on the void */
+```
+
+`--hb-lit-dim` reads 2.90:1 on the void (computed), which fails AA for a
+small label that carries meaning. Labels on the void use `--hb-lit-label`
+(6.37:1, computed); `--hb-lit-dim` stays for lines and ghosts.
+
+### On-ink lines
+
+The ink and void ladder has no step for a divider drawn on an ink bar.
+
+```css
+--hb-ink-line:   #33312c   /* hairline divider on ink */
+--hb-ink-inset:  #2a2822   /* inset well on ink */
+--hb-ink-border: #44413a   /* frame around a control on ink or the void */
+```
+
+### Stage parts and board render
+
+Data on the void, never chrome. The part palette gives a mechanism or
+assembly view one color per part role; the board set draws copper, mask and
+silkscreen.
+
+```css
+--hb-part-a: var(--hb-pink)       /* row train, primary moving part */
+--hb-part-b: var(--hb-slime)      /* column train, secondary */
+--hb-part-c: var(--hb-lit-warn)   /* links, couplings */
+--hb-part-d: #f5f0e6              /* rods, pivots, pins */
+--hb-part-e: #6b6459              /* decks, plates */
+--hb-part-f: #4a463c              /* frame, case */
+
+--hb-gold: #d9b45a   /* copper and ENIG */
+--hb-mask: #FE0386   /* solder mask */
+--hb-silk: #ffffff   /* silkscreen */
 ```
 
 ### The plate palette
@@ -167,6 +210,27 @@ a view: the active tab, the live value, the primary action, the trace on the
 scope, the dot and build in the wordmark. If three things on screen are pink,
 none of them are. It never goes on large fills, page backgrounds, body copy, or
 purely decorative chrome.
+
+Text on a pink fill is ink, never paper: ink reads 4.62:1 on the pink and
+paper reads 3.32:1 (both computed, WCAG relative luminance), which fails AA
+at the 11 px utility size every chip and button uses. This holds for
+`.hb-chip.is-on`, `.hb-seg > button.is-on`, `.hb-tile.is-on`,
+`.hb-row.is-on`, `.hb-btn-danger` and the pink hovers of `.hb-btn`,
+`.hb-iconbtn` and `.hb-menu-item`.
+
+The budget is countable. Every pink element in a view falls in one class:
+
+| Class | Allowed pink | Counts against the one |
+|---|---|---|
+| structural | header bottom rule, current tab or step underline, wordmark dot and `build`, the stage pink shadow, range accent-color, focus ring | no |
+| focal | the primary action of the current pane, or the one live value the step is about, or the welcome primary start | yes, exactly one per view |
+| data | the primary part color on the stage, the trace on a scope | no, it is data on the void |
+| never pink | toggle chips (ink fill when on), secondary buttons, cam buttons (current cam outlined in paper), status tags (slime when good, lit warn when not), card borders | |
+
+The hackbuild-fab bench smoke test (`tools/smoke/pink.ts` in that
+repository) counts the elements in a view whose computed background or
+border is `#FE0386`, removes the structural set, and fails above one.
+This package has no test of its own for it.
 
 ---
 
@@ -333,6 +397,11 @@ Left to right, always in this order:
 Header, tabs and status strip are pinned. Only the work area scrolls. Classes:
 `.hb-header`, `.hb-tabs`, `.hb-bar`, `.hb-statusbar`, `.hb-seg`, `.hb-spacer`.
 
+A design bench maps onto the same four: the steps strip is the tabs strip,
+the guide strip is the toolbar, and the bench verbs (undo, redo, open,
+save, guide) sit at the right end of the guide strip, never in the header.
+The header keeps identity and state only. Section 9 has the parts.
+
 ### On a marketing page instead
 
 A page header inverts: paper rather than ink, taller, the horizontal lockup
@@ -361,9 +430,9 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-card` | Same, but lifts 2 px on hover to a 7 px shadow |
 | `.hb-stage` | The void with a pink offset shadow. Canvases, scopes, waterfalls, 3D views |
 | `.hb-btn` and variants | Ink fill, pink on hover, shadow collapses on press. `-2` secondary, `-danger` pink fill, `-ghost` for inside stages |
-| `.hb-chip` | Filter and multi-select toggle, `.is-on` fills pink |
+| `.hb-chip` | Filter and multi-select toggle, `.is-on` fills pink with ink text; `.is-toggle.is-on` fills ink for toggles inside a bench |
 | `.hb-pill` | Status with a leading dot. `.is-live` pulses pink, `.is-ok`, `.is-err` |
-| `.hb-input`, `.hb-select`, `.hb-textarea`, `.hb-range` | Paper field, ink border, pink focus ring and pink accent-color |
+| `.hb-input`, `.hb-select`, `.hb-textarea`, `.hb-range` | Paper field, ink border, pink focus ring and pink accent-color. Ranges are 44 px tall under 820 px and on touch screens, native thumb kept |
 | `.hb-kv` | Label left, readout right, dashed divider. The workhorse row of every panel |
 | `.hb-table` | Ink header row, dashed cell rules, sunk-paper stripes, pink wash on hover |
 | `.hb-console` | Void background, VT323, newest line at the top, one color per severity |
@@ -393,12 +462,12 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-pages` / `.hb-page` | Pagination chips, current page pink |
 | `.hb-panel-hd-inst` | The instrument panel head: VT323 caps on a full-bleed ink bar |
 | `.hb-tilt-l` / `.hb-tilt-l2` / `.hb-tilt-r` / `.hb-tilt-r2` | Sparing rotation. One or two tilted things per view |
-| `.hb-icon` / `.hb-iconbtn` | The shipped stroke icon set and the square icon-only action button |
+| `.hb-icon` / `.hb-iconbtn` | The shipped stroke icon set and the square icon-only action button, 34 px, 44 px under 640 px and on touch screens |
 | `.hb-nav` / `.hb-nav-link` / `.hb-nav-cta` | Page navigation. Links collapse into a drawer below 760 px |
 | `.hb-hero` / `.hb-kicker` / `.hb-ink-block` | The zine hero: VT323 kicker on an ink plate, marker headline, ink block behind one phrase |
 | `.hb-sechead` / `.hb-sechead-link` | Section head: title left, one quiet link pushed right. Centered variant for standalone bands |
 | `.hb-footer` and children | Ink footer: link columns, ghost social squares, dashed stamp line |
-| `.hb-tag` | Static VT323 tag on a plate: category, badge, year. The interactive cousin is the chip |
+| `.hb-tag` | Static VT323 tag on a plate: category, badge, year. The interactive cousin is the chip. `.is-lit-ok`, `.is-lit-warn`, `.is-lit-err` are outlined status tags for ink and the void |
 | `.hb-link` | Quiet utility-face link, pink, usually with a trailing arrow icon |
 | `.hb-media-card` / `.hb-media` | Project card: media plate, overlay badges, tags, marker title, copy, quiet links, author footer |
 | `.hb-cover` | Seeded placeholder cover: an icon ghosted on the ink plate for projects with no image |
@@ -411,6 +480,13 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-vframe` | Video frame: the one pink border in a video section, a 16 by 9 well on the void |
 | `.hb-timeline` / `.hb-tl-item` | Left pink rule entries: jobs, releases, changelog |
 | `.hb-cta` / `.hb-stripes` | Closing ink band with colorless caution stripes. The pink stays on the button |
+| `.hb-steps` | Bench steps strip on the tabs markup: numbered, equal width, ok badge when done (section 9) |
+| `.hb-guide` | Bench guide strip on the toolbar: step name, goal, verbs (section 9) |
+| `.hb-cams` / `.hb-legend` / `.hb-hud` | Stage overlays: cams top left, legend top right, hud bottom left (section 9) |
+| `.hb-stagebar` | Ink strip across the top of a paper stage |
+| `.hb-mat` | Materials panel rows: swatch, extruder, material, parts, role |
+| `.hb-prow` | Bench param row: label column, control, paired number, unit, reset mark. `.hb-row` keeps its list meaning |
+| `.hb-welcome` | First-run card over the stage centre. `.hb-card` keeps its hover-card meaning |
 
 Status pills must always declare their own color. A pill inheriting paper text
 onto a light panel became unreadable once; `.hb-pill` sets `color` explicitly
@@ -484,7 +560,8 @@ width, `currentColor`, no fills. Never emoji, and never an icon where a two-word
 label is clearer.
 
 Version 1.2 bakes the real Font Awesome Free glyphs into the library:
-eighty solid icons covering everything the shipped pages actually used,
+the solid icons covering everything the shipped pages actually used
+(undo, redo, folder-open and floppy-disk joined in 1.3 for the bench verbs),
 plus the brand set (github, youtube, mastodon and the rest) for footers
 and contact rows. `HbIcon` renders them from path data, so the icons are
 pixel-identical to every existing hack.build page with no CDN and no
@@ -525,7 +602,8 @@ inventing a one-off.
 
 - [ ] Zero em dashes, en dashes and emoji in the whole file, including comments
 - [ ] Pink is `#FE0386`, paper `#f5f0e6`, ink `#1a1a1a`
-- [ ] Exactly one pink element competing for attention per view
+- [ ] Exactly one pink element competing for attention per view, counted by the budget table in section 2
+- [ ] Text on a pink fill is ink
 - [ ] The mark is the verbatim two paths through viewBox `117 103 800 800`
 - [ ] `hack` in ink, dot and `build` both pink
 - [ ] Four faces doing four jobs, no face outside its role
@@ -535,6 +613,102 @@ inventing a one-off.
 - [ ] One panel-head style throughout, editorial or instrument, not both
 - [ ] On-void text uses the lit set, not the paper signal colors
 - [ ] Header holds no verbs; toolbar holds no branding; status strip holds no buttons
+- [ ] Touch targets 44 px under 640 px and on touch screens
 - [ ] No horizontal scroll at 390 px
 - [ ] Icons are Font Awesome or inline SVG
-- [ ] Rendered and looked at in a real browser, not just counted headlessly
+- [ ] Rendered and looked at in a real browser, not counted headlessly
+
+---
+
+## 9. Bench layer
+
+A bench is the layout a design tool renders into: pick a step, set its
+parameters in the rail, watch the part on the stage, then export. COLLAR,
+BLOCKS and PIP arrived at the same layout separately. The values below are
+measured from those benches; spacing reads the 4 px scale.
+
+### Strips and regions
+
+| Region | Surface | Holds | Class, component |
+|---|---|---|---|
+| header | ink, 3 px pink bottom rule, 52 to 60 px | mark, `NAME.bench` in Permanent Marker with only the dot pink (`suffix` prop), status pill, Special Elite tagline pushed right at low opacity, dropped under 900 px | `.hb-header`, HbHeader |
+| steps | ink, 36 px | equal-width numbered tiles, pink underline on the current one, ok badge on done ones, the last step always the export step | `.hb-tabs.hb-steps`, HbSteps |
+| guide | sunk paper, 2 px ink bottom | `STEP N NAME` in VT323 17 px pink, the goal in Special Elite 13 px, verbs at the right end | `.hb-bar.hb-guide`, HbGuide |
+| main | stage (void) beside the rail (raised, 3 px ink edge, one pane per step) | | `.hb-stage`, `.hb-rail` |
+| status | ink, pinned | VT323 figures on the left (dims, triangles, build ms), lit tags on the right (fits bed, mesh current, warnings) | `.hb-statusbar`, `.hb-tag.is-lit-*` |
+| welcome | over the stage centre, first run only | tool name, two-line note, the steps, three starts | `.hb-welcome`, HbWelcome |
+
+### Stage overlays
+
+Absolute inside a relative stage, each with its own z-index. HbStageOverlay
+wraps HbStage and offers the four corners and the centre, nothing else.
+
+| Overlay | Where | Content |
+|---|---|---|
+| cams and modes | top left, one wrapping strip | iso, top, front, side, under, explode, xray, section, plate; translucent void buttons at 10 px; the current cam outlined in paper, never pink |
+| legend | top right, VT323 15 px | slot, material, role per extruder; mode notes in the lit set |
+| hud and drive pad | bottom left | stage tags, explode and open sliders, the drive pad with `touch-action:none` |
+| busy | bottom right | `building` |
+| welcome | centre | the welcome card on a void scrim |
+
+### Primitives
+
+| Primitive | Values |
+|---|---|
+| step tile | transparent on ink, equal flex, 3 px bottom border that goes pink on the current step, Plex 12 px .14em, 18 px numbered badge, ok fill when done |
+| guide | sunk, 2 px ink bottom, Special Elite 13 px, step name VT323 17 px pink |
+| instrument head | `.hb-panel-hd-inst`: VT323 17 px uppercase on a full-bleed ink bar |
+| param row | flex, 96 px label column at 10 px uppercase .12em in ink 3 with the reset mark at its end once the value leaves its default, control fills the rest, 64 px paired number, 22 px unit; wraps on narrow screens |
+| chip | 2 px ink border, raised; toggles fill ink when on (`.is-toggle`); pink fill only for the one primary selection of a step |
+| materials row | 18 px swatch with a 2 px ink border, extruder in VT323 15 px, material, parts, role |
+| status | ink, VT323; a live value is pink only when it is the focal value; good tags slime |
+| welcome card | paper, 3 px ink border, `--hb-shadow-pink` while open (the stage drops to `--hb-shadow-lg` through HbStageOverlay `quiet`), at most 640 px wide, Special Elite |
+
+Measured values off the 4 px scale and the step each one takes:
+
+| Where | Measured | Uses |
+|---|---|---|
+| step tile padding | 8 x 6 px | 8 x 4 px |
+| guide padding | 5 x 14 px | the toolbar's 8 x 24 px, so the guide lines up with the header |
+| cam button padding | 3 x 7 px | 4 x 8 px |
+| param row margin | 5 px | 4 px |
+| stage overlay inset | 10 px | 12 px, the stage padding |
+| welcome card padding | 18 x 22 px | 16 x 24 px |
+
+### Interaction
+
+| Behavior | Value |
+|---|---|
+| touch and commit | HbParamRow emits `touch` on each range input (preview only) and `commit` on change, on the paired number, and on select, switch and seg |
+| reset | the reset mark sets the default and emits `commit` then `reset` |
+| steps | arrow keys, Home and End move between steps; the strip turns into a select before a tile would clip |
+| welcome | Escape or the close square dismisses it; a start emits `start` and closes it |
+
+### Mobile
+
+| Rule | Value |
+|---|---|
+| no sideways scroll | at 390, 768 and 1280 px on every step |
+| tagline | dropped under 900 px |
+| rail | under 640 px the app stacks the stage over the rail, the rail at 46 percent with a 3 px top border (app layout, as PIP does it) |
+| cams | one strip that wraps inside the stage |
+| welcome | at most the stage width less 20 px, scrolls inside, step grid two columns under 640 px |
+| rows | wrap; number inputs keep `min-width:0` |
+| legend | under 640 px it collapses to slot chips in the status strip (HbMaterials `variant="chips"`); never hidden outright |
+| guide verbs | icon squares with an `aria-label` under 640 px; the goal sentence drops |
+| steps | 11 px, .04em, padding 8 x 2 px under 640 px; never two lines |
+| touch targets | 44 px: icon buttons and guide verbs under 640 px and on touch screens, ranges under 820 px and on touch screens; preset tiles 96 px |
+| status strip | wraps |
+
+### Defaults the owner may change
+
+These were written in as defaults and stand until the owner rules.
+
+| Item | Default |
+|---|---|
+| header verbs | on the guide strip; the header holds identity and state |
+| shell family | one system; paper shell for every bench except board views, which use instrument density (full-bleed void, floating ink panels, VT323 heads); never CONDUYT teal or JetBrains Mono |
+| tagline face | Special Elite for tool taglines in headers (`.hb-tagline.is-tool`, HbHeader `taglineKind="tool"`); Libre Baskerville italic only for "make things. break things. repeat."; offline bakes carry all five faces |
+| graph rule | 32 px at 10 percent pink for new work; benches shipped with 26 px keep it until rebaked |
+| chip on-state | ink fill for toggles inside a bench, pink fill only for the primary selection of a step |
+| text on pink | ink |

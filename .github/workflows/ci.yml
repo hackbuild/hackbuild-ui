@@ -1,0 +1,28 @@
+name: ci
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.18.0
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+      # a new branch checks only what it adds over main; the first subjects on
+      # main predate the hook and run past 60 characters
+      - name: lint-commits
+        run: node tools/lint-commits.mjs
+        env:
+          BASE_REF: ${{ github.base_ref || (github.event.created && 'main') || '' }}
+          BEFORE: ${{ github.event.before }}

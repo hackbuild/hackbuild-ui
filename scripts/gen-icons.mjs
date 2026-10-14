@@ -37,6 +37,12 @@ const SOLID = {
   grip: solid.faGripVertical,
   share: solid.faShareNodes,
 
+  // bench verbs on the guide strip: undo, redo, open, save
+  undo: solid.faRotateLeft,
+  redo: solid.faRotateRight,
+  'folder-open': solid.faFolderOpen,
+  'floppy-disk': solid.faFloppyDisk,
+
   // state
   eye: solid.faEye,
   heart: solid.faHeart,

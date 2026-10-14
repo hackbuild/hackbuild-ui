@@ -10,7 +10,7 @@ them for you.
 ## Install
 
 ```sh
-npm install @hackbuild/ui
+npm install @virgilvox/hackbuild-ui
 ```
 
 Requires Vue 3.4 or newer.
@@ -20,8 +20,8 @@ Requires Vue 3.4 or newer.
 ```ts
 // main.ts
 import { createApp } from 'vue'
-import '@hackbuild/ui/fonts.css'
-import '@hackbuild/ui/styles.css'
+import '@virgilvox/hackbuild-ui/fonts.css'
+import '@virgilvox/hackbuild-ui/styles.css'
 import App from './App.vue'
 
 createApp(App).mount('#app')
@@ -50,7 +50,7 @@ import { ref } from 'vue'
 import {
   HbAppShell, HbHeader, HbTabs, HbToolbar, HbStatusBar,
   HbPanel, HbKv, HbButton, HbPill, HbStage,
-} from '@hackbuild/ui'
+} from '@virgilvox/hackbuild-ui'
 
 const tab = ref<string | number>('spectrum')
 const connected = ref(false)

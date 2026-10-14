@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&family=VT323&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet" />
+  <title>hack.build UI bench layer</title>
+  <style>
+    /* layout glue for the bench page: the stage beside the rail, stacked under 640 px */
+    html, body { margin: 0 }
+    .pg-bench { display: flex; flex-direction: column; min-height: 100vh }
+    .pg-main { display: flex; min-height: 480px }
+    .pg-stage { flex: 1 1 auto; min-width: 0; display: flex }
+    .pg-stage > .hb-stage { flex: 1 1 auto; min-height: 480px }
+    .pg-rail { flex: 0 0 var(--hb-rail); min-width: 0; background: var(--hb-paper-raised); border-left: var(--hb-border-hd) solid var(--hb-ink); padding: var(--hb-s3) }
+    .pg-rail .hb-panel { padding: var(--hb-s2) var(--hb-s3) }
+    .pg-rail .hb-panel-hd-inst { margin: calc(-1 * var(--hb-s2)) calc(-1 * var(--hb-s3)) var(--hb-s2); padding-left: var(--hb-s3) }
+    .pg-states { padding: var(--hb-s4); display: grid; gap: var(--hb-s4) }
+    @media (max-width: 820px) { .pg-rail { flex-basis: 290px } }
+    @media (max-width: 640px) { .pg-main { flex-direction: column } .pg-stage > .hb-stage { min-height: 360px } .pg-rail { flex: 0 0 auto; border-left: 0; border-top: var(--hb-border-hd) solid var(--hb-ink) } }
+  </style>
+</head>
+<body class="hb hb-halftone">
+  <div id="app"></div>
+  <script type="module" src="/src/bench.ts"></script>
+</body>
+</html>

@@ -31,6 +31,7 @@ Solid, by group:
 |---|---|
 | arrows | arrow-right, arrow-left, arrow-up, arrow-down, external, link |
 | actions | plus, minus, x, check, search, copy, trash, pen, download, upload, filter, refresh, power, grip, share |
+| bench verbs | undo, redo, folder-open, floppy-disk |
 | state | eye, heart, star, bookmark, lock, warning, info, question, bell |
 | people | user, users, comment, envelope |
 | things | wrench, screwdriver-wrench, hammer, gear, bolt, cube, microchip, robot, plug, folder, book, newspaper, image, video, display, printer, lightbulb, flame, rocket, gamepad, palette, layer-group |

@@ -1,6 +1,6 @@
 # Tokens
 
-Everything in `src/styles/tokens.css`, exported as `@hackbuild/ui/tokens.css`.
+Everything in `src/styles/tokens.css`, exported as `@virgilvox/hackbuild-ui/tokens.css`.
 The class layer and the Tailwind bridge both read from these. If a value
 anywhere else disagrees, the token file wins.
 
@@ -51,10 +51,40 @@ Data only. Charts, log severity, pass and fail. Never chrome, never brand.
 | `--hb-err` | `#c3251f` | `--hb-lit-err` | `#ff5c4d` |
 | `--hb-info` | `#2b6cb0` | `--hb-lit-info` | `#58a6ff` |
 | | | `--hb-lit-dim` | `rgba(245,240,230,.35)` |
+| | | `--hb-lit-label` | `#9a9184` |
 
 The paper set goes muddy on the void, so anything drawn inside a stage or
 console uses the lit set. The stylesheet swaps them automatically for
-`.hb-ok` and friends inside `.hb-stage` and `.hb-console`.
+`.hb-ok` and the other status classes inside `.hb-stage` and `.hb-console`.
+
+`--hb-lit-dim` reads 2.90:1 on the void (computed) and fails AA for small
+labels; text labels on the void use the solid `--hb-lit-label` (6.37:1,
+computed). Text on a pink fill is `--hb-ink` (4.62:1, computed), never
+paper (3.32:1, computed).
+
+## On-ink lines
+
+| Token | Value | Job |
+|---|---|---|
+| `--hb-ink-line` | `#33312c` | hairline divider on ink |
+| `--hb-ink-inset` | `#2a2822` | inset well on ink |
+| `--hb-ink-border` | `#44413a` | frame around a control on ink or the void |
+
+## Stage parts and board render
+
+Data on the void, never chrome.
+
+| Token | Value | Job |
+|---|---|---|
+| `--hb-part-a` | `var(--hb-pink)` | row train, primary moving part |
+| `--hb-part-b` | `var(--hb-slime)` | column train, secondary |
+| `--hb-part-c` | `var(--hb-lit-warn)` | links, couplings |
+| `--hb-part-d` | `#f5f0e6` | rods, pivots, pins |
+| `--hb-part-e` | `#6b6459` | decks, plates |
+| `--hb-part-f` | `#4a463c` | frame, case |
+| `--hb-gold` | `#d9b45a` | copper and ENIG |
+| `--hb-mask` | `#FE0386` | solder mask |
+| `--hb-silk` | `#ffffff` | silkscreen |
 
 ## The plate palette
 
@@ -128,3 +158,5 @@ overlay always sits on top; it is texture, not chrome.
 | `--hb-measure` | `68ch` | prose line length ceiling |
 | `--hb-narrow` | `860px` | docs and article shells |
 | `--hb-wide` | `1180px` | app and page shells |
+| `--hb-rail` | `336px` | bench rail beside the stage |
+| `--hb-tray` | `210px` | bench tray under the stage |

@@ -1,6 +1,6 @@
 /* ==========================================================================
    hack.build design tokens
-   Version 1.2
+   Version 1.3
 
    The single source of truth for every value in the system. The class layer
    in hackbuild.css and the Tailwind bridge in tailwind.css both read from
@@ -53,6 +53,30 @@
   --hb-lit-info: #58a6ff;
   --hb-lit-dim:  rgba(245,240,230,.35); /* ghost paths, graticules, axes */
 
+  /* ---- on-ink lines. Dividers and frames drawn on ink bars and the void,
+     where the ink and void ladder has no step. -------------------------- */
+  --hb-ink-line:   #33312c;     /* hairline divider on ink */
+  --hb-ink-inset:  #2a2822;     /* inset well on ink */
+  --hb-ink-border: #44413a;     /* frame around a control on ink or void */
+  /* Solid label on the void. --hb-lit-dim is translucent and reads 2.90:1
+     on void (computed), which fails AA for small labels that carry meaning. */
+  --hb-lit-label:  #9a9184;
+
+  /* ---- stage part palette. Data on the void for mechanism and assembly
+     views, one color per part role. Never chrome. ------------------------ */
+  --hb-part-a: var(--hb-pink);      /* row train, primary moving part */
+  --hb-part-b: var(--hb-slime);     /* column train, secondary */
+  --hb-part-c: var(--hb-lit-warn);  /* links, couplings */
+  --hb-part-d: #f5f0e6;             /* rods, pivots, pins */
+  --hb-part-e: #6b6459;             /* decks, plates */
+  --hb-part-f: #4a463c;             /* frame, case */
+
+  /* ---- board render. Copper, solder mask and silkscreen on a PCB or a
+     printed circuit view. Data only. ------------------------------------- */
+  --hb-gold: #d9b45a;           /* copper and ENIG */
+  --hb-mask: #FE0386;           /* solder mask */
+  --hb-silk: #ffffff;           /* silkscreen */
+
   /* ---- type. Four faces, four jobs. ------------------------------------- */
   --hb-display:  'Permanent Marker', cursive;                 /* headlines only */
   --hb-body:     'Special Elite', 'Courier New', monospace;   /* prose */
@@ -89,4 +113,6 @@
   --hb-measure: 68ch;           /* prose line length ceiling */
   --hb-narrow:  860px;          /* docs and article shells */
   --hb-wide:    1180px;         /* app and page shell width */
+  --hb-rail:    336px;          /* bench rail beside the stage */
+  --hb-tray:    210px;          /* bench tray under the stage */
 }

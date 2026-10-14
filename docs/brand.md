@@ -1,7 +1,7 @@
 # Brand assets
 
 Everything lives in `assets/brand/` and ships with the package under
-`@hackbuild/ui/brand/*`. Every file carrying type has that type as
+`@virgilvox/hackbuild-ui/brand/*`. Every file carrying type has that type as
 outlined paths, so nothing depends on a font being installed.
 
 | File | What it is |
