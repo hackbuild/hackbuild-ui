@@ -143,7 +143,10 @@ body.hb::before{
   display:flex; align-items:center; gap:var(--hb-s4); flex-wrap:wrap;
 }
 .hb-header .hb-logo{ width:28px; height:28px; flex:0 0 auto }
-.hb-header h1{ font-size:24px; color:var(--hb-paper) }
+/* the title shrinks and wraps beside the mark on a phone instead of
+   dropping under it or pushing the page sideways */
+.hb-header h1{ font-size:20px; color:var(--hb-paper); flex:1 1 0; min-width:0; overflow-wrap:anywhere }
+@media(min-width:641px){ .hb-header h1{ font-size:24px; flex:0 1 auto } }
 .hb-header h1 span{ color:var(--hb-pink) }
 /* Suffix after the pink accent stays paper: PIP<span>.</span>bench. */
 .hb-header h1 span.hb-suffix{ color:var(--hb-paper) }
@@ -1459,7 +1462,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 /* Inline control in a toolbar or a controls row: a utility label, then
    the control. .is-wide takes the whole row (URL fields). */
 .hb-ctl{
-  display:inline-flex; align-items:center; gap:var(--hb-s2); flex:1 1 100%; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:var(--hb-s2); flex:1 1 100%; min-width:0; max-width:100%; white-space:nowrap;
   font-family:var(--hb-utility); font-size:11px; font-weight:600;
   text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink-3);
 }

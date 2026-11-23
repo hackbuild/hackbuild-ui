@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.3
+
+- `.hb-ctl` shrinks to its row: a select with a long option no longer
+  pushes a phone page sideways.
+- The `.hb-header` title is 20 px on phones and wraps beside the mark;
+  24 px from 641 px as before.
+
 ## 0.4.2
 
 - `.hb-input` and `.hb-select` are 44 px tall on phones and touch
