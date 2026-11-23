@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.1
+
+- Mobile first. Every `max-width` media and container query in
+  `hackbuild.css` is now a base state for a 360 px phone with the wider
+  layout added at `min-width` (641, 761, 801, 821 and 901 px, and 561 px
+  for viewport container queries). Layouts at each width are unchanged.
+- Touch: `.hb-btn`, `.hb-chip`, `.hb-tab` and `.hb-cams` buttons are
+  44 px tall on phones and touch screens and compact only at 641 px and
+  up with a fine pointer. Icon buttons, the param row reset and ranges
+  follow the same rule.
+- Fields are 16 px on phones and touch screens, so iOS does not zoom the
+  page on focus.
+- Header, nav, toolbar, status strip and `.hb-shell` respect the safe
+  area insets.
+- GUIDELINES.md 4c gains a mobile first table and section 8 a checklist
+  line.
+
 ## 0.4.0
 
 - The ai and 3d layer, GUIDELINES.md 1.4 section 10, with its classes in

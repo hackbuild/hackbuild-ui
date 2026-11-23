@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>hack.build UI ai and 3d classes</title>
 <!-- The class layer alone, the way a vanilla page uses it. Run npm run build,
      then open this file from disk: no server, no network, no script needed
@@ -11,11 +11,12 @@
 <link rel="stylesheet" href="../dist/styles/hackbuild.css">
 <style>
   /* layout glue: a work column beside a rail, stacked under 900 px */
-  .pg-work { display: grid; grid-template-columns: minmax(0, 1fr) var(--hb-rail); gap: var(--hb-s5); padding: var(--hb-s4) var(--hb-s5) var(--hb-s6) }
+  /* mobile first: one column, the rail beside the work from 901 px */
+  .pg-work { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--hb-s5); padding: var(--hb-s3) var(--hb-s4) var(--hb-s6) }
   .pg-col { min-width: 0; display: flex; flex-direction: column; gap: var(--hb-s4) }
   .pg-stack { display: flex; flex-direction: column; gap: var(--hb-s2) }
-  @media (max-width: 900px) { .pg-work { grid-template-columns: minmax(0, 1fr) } }
-  @media (max-width: 640px) { .pg-work { padding: var(--hb-s3) var(--hb-s4) var(--hb-s6) } }
+  @media (min-width: 641px) { .pg-work { padding: var(--hb-s4) var(--hb-s5) var(--hb-s6) } }
+  @media (min-width: 901px) { .pg-work { grid-template-columns: minmax(0, 1fr) var(--hb-rail) } }
 </style>
 </head>
 <body class="hb hb-halftone">

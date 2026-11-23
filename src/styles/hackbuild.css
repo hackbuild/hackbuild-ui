@@ -56,10 +56,13 @@ body.hb::before{
   background-size:32px 32px;
 }
 
-.hb-shell{ max-width:var(--hb-wide); margin:0 auto; padding:0 var(--hb-s5) }
+.hb-shell{
+  max-width:var(--hb-wide); margin:0 auto;
+  padding:0 max(var(--hb-s4), env(safe-area-inset-right)) 0 max(var(--hb-s4), env(safe-area-inset-left));
+}
 .hb-shell-narrow{ max-width:var(--hb-narrow) }
 .hb-prose{ max-width:var(--hb-measure) }
-@media(max-width:640px){ .hb-shell{ padding:0 var(--hb-s4) } }
+@media(min-width:641px){ .hb-shell{ padding:0 max(var(--hb-s5), env(safe-area-inset-right)) 0 max(var(--hb-s5), env(safe-area-inset-left)) } }
 
 /* ==========================================================================
    2. TYPE
@@ -72,10 +75,10 @@ body.hb::before{
   letter-spacing:.5px;
   margin:0;
 }
-.hb h1{ font-size:44px; line-height:1.05 }
-.hb h2{ font-size:28px; line-height:1.15 }
+.hb h1{ font-size:32px; line-height:1.05 }
+.hb h2{ font-size:23px; line-height:1.15 }
 .hb h3{ font-size:20px; line-height:1.2 }
-@media(max-width:640px){ .hb h1{ font-size:32px } .hb h2{ font-size:23px } }
+@media(min-width:641px){ .hb h1{ font-size:44px } .hb h2{ font-size:28px } }
 
 .hb p{ margin:0 0 var(--hb-s4) }
 
@@ -135,7 +138,8 @@ body.hb::before{
   background:var(--hb-ink);
   color:var(--hb-paper);
   border-bottom:var(--hb-border-hd) solid var(--hb-pink);
-  padding:var(--hb-s3) var(--hb-s5);
+  padding:var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-left));
+  padding-top:max(var(--hb-s2), env(safe-area-inset-top));
   display:flex; align-items:center; gap:var(--hb-s4); flex-wrap:wrap;
 }
 .hb-header .hb-logo{ width:28px; height:28px; flex:0 0 auto }
@@ -143,12 +147,12 @@ body.hb::before{
 .hb-header h1 span{ color:var(--hb-pink) }
 /* Suffix after the pink accent stays paper: PIP<span>.</span>bench. */
 .hb-header h1 span.hb-suffix{ color:var(--hb-paper) }
-.hb-header .hb-tagline{ margin-left:auto; color:var(--hb-paper); opacity:.55 }
+.hb-header .hb-tagline{ display:none; margin-left:auto; color:var(--hb-paper); opacity:.55 }
 /* A tool tagline is Special Elite; Libre Baskerville italic stays for the
    brand line alone. */
 .hb-header .hb-tagline.is-tool{ font-family:var(--hb-body); font-style:normal }
-@media(max-width:900px){ .hb-header .hb-tagline{ display:none } }
-@media(max-width:640px){ .hb-header{ padding:var(--hb-s2) var(--hb-s4) } }
+@media(min-width:901px){ .hb-header .hb-tagline{ display:inline } }
+@media(min-width:641px){ .hb-header{ padding:var(--hb-s3) max(var(--hb-s5), env(safe-area-inset-right)) var(--hb-s3) max(var(--hb-s5), env(safe-area-inset-left)) } }
 
 .hb-tabs{ display:flex; gap:2px; background:var(--hb-ink); overflow-x:auto }
 .hb-tab{
@@ -285,6 +289,10 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-btn-sm{ font-size:10px; padding:5px 10px }
 .hb-btn-lg{ font-size:12px; padding:11px 20px }
 .hb-btn-block{ display:flex; width:100%; justify-content:center }
+/* A finger needs 44 px: buttons, chips and tabs start there and compact
+   only on a wider screen with a fine pointer. */
+.hb-btn,.hb-chip,.hb-tab{ min-height:44px }
+@media(min-width:641px) and (pointer:fine){ .hb-btn,.hb-chip,.hb-tab{ min-height:0 } }
 
 /* Chips: filters and multi-select toggles. */
 .hb-chip{
@@ -333,7 +341,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-4);
 }
 .hb-input,.hb-select,.hb-textarea{
-  font-family:var(--hb-utility); font-size:13px;
+  font-family:var(--hb-utility); font-size:16px;
   background:var(--hb-paper-raised); color:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink);
   padding:8px 10px; width:100%;
@@ -341,6 +349,8 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-input:focus,.hb-select:focus,.hb-textarea:focus{
   outline:none; border-color:var(--hb-pink); box-shadow:2px 2px 0 var(--hb-pink);
 }
+/* 16 px on phones and touch screens, or iOS zooms the page on focus */
+@media(min-width:641px) and (pointer:fine){ .hb-input,.hb-select,.hb-textarea{ font-size:13px } }
 .hb-input::placeholder,.hb-textarea::placeholder{ color:var(--hb-ink-4) }
 .hb-input.is-invalid,.hb-select.is-invalid,.hb-textarea.is-invalid{
   border-color:var(--hb-err);
@@ -350,8 +360,9 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 }
 .hb input[type=range],.hb-range{ accent-color:var(--hb-pink); width:100% }
 /* A finger needs 44 px. The native thumb and accent-color stay. */
-@media(max-width:820px),(pointer:coarse){
-  .hb-range,.hb-slider > input[type=range],.hb-prow input[type=range]{ height:44px; margin:0 }
+.hb-range,.hb-slider > input[type=range],.hb-prow input[type=range]{ height:44px; margin:0 }
+@media(min-width:821px) and (pointer:fine){
+  .hb-range,.hb-slider > input[type=range],.hb-prow input[type=range]{ height:auto; margin:2px }
 }
 .hb input[type=checkbox],.hb input[type=radio]{ accent-color:var(--hb-pink) }
 
@@ -395,14 +406,14 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
    6. DATA
    ========================================================================== */
 
-.hb-table{ width:100%; border-collapse:collapse; font-family:var(--hb-utility); font-size:12.5px }
+.hb-table{ width:100%; border-collapse:collapse; font-family:var(--hb-utility); font-size:11.5px }
 .hb-table th{
   text-align:left; font-size:10px; font-weight:700;
   text-transform:uppercase; letter-spacing:.09em;
   background:var(--hb-ink); color:var(--hb-paper);
   padding:7px 10px;
 }
-.hb-table td{ padding:7px 10px; border-bottom:1px solid rgba(26,26,26,.2) }
+.hb-table td{ padding:6px 8px; border-bottom:1px solid rgba(26,26,26,.2) }
 .hb-table tbody tr:nth-child(even){ background:var(--hb-paper-sunk) }
 .hb-table tbody tr:hover{ background:var(--hb-pink-10) }
 .hb-table .num{ text-align:right; font-variant-numeric:tabular-nums }
@@ -482,22 +493,22 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   display:flex; align-items:center; gap:var(--hb-s3); flex-wrap:wrap;
   background:var(--hb-paper-sunk);
   border-bottom:var(--hb-border) solid var(--hb-ink);
-  padding:var(--hb-s2) var(--hb-s5);
+  padding:var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-left));
   min-height:46px;
 }
 .hb-bar .hb-spacer{ margin-left:auto }
 .hb-bar-ink{ background:var(--hb-ink); color:var(--hb-paper); border-bottom-color:var(--hb-pink) }
-@media(max-width:640px){ .hb-bar{ padding:var(--hb-s2) var(--hb-s4) } }
+@media(min-width:641px){ .hb-bar{ padding:var(--hb-s2) max(var(--hb-s5), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s5), env(safe-area-inset-left)) } }
 
 /* Status strip. Thin, VT323, counts and rates only. Never actions. */
 .hb-statusbar{
-  display:flex; align-items:center; gap:var(--hb-s5); flex-wrap:wrap;
+  display:flex; align-items:center; gap:var(--hb-s4); flex-wrap:wrap;
   background:var(--hb-ink); color:var(--hb-paper);
   font-family:var(--hb-readout); font-size:15px; line-height:1;
-  padding:6px var(--hb-s5); border-top:var(--hb-border-hd) solid var(--hb-pink);
+  padding:6px var(--hb-s4) max(6px, env(safe-area-inset-bottom)); border-top:var(--hb-border-hd) solid var(--hb-pink);
 }
 .hb-statusbar b{ color:var(--hb-pink); font-weight:400 }
-@media(max-width:640px){ .hb-statusbar{ gap:var(--hb-s4); padding:6px var(--hb-s4) } }
+@media(min-width:641px){ .hb-statusbar{ gap:var(--hb-s5); padding-left:var(--hb-s5); padding-right:var(--hb-s5) } }
 
 /* Segmented control. Mode switches, polarity, easy versus advanced.
    Two or three options only; past that it is a select. */
@@ -617,7 +628,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 
 /* Modal. The display rule must be beaten by [hidden] explicitly or the close
    button does nothing. This bug shipped once. */
-.hb-modal{ position:fixed; inset:0; z-index:var(--hb-z-modal); display:flex; align-items:center; justify-content:center; padding:var(--hb-s5) }
+.hb-modal{ position:fixed; inset:0; z-index:var(--hb-z-modal); display:flex; align-items:center; justify-content:center; padding:var(--hb-s3) }
 .hb-modal[hidden]{ display:none }
 .hb-modal::before{
   content:""; position:absolute; inset:0; background:rgba(10,10,10,.72);
@@ -629,7 +640,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   animation:hb-drop var(--hb-t-slow);
 }
 @keyframes hb-drop{ from{ transform:translateY(-14px); opacity:0 } }
-@media(max-width:640px){ .hb-modal{ padding:var(--hb-s3) } }
+@media(min-width:641px){ .hb-modal{ padding:var(--hb-s5) } }
 
 /* Toast. Bottom center, ink plate, pink rule, gone in about a second. */
 .hb-toast{
@@ -657,14 +668,14 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
    rail stacks under the work column.
    ========================================================================== */
 
-.hb-app{ display:flex; flex-direction:column; height:100vh; height:100dvh; overflow:hidden }
-.hb-app > .hb-work{ flex:1; min-height:0; display:grid; grid-template-columns:1fr 340px; gap:var(--hb-s4); padding:var(--hb-s4); overflow:hidden }
-.hb-app .hb-main{ min-width:0; overflow:auto; display:flex; flex-direction:column; gap:var(--hb-s4) }
-.hb-app .hb-rail{ min-width:0; overflow:auto; display:flex; flex-direction:column; gap:var(--hb-s4) }
-@media(max-width:900px){
-  .hb-app{ height:auto; overflow:visible }
-  .hb-app > .hb-work{ grid-template-columns:1fr; overflow:visible }
-  .hb-app .hb-main,.hb-app .hb-rail{ overflow:visible }
+.hb-app{ display:flex; flex-direction:column }
+.hb-app > .hb-work{ flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr); gap:var(--hb-s4); padding:var(--hb-s4) }
+.hb-app .hb-main{ min-width:0; display:flex; flex-direction:column; gap:var(--hb-s4) }
+.hb-app .hb-rail{ min-width:0; display:flex; flex-direction:column; gap:var(--hb-s4) }
+@media(min-width:901px){
+  .hb-app{ height:100vh; height:100dvh; overflow:hidden }
+  .hb-app > .hb-work{ grid-template-columns:minmax(0,1fr) 340px; overflow:hidden }
+  .hb-app .hb-main,.hb-app .hb-rail{ overflow:auto }
 }
 
 /* Canvas inside a stage always fills it and stays block, or it leaves a
@@ -679,9 +690,11 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 
 .hb-scroll-x,.hb .hb-panel > table.hb-table{ display:block; overflow-x:auto; max-width:100% }
 .hb pre{ max-width:100% }
-@media(max-width:640px){
-  .hb-table{ font-size:11.5px }
-  .hb-table th,.hb-table td{ padding:6px 8px; white-space:nowrap }
+.hb-table th,.hb-table td{ white-space:nowrap }
+@media(min-width:641px){
+  .hb-table{ font-size:12.5px }
+  .hb-table td{ padding:7px 10px }
+  .hb-table th,.hb-table td{ white-space:normal }
 }
 
 /* ==========================================================================
@@ -861,7 +874,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 /* Square icon button. For icon-only actions in navs, footers and rows.
    Always carries an aria-label. */
 .hb-iconbtn{
-  width:34px; height:34px; padding:0;
+  width:44px; height:44px; padding:0;
   display:inline-flex; align-items:center; justify-content:center;
   background:var(--hb-paper-raised); color:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink);
@@ -880,7 +893,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   border-color:var(--hb-pink); color:var(--hb-pink); background:transparent;
 }
 /* 44 px touch targets on phones and touch screens. */
-@media(max-width:640px),(pointer:coarse){ .hb-iconbtn{ width:44px; height:44px } }
+@media(min-width:641px) and (pointer:fine){ .hb-iconbtn{ width:34px; height:34px } }
 
 /* ==========================================================================
    18. PAGE SECTIONS
@@ -893,14 +906,14 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-nav{
   background:var(--hb-ink); color:var(--hb-paper);
   border-bottom:var(--hb-border-hd) solid var(--hb-pink);
-  padding:0 var(--hb-s5); min-height:58px;
+  padding:0 max(var(--hb-s4), env(safe-area-inset-right)) 0 max(var(--hb-s4), env(safe-area-inset-left)); min-height:58px;
   display:flex; align-items:center; gap:var(--hb-s4);
 }
 .hb-nav-brand{
   display:inline-flex; align-items:center; gap:10px;
   color:var(--hb-paper); text-decoration:none;
 }
-.hb-nav-links{ display:flex; align-items:center; gap:2px; margin-left:auto }
+.hb-nav-links{ display:none; align-items:center; gap:2px; margin-left:auto }
 .hb-nav-link{
   font-family:var(--hb-utility); font-size:12px; font-weight:600;
   text-transform:lowercase; letter-spacing:.04em;
@@ -913,16 +926,16 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   background:var(--hb-pink); border-color:var(--hb-pink); opacity:1;
 }
 .hb-nav-cta:hover{ background:var(--hb-pink-deep); border-color:var(--hb-pink-deep) }
-.hb-nav-toggle{ display:none; margin-left:auto }
-@media(max-width:760px){
-  .hb-nav{ padding:0 var(--hb-s4) }
-  .hb-nav-links{ display:none }
-  .hb-nav-toggle{ display:inline-flex }
+.hb-nav-toggle{ display:inline-flex; margin-left:auto }
+@media(min-width:761px){
+  .hb-nav{ padding:0 max(var(--hb-s5), env(safe-area-inset-right)) 0 max(var(--hb-s5), env(safe-area-inset-left)) }
+  .hb-nav-links{ display:flex }
+  .hb-nav-toggle{ display:none }
 }
 
 /* Hero. The big marker headline, often with a solid ink block behind one
    phrase, a kicker above and at most one pink action below. */
-.hb-hero{ position:relative; padding:var(--hb-s8) 0 var(--hb-s7); overflow:hidden }
+.hb-hero{ position:relative; padding:var(--hb-s7) 0 var(--hb-s6); overflow:hidden }
 .hb-hero h1,.hb-hero-title{
   font-family:var(--hb-display); font-weight:400;
   font-size:clamp(40px,8vw,84px); line-height:1.05;
@@ -930,7 +943,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 }
 .hb-hero .hb-prose{ margin-top:var(--hb-s5); font-size:16px }
 .hb-hero-actions{ display:flex; gap:var(--hb-s3); flex-wrap:wrap; margin-top:var(--hb-s6) }
-@media(max-width:640px){ .hb-hero{ padding:var(--hb-s7) 0 var(--hb-s6) } }
+@media(min-width:641px){ .hb-hero{ padding:var(--hb-s8) 0 var(--hb-s7) } }
 
 /* Kicker. The VT323 tag on an ink plate that opens a hero or a section.
    The resume and the theme pages both arrived at this on their own. */
@@ -1162,8 +1175,8 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 
 /* Playlist. The video frame beside a numbered track list. Below 800 px the
    list drops under the player. */
-.hb-playlist{ display:grid; grid-template-columns:2fr 1fr; gap:var(--hb-s4); align-items:start }
-@media(max-width:800px){ .hb-playlist{ grid-template-columns:1fr } }
+.hb-playlist{ display:grid; grid-template-columns:minmax(0,1fr); gap:var(--hb-s4); align-items:start }
+@media(min-width:801px){ .hb-playlist{ grid-template-columns:2fr 1fr } }
 .hb-playlist-tracks{
   border:var(--hb-border) solid var(--hb-ink);
   background:var(--hb-paper-raised); color:var(--hb-ink);
@@ -1230,21 +1243,21 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-tabs.hb-steps{ gap:0; overflow:hidden }
 .hb-steps > .hb-tab{
   flex:1 1 0; min-width:0; opacity:1;
-  font-size:12px; letter-spacing:.14em;
-  padding:var(--hb-s2) var(--hb-s1);
+  font-size:11px; letter-spacing:.04em;
+  padding:var(--hb-s2) calc(var(--hb-s1) / 2);
   display:inline-flex; align-items:center; justify-content:center;
 }
 .hb-steps > .hb-tab[aria-selected="true"],.hb-steps > .hb-tab.is-active{ color:var(--hb-paper) }
 .hb-steps .n{
   display:inline-block; width:18px; height:18px; line-height:16px; flex:0 0 auto;
   border:1px solid var(--hb-paper); text-align:center;
-  margin-right:var(--hb-s2); font-size:11px; letter-spacing:0;
+  margin-right:var(--hb-s1); font-size:11px; letter-spacing:0;
 }
 .hb-steps > .hb-tab.is-done .n{ background:var(--hb-ok); border-color:var(--hb-ok) }
 .hb-steps-select{ display:block; width:100%; border-left:0; border-right:0 }
-@media(max-width:640px){
-  .hb-steps > .hb-tab{ letter-spacing:.04em; font-size:11px; padding:var(--hb-s2) calc(var(--hb-s1) / 2) }
-  .hb-steps .n{ margin-right:var(--hb-s1) }
+@media(min-width:641px){
+  .hb-steps > .hb-tab{ letter-spacing:.14em; font-size:12px; padding:var(--hb-s2) var(--hb-s1) }
+  .hb-steps .n{ margin-right:var(--hb-s2) }
 }
 
 /* Guide. The toolbar strip of a bench: step name in VT323, the goal in
@@ -1258,15 +1271,17 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   font-family:var(--hb-readout); font-size:17px; color:var(--hb-pink);
   text-transform:uppercase; white-space:nowrap; flex:0 0 auto;
 }
-.hb-guide-goal{ flex:1 1 auto; min-width:0 }
+.hb-guide-goal{ display:none; flex:1 1 auto; min-width:0 }
 .hb-guide-verbs{ display:flex; gap:var(--hb-s1); margin-left:auto; flex:0 0 auto }
 .hb-guide-verbs .hb-btn{ box-shadow:none }
-@media(max-width:640px){
-  .hb-guide-verbs .hb-btn{ width:44px; height:44px; padding:0; justify-content:center }
-  .hb-guide-verbs .hb-btn > .hb-guide-verb-label{
-    position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
-  }
-  .hb-guide-goal{ display:none }
+.hb-guide-verbs .hb-btn{ width:44px; height:44px; padding:0; justify-content:center }
+.hb-guide-verbs .hb-btn > .hb-guide-verb-label{
+  position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
+}
+@media(min-width:641px){
+  .hb-guide-verbs .hb-btn{ width:auto; height:auto; padding:8px 14px; justify-content:flex-start }
+  .hb-guide-verbs .hb-btn > .hb-guide-verb-label{ position:static; width:auto; height:auto; overflow:visible; clip:auto }
+  .hb-guide-goal{ display:block }
 }
 
 /* Stage overlays. Absolute inside a relative stage, each with its own
@@ -1291,29 +1306,31 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-cams > button{
   font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.08em;
   background:color-mix(in srgb, var(--hb-void) 80%, transparent); color:var(--hb-lit-label);
-  border:1px solid var(--hb-ink-border); padding:var(--hb-s1) var(--hb-s2); cursor:pointer;
+  border:1px solid var(--hb-ink-border); padding:calc(var(--hb-s1) / 2) var(--hb-s1); cursor:pointer;
+  min-width:44px; min-height:44px;
 }
 .hb-cams > button:hover{ color:var(--hb-paper) }
 .hb-cams > button.is-on,.hb-cams > button[aria-pressed="true"]{ color:var(--hb-paper); border-color:var(--hb-paper) }
 .hb-cams > button:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:1px }
-@media(max-width:640px){ .hb-cams > button{ padding:calc(var(--hb-s1) / 2) var(--hb-s1) } }
+@media(min-width:641px){ .hb-cams > button{ padding:var(--hb-s1) var(--hb-s2) } }
+@media(min-width:641px) and (pointer:fine){ .hb-cams > button{ min-width:0; min-height:0 } }
 
 /* Legend. Slot, name and role per material in VT323 on the void; mode
    notes use the lit set. Under 640 px it collapses to slot chips in the
    status strip, never hidden outright. */
-.hb-legend{ display:flex; flex-direction:column; gap:var(--hb-s1); font-family:var(--hb-readout); font-size:15px; color:var(--hb-paper) }
+.hb-legend{ display:none; flex-direction:column; gap:var(--hb-s1); font-family:var(--hb-readout); font-size:15px; color:var(--hb-paper) }
 .hb-legend-item{ display:flex; align-items:center; gap:var(--hb-s2) }
 .hb-legend-sw{ display:inline-block; width:14px; height:14px; flex:0 0 auto; border:1px solid var(--hb-paper); background:var(--hb-mat-color, transparent) }
 .hb-legend-role{ color:var(--hb-lit-label) }
-.hb-legend-chips{ display:none; flex-wrap:wrap; gap:var(--hb-s1) }
+.hb-legend-chips{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) }
 .hb-legend-chip{
   display:inline-flex; align-items:center; gap:var(--hb-s1);
   font-family:var(--hb-readout); font-size:15px; color:var(--hb-paper);
   border:1px solid var(--hb-ink-border); padding:0 var(--hb-s1);
 }
-@media(max-width:640px){
-  .hb-legend{ display:none }
-  .hb-legend-chips{ display:flex }
+@media(min-width:641px){
+  .hb-legend{ display:flex }
+  .hb-legend-chips{ display:none }
 }
 
 /* HUD. Bottom left: stage chips, explode and open sliders, the drive pad. */
@@ -1369,7 +1386,9 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-prow-reset[hidden]{ display:none }
 .hb-prow-why{ flex:1 0 100%; font-family:var(--hb-body); font-size:12px; color:var(--hb-ink-3) }
 .hb-prow.is-disabled .hb-prow-label{ color:var(--hb-ink-4) }
-@media(pointer:coarse){ .hb-prow-reset{ width:44px; height:44px } }
+/* 44 px on phones and touch screens; the 22 px mark only with a fine pointer on a wide screen */
+.hb-prow-reset{ width:44px; height:44px }
+@media(min-width:641px) and (pointer:fine){ .hb-prow-reset{ width:22px; height:22px } }
 
 /* Welcome. The card over the stage centre on first run: tool name, a
    two-line note, the steps, three starts. It takes the pink shadow while
@@ -1392,13 +1411,13 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-welcome h2 span{ color:var(--hb-pink) }
 .hb-welcome h2 span.hb-suffix{ color:var(--hb-ink) }
 .hb-welcome-note{ color:var(--hb-ink-3); margin:var(--hb-s2) 0; font-size:13px }
-.hb-welcome-steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--hb-s3); margin:var(--hb-s3) 0 var(--hb-s4); padding:0; list-style:none }
+.hb-welcome-steps{ display:grid; grid-template-columns:1fr 1fr; gap:var(--hb-s3); margin:var(--hb-s3) 0 var(--hb-s4); padding:0; list-style:none }
 .hb-welcome-steps > li{ border:var(--hb-border) solid var(--hb-ink); padding:var(--hb-s2) }
 .hb-welcome-steps b{ display:block; font-family:var(--hb-readout); font-size:22px; font-weight:400; color:var(--hb-pink) }
 .hb-welcome-steps p{ margin:calc(var(--hb-s1) / 2) 0 0; font-size:12px }
 .hb-welcome-close{ position:absolute; top:var(--hb-s2); right:var(--hb-s2) }
 .hb-welcome .hb-tiles{ grid-template-columns:repeat(auto-fit,minmax(132px,1fr)) }
-@media(max-width:640px){ .hb-welcome-steps{ grid-template-columns:1fr 1fr } }
+@media(min-width:641px){ .hb-welcome-steps{ grid-template-columns:repeat(4,1fr) } }
 
 /* ==========================================================================
    19. AI AND 3D LAYER
@@ -1435,31 +1454,34 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 /* Inline control in a toolbar or a controls row: a utility label, then
    the control. .is-wide takes the whole row (URL fields). */
 .hb-ctl{
-  display:inline-flex; align-items:center; gap:var(--hb-s2); flex:0 0 auto; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:var(--hb-s2); flex:1 1 100%; white-space:nowrap;
   font-family:var(--hb-utility); font-size:11px; font-weight:600;
   text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink-3);
 }
-.hb-ctl > .hb-input,.hb-ctl > .hb-select{ width:auto; min-width:0; text-transform:none; letter-spacing:0; font-weight:400 }
-.hb-ctl > .hb-range{ width:140px }
+.hb-ctl > .hb-input,.hb-ctl > .hb-select{ width:auto; min-width:0; flex:1 1 auto; text-transform:none; letter-spacing:0; font-weight:400 }
+.hb-ctl > .hb-range{ flex:1 1 auto; width:auto; min-width:0 }
 .hb-ctl > .hb-readout{ font-size:17px; color:var(--hb-ink); min-width:4ch; text-align:right }
 .hb-ctl.is-wide{ display:flex; flex:1 1 100%; white-space:normal; min-width:0 }
 .hb-ctl.is-wide > .hb-input{ flex:1 1 auto }
-@media(max-width:640px){
-  .hb-ctl{ flex:1 1 100% }
-  .hb-ctl > .hb-range,.hb-ctl > .hb-select,.hb-ctl > .hb-input{ flex:1 1 auto }
+@media(min-width:641px){
+  .hb-ctl{ flex:0 0 auto }
+  .hb-ctl > .hb-input,.hb-ctl > .hb-select{ flex:0 1 auto }
+  .hb-ctl > .hb-range{ flex:0 1 auto; width:140px }
+  .hb-ctl.is-wide{ flex:1 1 100% }
+  .hb-ctl.is-wide > .hb-input{ flex:1 1 auto }
 }
 
 /* Readout grid. Label and value pairs, many at once: fps, timings, probe
    results. Values are VT323 ink; one value may be the focal pink. */
 .hb-readouts{
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  display:grid; grid-template-columns:minmax(0,1fr);
   gap:0 var(--hb-s5); margin:var(--hb-s2) 0 var(--hb-s5);
 }
 .hb-readouts > .hb-kv{ font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-3) }
 .hb-readouts > .hb-kv:last-child{ border-bottom:1px dashed rgba(26,26,26,.25) }
 .hb-readouts .hb-readout{ color:var(--hb-ink); font-size:18px; text-align:right; overflow-wrap:anywhere }
 .hb-readouts .is-focal .hb-readout,.hb-readouts .hb-readout.is-focal{ color:var(--hb-pink) }
-@media(max-width:640px){ .hb-readouts{ grid-template-columns:1fr } }
+@media(min-width:641px){ .hb-readouts{ grid-template-columns:repeat(auto-fill,minmax(220px,1fr)) } }
 
 /* Gauge rows. Label, a bar, the value: drives, utilities, scores. Ink
    fill on a sunk track; the current row is the one pink. */
@@ -1495,7 +1517,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
    are translucent void so they read on a light or a dark scene. */
 .hb-viewport{
   position:relative; overflow:hidden; width:100%;
-  aspect-ratio:var(--hb-vp-ratio, 16/9); max-height:70vh;
+  aspect-ratio:var(--hb-vp-ratio-sm, 1/1); max-height:62vh; max-height:62svh;
   container-type:inline-size;
   background:var(--hb-void); color:var(--hb-paper);
   border:var(--hb-border) solid var(--hb-ink);
@@ -1510,18 +1532,21 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-viewport > .hb-ov-bl,.hb-viewport > .hb-ov-br{ max-width:calc(100% - 2 * var(--hb-s3)) }
 /* Bottom band: a wrapping row of scene verbs across the foot. */
 .hb-ov-b{
-  left:var(--hb-s3); right:var(--hb-s3); bottom:var(--hb-s3);
+  left:var(--hb-s2); right:var(--hb-s2); bottom:var(--hb-s2);
   flex-direction:row; flex-wrap:wrap; align-items:flex-end; gap:var(--hb-s1) var(--hb-s2);
 }
-@media(max-width:640px){
-  .hb-viewport{ aspect-ratio:var(--hb-vp-ratio-sm, 1/1); max-height:62vh }
-  .hb-viewport.is-fill{ aspect-ratio:auto }
-  .hb-ov-b{ left:var(--hb-s2); right:var(--hb-s2); bottom:var(--hb-s2) }
+@media(min-width:641px){
+  .hb-viewport{ aspect-ratio:var(--hb-vp-ratio, 16/9); max-height:70vh }
+  .hb-viewport.is-fill{ aspect-ratio:auto; max-height:none }
+  .hb-ov-b{ left:var(--hb-s3); right:var(--hb-s3); bottom:var(--hb-s3) }
 }
-/* A narrow viewport stacks the hud figures and shrinks the scene verbs. */
-@container (max-width:560px){
-  .hb-hudstats{ flex-direction:column; align-items:flex-end }
-  .hb-ov-b .hb-btn{ font-size:10px; padding:5px 8px; box-shadow:2px 2px 0 var(--hb-ink) }
+/* A narrow viewport stacks the hud figures and shrinks the scene verbs;
+   from 561 px of viewport width they sit in a row at full size. */
+.hb-hudstats{ flex-direction:column; align-items:flex-end }
+.hb-ov-b .hb-btn{ font-size:10px; padding:5px 8px; box-shadow:2px 2px 0 var(--hb-ink) }
+@container (min-width:561px){
+  .hb-hudstats{ flex-direction:row; align-items:stretch }
+  .hb-ov-b .hb-btn{ font-size:11px; padding:8px 14px; box-shadow:var(--hb-shadow) }
 }
 
 /* Hud stat. fps, frame ms, inference ms on a translucent void plate. The
@@ -1545,8 +1570,9 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   font-family:var(--hb-body); font-size:12px; line-height:1.4; max-width:280px;
   background:color-mix(in srgb, var(--hb-void) 80%, transparent); color:var(--hb-paper);
   border:1px solid var(--hb-ink-border); padding:var(--hb-s1) var(--hb-s2);
+  display:none;
 }
-@media(max-width:640px){ .hb-hudnote{ display:none } }
+@media(min-width:641px){ .hb-hudnote{ display:block } }
 
 /* Viewport cover. Over the whole viewport while it cannot show the scene:
    loading, waiting for a file, no webgpu adapter. Says what and why. */
@@ -1565,7 +1591,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 /* Inset. A picture in picture card on the viewport: the eye view, a
    depth map, a mask. Ink head, the media at its own ratio. */
 .hb-inset{
-  width:min(var(--hb-inset-w), 46cqw); margin:0;
+  width:44cqw; margin:0;
   background:var(--hb-void); color:var(--hb-paper);
   border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
 }
@@ -1576,7 +1602,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 }
 .hb-inset-media{ position:relative; aspect-ratio:var(--hb-inset-ratio, 4/3) }
 .hb-inset-media > canvas,.hb-inset-media > video,.hb-inset-media > img{ position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover }
-@container (max-width:560px){ .hb-inset{ width:44cqw } }
+@container (min-width:561px){ .hb-inset{ width:min(var(--hb-inset-w), 46cqw) } }
 
 /* Bubble. A speech or thought bubble pinned over a point in the scene.
    The page sets left and top in px; the bubble sits above the point. */
@@ -1738,7 +1764,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   flex:1 1 auto; min-height:0; overflow:auto; max-height:var(--hb-chat-h);
   display:flex; flex-direction:column; gap:var(--hb-s3); padding:var(--hb-s3);
 }
-.hb-msg{ display:flex; flex-direction:column; gap:2px; max-width:88%; align-self:flex-start }
+.hb-msg{ display:flex; flex-direction:column; gap:2px; max-width:100%; align-self:flex-start }
 .hb-msg-who{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
 .hb-msg-text{
   font-family:var(--hb-body); font-size:14px; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere;
@@ -1767,13 +1793,14 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   display:flex; align-items:flex-end; gap:var(--hb-s2); flex-wrap:wrap;
   border-top:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-sunk); padding:var(--hb-s2);
 }
-.hb-composer > .hb-textarea{ flex:1 1 220px; min-height:44px; resize:vertical; font-family:var(--hb-body); font-size:14px }
+.hb-composer > .hb-textarea{ flex:1 1 220px; min-height:44px; resize:vertical; font-family:var(--hb-body); font-size:16px }
+@media(min-width:641px) and (pointer:fine){ .hb-composer > .hb-textarea{ font-size:14px } }
 .hb-composer-acts{ display:flex; gap:var(--hb-s2) }
 .hb-chat-key{ display:flex; align-items:center; gap:var(--hb-s2); flex-wrap:wrap; padding:var(--hb-s2); border-bottom:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-chat-key > .hb-ctl{ flex:1 1 220px }
 .hb-chat-key .hb-input{ flex:1 1 auto }
 .hb-chat-key > .hb-readout{ font-size:16px; color:var(--hb-ink-3) }
-@media(max-width:640px){ .hb-msg{ max-width:100% } }
+@media(min-width:641px){ .hb-msg{ max-width:88% } }
 
 /* Transcript. Timed segments: start to end in VT323, the words in
    Special Elite. The segment playing now takes an ink rule and its time
@@ -1843,11 +1870,10 @@ button.hb-tseg:hover{ background:var(--hb-paper-sunk) }
    reason in words, and the measured figure. A summary line above. */
 .hb-checks-sum{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) var(--hb-s4); align-items:center; margin:0 0 var(--hb-s2); font-family:var(--hb-readout); font-size:17px }
 .hb-table.hb-checks td{ vertical-align:top }
-.hb-table.hb-checks td.why{ color:var(--hb-ink-2); overflow-wrap:anywhere; min-width:16ch }
+.hb-table.hb-checks td.why{ color:var(--hb-ink-2); overflow-wrap:anywhere; min-width:16ch; white-space:normal }
 .hb-table.hb-checks td.id{ font-weight:600; white-space:nowrap }
 .hb-table.hb-checks tr.is-fail td.id{ box-shadow:inset 4px 0 0 var(--hb-err) }
 .hb-table.hb-checks tbody tr:hover{ background:inherit }
-@media(max-width:640px){ .hb-table.hb-checks td.why{ white-space:normal } }
 
 /* Table row mark: the rows a step used, such as the recall hits handed
    to the model. An ink rule on the first cell, never pink. */

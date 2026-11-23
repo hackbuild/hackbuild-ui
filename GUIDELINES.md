@@ -421,6 +421,24 @@ rather than the bare mark, no status, no tabs, one pink element which is usually
 the call to action. If the page scrolls, the header shrinks into the ink
 tool-style bar rather than staying tall.
 
+### Mobile first
+
+The class layer is written for a 360 px phone held upright, and every wider
+layout is added with a `min-width` media query or a `min-width` container
+query; no rule in `hackbuild.css` narrows a desktop layout with
+`max-width`. The breakpoints are the ones the system already used: 641 px
+for most of the layer, 761 px for the page nav, 801 px for the playlist,
+821 px for range height and 901 px for the app shell and the header
+tagline. Read every "under 640 px" in this file as the base state.
+
+| Rule | Value |
+|---|---|
+| touch targets | buttons, chips, tabs, icon buttons, cam buttons, the param row reset and ranges are 44 px tall; they compact only at 641 px and up with a fine pointer (ranges at 821 px) |
+| fields | `.hb-input`, `.hb-select`, `.hb-textarea` and the composer are 16 px, so iOS does not zoom on focus; 13 px (composer 14) only at 641 px and up with a fine pointer |
+| safe area | the header, nav, toolbar, status strip and shell pad by `env(safe-area-inset-*)` when the inset is larger than the gutter; the page sets `viewport-fit=cover` to use it |
+| viewport | square and at most 62svh first, 16 by 9 at 641 px; the hud stacks and the scene verbs shrink until the viewport is 561 px wide |
+| app shell | stacked and scrolling as one page first; pinned work column beside the rail at 901 px |
+
 ### Do not
 
 Put connect, save or export in the header. Put the mark in the toolbar or the
@@ -638,7 +656,8 @@ inventing a one-off.
 - [ ] One panel-head style throughout, editorial or instrument, not both
 - [ ] On-void text uses the lit set, not the paper signal colors
 - [ ] Header holds no verbs; toolbar holds no branding; status strip holds no buttons
-- [ ] Touch targets 44 px under 640 px and on touch screens
+- [ ] Mobile first: base styles for a 360 px phone, wider layouts only through `min-width` queries
+- [ ] Touch targets 44 px on phones and touch screens, fields 16 px there
 - [ ] No horizontal scroll at 390 px
 - [ ] Icons are Font Awesome or inline SVG
 - [ ] Rendered and looked at in a real browser, not counted headlessly
