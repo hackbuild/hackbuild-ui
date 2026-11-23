@@ -1,6 +1,6 @@
 {
   "name": "@virgilvox/hackbuild-ui",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "The hack.build design system and Vue component library. Paper and ink, one pink, hard shadows, zero radius.",
   "license": "MIT",
   "author": "Moheeb Zara <hackbuildvideo@gmail.com>",
@@ -36,6 +36,9 @@
     "./styles.css": "./dist/styles/hackbuild.css",
     "./tokens.css": "./dist/styles/tokens.css",
     "./fonts.css": "./dist/styles/fonts.css",
+    "./fonts-local.css": "./dist/styles/fonts-local.css",
+    "./fonts-inline.css": "./dist/styles/fonts-inline.css",
+    "./fonts/*": "./dist/styles/fonts/*",
     "./theme.css": "./dist/styles/tailwind.css",
     "./brand/*": "./assets/brand/*"
   },
@@ -43,14 +46,15 @@
     "dev": "vite playground",
     "dev:site": "vite site",
     "build": "vite build && npm run build:styles",
-    "build:styles": "mkdir -p dist/styles && cp src/styles/*.css dist/styles/",
+    "build:styles": "mkdir -p dist/styles && node scripts/gen-fonts.mjs && cp src/styles/*.css dist/styles/ && cp -R src/styles/fonts dist/styles/",
     "build:site": "vite build site",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "preview": "vite preview playground",
     "gen:icons": "node scripts/gen-icons.mjs",
     "test": "node --test \"tools/test/*.test.mjs\"",
     "lint:commits": "node tools/lint-commits.mjs",
-    "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true"
+    "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true",
+    "gen:fonts": "node scripts/gen-fonts.mjs"
   },
   "peerDependencies": {
     "vue": "^3.4.0"

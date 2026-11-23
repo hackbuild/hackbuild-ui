@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hack.build UI ai and 3d classes</title>
+<!-- The class layer alone, the way a vanilla page uses it. Run npm run build,
+     then open this file from disk: no server, no network, no script needed
+     for the look. Fonts come from fonts-inline.css. -->
+<link rel="stylesheet" href="../dist/styles/fonts-inline.css">
+<link rel="stylesheet" href="../dist/styles/hackbuild.css">
+<style>
+  /* layout glue: a work column beside a rail, stacked under 900 px */
+  .pg-work { display: grid; grid-template-columns: minmax(0, 1fr) var(--hb-rail); gap: var(--hb-s5); padding: var(--hb-s4) var(--hb-s5) var(--hb-s6) }
+  .pg-col { min-width: 0; display: flex; flex-direction: column; gap: var(--hb-s4) }
+  .pg-stack { display: flex; flex-direction: column; gap: var(--hb-s2) }
+  @media (max-width: 900px) { .pg-work { grid-template-columns: minmax(0, 1fr) } }
+  @media (max-width: 640px) { .pg-work { padding: var(--hb-s3) var(--hb-s4) var(--hb-s6) } }
+</style>
+</head>
+<body class="hb hb-halftone">
+<header class="hb-header">
+  <h1>hackbuild-motion<span>.</span><span class="hb-suffix">motion-net</span></h1>
+  <span class="hb-pill is-busy">loading</span>
+  <span class="hb-tagline is-tool">the quadruped codebook network against the cpu path</span>
+</header>
+<div class="hb-bar">
+  <label class="hb-ctl is-wide">network json <input class="hb-input" type="url" value="https://huggingface.co/sweriko/quadruped/resolve/main/quadruped.json"></label>
+  <label class="hb-ctl">speed m/s <input class="hb-range" type="range" min="0" max="3" step="0.05" value="1"><span class="hb-readout">1.00</span></label>
+  <label class="hb-ctl">device <select class="hb-select"><option>webgpu if present</option><option>wasm only</option></select></label>
+  <label class="hb-check"><input type="checkbox" checked> foot lock</label>
+  <button class="hb-btn hb-btn-2" type="button" disabled title="the live microphone path is in @hackbuild/listen">microphone: not on this page</button>
+</div>
+<main class="pg-work">
+  <div class="pg-col">
+    <section class="hb-viewport" aria-label="3d view">
+      <canvas id="scene"></canvas>
+      <div class="hb-ov hb-ov-tl">
+        <figure class="hb-inset"><div class="hb-inset-hd"><span>depth</span><span class="hb-hd-aux">depth anything v2 small</span></div><div class="hb-inset-media"><canvas id="depth"></canvas></div></figure>
+      </div>
+      <div class="hb-ov hb-ov-tr">
+        <div class="hb-hudstats">
+          <span class="hb-hudstat"><span class="k">fps</span><b>59.9</b></span>
+          <span class="hb-hudstat is-warn"><span class="k">frame</span><b>24.1</b><span class="u">ms</span></span>
+          <span class="hb-hudstat"><span class="k">infer</span><b>38</b><span class="u">ms</span></span>
+        </div>
+      </div>
+      <div class="hb-ov hb-ov-br"><span class="hb-hudnote">drag to orbit. arrow keys rotate, + and - zoom.</span></div>
+      <div class="hb-ov hb-ov-b">
+        <button class="hb-btn" type="button">throttle the tab to 8 fps for 3 s</button>
+        <button class="hb-btn hb-btn-2" type="button">restart</button>
+      </div>
+      <div class="hb-bubble" style="left: 62%; top: 52%">sniff. sniff.</div>
+      <div class="hb-dropzone is-cover" id="cover">drop quadruped.json, quadruped.bin and bind.json</div>
+    </section>
+    <div class="hb-status is-warn" role="status">weights loaded, sha-256 9b1e77d0a2c4. cc by-nc 4.0: no commercial use.</div>
+    <div class="hb-readouts">
+      <div class="hb-kv"><span>frames (measured)</span><span class="hb-readout">600</span></div>
+      <div class="hb-kv"><span>fps p50 (measured)</span><span class="hb-readout">59.88</span></div>
+      <div class="hb-kv"><span>frame ms p95 (measured)</span><span class="hb-readout">24.10</span></div>
+      <div class="hb-kv"><span>inference ms (measured)</span><span class="hb-readout">38.20</span></div>
+      <div class="hb-kv"><span>max buffer MB (measured)</span><span class="hb-readout">4096</span></div>
+      <div class="hb-kv"><span>device memory GB (vendor)</span><span class="hb-readout">8</span></div>
+    </div>
+    <section class="hb-panel hb-loader">
+      <h3 class="hb-panel-hd-inst">quadruped codebook network <span class="hb-hd-aux">17.7 MB</span></h3>
+      <div class="hb-loader-src">
+        <label class="hb-ctl is-wide">weights <input class="hb-input" type="url" value="https://huggingface.co/sweriko/quadruped/resolve/main/quadruped.bin"></label>
+        <div class="hb-dropzone" id="drop"><span>or drop quadruped.json, quadruped.bin and bind.json here</span><input type="file" multiple aria-label="pick files"></div>
+      </div>
+      <div class="hb-loader-meta">
+        <div class="hb-kv"><span>size</span><span>18 MB, vendor</span></div>
+        <div class="hb-kv"><span>sha-256</span><span class="hb-hash"><span class="hb-hash-hex">3f9a0c21b7e4d0a51e6f0c9d2b8a7e3f5c1d9e0b4a6f8c2d7e1b3a5c9f0d2e4b</span><span class="hb-verdict is-fail">does not match</span></span></div>
+      </div>
+      <div class="hb-licence is-nc">weights <b>CC-BY-NC-4.0</b>, no commercial use. read it before you download.</div>
+      <div class="hb-progress">
+        <div class="hb-progress-hd"><span class="hb-progress-text" role="status">42 percent, 7.4 of 17.7 MB</span><span class="hb-progress-pct">42%</span></div>
+        <div class="hb-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="42"><i style="width: 42%"></i></div>
+      </div>
+      <div class="hb-progress is-busy is-quiet">
+        <div class="hb-progress-hd"><span class="hb-progress-text">bind.json: 0.2 MB, total unknown</span><button class="hb-btn hb-btn-2 hb-btn-sm" type="button">cancel</button></div>
+        <div class="hb-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+      </div>
+      <div class="hb-loader-actions"><button class="hb-btn hb-btn-2" type="button">cancel</button></div>
+      <div class="hb-callout is-err" role="alert">quadruped.bin: sha-256 3f9a0c21b7e4 does not match the known 9b1e77d0a2c4. the file was not used.</div>
+    </section>
+    <section class="hb-chat" aria-label="chat">
+      <div class="hb-chat-log" role="log" aria-live="polite">
+        <div class="hb-msg is-system"><span class="hb-msg-who">note</span><div class="hb-msg-text">webllm 0.2.79: qwen2.5 0.5b, weights Apache-2.0.</div></div>
+        <div class="hb-msg is-user"><span class="hb-msg-who">you</span><div class="hb-msg-text">Name three things to pack for a rainy hike, one line each.</div></div>
+        <div class="hb-msg is-streaming"><span class="hb-msg-who">qwen2.5</span><details class="hb-think"><summary>thinking</summary><pre>short list.</pre></details><div class="hb-msg-text">a hooded rain shell.
+a dry bag</div></div>
+        <div class="hb-msg"><span class="hb-msg-who">qwen2.5</span><div class="hb-msg-text">wool socks</div><span class="hb-msg-note is-err">cut at the token limit.</span></div>
+      </div>
+      <form class="hb-composer" onsubmit="return false"><textarea class="hb-textarea" rows="2" aria-label="message" placeholder="type a message"></textarea><div class="hb-composer-acts"><button class="hb-btn hb-btn-2" type="button">stop</button><button class="hb-btn" type="submit" disabled>send</button></div></form>
+    </section>
+    <div>
+      <div class="hb-checks-sum" role="status"><span>2 pass</span><span>1 fail</span><span>1 not run</span></div>
+      <div class="hb-scroll-x"><table class="hb-table hb-checks">
+        <thead><tr><th>check</th><th>result</th><th>reason</th><th class="num">figure</th></tr></thead>
+        <tbody>
+          <tr><td class="id">webgpu path</td><td><span class="hb-verdict is-pass">pass</span></td><td class="why"></td><td class="num">38 ms (measured)</td></tr>
+          <tr class="is-fail"><td class="id">worker handoff</td><td><span class="hb-verdict is-fail">fail</span></td><td class="why">the gait host kept the network after 3 long frames.</td><td class="num"></td></tr>
+          <tr><td class="id">cpu path</td><td><span class="hb-verdict is-pass">pass</span></td><td class="why"></td><td class="num">212 ms (measured)</td></tr>
+          <tr><td class="id">bind pose</td><td><span class="hb-verdict is-skip">not run</span></td><td class="why">no bind.json given.</td><td class="num"></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <aside class="pg-col">
+    <section class="hb-panel">
+      <h3 class="hb-panel-hd-inst">this browser</h3>
+      <div class="pg-stack">
+        <div class="hb-perm is-missing"><span class="hb-perm-ic">gpu</span><div class="hb-perm-hd"><span class="hb-perm-name">webgpu adapter</span><span class="hb-verdict is-warn">missing</span></div><div class="hb-perm-why">webgpu needs https or localhost. the cpu path runs instead.</div></div>
+        <div class="hb-perm is-denied"><span class="hb-perm-ic">mic</span><div class="hb-perm-hd"><span class="hb-perm-name">microphone</span><span class="hb-verdict is-fail">blocked</span></div><div class="hb-perm-why">no microphone: permission denied.</div><button class="hb-btn hb-btn-2 hb-btn-sm hb-perm-act" type="button">try again</button></div>
+      </div>
+    </section>
+    <section class="hb-panel">
+      <h3 class="hb-panel-hd-inst">models</h3>
+      <ul class="hb-models" role="listbox" aria-label="models">
+        <li class="hb-model" role="option" aria-selected="true"><span class="hb-model-name">qwen2.5 0.5b</span><button class="hb-btn hb-btn-2 hb-btn-sm" type="button">in use</button><span class="hb-model-meta">945 MB, vendor. webgpu or wasm</span><span class="hb-model-lic">weights Apache-2.0, commercial use allowed</span></li>
+        <li class="hb-model" role="option" aria-selected="false" aria-disabled="true"><span class="hb-model-name">sd-turbo</span><button class="hb-btn hb-btn-2 hb-btn-sm" type="button" disabled>use</button><span class="hb-model-meta">2.6 GB, vendor. webgpu</span><span class="hb-model-lic">weights Stability AI Community License, no commercial use</span><span class="hb-model-why">no webgpu adapter. this model needs it.</span></li>
+      </ul>
+    </section>
+    <section class="hb-panel">
+      <h3 class="hb-panel-hd-inst">drives <span class="hb-hd-aux">need 0..1</span></h3>
+      <div class="hb-gauges">
+        <div class="hb-gauge"><span class="hb-gauge-label">hunger</span><div class="hb-meter"><i style="width: 42%"></i></div><span class="hb-gauge-value">0.42</span></div>
+        <div class="hb-gauge"><span class="hb-gauge-label">play</span><div class="hb-meter"><i style="width: 71%"></i></div><span class="hb-gauge-value">0.71</span></div>
+      </div>
+    </section>
+    <section class="hb-panel">
+      <h3 class="hb-panel-hd-inst">transcript</h3>
+      <ol class="hb-transcript">
+        <li><div class="hb-tseg"><span class="hb-tseg-t">0.00 to 1.84</span><span class="hb-tseg-text">The kettle is on.</span></div></li>
+        <li><div class="hb-tseg is-partial"><span class="hb-tseg-t">1.84 to 2.60</span><span class="hb-tseg-text">Pour the</span></div></li>
+      </ol>
+      <div style="height: var(--hb-s2)"></div>
+      <div class="hb-heard">sit</div>
+      <div style="height: var(--hb-s2)"></div>
+      <div class="hb-wave" role="img" aria-label="mic level"><canvas id="wave"></canvas><span class="hb-wave-label">mic level</span><span class="hb-wave-value">-18 dB</span><span class="hb-wave-head" style="--hb-at: .4"></span></div>
+    </section>
+    <section class="hb-panel">
+      <h3 class="hb-panel-hd-inst">associations</h3>
+      <div class="hb-scroll-x"><table class="hb-heat">
+        <thead><tr><th></th><th scope="col">sit</th><th scope="col">spin</th><th scope="col">fetch</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">sit</th><td class="is-hi" style="--v: .82">0.82</td><td style="--v: .05">0.05</td><td style="--v: .1">0.10</td></tr>
+          <tr><th scope="row">fetch</th><td style="--v: 0">0.00</td><td style="--v: .12">0.12</td><td class="is-hi" style="--v: .91">0.91</td></tr>
+        </tbody>
+      </table></div>
+      <div class="hb-feeds">
+        <figure class="hb-feed is-pixel"><canvas width="32" height="16"></canvas><figcaption>scent left</figcaption></figure>
+        <figure class="hb-feed is-pixel"><canvas width="32" height="16"></canvas><figcaption>scent right</figcaption></figure>
+      </div>
+    </section>
+  </aside>
+</main>
+<footer class="hb-statusbar"><span>frames 600</span><span>fps 59.9</span><span class="hb-tag is-lit-warn">frame budget missed</span></footer>
+<script>
+  // scene fill so the hud reads over a light scene; drawing only
+  for (const id of ['scene', 'depth', 'wave']) {
+    const c = document.getElementById(id), g = c.getContext('2d');
+    c.width = c.clientWidth; c.height = c.clientHeight;
+    if (id === 'scene') { g.fillStyle = '#eef2ef'; g.fillRect(0, 0, c.width, c.height); g.fillStyle = '#1a1a1a'; g.fillRect(c.width * .55, c.height * .55, 90, 34) }
+    if (id === 'depth') for (let x = 0; x < c.width; x++) { const v = Math.round(255 * x / c.width); g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(x, 0, 1, c.height) }
+    if (id === 'wave') { g.fillStyle = '#FE0386'; for (let x = 0; x < c.width; x += 3) { const h = Math.abs(Math.sin(x / 9)) * c.height * .7; g.fillRect(x, c.height - h, 2, h) } }
+  }
+  const zone = document.getElementById('drop');
+  zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('is-over') });
+  zone.addEventListener('dragleave', () => zone.classList.remove('is-over'));
+  zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('is-over') });
+</script>
+</body>
+</html>

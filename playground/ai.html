@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>hack.build UI ai and 3d layer</title>
+  <style>
+    /* layout glue for the ai and 3d page: a work column beside a rail, stacked under 900 px */
+    html, body { margin: 0 }
+    .pg-ai { display: flex; flex-direction: column; min-height: 100vh }
+    .pg-work { display: grid; grid-template-columns: minmax(0, 1fr) var(--hb-rail); gap: var(--hb-s5); padding: var(--hb-s4) var(--hb-s5) var(--hb-s6) }
+    .pg-col { min-width: 0; display: flex; flex-direction: column; gap: var(--hb-s4) }
+    @media (max-width: 900px) { .pg-work { grid-template-columns: minmax(0, 1fr) } }
+    @media (max-width: 640px) { .pg-work { padding: var(--hb-s3) var(--hb-s4) var(--hb-s6) } }
+  </style>
+</head>
+<body class="hb hb-halftone">
+  <div id="app"></div>
+  <script type="module" src="/src/ai.ts"></script>
+</body>
+</html>

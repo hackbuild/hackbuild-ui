@@ -160,3 +160,6 @@ overlay always sits on top; it is texture, not chrome.
 | `--hb-wide` | `1180px` | app and page shells |
 | `--hb-rail` | `336px` | bench rail beside the stage |
 | `--hb-tray` | `210px` | bench tray under the stage |
+| `--hb-inset-w` | `320px` | picture in picture card on a viewport, at most 46 percent of it |
+| `--hb-wave-h` | `72px` | audio strip height |
+| `--hb-chat-h` | `360px` | chat log and transcript scroll ceiling |

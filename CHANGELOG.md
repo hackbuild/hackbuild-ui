@@ -1,6 +1,33 @@
 # Changelog
 
-## 0.3.0 (unreleased)
+## 0.4.0
+
+- The ai and 3d layer, GUIDELINES.md 1.4 section 10, with its classes in
+  section 19 of `hackbuild.css`: viewport with hud slots, bottom band,
+  cover, inset and speech bubble; hud stats and notes; drop zone;
+  progress with indeterminate, paused, done and failed states; verdict
+  tags, hash line and licence line; model loader and model list;
+  permission and capability states; chat and composer; timed transcript
+  and heard line; audio strip; check table; readout grid; gauge rows;
+  status line; inline toolbar control; feeds; heat table; table row marks.
+- Vue components over those classes: HbViewport, HbHudStat, HbInset,
+  HbBubble, HbDropzone, HbProgress, HbHash, HbLicence, HbVerdict,
+  HbLoader, HbModelList, HbPermission, HbChat, HbTranscript, HbWave,
+  HbChecks, HbStatusLine, HbReadouts and HbGauges. HbPill `busy`.
+- Self-hosted fonts: the five faces as woff2 (latin subset, Fontsource
+  5.3.0) with their licence texts, `fonts-local.css`, and
+  `fonts-inline.css` for pages opened from `file://`. Exports
+  `./fonts-local.css`, `./fonts-inline.css` and `./fonts/*`.
+- Tokens `--hb-inset-w`, `--hb-wave-h`, `--hb-chat-h`.
+- Icons `microphone`, `microphone-slash`, `camera`, `video-slash`,
+  `file-arrow-up`, `paper-plane`, `shield-halved`, `fingerprint`.
+- An instrument head on an `h2` or `h3` keeps VT323 and its full-bleed
+  margins; `.hb-hd-aux` puts a quieter value at its right end.
+- `docs/consumers-ai-3d.md`, the element map for the ai and 3d consumers.
+- `playground/ai.html` drives the layer; `playground/ai-static.html` is
+  the same layer as plain classes, opened from disk after a build.
+
+## 0.3.0
 
 - The bench layer, GUIDELINES.md 1.3 section 9: HbSteps, HbGuide,
   HbStageOverlay, HbMaterials, HbParamRow and HbWelcome, with their

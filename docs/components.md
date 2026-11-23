@@ -797,6 +797,140 @@ HbSeg by `type`. `class: hb-prow`
 Emits `touch(value)` on each range input (preview only), `commit(value)`
 when the value settles, and `reset(value)`.
 
+## AI and 3D layer
+
+GUIDELINES.md section 10. Every component binds to a class that also works
+alone in a vanilla page; `playground/ai-static.html` shows the markup.
+
+### HbViewport
+
+The stage for a scene. Slots `default` (the canvas), `tl`, `tr`, `bl`,
+`br`, `b` (the bottom band of verbs), `center` and `cover`.
+`class: hb-viewport`
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `aspect` | `string` | `'16/9'` | any CSS ratio, or `'fill'` for the parent's height; square under 640 px |
+| `quiet` | `boolean` | `false` | drops the pink shadow while another element holds it |
+| `label` | `string` | `''` | accessible name of the scene |
+| `coverTitle`, `coverNote` | `string` | `''` | shows the cover while the scene cannot show |
+| `coverError` | `boolean` | `false` | the note takes the lit error color and the cover becomes an alert |
+
+### HbHudStat
+
+`label`, `value` (number or string), `unit`, `state` (`'none' \| 'warn' \| 'err'`),
+`digits` (default 1). Wrap several in `.hb-hudstats`. `class: hb-hudstat`
+
+### HbInset
+
+`title`, `aux`, `ratio` (default `'4/3'`); the default slot is the media,
+the `head` slot replaces `aux`. `class: hb-inset`
+
+### HbBubble
+
+`x`, `y` in px from the viewport's corner, `text` or the default slot,
+`ink`, `show`. `class: hb-bubble`
+
+### HbDropzone
+
+`hint`, `accept`, `multiple`, `disabled`, `label` (the pick button), and
+`cover`, which hides the zone until a file hovers its parent. Emits
+`files(File[])`. `class: hb-dropzone`
+
+### HbProgress
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `loaded` | `number` | `0` | bytes |
+| `total` | `number \| null` | `null` | null shows the indeterminate bar and `MB, total unknown` |
+| `state` | `'idle' \| 'running' \| 'paused' \| 'done' \| 'failed'` | `'running'` | |
+| `error` | `string` | `''` | named after `download failed.` |
+| `text` | `string` | `''` | replaces the built words |
+| `quiet` | `boolean` | `false` | a second download at once: paper fill |
+| `actions` | `boolean` | `true` | cancel while running, resume when paused or failed |
+
+Emits `cancel` and `resume`. `class: hb-progress`
+
+### HbHash, HbLicence, HbVerdict
+
+HbHash: `hex`, `expected`, `checking`; picks the verdict itself.
+HbLicence: `licence`, `commercial` (`true`, `false`, `null`), `what`
+(default `'weights'`), `href`, a slot for the rest of the notice.
+HbVerdict: `status` (`'pass' \| 'fail' \| 'not run' \| 'running' \| 'warn'`),
+`text`. `class: hb-hash, hb-licence, hb-verdict`
+
+### HbLoader
+
+The model loader panel: URL, drop zone, size, hash, licence, progress,
+actions, error. `v-model:url`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `title` (required) | `string` | | |
+| `instrument` | `boolean` | `false` | instrument head; match the page |
+| `urlLabel`, `dropHint`, `accept`, `multiple` | | | `dropHint` empty hides the zone |
+| `sizeMB`, `sizeSource` | `number \| null`, `'measured' \| 'vendor' \| 'inferred' \| 'unknown'` | `null`, `'unknown'` | |
+| `licence`, `commercial`, `licenceHref` | | | the `licence` slot adds to the line |
+| `sha256`, `expectedSha256`, `hashing` | | | |
+| `loaded`, `total`, `state`, `error` | | | as HbProgress; `idle` hides the progress |
+| `loadLabel` | `string` | `'load'` | the size and licence are added: `load (18 MB, CC-BY-NC-4.0)` |
+
+Emits `load(url)`, `files(File[])`, `cancel`, `resume`. Slot `actions`.
+`class: hb-loader`
+
+### HbModelList
+
+`models` (`HbModelRow[]`, the same shape as ai-elements `modelRows`),
+`v-model` the chosen id, `label`, `empty`. Emits `pick(id)`. A row with a
+`disabled` reason cannot be picked and says why. `class: hb-models`
+
+### HbPermission
+
+`name`, `icon`, `state` (`'checking' \| 'ask' \| 'ok' \| 'denied' \| 'missing'`),
+`reason` or the default slot, `stateText`, `action`. Emits `act`.
+`class: hb-perm`
+
+### HbChat
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `lines` (required) | `HbChatLine[]` | | `role`, `text`, `think`, `done` (false while streaming), `note`, `error` |
+| `streaming` | `boolean` | `false` | shows stop, holds send |
+| `disabled` | `boolean` | `false` | no model loaded |
+| `keyField` | `boolean` | `false` | api key field; `v-model:api-key`, shown masked |
+| `userName`, `assistantName` | `string` | `'you'`, `'model'` | |
+| `v-model:draft` | `string` | | |
+
+Emits `send(text)` and `stop`. Enter sends, Shift Enter adds a line. The
+log follows the newest line unless the reader scrolled up. `class: hb-chat`
+
+### HbTranscript
+
+`segments` (`start`, `end`, `text`, `partial`), `now` in seconds,
+`seekable` (segments become buttons that emit `seek(start)`), `label`,
+`empty`. `class: hb-transcript`
+
+### HbWave
+
+`label`, `value`, `at` (playhead 0 to 1), `samples` (-1 to 1, drawn in the
+pink trace), `bars` (level history from the floor), `off`. Leave
+`samples` empty and put your own canvas in the default slot to draw it
+yourself. Exposes `draw()`. `class: hb-wave`
+
+### HbChecks
+
+`rows` (`id`, `status`, `reason`, `value`), `caption`. Counts pass, fail,
+not run and running above the table. `class: hb-checks`
+
+### HbStatusLine, HbReadouts, HbGauges
+
+HbStatusLine: `text` or slot, `kind` (`'none' \| 'ok' \| 'warn' \| 'err' \| 'info' \| 'busy'`).
+HbReadouts: `rows` as `HbReadoutRow[]` or a label to value record, `digits`.
+HbGauges: `rows` (`label`, `value`, `display`, `current`), `max`, `label`.
+`class: hb-status, hb-readouts, hb-gauges`
+
+HbPill also takes `status="busy"`: an ink dot that blinks.
+
 ## Class-only pieces
 
 Some things are positioning-specific decor or one-liners and ship as CSS
@@ -809,6 +943,13 @@ classes without a component:
 | `hb-label`, `hb-readout`, `hb-tagline` | the type roles |
 | `hb-rule`, `hb-rule-hd` | dashed and heavy horizontal rules |
 | `hb-scope` | canvas inside a stage, block and full width |
+| `hb-ctl`, `hb-ctl is-wide` | inline toolbar control: a utility label, then the field |
+| `hb-hudnote` | a hint on a viewport corner, dropped under 640 px |
+| `hb-heard` | the last line a microphone caught; `data-empty` holds the empty text |
+| `hb-feeds`, `hb-feed` | small multiples of a sense or a camera; `is-pixel`, `is-mirror` |
+| `hb-heat` | a strength matrix; each cell sets `--v` from 0 to 1, `is-hi` flips the figure |
+| `hb-hd-aux` | the quieter value at the right end of an instrument head |
+| `hb-table tr.is-mark` | an ink rule on the rows a step used |
 | `hb-halftone`, `hb-graph` | textures. One per artifact, graph only on the void |
 | `hb-scroll-x` | horizontal scroll wrapper for wide content |
 | `hb-stagebar` | ink strip across the top of a paper stage |

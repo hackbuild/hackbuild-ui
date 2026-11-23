@@ -1,6 +1,6 @@
 # hack.build design system
 
-Version 1.3. This document supersedes the hack.build sections of
+Version 1.4. This document supersedes the hack.build sections of
 `hackbuild-explainer`, `brand-forge`, and `board-forge`, and the styling of
 every earlier project (`hack-build`, `hack-build-vue`, `hackbuild-stack`,
 `hackbuild-resume`). Where any of those disagree with this file, this file
@@ -26,6 +26,16 @@ countable, puts the bench verbs on the guide strip, sets ink text on every
 pink fill, adds an ink on-state for toggle chips, and sets 44 px touch
 targets for icon buttons and ranges.
 
+Version 1.4 adds the ai and 3d layer (section 10): the viewport with its
+hud, cover, inset and speech bubble; the drop zone, progress, hash,
+licence line and model loader; the model list and the permission state;
+chat, timed transcripts, the heard line and the audio strip; verdict tags,
+check tables, readout grids, gauge rows, feeds and the heat table. They
+ship as classes that stand alone for vanilla pages and as Vue components.
+It also ships the five faces self-hosted, for pages that open from
+`file://` or run offline, fixes the instrument head on an `h2` or `h3`,
+and adds a busy pill that never spends the pink.
+
 ## What this is
 
 The punk zine language: warm paper, black ink, one hot pink, typewriter type,
@@ -45,6 +55,8 @@ they never mix inside one artifact.
 | `src/styles/hackbuild.css` | The production stylesheet. Every component as plain CSS over the tokens. |
 | `src/styles/tailwind.css` | Tailwind v4 bridge. Maps tokens to theme variables for app code. |
 | `src/styles/fonts.css` | Google Fonts convenience import for the five faces. |
+| `src/styles/fonts/` | The five faces as woff2 (latin subset, Fontsource 5.3.0) with their Apache-2.0 and OFL-1.1 licence texts. |
+| `src/styles/fonts-local.css` | `@font-face` over `./fonts/`. The build also writes `fonts-inline.css`, the same faces as data urls for `file://` and offline pages. |
 | `src/components/` | Vue 3 components, Hb prefix. Behavior only; they bind to the classes here and carry no styles of their own. |
 | `src/composables/` | useToast. |
 | `assets/brand/hackbuild-mark.svg` | Canonical two-path mark, arc in ink. |
@@ -222,10 +234,10 @@ The budget is countable. Every pink element in a view falls in one class:
 
 | Class | Allowed pink | Counts against the one |
 |---|---|---|
-| structural | header bottom rule, current tab or step underline, wordmark dot and `build`, the stage pink shadow, range accent-color, focus ring | no |
-| focal | the primary action of the current pane, or the one live value the step is about, or the welcome primary start | yes, exactly one per view |
-| data | the primary part color on the stage, the trace on a scope | no, it is data on the void |
-| never pink | toggle chips (ink fill when on), secondary buttons, cam buttons (current cam outlined in paper), status tags (slime when good, lit warn when not), card borders | |
+| structural | header bottom rule, current tab or step underline, wordmark dot and `build`, the stage or viewport pink shadow, range accent-color, focus ring, the drop zone dashes while a file hovers | no |
+| focal | the primary action of the current pane, or the one live value the step is about, or the welcome primary start; in the ai and 3d layer the running download, the current gauge row, the transcript segment playing now, or a readout marked focal | yes, exactly one per view |
+| data | the primary part color on the stage, the trace on a scope, the trace in an audio strip | no, it is data on the void |
+| never pink | toggle chips (ink fill when on), secondary buttons, cam buttons (current cam outlined in paper), status tags (slime when good, lit warn when not), card borders, busy pills and verdict tags, hud stats, the chosen model row, the person's chat turns, the streaming caret | |
 
 The hackbuild-fab bench smoke test (`tools/smoke/pink.ts` in that
 repository) counts the elements in a view whose computed background or
@@ -487,6 +499,19 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-mat` | Materials panel rows: swatch, extruder, material, parts, role |
 | `.hb-prow` | Bench param row: label column, control, paired number, unit, reset mark. `.hb-row` keeps its list meaning |
 | `.hb-welcome` | First-run card over the stage centre. `.hb-card` keeps its hover-card meaning |
+| `.hb-viewport` | The stage for a 3D scene, a camera or a canvas sim: canvas fills it, hud slots on top, square under 640 px (section 10) |
+| `.hb-hudstat` / `.hb-hudnote` / `.hb-vp-cover` | Hud figures (fps, frame ms), a hud hint, and the cover that says why the scene cannot show (section 10) |
+| `.hb-inset` / `.hb-bubble` | Picture in picture card on a viewport; speech bubble pinned to a point in the scene (section 10) |
+| `.hb-dropzone` | Drop a file or pick one. `.is-cover` spreads over a viewport while a file hovers (section 10) |
+| `.hb-progress` | Download or long task: words, figure, one action, the meter; indeterminate, paused, done, failed (section 10) |
+| `.hb-verdict` / `.hb-hash` / `.hb-licence` | Result tags, the SHA-256 line, the weight licence line (section 10) |
+| `.hb-loader` / `.hb-models` | The model loader panel and the model list with the reason a device cannot run one (section 10) |
+| `.hb-perm` | Permission and capability state: microphone, camera, webgpu adapter, storage (section 10) |
+| `.hb-chat` / `.hb-msg` / `.hb-composer` | Chat transcript and composer with streaming, think text and notes (section 10) |
+| `.hb-transcript` / `.hb-tseg` / `.hb-heard` | Timed transcript segments and the last line a microphone caught (section 10) |
+| `.hb-wave` | Audio strip on the void: waveform or level history, label, figure, playhead (section 10) |
+| `.hb-checks` / `.hb-readouts` / `.hb-gauges` | Check result table, readout grid, gauge rows (section 10) |
+| `.hb-status` / `.hb-ctl` / `.hb-feeds` / `.hb-heat` | Status line, inline toolbar control, small multiples, heat table (section 10) |
 
 Status pills must always declare their own color. A pill inheriting paper text
 onto a light panel became unreadable once; `.hb-pill` sets `color` explicitly
@@ -617,6 +642,8 @@ inventing a one-off.
 - [ ] No horizontal scroll at 390 px
 - [ ] Icons are Font Awesome or inline SVG
 - [ ] Rendered and looked at in a real browser, not counted headlessly
+- [ ] A page that opens from `file://` or runs offline loads `fonts-inline.css`, never Google Fonts
+- [ ] Every failure, missing device and refused permission names itself in words (section 10)
 
 ---
 
@@ -712,3 +739,109 @@ These were written in as defaults and stand until the owner rules.
 | graph rule | 32 px at 10 percent pink for new work; benches shipped with 26 px keep it until rebaked |
 | chip on-state | ink fill for toggles inside a bench, pink fill only for the primary selection of a step |
 | text on pink | ink |
+
+---
+
+## 10. AI and 3D layer
+
+A page that runs a model or a scene in the tab: a viewport with a hud, a
+model that comes from a URL or a dropped file, a permission the browser
+may refuse, a chat or a transcript, timings and check results. The
+hackbuild-motion, hackbuild-browser-ai and hackbuild-agents example pages,
+the ai-elements web components and the dog-simulator view all built these
+separately. `docs/consumers-ai-3d.md` maps each of their elements to a
+class here. Spacing reads the 4 px scale.
+
+Every class stands alone: a vanilla page gets the whole look from
+`hackbuild.css` and its own markup. The Vue components add behavior only
+(drag and drop, Enter to send, follow the newest line, progress words).
+
+### Regions
+
+| Region | Surface | Holds | Class, component |
+|---|---|---|---|
+| controls | the toolbar, sunk paper | inline controls: a utility label, then the field, range with its VT323 figure, or select; URL fields take the whole row | `.hb-bar`, `.hb-ctl`, `.hb-ctl.is-wide` |
+| viewport | the void, pink shadow, 16 by 9, square under 640 px | the canvas, video or image filling it; hud slots | `.hb-viewport`, HbViewport |
+| status line | under the controls or the viewport | one sentence in Special Elite with a square marker: ok, warn, err, info, busy | `.hb-status`, HbStatusLine |
+| readouts | under the status line | label and value pairs in a grid, values VT323 ink; the label carries the source word (measured, computed, vendor, inferred) | `.hb-readouts`, HbReadouts |
+| rail | raised panels beside or under the viewport | loader, permissions, gauges, transcript, audio | `.hb-panel` with one head style |
+
+### Viewport slots
+
+The viewport reuses the stage overlay corners (section 9) and adds a bottom
+band and a cover.
+
+| Slot | Where | Content |
+|---|---|---|
+| top left | `.hb-ov-tl` | the inset: eye view, depth map, mask |
+| top right | `.hb-ov-tr` | hud stats: fps, frame ms, inference ms; they stack under a 560 px wide viewport |
+| bottom left, right | `.hb-ov-bl`, `.hb-ov-br` | hud notes, a busy readout |
+| bottom band | `.hb-ov-b` | the scene verbs as a wrapping row of buttons; one ink primary, the rest secondary |
+| centre | `.hb-ov-c` | a card that needs the scene behind it |
+| cover | `.hb-vp-cover` | loading, waiting for a file, no adapter: a marker title, a Special Elite note in lit label or lit error, and a spinner or a progress |
+| bubble | `.hb-bubble`, placed by the page in px | speech or a thought over a point in the scene; `.is-ink` for the second speaker |
+| file cover | `.hb-dropzone.is-cover` | hidden until a file hovers the viewport |
+
+The scene draws its own background and stays brightly lit (section 6). Hud
+plates are void at 80 percent so they read on a light or a dark scene. No
+texture inside the viewport.
+
+### Primitives
+
+| Primitive | Values |
+|---|---|
+| hud stat | VT323 16 px, key in lit label caps, figure paper, unit lit label 13 px; lit warn on a missed frame budget, lit error on a stall |
+| inset | `--hb-inset-w` 320 px, at most 46 percent of the viewport (44 under 560 px); VT323 15 px head on ink with the quieter value at the right |
+| drop zone | sunk paper, 2 px dashed ink 4, Special Elite 13 px; the pick button is a secondary small button; dashes go pink only while a file hovers |
+| progress | words in Plex 11.5 px, the percent in VT323 18 px, one action; the meter is the ink track; indeterminate is a 30 percent block stepping across, still under reduced motion; paused ink 4, done slime, failed lit error |
+| hash | Plex 12 px hex cut with an ellipsis, then a verdict: hashing, not hashed, no known hash (warn), matches (pass), does not match (fail) |
+| licence line | 4 px ink rule on sunk paper, Plex 11.5 px: what it covers, the licence in bold, the commercial terms; the rule goes warn when commercial use is not allowed |
+| verdict | Plex 10 px caps, 1 px outline in the signal color; dashed for not run, a blinking square for running; the lit set on ink and the void |
+| model row | name in Plex 700, size with its source word and the devices, licence, then the reason in Special Elite warn when this device cannot run it; the chosen row takes a 4 px ink rule |
+| permission | raised paper, 6 px left rule in the state color (ok, info for not asked, err for blocked, warn for missing), icon, name in Plex caps, a verdict, the reason in Special Elite, one action |
+| chat | messages in Special Elite 14 px; the person's turns ink plates on the right, the model's paper on the left, notes dashed; role in Plex 10 px caps; think text folded; streaming ends in a blinking ink block; composer on sunk paper, Enter sends, Shift Enter adds a line |
+| transcript | `start to end` in VT323 16 px, words in Special Elite; the segment playing now takes an ink rule and a pink time; a partial line stays ink 3 |
+| heard | VT323 19 px on sunk paper, the empty text from `data-empty` |
+| audio strip | `--hb-wave-h` 72 px of void, 2 px ink border, no pink shadow; the trace is data and may be pink; paper playhead; dimmed when the source is off |
+| gauge row | 96 px label column, an ink bar on a sunk track, VT323 figure; the current row bold with the one pink bar |
+| check table | `.hb-table` with a summary in VT323 above; failed rows take a 4 px error rule on the id cell; the reason in words; the figure carries its source word |
+| heat table | each cell sets `--v` from 0 to 1, ink mixed into raised paper; `.is-hi` flips the figure to paper |
+
+### Copy
+
+Copy follows section 7 and names the failure. The consumer pages already
+write it this way, and the components build their words the same way:
+
+| State | Words |
+|---|---|
+| download, total known | `42 percent, 7.4 of 17.7 MB` |
+| download, total unknown | `0.2 MB, total unknown` |
+| download, failed | `download failed.` then the error |
+| no adapter | `no webgpu adapter. this model needs it.` |
+| no isolation | `the page is not cross origin isolated` |
+| hash mismatch | `sha-256 3f9a0c21b7e4 does not match the known 9b1e77d0a2c4. the file was not used.` |
+| licence | `weights CC-BY-NC-4.0, no commercial use.` |
+| chat stopped | `stopped.`, `cut at the token limit.`, `no model loaded. pick one first.` |
+| api key | `stays in this tab, never stored`, shown as its first and last 4 characters |
+
+### Mobile
+
+| Rule | Value |
+|---|---|
+| viewport | square under 640 px (`--hb-vp-ratio-sm`), at most 62vh; hud stats stack and the bottom band shrinks under 560 px of viewport width |
+| hud notes | dropped under 640 px |
+| controls | each inline control takes its own row under 640 px |
+| readouts | one column under 640 px |
+| permission | the action stays beside the name; the reason wraps under both |
+| chat | messages take the full width under 640 px |
+| tables | scroll inside their panel, never the page |
+
+### Defaults the owner may change
+
+| Item | Default |
+|---|---|
+| dark or low light | none. This file defines no dark palette, so the layer ships none; a consumer theme switch drops to the paper system |
+| viewport aspect | 16 by 9, square under 640 px |
+| focal pink in a model view | the running download |
+| chat faces | Special Elite for both speakers; code in a reply stays a `pre` block |
+| fonts for offline pages | `fonts-inline.css`, latin subset only |

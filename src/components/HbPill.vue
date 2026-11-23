@@ -3,8 +3,9 @@ import { computed } from 'vue'
 import { cx } from '../utils/cx'
 
 interface Props {
-  /** live pulses pink. The pill shows the connection, not the task. */
-  status?: 'none' | 'live' | 'ok' | 'warn' | 'err'
+  /** live pulses pink. The pill shows the connection, not the task.
+      busy blinks an ink dot: a task running, never pink. */
+  status?: 'none' | 'live' | 'ok' | 'warn' | 'err' | 'busy'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,6 +18,7 @@ const classes = computed(() =>
     'is-ok': props.status === 'ok',
     'is-warn': props.status === 'warn',
     'is-err': props.status === 'err',
+    'is-busy': props.status === 'busy',
   }),
 )
 </script>

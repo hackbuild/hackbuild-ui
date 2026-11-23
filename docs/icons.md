@@ -34,7 +34,7 @@ Solid, by group:
 | bench verbs | undo, redo, folder-open, floppy-disk |
 | state | eye, heart, star, bookmark, lock, warning, info, question, bell |
 | people | user, users, comment, envelope |
-| things | wrench, screwdriver-wrench, hammer, gear, bolt, cube, microchip, robot, plug, folder, book, newspaper, image, video, display, printer, lightbulb, flame, rocket, gamepad, palette, layer-group |
+| things | wrench, screwdriver-wrench, hammer, gear, bolt, cube, microchip, robot, plug, folder, book, newspaper, image, video, video-slash, camera, microphone, microphone-slash, file-arrow-up, paper-plane, shield-halved, fingerprint, display, printer, lightbulb, flame, rocket, gamepad, palette, layer-group |
 | recognition | trophy, medal, certificate, graduation-cap |
 | instruments | code, terminal, wave, signal, globe, play, circle-play, pause, record, backward, forward, repeat, rss, list-check |
 | time and place | clock, calendar, pin, menu, sun, wand |

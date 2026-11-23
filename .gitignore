@@ -13,3 +13,5 @@ coverage/
 .env.*
 !.env.example
 *.key
+# playground screenshots
+playground/shots/

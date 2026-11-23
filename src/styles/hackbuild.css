@@ -1,6 +1,6 @@
 /* ==========================================================================
    hack.build design system
-   Version 1.3
+   Version 1.4
 
    One accent. Paper and ink. Four faces with four jobs. Hard shadows, no blur,
    no radius. Everything here is derived from the favicon and from tools that
@@ -1399,3 +1399,475 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-welcome-close{ position:absolute; top:var(--hb-s2); right:var(--hb-s2) }
 .hb-welcome .hb-tiles{ grid-template-columns:repeat(auto-fit,minmax(132px,1fr)) }
 @media(max-width:640px){ .hb-welcome-steps{ grid-template-columns:1fr 1fr } }
+
+/* ==========================================================================
+   19. AI AND 3D LAYER
+   The pieces of a page that runs a model or a 3D scene in the tab: the
+   viewport with its hud, the model loader, permission and capability
+   states, chat, timed transcripts, audio strips, check results, readout
+   grids and gauge rows. Taken from the hackbuild-motion,
+   hackbuild-browser-ai and hackbuild-agents example pages and the
+   dog-simulator view; docs/consumers-ai-3d.md maps each element.
+   Every class stands alone for vanilla pages; the Vue components bind to
+   them. GUIDELINES 10 holds the rules and the pink budget.
+   ========================================================================== */
+
+/* Status line. One sentence under the controls that says what the page is
+   doing or what failed. Special Elite, a square marker by kind. */
+.hb-status{
+  display:flex; align-items:baseline; gap:var(--hb-s2);
+  font-family:var(--hb-body); font-size:13px; line-height:1.5;
+  color:var(--hb-ink-2); min-height:1.5em; margin:var(--hb-s2) 0;
+}
+.hb-status::before{
+  content:""; width:8px; height:8px; flex:0 0 auto; align-self:center;
+  background:var(--hb-ink-4);
+}
+.hb-status:empty::before{ display:none }
+.hb-status.is-ok::before{ background:var(--hb-ok) }
+.hb-status.is-warn{ color:var(--hb-warn) }
+.hb-status.is-warn::before{ background:var(--hb-warn) }
+.hb-status.is-err{ color:var(--hb-err) }
+.hb-status.is-err::before{ background:var(--hb-err) }
+.hb-status.is-info::before{ background:var(--hb-info) }
+.hb-status.is-busy::before{ background:var(--hb-ink); animation:hb-blink 1s infinite }
+
+/* Inline control in a toolbar or a controls row: a utility label, then
+   the control. .is-wide takes the whole row (URL fields). */
+.hb-ctl{
+  display:inline-flex; align-items:center; gap:var(--hb-s2); flex:0 0 auto; white-space:nowrap;
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink-3);
+}
+.hb-ctl > .hb-input,.hb-ctl > .hb-select{ width:auto; min-width:0; text-transform:none; letter-spacing:0; font-weight:400 }
+.hb-ctl > .hb-range{ width:140px }
+.hb-ctl > .hb-readout{ font-size:17px; color:var(--hb-ink); min-width:4ch; text-align:right }
+.hb-ctl.is-wide{ display:flex; flex:1 1 100%; white-space:normal; min-width:0 }
+.hb-ctl.is-wide > .hb-input{ flex:1 1 auto }
+@media(max-width:640px){
+  .hb-ctl{ flex:1 1 100% }
+  .hb-ctl > .hb-range,.hb-ctl > .hb-select,.hb-ctl > .hb-input{ flex:1 1 auto }
+}
+
+/* Readout grid. Label and value pairs, many at once: fps, timings, probe
+   results. Values are VT323 ink; one value may be the focal pink. */
+.hb-readouts{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:0 var(--hb-s5); margin:var(--hb-s2) 0 var(--hb-s5);
+}
+.hb-readouts > .hb-kv{ font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-3) }
+.hb-readouts > .hb-kv:last-child{ border-bottom:1px dashed rgba(26,26,26,.25) }
+.hb-readouts .hb-readout{ color:var(--hb-ink); font-size:18px; text-align:right; overflow-wrap:anywhere }
+.hb-readouts .is-focal .hb-readout,.hb-readouts .hb-readout.is-focal{ color:var(--hb-pink) }
+@media(max-width:640px){ .hb-readouts{ grid-template-columns:1fr } }
+
+/* Gauge rows. Label, a bar, the value: drives, utilities, scores. Ink
+   fill on a sunk track; the current row is the one pink. */
+.hb-gauges{ display:flex; flex-direction:column; gap:var(--hb-s1) }
+.hb-gauge{
+  display:grid; grid-template-columns:96px minmax(0,1fr) 48px; align-items:center;
+  gap:var(--hb-s2); font-family:var(--hb-utility); font-size:12px;
+}
+.hb-gauge-label{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.hb-gauge > .hb-meter{ height:11px; background:var(--hb-paper-sunk) }
+.hb-gauge > .hb-meter > i{ background:var(--hb-ink) }
+.hb-gauge-value{ font-family:var(--hb-readout); font-size:16px; text-align:right; font-variant-numeric:tabular-nums }
+.hb-gauge.is-cur .hb-gauge-label{ font-weight:700 }
+.hb-gauge.is-cur > .hb-meter > i{ background:var(--hb-pink) }
+
+/* Instrument head on an h2 or h3. `.hb h3` sets the marker face and a zero
+   margin at a higher specificity, so the head restates its own. */
+.hb h2.hb-panel-hd-inst,.hb h3.hb-panel-hd-inst{
+  font-family:var(--hb-readout); font-size:17px; letter-spacing:.06em; line-height:1.3;
+  margin:calc(-1 * var(--hb-s4)) calc(-1 * var(--hb-s5)) var(--hb-s3);
+}
+.hb-panel-hd-inst:has(> .hb-hd-aux){ display:flex; align-items:baseline; gap:var(--hb-s2) }
+/* Instrument head value: the right end of an ink head, quieter. */
+.hb-hd-aux{ margin-left:auto; color:var(--hb-lit-label); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+
+/* Busy pill. The task is running; the dot blinks ink, so a row of busy
+   pills never spends the pink. */
+.hb-pill.is-busy::before{ background:var(--hb-ink); animation:hb-blink 1s infinite }
+
+/* Viewport. The stage for a 3D scene, a camera feed or a canvas sim: the
+   void, the pink shadow, the canvas filling it, hud slots on top. The
+   scene draws its own background and stays brightly lit; the hud plates
+   are translucent void so they read on a light or a dark scene. */
+.hb-viewport{
+  position:relative; overflow:hidden; width:100%;
+  aspect-ratio:var(--hb-vp-ratio, 16/9); max-height:70vh;
+  container-type:inline-size;
+  background:var(--hb-void); color:var(--hb-paper);
+  border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow-pink);
+}
+.hb-viewport.is-fill{ aspect-ratio:auto; max-height:none; height:100% }
+.hb-viewport.is-quiet{ box-shadow:var(--hb-shadow-lg) }
+.hb-viewport > canvas,.hb-viewport > video,.hb-viewport > img,.hb-viewport > .hb-viewport-media{
+  position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none;
+}
+.hb-viewport > video,.hb-viewport > img{ object-fit:contain }
+.hb-viewport > .hb-ov-bl,.hb-viewport > .hb-ov-br{ max-width:calc(100% - 2 * var(--hb-s3)) }
+/* Bottom band: a wrapping row of scene verbs across the foot. */
+.hb-ov-b{
+  left:var(--hb-s3); right:var(--hb-s3); bottom:var(--hb-s3);
+  flex-direction:row; flex-wrap:wrap; align-items:flex-end; gap:var(--hb-s1) var(--hb-s2);
+}
+@media(max-width:640px){
+  .hb-viewport{ aspect-ratio:var(--hb-vp-ratio-sm, 1/1); max-height:62vh }
+  .hb-viewport.is-fill{ aspect-ratio:auto }
+  .hb-ov-b{ left:var(--hb-s2); right:var(--hb-s2); bottom:var(--hb-s2) }
+}
+/* A narrow viewport stacks the hud figures and shrinks the scene verbs. */
+@container (max-width:560px){
+  .hb-hudstats{ flex-direction:column; align-items:flex-end }
+  .hb-ov-b .hb-btn{ font-size:10px; padding:5px 8px; box-shadow:2px 2px 0 var(--hb-ink) }
+}
+
+/* Hud stat. fps, frame ms, inference ms on a translucent void plate. The
+   key is the lit label, the figure paper, a missed budget lit warn. */
+.hb-hudstats{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) }
+.hb-hudstat{
+  display:inline-flex; align-items:baseline; gap:var(--hb-s1);
+  font-family:var(--hb-readout); font-size:16px; line-height:1.1;
+  background:color-mix(in srgb, var(--hb-void) 80%, transparent);
+  border:1px solid var(--hb-ink-border); color:var(--hb-paper);
+  padding:calc(var(--hb-s1) / 2) var(--hb-s2); white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+.hb-hudstat .k{ color:var(--hb-lit-label); text-transform:uppercase }
+.hb-hudstat .u{ color:var(--hb-lit-label); font-size:13px }
+.hb-hudstat.is-warn b{ color:var(--hb-lit-warn) }
+.hb-hudstat.is-err b{ color:var(--hb-lit-err) }
+.hb-hudstat b{ font-weight:400 }
+/* A plain note in a hud corner: hints, the orbit keys. */
+.hb-hudnote{
+  font-family:var(--hb-body); font-size:12px; line-height:1.4; max-width:280px;
+  background:color-mix(in srgb, var(--hb-void) 80%, transparent); color:var(--hb-paper);
+  border:1px solid var(--hb-ink-border); padding:var(--hb-s1) var(--hb-s2);
+}
+@media(max-width:640px){ .hb-hudnote{ display:none } }
+
+/* Viewport cover. Over the whole viewport while it cannot show the scene:
+   loading, waiting for a file, no webgpu adapter. Says what and why. */
+.hb-vp-cover{
+  position:absolute; inset:0; z-index:20;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:var(--hb-s3); padding:var(--hb-s5); text-align:center;
+  background:color-mix(in srgb, var(--hb-void) 88%, transparent); color:var(--hb-paper);
+}
+.hb-vp-cover[hidden]{ display:none }
+.hb-vp-cover-title{ font-family:var(--hb-display); font-size:26px; line-height:1.1 }
+.hb-vp-cover-note{ font-family:var(--hb-body); font-size:13px; color:var(--hb-lit-label); max-width:46ch }
+.hb-vp-cover.is-err .hb-vp-cover-note{ color:var(--hb-lit-err) }
+.hb-vp-cover > .hb-progress{ width:min(360px, 100%) }
+
+/* Inset. A picture in picture card on the viewport: the eye view, a
+   depth map, a mask. Ink head, the media at its own ratio. */
+.hb-inset{
+  width:min(var(--hb-inset-w), 46cqw); margin:0;
+  background:var(--hb-void); color:var(--hb-paper);
+  border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
+}
+.hb-inset-hd{
+  font-family:var(--hb-readout); font-size:15px; letter-spacing:.04em; text-transform:uppercase;
+  background:var(--hb-ink); color:var(--hb-paper); padding:2px var(--hb-s2);
+  display:flex; align-items:center; gap:var(--hb-s2);
+}
+.hb-inset-media{ position:relative; aspect-ratio:var(--hb-inset-ratio, 4/3) }
+.hb-inset-media > canvas,.hb-inset-media > video,.hb-inset-media > img{ position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover }
+@container (max-width:560px){ .hb-inset{ width:44cqw } }
+
+/* Bubble. A speech or thought bubble pinned over a point in the scene.
+   The page sets left and top in px; the bubble sits above the point. */
+.hb-bubble{
+  position:absolute; z-index:8; pointer-events:none;
+  transform:translate(-50%, calc(-100% - 10px));
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
+  font-family:var(--hb-body); font-size:14px; line-height:1.35;
+  padding:var(--hb-s1) var(--hb-s2); max-width:280px; width:max-content;
+}
+.hb-bubble::after{
+  content:""; position:absolute; left:50%; bottom:-7px; width:10px; height:10px;
+  background:inherit; border-right:var(--hb-border) solid var(--hb-ink); border-bottom:var(--hb-border) solid var(--hb-ink);
+  transform:translateX(-50%) rotate(45deg);
+}
+.hb-bubble.is-ink{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-bubble[hidden]{ display:none }
+
+/* Drop zone. Drop a file or pick one. The file input lives inside. While
+   a file hovers, the dashes go pink: structural, like the focus ring. */
+.hb-dropzone{
+  display:flex; align-items:center; flex-wrap:wrap; gap:var(--hb-s2) var(--hb-s3);
+  border:var(--hb-border) dashed var(--hb-ink-4); background:var(--hb-paper-sunk);
+  padding:var(--hb-s3); font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-3);
+}
+.hb-dropzone input[type=file]{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-2); max-width:100% }
+.hb-dropzone input[type=file]::file-selector-button{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.09em;
+  background:var(--hb-paper-raised); color:var(--hb-ink); border:var(--hb-border) solid var(--hb-ink);
+  padding:5px 10px; margin-right:var(--hb-s2); cursor:pointer;
+}
+.hb-dropzone-pick{ position:relative; flex:0 0 auto }
+.hb-dropzone-pick > input[type=file]{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
+.hb-dropzone-pick:focus-within{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-dropzone.is-over{ border-color:var(--hb-pink); border-style:dashed; color:var(--hb-ink) }
+/* Cover form: over a whole viewport, shown only while a file hovers. */
+.hb-dropzone.is-cover{
+  position:absolute; inset:0; z-index:30; justify-content:center;
+  border-width:4px; background:color-mix(in srgb, var(--hb-paper) 70%, transparent);
+  font-family:var(--hb-display); font-size:26px; color:var(--hb-ink);
+}
+.hb-dropzone.is-cover:not(.is-over){ display:none }
+
+/* Progress. A download or a long task: what it is doing in words, the
+   figure, one action (cancel or resume), the bar. Pink while it runs,
+   because the running download is the live value of the view; a second
+   one at the same time takes .is-quiet. */
+.hb-progress{ display:flex; flex-direction:column; gap:var(--hb-s1); min-width:0 }
+.hb-progress-hd{ display:flex; align-items:center; gap:var(--hb-s2); min-width:0 }
+.hb-progress-text{ font-family:var(--hb-utility); font-size:11.5px; color:var(--hb-ink-2); flex:1 1 auto; min-width:0; overflow-wrap:anywhere }
+.hb-progress-pct{ font-family:var(--hb-readout); font-size:18px; line-height:1; color:var(--hb-ink); font-variant-numeric:tabular-nums }
+.hb-progress > .hb-meter{ position:relative; overflow:hidden }
+.hb-progress.is-busy > .hb-meter > i{ width:30% !important; animation:hb-sweep 1.4s steps(14) infinite }
+.hb-progress.is-paused > .hb-meter > i{ background:var(--hb-ink-4) }
+.hb-progress.is-done > .hb-meter > i{ background:var(--hb-slime) }
+.hb-progress.is-failed > .hb-meter > i{ background:var(--hb-lit-err) }
+.hb-progress.is-failed .hb-progress-text{ color:var(--hb-err) }
+.hb-progress.is-quiet > .hb-meter > i{ background:var(--hb-paper) }
+@keyframes hb-sweep{ from{ transform:translateX(-100%) } to{ transform:translateX(340%) } }
+.hb-stage .hb-progress-text,.hb-vp-cover .hb-progress-text,.hb-on-ink .hb-progress-text{ color:var(--hb-lit-label) }
+.hb-stage .hb-progress-pct,.hb-vp-cover .hb-progress-pct,.hb-on-ink .hb-progress-pct{ color:var(--hb-paper) }
+.hb-stage .hb-progress > .hb-meter,.hb-vp-cover .hb-progress > .hb-meter{ border-color:var(--hb-ink-border) }
+
+/* Verdict. A static outline tag for a result: pass, fail, not run,
+   running, warn. Signal colors on paper, the lit set on ink and void. */
+.hb-verdict{
+  display:inline-flex; align-items:center; gap:var(--hb-s1); white-space:nowrap;
+  font-family:var(--hb-utility); font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.1em; line-height:1.4;
+  color:var(--hb-ink-3); border:1px solid currentColor; padding:0 6px;
+}
+.hb-verdict.is-pass{ color:var(--hb-ok) }
+.hb-verdict.is-fail{ color:var(--hb-err) }
+.hb-verdict.is-warn{ color:var(--hb-warn) }
+.hb-verdict.is-skip{ color:var(--hb-ink-3); border-style:dashed }
+.hb-verdict.is-run{ color:var(--hb-ink) }
+.hb-verdict.is-run::before{ content:""; width:6px; height:6px; background:currentColor; animation:hb-blink 1s infinite }
+.hb-stage .hb-verdict.is-pass,.hb-on-ink .hb-verdict.is-pass,.hb-vp-cover .hb-verdict.is-pass{ color:var(--hb-slime) }
+.hb-stage .hb-verdict.is-fail,.hb-on-ink .hb-verdict.is-fail,.hb-vp-cover .hb-verdict.is-fail{ color:var(--hb-lit-err) }
+.hb-stage .hb-verdict.is-warn,.hb-on-ink .hb-verdict.is-warn,.hb-vp-cover .hb-verdict.is-warn{ color:var(--hb-lit-warn) }
+.hb-stage .hb-verdict.is-skip,.hb-on-ink .hb-verdict.is-skip,.hb-stage .hb-verdict.is-run,.hb-on-ink .hb-verdict.is-run{ color:var(--hb-lit-label) }
+
+/* Hash. A SHA-256 line: the hex, cut to fit, and its verdict. */
+.hb-hash{ display:flex; align-items:center; gap:var(--hb-s2); min-width:0 }
+.hb-hash-hex{
+  font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-2);
+  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* Licence line. The weight licence before the download and after the
+   load: an ink rule on sunk paper, the licence and the commercial terms. */
+.hb-licence{
+  border-left:4px solid var(--hb-ink); background:var(--hb-paper-sunk);
+  padding:var(--hb-s2) var(--hb-s3);
+  font-family:var(--hb-utility); font-size:11.5px; line-height:1.5; color:var(--hb-ink-2);
+}
+.hb-licence b{ color:var(--hb-ink); font-weight:700 }
+.hb-licence a{ color:var(--hb-ink) }
+.hb-licence.is-nc{ border-left-color:var(--hb-warn) }
+
+/* Model loader. A panel: source (URL or a dropped file), size with the
+   word that says where the number came from, the hash, the licence, the
+   progress, load and cancel, and the error named when it fails. */
+.hb-loader{ display:flex; flex-direction:column; gap:var(--hb-s3) }
+.hb-loader > .hb-panel-hd,.hb-loader > .hb-panel-hd-inst{ margin-bottom:0 }
+.hb-loader-src{ display:flex; flex-direction:column; gap:var(--hb-s2) }
+.hb-loader-meta > .hb-kv{ font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-3) }
+.hb-loader-meta > .hb-kv > :first-child{ flex:0 0 auto; white-space:nowrap }
+.hb-loader-meta > .hb-kv > :last-child{ color:var(--hb-ink); min-width:0; text-align:right }
+.hb-loader-actions{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); align-items:center }
+.hb-loader > .hb-callout{ margin:0 }
+
+/* Model list. One row per model: name, size and devices, licence, and
+   the reason when this device cannot run it. The chosen row takes an ink
+   rule, a row it cannot run goes quiet and says why. */
+.hb-models{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); color:var(--hb-ink); margin:0; padding:0; list-style:none }
+.hb-model{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px var(--hb-s3); align-items:start;
+  padding:var(--hb-s2) var(--hb-s3); border-bottom:1px dashed rgba(26,26,26,.25);
+  border-left:4px solid transparent;
+}
+.hb-model:last-child{ border-bottom:0 }
+.hb-model[aria-selected="true"]{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
+.hb-model-name{ font-family:var(--hb-utility); font-size:12.5px; font-weight:700 }
+.hb-model-meta,.hb-model-lic{ grid-column:1; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-model-why{ grid-column:1 / -1; font-family:var(--hb-body); font-size:12.5px; color:var(--hb-warn) }
+.hb-model > .hb-btn{ grid-column:2; grid-row:1 / span 2 }
+.hb-model[aria-disabled="true"] .hb-model-name{ color:var(--hb-ink-4) }
+
+/* Permission and capability. Microphone, camera, the webgpu adapter,
+   storage: what it is, where it stands, the reason in words, and the one
+   action that can change it. The left rule carries the state. */
+.hb-perm{
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:2px var(--hb-s3); align-items:center;
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:var(--hb-border) solid var(--hb-ink); border-left-width:6px; border-left-color:var(--hb-ink-4);
+  padding:var(--hb-s2) var(--hb-s3);
+}
+.hb-perm-ic{ grid-column:1; grid-row:1 / span 2; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; color:var(--hb-ink) }
+.hb-perm-hd{ grid-column:2; display:flex; align-items:center; gap:var(--hb-s2); flex-wrap:wrap; min-width:0 }
+.hb-perm-name{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em }
+.hb-perm-why{ grid-column:2 / -1; font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
+.hb-perm-act{ grid-column:3; grid-row:1 }
+.hb-perm.is-ok{ border-left-color:var(--hb-ok) }
+.hb-perm.is-ask{ border-left-color:var(--hb-info) }
+.hb-perm.is-denied{ border-left-color:var(--hb-err) }
+.hb-perm.is-missing{ border-left-color:var(--hb-warn) }
+
+/* Chat. A transcript and a composer. Messages are prose in Special
+   Elite; the person's turns sit on ink, the model's on raised paper, and
+   a streaming reply ends in a blinking ink block. Think text folds. */
+.hb-chat{
+  display:flex; flex-direction:column; min-height:0;
+  border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); color:var(--hb-ink);
+  box-shadow:var(--hb-shadow-lg);
+}
+.hb-chat-log{
+  flex:1 1 auto; min-height:0; overflow:auto; max-height:var(--hb-chat-h);
+  display:flex; flex-direction:column; gap:var(--hb-s3); padding:var(--hb-s3);
+}
+.hb-msg{ display:flex; flex-direction:column; gap:2px; max-width:88%; align-self:flex-start }
+.hb-msg-who{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-msg-text{
+  font-family:var(--hb-body); font-size:14px; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere;
+  border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper); padding:var(--hb-s2) var(--hb-s3);
+}
+.hb-msg.is-user{ align-self:flex-end; align-items:flex-end }
+.hb-msg.is-user .hb-msg-text{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-msg.is-system{ max-width:100%; align-self:stretch }
+.hb-msg.is-system .hb-msg-text{ background:transparent; border-style:dashed; border-color:var(--hb-ink-4); color:var(--hb-ink-3); font-size:13px }
+.hb-msg.is-streaming .hb-msg-text::after{
+  content:""; display:inline-block; width:.55em; height:1em; margin-left:2px; vertical-align:-2px;
+  background:var(--hb-ink); animation:hb-blink 1s infinite;
+}
+.hb-msg-note{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-msg-note.is-err{ color:var(--hb-err) }
+.hb-think{ border:1px dashed var(--hb-ink-4); font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-think > summary{ cursor:pointer; padding:2px var(--hb-s2); text-transform:uppercase; letter-spacing:.09em; font-weight:600; list-style:none }
+.hb-think > summary::-webkit-details-marker{ display:none }
+.hb-think > summary::before{ content:"+ " }
+.hb-think[open] > summary::before{ content:"- " }
+.hb-think > pre,.hb .hb-think > pre{
+  margin:0; padding:var(--hb-s2); white-space:pre-wrap; font-size:11.5px;
+  background:var(--hb-paper-sunk); color:var(--hb-ink-2); border:0; box-shadow:none;
+}
+.hb-composer{
+  display:flex; align-items:flex-end; gap:var(--hb-s2); flex-wrap:wrap;
+  border-top:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-sunk); padding:var(--hb-s2);
+}
+.hb-composer > .hb-textarea{ flex:1 1 220px; min-height:44px; resize:vertical; font-family:var(--hb-body); font-size:14px }
+.hb-composer-acts{ display:flex; gap:var(--hb-s2) }
+.hb-chat-key{ display:flex; align-items:center; gap:var(--hb-s2); flex-wrap:wrap; padding:var(--hb-s2); border-bottom:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-sunk) }
+.hb-chat-key > .hb-ctl{ flex:1 1 220px }
+.hb-chat-key .hb-input{ flex:1 1 auto }
+.hb-chat-key > .hb-readout{ font-size:16px; color:var(--hb-ink-3) }
+@media(max-width:640px){ .hb-msg{ max-width:100% } }
+
+/* Transcript. Timed segments: start to end in VT323, the words in
+   Special Elite. The segment playing now takes an ink rule and its time
+   is the focal pink; a partial line still being heard stays muted. */
+.hb-transcript{
+  margin:0; padding:0; list-style:none;
+  border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); color:var(--hb-ink);
+  max-height:var(--hb-chat-h); overflow:auto;
+}
+.hb-tseg{
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--hb-s3); align-items:baseline;
+  padding:var(--hb-s1) var(--hb-s3); border-bottom:1px dashed rgba(26,26,26,.2); border-left:4px solid transparent;
+}
+.hb-tseg:last-child{ border-bottom:0 }
+.hb-tseg-t{ font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-3); white-space:nowrap; font-variant-numeric:tabular-nums }
+.hb-tseg-text{ font-family:var(--hb-body); font-size:14px; line-height:1.5; overflow-wrap:anywhere }
+button.hb-tseg{ width:100%; background:none; border-top:0; border-right:0; text-align:left; cursor:pointer; color:inherit; font:inherit }
+button.hb-tseg:hover{ background:var(--hb-paper-sunk) }
+.hb-tseg.is-now{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
+.hb-tseg.is-now .hb-tseg-t{ color:var(--hb-pink) }
+.hb-tseg.is-partial .hb-tseg-text{ color:var(--hb-ink-3) }
+/* The heard line: the last thing a microphone caught, one line, VT323. */
+.hb-heard{
+  font-family:var(--hb-readout); font-size:19px; line-height:1.25; min-height:1.6em;
+  background:var(--hb-paper-sunk); border:1px solid var(--hb-paper-edge); color:var(--hb-ink);
+  padding:2px var(--hb-s2); overflow-wrap:anywhere;
+}
+.hb-heard:empty::before{ content:attr(data-empty); color:var(--hb-ink-4) }
+
+/* Wave. An audio strip on the void: waveform, level history or visemes
+   drawn by the page into the canvas, a label, and an optional playhead.
+   The trace is data, so it may be pink; the strip never takes the pink
+   shadow, that belongs to the one viewport. */
+.hb-wave{
+  position:relative; height:var(--hb-wave-h); overflow:hidden;
+  background:var(--hb-void); color:var(--hb-paper);
+  border:var(--hb-border) solid var(--hb-ink);
+}
+.hb-wave > canvas{ position:absolute; inset:0; width:100%; height:100%; display:block }
+.hb-wave-label{
+  position:absolute; left:var(--hb-s2); top:var(--hb-s1); z-index:2;
+  font-family:var(--hb-readout); font-size:14px; color:var(--hb-lit-label); text-transform:uppercase;
+}
+.hb-wave-value{
+  position:absolute; right:var(--hb-s2); top:var(--hb-s1); z-index:2;
+  font-family:var(--hb-readout); font-size:16px; color:var(--hb-paper); font-variant-numeric:tabular-nums;
+}
+.hb-wave-head{
+  position:absolute; top:0; bottom:0; z-index:1; width:2px; margin-left:-1px;
+  left:calc(var(--hb-at, 0) * 100%); background:var(--hb-paper);
+}
+.hb-wave.is-off > canvas{ opacity:.35 }
+
+/* Feeds. Small multiples of a sense or a camera: each a void canvas with
+   a utility caption, pixel art left square. */
+.hb-feeds{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:var(--hb-s3); margin:var(--hb-s3) 0 }
+.hb-feed{ margin:0; display:flex; flex-direction:column; gap:var(--hb-s1); min-width:0 }
+.hb-feed > canvas,.hb-feed > video,.hb-feed > img{
+  display:block; width:100%; height:auto; background:var(--hb-void);
+  border:var(--hb-border) solid var(--hb-ink);
+}
+.hb-feed.is-pixel > canvas{ image-rendering:pixelated }
+.hb-feed.is-mirror > video{ transform:scaleX(-1) }
+.hb-feed > figcaption{ font-family:var(--hb-utility); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink-3) }
+
+/* Checks. The result table of a test page: each check, its verdict, the
+   reason in words, and the measured figure. A summary line above. */
+.hb-checks-sum{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) var(--hb-s4); align-items:center; margin:0 0 var(--hb-s2); font-family:var(--hb-readout); font-size:17px }
+.hb-table.hb-checks td{ vertical-align:top }
+.hb-table.hb-checks td.why{ color:var(--hb-ink-2); overflow-wrap:anywhere; min-width:16ch }
+.hb-table.hb-checks td.id{ font-weight:600; white-space:nowrap }
+.hb-table.hb-checks tr.is-fail td.id{ box-shadow:inset 4px 0 0 var(--hb-err) }
+.hb-table.hb-checks tbody tr:hover{ background:inherit }
+@media(max-width:640px){ .hb-table.hb-checks td.why{ white-space:normal } }
+
+/* Table row mark: the rows a step used, such as the recall hits handed
+   to the model. An ink rule on the first cell, never pink. */
+.hb-table tr.is-mark > td:first-child{ box-shadow:inset 4px 0 0 var(--hb-ink); font-weight:700 }
+
+/* Heat table. A matrix of strengths, cue by action. The page sets --v
+   from 0 to 1 on each cell; the fill is ink mixed into paper, and the
+   figure flips to paper past the middle. */
+.hb-heat{ border-collapse:collapse; font-family:var(--hb-utility); font-size:11px }
+.hb-heat th{ font-weight:600; color:var(--hb-ink-3); padding:2px var(--hb-s1); text-align:center; white-space:nowrap }
+.hb-heat th[scope="row"]{ text-align:right }
+.hb-heat td{
+  min-width:28px; height:22px; text-align:center; border:1px solid var(--hb-paper-edge);
+  font-family:var(--hb-readout); font-size:14px; font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb, var(--hb-ink) calc(var(--v, 0) * 100%), var(--hb-paper-raised));
+}
+.hb-heat td.is-hi{ color:var(--hb-paper) }
+
+@media (prefers-reduced-motion:reduce){
+  .hb-status.is-busy::before,.hb-pill.is-busy::before,.hb-verdict.is-run::before,
+  .hb-msg.is-streaming .hb-msg-text::after{ animation:none }
+  .hb-progress.is-busy > .hb-meter > i{ animation:none; width:100% !important; opacity:.45 }
+}
