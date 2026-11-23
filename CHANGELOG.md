@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.4
+
+- `.hb-check` rows are 44 px tall with a 20 px box on phones and touch
+  screens, and the `.hb-dropzone` file picker button is 44 px tall; both
+  compact at 641 px and up with a fine pointer.
+
 ## 0.4.3
 
 - `.hb-ctl` shrinks to its row: a select with a long option no longer

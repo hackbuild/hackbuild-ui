@@ -381,6 +381,15 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   user-select:none;
 }
 .hb-check input{ width:15px; height:15px; margin:0; flex:0 0 auto }
+/* A finger needs 44 px: the row is the target and the box is 20 px on
+   phones and touch screens; 15 px and the natural height only on a wider
+   screen with a fine pointer. */
+.hb-check{ min-height:44px }
+.hb-check input{ width:20px; height:20px }
+@media(min-width:641px) and (pointer:fine){
+  .hb-check{ min-height:0 }
+  .hb-check input{ width:15px; height:15px }
+}
 .hb-check.is-disabled{ color:var(--hb-ink-4); cursor:not-allowed }
 
 /* Switch. A rectangular toggle, knob slides, pink when on. No radius. */
@@ -1643,6 +1652,8 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   background:var(--hb-paper-raised); color:var(--hb-ink); border:var(--hb-border) solid var(--hb-ink);
   padding:5px 10px; margin-right:var(--hb-s2); cursor:pointer;
 }
+.hb-dropzone input[type=file]::file-selector-button{ min-height:44px }
+@media(min-width:641px) and (pointer:fine){ .hb-dropzone input[type=file]::file-selector-button{ min-height:0 } }
 .hb-dropzone-pick{ position:relative; flex:0 0 auto }
 .hb-dropzone-pick > input[type=file]{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
 .hb-dropzone-pick:focus-within{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
