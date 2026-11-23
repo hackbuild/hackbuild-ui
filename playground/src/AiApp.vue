@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import {
-  HbBubble, HbChat, HbChecks, HbDropzone, HbGauges, HbHeader, HbHudStat, HbInset,
+  HbBubble, HbCapabilities, HbCausalLog, HbChat, HbChecks, HbChoiceBars, HbDrawer,
+  HbDropzone, HbGauges, HbHeader, HbHudStat, HbInset,
   HbLoader, HbModelList, HbPanel, HbPermission, HbPill, HbProgress, HbReadouts,
-  HbStatusBar, HbStatusLine, HbTabs, HbTranscript, HbViewport, HbWave,
-  type HbChatLine, type HbCheckRow, type HbModelRow, type HbProgressState,
+  HbSeg, HbSparkRows, HbStatusBar, HbStatusLine, HbTabs, HbTranscript, HbViewport, HbWave,
+  type HbCap, type HbCapVerb, type HbChatLine, type HbCheckRow, type HbModelRow, type HbProgressState,
   type HbTranscriptSegment,
 } from '@hackbuild/ui'
+import { createMinds, rng } from './minds-sim'
 
 // Sample strings are taken from the consumer pages: the hackbuild-motion
 // motion-net and lipsync examples, the hackbuild-browser-ai chat,
@@ -102,6 +104,85 @@ const readouts = computed(() => [
   { label: 'wasm threads (computed)', value: 8 },
 ])
 const dropped = ref('')
+
+
+/* ---- minds: seeded fake agents at 2 Hz ------------------------------- */
+const seed = Number(q.get('seed') ?? 7)
+const minds = createMinds(seed)
+const mtick = ref(0)
+const who = ref<string | number>('dog')
+const pinned = ref<Array<string | number>>([])
+const byAgent = ref(q.has('group'))
+const frozen = q.has('freeze')
+const sparkOf = (list: typeof minds.state.drives) => list.map((s) => ({ label: s.label, values: [...s.values], threshold: s.threshold, ticks: [...s.ticks] }))
+const dogDrives = computed(() => (mtick.value, sparkOf(minds.state.drives)))
+const humNeeds = computed(() => (mtick.value, sparkOf(minds.state.needs)))
+const dogOpts = computed(() => (mtick.value, minds.state.dog.options.map((o) => ({ ...o }))))
+const humOpts = computed(() => (mtick.value, minds.state.hum.options.map((o) => ({ ...o }))))
+const events = computed(() => (mtick.value, minds.state.events.slice(0, 120).map((e) => ({ ...e }))))
+const clock = computed(() => (mtick.value, minds.state.t))
+const dogNow = computed(() => (mtick.value, { ...minds.state.dog, inFor: minds.state.t - minds.state.dog.since }))
+const humNow = computed(() => (mtick.value, { ...minds.state.hum, inFor: minds.state.t - minds.state.hum.since }))
+let mtimer = 0
+if (q.get('pin')) pinned.value = [Number(q.get('pin'))]
+
+/* ---- capabilities: the dog simulator rows, loading faked ------------- */
+const gpu = ref(q.get('gpu') !== '0')
+const capR = rng(seed + 1)
+const MB = 1024 * 1024
+const caps = ref<HbCap[]>([])
+function buildCaps() {
+  const g = gpu.value
+  caps.value = [
+    { id: 'eye', name: 'eye renderer', icon: 'eye', state: 'on', needs: [{ kind: 'webgpu', label: g ? 'webgpu' : 'webgl2, no webgpu' }], licence: 'three.js MIT', licenceWhat: 'renderer', commercial: true, offAction: '' },
+    { id: 'gait', name: 'neural gait', icon: 'paw', state: 'off', needs: [{ kind: 'other', label: g ? 'webgpu worker' : 'cpu, slower' }], size: '17.7 MB', sizeSource: 'vendor', licence: 'CC-BY-NC-4.0', commercial: false, licenceWhat: 'model and mocap', action: 'load and turn on' },
+    { id: 'yolo', name: 'object detector on the eye', icon: 'eye', state: 'off', needs: [{ kind: 'webgpu', label: g ? 'webgpu' : 'wasm, no webgpu' }], size: '12.8 MB', sizeSource: 'vendor', licence: 'AGPL-3.0', commercial: false, action: 'load and turn on' },
+    { id: 'cortex-s', name: 'dog cortex, small', icon: 'brain', state: g ? 'off' : 'unavailable', needs: [{ kind: 'webgpu', missing: !g }], size: 'about 320 MB', sizeSource: 'vendor', licence: 'LFM Open License 1.0', commercial: null, action: 'download and turn on', reason: g ? '' : 'no webgpu adapter. the cortex needs it.' },
+    { id: 'cortex-l', name: 'dog cortex, large', icon: 'brain', state: g ? 'off' : 'unavailable', needs: [{ kind: 'webgpu', missing: !g }], size: 'about 3.3 GB', sizeSource: 'vendor', licence: 'Apache-2.0', commercial: true, action: 'download and turn on', reason: g ? '' : 'no webgpu adapter. the cortex needs it.' },
+    { id: 'human', name: 'human mind', icon: 'user', state: g ? 'off' : 'unavailable', needs: [{ kind: 'model', label: 'a cortex model', missing: !g }], dependsOn: 'cortex-s', action: 'turn on', reason: g ? '' : 'no webgpu adapter, so no cortex model to drive him.' },
+    { id: 'voice', name: 'his voice', icon: 'comment', state: 'off', size: 'size unknown until the first fetch', licence: 'CC-BY-NC-4.0', commercial: false, licenceWhat: 'engine Apache-2.0, models', action: 'load' },
+    { id: 'talk', name: 'talk to the dog', icon: 'microphone', state: 'off', needs: ['microphone'], action: 'allow the microphone', ask: 'in chrome, audio goes to the browser speech service. nothing is stored.' },
+    { id: 'cam', name: 'webcam gestures and smiles', icon: 'camera', state: q.get('cam') === 'blocked' ? 'failed' : 'off', needs: ['camera'], size: 'two files, size unknown', licence: 'Apache-2.0', commercial: true, action: 'allow the camera', ask: 'the camera turns on, and two gesture models download from google. the microphone is not used.', reason: 'the camera was blocked. allow it in the address bar, then try again.' },
+    { id: 'clap', name: 'clap detection', icon: 'ear-listen', state: 'off', needs: ['microphone'], action: 'allow the microphone' },
+    { id: 'sound', name: 'sound', icon: 'wave', state: 'on' },
+  ]
+}
+buildCaps()
+const capsOpen = ref(q.has('drawer'))
+const capsOn = computed(() => caps.value.filter((c) => c.state === 'on').length)
+const loads = new Map<string, number>()
+const SIZES: Record<string, number | null> = { gait: 17.7 * MB, yolo: 12.8 * MB, 'cortex-s': 320 * MB, 'cortex-l': 3300 * MB, voice: null }
+function setCap(id: string, patch: Partial<HbCap>) {
+  caps.value = caps.value.map((c) => (c.id === id ? { ...c, ...patch } : c))
+}
+function load(id: string) {
+  const total = SIZES[id] ?? null
+  setCap(id, { state: 'loading', loaded: 0, total })
+  const failAt = q.get('fail') === id ? 0.6 : 2
+  const t = window.setInterval(() => {
+    const c = caps.value.find((x) => x.id === id)!
+    const add = (total ?? 40 * MB) / (18 + capR() * 10)
+    const loaded = (c.loaded ?? 0) + add
+    if (total && loaded / total >= failAt) { clearInterval(t); setCap(id, { state: 'failed', reason: 'download failed. the server closed the connection at ' + Math.round(loaded / MB) + ' MB.' }); return }
+    if (loaded >= (total ?? 40 * MB)) { clearInterval(t); loads.delete(id); setCap(id, { state: 'on', loaded, reason: '' }); return }
+    setCap(id, { loaded })
+  }, 300)
+  loads.set(id, t)
+}
+function onCap(id: string, verb: HbCapVerb) {
+  const c = caps.value.find((x) => x.id === id)!
+  if (verb === 'cancel') { clearInterval(loads.get(id)); setCap(id, { state: 'off', loaded: 0 }); return }
+  if (verb === 'disable') { setCap(id, { state: 'off' }); return }
+  if (id === 'cam' || id === 'talk' || id === 'clap') { setCap(id, { state: 'on' }); return }
+  if (c.dependsOn) {
+    const p = caps.value.find((x) => x.id === c.dependsOn)!
+    if (p.state !== 'on') { load(p.id); const w = window.setInterval(() => { const pp = caps.value.find((x) => x.id === p.id)!; if (pp.state === 'on') { clearInterval(w); setCap(id, { state: 'on' }) } else if (pp.state !== 'loading') clearInterval(w) }, 300); return }
+    setCap(id, { state: 'on' }); return
+  }
+  if (id in SIZES) load(id)
+  else setCap(id, { state: 'on' })
+}
+if (q.get('loading')) load(q.get('loading')!)
 
 /* ---- model ------------------------------------------------------------ */
 const url = ref('https://huggingface.co/sweriko/quadruped/resolve/main/quadruped.bin')
@@ -211,16 +292,20 @@ function fillFeeds() {
     }
   })
 }
-onMounted(() => { raf = requestAnimationFrame(loop); fillFeeds() })
-onBeforeUnmount(() => { cancelAnimationFrame(raf); clearInterval(dl); clearInterval(tok) })
+onMounted(() => {
+  raf = requestAnimationFrame(loop); fillFeeds()
+  if (!frozen) mtimer = window.setInterval(() => { minds.step(); mtick.value++ }, 500)
+})
+onBeforeUnmount(() => { cancelAnimationFrame(raf); clearInterval(dl); clearInterval(tok); clearInterval(mtimer); loads.forEach((t) => clearInterval(t)) })
+const fmt = (s: number) => s.toFixed(1)
 </script>
 
 <template>
   <div class="pg-ai">
     <HbHeader title="hackle" accent="." tagline="a dog with a brain, a body and eyes, running in your browser" tagline-kind="tool">
-      <HbPill status="ok">webgpu</HbPill>
+      <HbPill :status="gpu ? 'ok' : 'warn'">{{ gpu ? 'webgpu' : 'webgl2, no webgpu' }}</HbPill>
     </HbHeader>
-    <HbTabs v-model="tab" :tabs="['scene', 'model', 'talk', 'checks']" />
+    <HbTabs v-model="tab" :tabs="['scene', 'minds', { label: 'turn on', value: 'caps' }, 'model', 'talk', 'checks']" label="views" id-prefix="pg" />
 
     <!-- scene: the viewport, its hud and the rail. focal pink: the current drive. -->
     <div v-if="tab === 'scene'" class="hb-bar">
@@ -286,6 +371,83 @@ onBeforeUnmount(() => { cancelAnimationFrame(raf); clearInterval(dl); clearInter
         <HbPanel>
           <h3 class="hb-panel-hd-inst">heard</h3>
           <div class="hb-heard" data-empty='say "sit", "spin", or any new word' />
+        </HbPanel>
+      </div>
+    </div>
+
+    <!-- minds: two agents and one timeline. focal pink: the dog's chosen bar. -->
+    <template v-if="tab === 'minds'">
+      <div id="pg-panel-minds" role="tabpanel" aria-labelledby="pg-tab-minds">
+        <div class="hb-bar">
+          <HbSeg v-model="who" toggle class="pg-who" :options="[{ label: 'dog', value: 'dog' }, { label: 'moheeb', value: 'moheeb' }]" aria-label="whose mind" />
+          <button class="hb-btn hb-btn-2" type="button" @click="capsOpen = true">turn things on, {{ capsOn }} of {{ caps.length }} on</button>
+        </div>
+        <div class="pg-work pg-minds" :data-show="who">
+          <div class="pg-col" data-agent="dog">
+            <HbPanel>
+              <h3 class="hb-panel-hd-inst">dog, now <span class="hb-hd-aux">{{ fmt(dogNow.inFor) }} s</span></h3>
+              <h3>{{ dogNow.cur }}</h3>
+              <p class="pg-why">{{ dogNow.why }}</p>
+              <p class="pg-next">next look in {{ fmt(Math.max(0, dogNow.nextLook)) }} s</p>
+            </HbPanel>
+            <HbPanel>
+              <h3 class="hb-panel-hd-inst">drives <span class="hb-hd-aux">computed, 120 s</span></h3>
+              <HbSparkRows :rows="dogDrives" label="dog drives" :window="120" />
+            </HbPanel>
+            <HbPanel>
+              <h3 class="hb-panel-hd-inst">choice <span class="hb-hd-aux">top 3 of {{ dogOpts.length }}</span></h3>
+              <HbChoiceBars
+                :options="dogOpts"
+                :limit="3"
+                :why="dogNow.why"
+                :meta="`temperature 0.06, commitment 0.12 x 1.11 (independence), next look in ${fmt(Math.max(0, dogNow.nextLook))} s`"
+                label="dog options"
+              />
+              <details class="hb-fold">
+                <summary>all {{ dogOpts.length }}</summary>
+                <div class="hb-fold-body"><HbChoiceBars :options="dogOpts" quiet :legend="false" :announce="false" label="all dog options" /></div>
+              </details>
+            </HbPanel>
+          </div>
+          <div class="pg-col" data-agent="moheeb">
+            <HbPanel>
+              <h3 class="hb-panel-hd-inst">moheeb, now <span class="hb-hd-aux">{{ humNow.src }}</span></h3>
+              <h3>{{ humNow.cur }}</h3>
+              <p class="pg-why">{{ humNow.why }}</p>
+            </HbPanel>
+            <HbPanel>
+              <h3 class="hb-panel-hd-inst">needs <span class="hb-hd-aux">computed, 120 s</span></h3>
+              <HbSparkRows :rows="humNeeds" label="moheeb needs" :window="120" />
+            </HbPanel>
+            <HbPanel>
+              <h3 class="hb-panel-hd-inst">plan <span class="hb-hd-aux">routine draw from the top 3</span></h3>
+              <HbChoiceBars :options="humOpts" quiet :why="humNow.why" meta="repeat penalty 0.55 per repeat in the last three tasks" label="moheeb plan" />
+            </HbPanel>
+          </div>
+          <div class="pg-col pg-span">
+            <HbPanel>
+              <h3 class="hb-panel-hd-inst">timeline <span class="hb-hd-aux">{{ fmt(clock) }} s</span></h3>
+              <label class="hb-check pg-group"><input v-model="byAgent" type="checkbox"> group by agent</label>
+              <HbCausalLog v-model:pinned="pinned" :events="events" :agents="['dog', 'moheeb']" :group="byAgent" label="cause timeline, newest first" />
+            </HbPanel>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- turn on: the capability panel. focal pink: the running download. -->
+    <div v-else-if="tab === 'caps'" id="pg-panel-caps" class="pg-work" role="tabpanel" aria-labelledby="pg-tab-caps">
+      <div class="pg-col">
+        <HbPanel>
+          <h3 class="hb-panel-hd-inst">turn things on <span class="hb-hd-aux">{{ gpu ? 'webgpu' : 'webgl2, no webgpu' }}</span></h3>
+          <HbCapabilities :caps="caps" @act="onCap" />
+        </HbPanel>
+      </div>
+      <div class="pg-col">
+        <HbPanel>
+          <h3 class="hb-panel-hd-inst">this device</h3>
+          <label class="hb-check"><input v-model="gpu" type="checkbox" @change="buildCaps"> pretend there is a webgpu adapter</label>
+          <p class="pg-why">every row stays when the device cannot run it, so you learn it exists. the reason sits beside the disabled button.</p>
         </HbPanel>
       </div>
     </div>
@@ -388,6 +550,11 @@ onBeforeUnmount(() => { cancelAnimationFrame(raf); clearInterval(dl); clearInter
         </HbPanel>
       </div>
     </div>
+
+    <HbDrawer v-model="capsOpen">
+      <h3 class="hb-panel-hd-inst">turn things on</h3>
+      <HbCapabilities :caps="caps" @act="onCap" />
+    </HbDrawer>
 
     <HbStatusBar>
       <span>fps {{ fps.toFixed(0) }}</span>

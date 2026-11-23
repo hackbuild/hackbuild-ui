@@ -83,6 +83,13 @@ const SOLID = {
   'paper-plane': solid.faPaperPlane,
   'shield-halved': solid.faShieldHalved,
   fingerprint: solid.faFingerprint,
+
+  // minds: cause timeline kinds and the pin
+  paw: solid.faPaw,
+  brain: solid.faBrain,
+  'code-branch': solid.faCodeBranch,
+  thumbtack: solid.faThumbtack,
+  wind: solid.faWind,
   display: solid.faDisplay,
   printer: solid.faPrint,
   lightbulb: solid.faLightbulb,

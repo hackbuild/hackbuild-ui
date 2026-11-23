@@ -9,9 +9,11 @@ export interface HbSegOption {
 interface Props {
   /** Two or three options only. Past that, use a select. */
   options: Array<HbSegOption | string>
+  /** Ink when on: a view switch that leaves the pink to the focal value. */
+  toggle?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), { toggle: false })
 
 const model = defineModel<string | number>()
 
@@ -23,7 +25,7 @@ const normalized = computed<HbSegOption[]>(() =>
 </script>
 
 <template>
-  <div class="hb-seg" role="group">
+  <div class="hb-seg" :class="{ 'is-toggle': props.toggle }" role="group">
     <button
       v-for="option in normalized"
       :key="option.value"

@@ -119,3 +119,19 @@ fonts for pages that open from `file://`.
 - Header chips that carry rates (fps, clock) move to the status strip.
 - One pink per view: the dog-simulator pink buttons, pink bar rows other
   than the current one, and the pink bubble border go to ink.
+
+## Minds and capabilities (0.5.0)
+
+The dog-simulator UX design (`web-ai-knowledge/research/dog-sim-ux.md`
+section 5) asked for four pieces it would otherwise write in the app.
+GUIDELINES.md section 11 holds their rules.
+
+| Element | Seen on | Maps to | Status |
+|---|---|---|---|
+| drive and need sparklines with the 0.7 mark and switch ticks | minds tab, both agents | `.hb-sparks`, HbSparkRows | added |
+| top three options with softmax chance and commitment | minds tab, dog choice; the human's plan with the repeat penalty | `.hb-choice`, HbChoiceBars | added |
+| shared timeline with cause links, filters by agent and kind | minds tab foot | `.hb-causal`, HbCausalLog | added |
+| `turn things on` drawer, one row per optional feature | header button, inline links, welcome card | `.hb-caps` in `.hb-drawer`, HbCapabilities | added |
+| tabs with `aria-controls` and arrow keys | five tabs | HbTabs `idPrefix` | added |
+| `dog \| moheeb` switch | minds tab on a phone | `.hb-seg.is-toggle`, HbSeg `toggle` | added |
+

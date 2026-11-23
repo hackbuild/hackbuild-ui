@@ -6,13 +6,24 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>hack.build UI ai and 3d layer</title>
   <style>
-    /* layout glue for the ai and 3d page: a work column beside a rail, stacked under 900 px */
+    /* layout glue, mobile first: one column, the rail beside the work from 901 px */
     html, body { margin: 0 }
     .pg-ai { display: flex; flex-direction: column; min-height: 100vh }
-    .pg-work { display: grid; grid-template-columns: minmax(0, 1fr) var(--hb-rail); gap: var(--hb-s5); padding: var(--hb-s4) var(--hb-s5) var(--hb-s6) }
+    .pg-work { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--hb-s5); padding: var(--hb-s3) var(--hb-s4) var(--hb-s6) }
     .pg-col { min-width: 0; display: flex; flex-direction: column; gap: var(--hb-s4) }
-    @media (max-width: 900px) { .pg-work { grid-template-columns: minmax(0, 1fr) } }
-    @media (max-width: 640px) { .pg-work { padding: var(--hb-s3) var(--hb-s4) var(--hb-s6) } }
+    .pg-why { margin: var(--hb-s2) 0 0; font-size: 14px; line-height: 1.5 }
+    .pg-next { margin: var(--hb-s1) 0 0; font-family: var(--hb-utility); font-size: 11px; color: var(--hb-ink-3) }
+    .pg-group { margin-bottom: var(--hb-s3) }
+    /* minds: one agent at a time on a phone, both side by side from 901 px */
+    .pg-minds[data-show="dog"] [data-agent="moheeb"], .pg-minds[data-show="moheeb"] [data-agent="dog"] { display: none }
+    @media (min-width: 641px) { .pg-work { padding: var(--hb-s4) var(--hb-s5) var(--hb-s6) } }
+    @media (min-width: 901px) {
+      .pg-work { grid-template-columns: minmax(0, 1fr) var(--hb-rail) }
+      .pg-minds { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) }
+      .pg-minds[data-show] [data-agent] { display: flex }
+      .pg-minds .pg-span { grid-column: 1 / -1 }
+      .pg-who { display: none }
+    }
   </style>
 </head>
 <body class="hb hb-halftone">

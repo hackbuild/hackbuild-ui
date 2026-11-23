@@ -19,6 +19,8 @@ interface Props {
   /** Show cancel while running and resume when paused or failed. */
   actions?: boolean
   label?: string
+  /** Speak the words as they change. Off when a parent announces at its own pace. */
+  live?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -30,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   quiet: false,
   actions: true,
   label: 'download',
+  live: true,
 })
 
 const emit = defineEmits<{ cancel: []; resume: [] }>()
@@ -69,7 +72,7 @@ const classes = computed(() =>
 <template>
   <div :class="classes">
     <div class="hb-progress-hd">
-      <span class="hb-progress-text" :role="props.state === 'failed' ? 'alert' : 'status'">{{ words }}</span>
+      <span class="hb-progress-text" :role="props.state === 'failed' ? 'alert' : props.live ? 'status' : undefined">{{ words }}</span>
       <span v-if="pct !== null && props.state !== 'done'" class="hb-progress-pct">{{ pct }}%</span>
       <template v-if="props.actions">
         <button v-if="props.state === 'running'" type="button" class="hb-btn hb-btn-2 hb-btn-sm" @click="emit('cancel')">cancel</button>

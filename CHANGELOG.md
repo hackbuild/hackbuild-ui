@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.5.0
+
+- The minds and capabilities layer, GUIDELINES.md 1.5 section 11, with
+  its classes in section 20 of `hackbuild.css`: drive sparkline rows with
+  a threshold rule, switch ticks, a state chip and a larger chart; choice
+  bars with hatched commitment, a struck repeat penalty, chance and the
+  chosen row; the cause timeline with chains, agent and kind filters,
+  pins and agent groups; the capability panel with off, loading, on,
+  failed and unavailable rows, needs, size, licence, reason and one
+  button.
+- Vue components over those classes: HbSparkRows, HbChoiceBars,
+  HbCausalLog and HbCapabilities, and `useLiveAnnounce`, a polite live
+  region that speaks at most once per gap.
+- Hover styles apply only with `(hover:hover) and (pointer:fine)`: a
+  tapped button no longer stays pink on a touch screen. `:active` and
+  `:focus-visible` are unchanged.
+- HbTabs takes arrow keys, Home and End with one tab in the tab order,
+  and `label` and `idPrefix` for `aria-controls`.
+- `.hb-seg.is-toggle` and HbSeg `toggle`: ink when on. Segment buttons
+  and fold summaries are 44 px on phones and touch screens.
+- HbProgress `live` turns its words out of the live region.
+- Tokens `--hb-spark-h`, `--hb-spark-big-h`, `--hb-log-h`. Icons `paw`,
+  `brain`, `code-branch`, `thumbtack`, `wind`.
+- `playground/ai.html` gains minds and turn on tabs driven by a seeded
+  generator (`?seed=`); `playground/minds-static.html` is the layer as
+  plain classes.
+
 ## 0.4.4
 
 - `.hb-check` rows are 44 px tall with a 20 px box on phones and touch

@@ -163,3 +163,6 @@ overlay always sits on top; it is texture, not chrome.
 | `--hb-inset-w` | `320px` | picture in picture card on a viewport, at most 46 percent of it |
 | `--hb-wave-h` | `72px` | audio strip height |
 | `--hb-chat-h` | `360px` | chat log and transcript scroll ceiling |
+| `--hb-spark-h` | `28px` | sparkline height in a drive row |
+| `--hb-spark-big-h` | `112px` | the larger chart a drive row opens |
+| `--hb-log-h` | `480px` | cause timeline scroll ceiling |

@@ -76,6 +76,11 @@ Destinations under the header. `class: hb-tabs, hb-tab`
 |---|---|---|
 | `tabs` (required) | `Array<{label, value} \| string>` | three to eight |
 | `v-model` | `string \| number` | active tab value |
+| `label` | `string` | accessible name of the strip |
+| `idPrefix` | `string` | tab `${idPrefix}-tab-${value}` controls panel `${idPrefix}-panel-${value}` |
+
+Arrow keys, Home and End move between tabs; only the current tab is in the
+tab order.
 
 The strip scrolls sideways on narrow screens rather than wrapping.
 
@@ -368,6 +373,7 @@ Segmented mode switch. Two or three options only; past that use a select.
 |---|---|
 | `options` (required) | `Array<{label, value} \| string>` |
 | `v-model` | `string \| number` |
+| `toggle` | `boolean`: ink when on, for a view switch beside a focal value |
 
 ### HbInput, HbTextarea
 
@@ -848,6 +854,7 @@ the `head` slot replaces `aux`. `class: hb-inset`
 | `text` | `string` | `''` | replaces the built words |
 | `quiet` | `boolean` | `false` | a second download at once: paper fill |
 | `actions` | `boolean` | `true` | cancel while running, resume when paused or failed |
+| `live` | `boolean` | `true` | speak the words as they change; off inside a panel that announces at its own pace |
 
 Emits `cancel` and `resume`. `class: hb-progress`
 
@@ -930,6 +937,75 @@ HbGauges: `rows` (`label`, `value`, `display`, `current`), `max`, `label`.
 `class: hb-status, hb-readouts, hb-gauges`
 
 HbPill also takes `status="busy"`: an ink dot that blinks.
+
+## Minds and capabilities
+
+GUIDELINES.md section 11. Each component speaks through its own polite
+live region, rate limited by `useLiveAnnounce`; `announce` turns it off.
+
+### HbSparkRows
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `rows` (required) | `HbSparkRow[]` | | `label`, `values` (oldest first), `value`, `display`, `threshold`, `ticks` (sample indexes of switches), `current` (pink trace), `state` (chip words) |
+| `label` | `string` | `'drives'` | list name |
+| `min`, `max` | `number` | `0`, `1` | |
+| `window` | `number` | `120` | seconds the history covers, for the words |
+| `trendSamples` | `number` | `60` | |
+| `expandable` | `boolean` | `true` | rows are buttons that open the larger chart |
+| `announce`, `announceGap` | `boolean`, `number` | `true`, `4000` | threshold crossings |
+| `digits` | `number` | `2` | |
+
+Emits `open(id or null)`. `class: hb-sparks, hb-spark`
+
+### HbChoiceBars
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `options` (required) | `HbChoiceOption[]` | | `id`, `label`, `score`, `bonus` (commitment), `penalty`, `prob` (0 to 1), `chosen`, `top` |
+| `limit` | `number` | `0` | show the top n; the chosen one always shows |
+| `sort` | `'score' \| 'none'` | `'score'` | score plus bonus, highest first |
+| `why`, `meta` | `string` | `''` | the reason above, the dials below |
+| `max` | `number` | largest bar | bar scale |
+| `quiet` | `boolean` | `false` | chosen bar in ink |
+| `legend` | `boolean` | `true` | |
+| `announce`, `announceGap` | `boolean`, `number` | `true`, `4000` | a new choice and its why |
+
+`@hackbuild/drives` Chooser output maps onto `options` as is. `class: hb-choice, hb-opt`
+
+### HbCausalLog
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `events` (required) | `HbCausalEvent[]` | | `id`, `t` (s), `agent`, `kind` (`sense`, `choice`, `act`, `model`, `reward`, `cue` or your own), `text`, `cause` (an id), `icon` |
+| `agents`, `kinds` | `string[]` | from the events | filter chips in this order |
+| `group` | `boolean` | `false` | one section per agent |
+| `depth` | `number` | `3` | cause links shown |
+| `limit` | `number` | `60` | events after the pins |
+| `formatTime` | `(t) => string` | `m:ss.s` | |
+| `v-model:pinned` | `Array<string \| number>` | `[]` | pinned ids, shown first |
+| `announce`, `announceGap` | `boolean`, `number` | `true`, `8000` | the newest shown event |
+
+`class: hb-causal, hb-cev`
+
+### HbCapabilities
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `caps` (required) | `HbCap[]` | | `id`, `name`, `icon`, `state` (`off`, `loading`, `on`, `failed`, `unavailable`), `needs` (`webgpu`, `microphone`, `camera`, `model`, `other`, or `{kind, label, missing}`), `size`, `sizeSource`, `licence`, `commercial`, `licenceWhat`, `dependsOn`, `reason`, `ask`, `action`, `offAction`, `loaded`, `total` |
+| `label` | `string` | `'what you can turn on'` | |
+| `summary` | `boolean` | `true` | `2 of 9 on` |
+| `quiet` | `boolean` | `false` | every download in paper |
+| `announce`, `announceGap` | `boolean`, `number` | `true`, `3000` | on, failed, cancelled |
+
+Emits `act(id, verb)` with verb `enable`, `cancel`, `disable` or `retry`.
+The page runs the work and passes the new state back. `class: hb-caps, hb-cap`
+
+### useLiveAnnounce
+
+`useLiveAnnounce(gapMs = 4000)` returns `{ text, say, clear }`. Bind
+`text` to a `.hb-sr` element with `aria-live="polite"`; `say()` sends at
+most one message per gap, the newest waiting one wins.
 
 ## Class-only pieces
 

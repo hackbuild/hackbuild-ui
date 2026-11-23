@@ -1,6 +1,6 @@
 # hack.build design system
 
-Version 1.4. This document supersedes the hack.build sections of
+Version 1.5. This document supersedes the hack.build sections of
 `hackbuild-explainer`, `brand-forge`, and `board-forge`, and the styling of
 every earlier project (`hack-build`, `hack-build-vue`, `hackbuild-stack`,
 `hackbuild-resume`). Where any of those disagree with this file, this file
@@ -35,6 +35,13 @@ ship as classes that stand alone for vanilla pages and as Vue components.
 It also ships the five faces self-hosted, for pages that open from
 `file://` or run offline, fixes the instrument head on an `h2` or `h3`,
 and adds a busy pill that never spends the pink.
+
+Version 1.5 adds the minds and capabilities layer (section 11): drive
+sparkline rows, choice bars, the cause timeline and the capability panel,
+as classes and as four Vue components, with a rate limited live region
+for values that change many times a second. Hover styles now apply only
+to a hovering fine pointer, so a tapped button does not stay pink. Tabs
+take arrow keys, and a segmented control may be an ink view switch.
 
 ## What this is
 
@@ -438,6 +445,7 @@ tagline. Read every "under 640 px" in this file as the base state.
 | safe area | the header, nav, toolbar, status strip and shell pad by `env(safe-area-inset-*)` when the inset is larger than the gutter; the page sets `viewport-fit=cover` to use it |
 | viewport | square and at most 62svh first, 16 by 9 at 641 px; the hud stacks and the scene verbs shrink until the viewport is 561 px wide |
 | app shell | stacked and scrolling as one page first; pinned work column beside the rail at 901 px |
+| hover | every `:hover` rule sits inside `@media (hover:hover) and (pointer:fine)`, so a tap on a touch screen leaves no pink behind; `:active` and `:focus-visible` stay for touch and keys |
 
 ### Do not
 
@@ -469,7 +477,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-meter` | Pink fill on an ink track, hard edges |
 | `.hb-callout` | Pink left rule on a 10 percent pink wash. One or two per page |
 | `.hb-num` | Circular section badge. One of only two places a radius is allowed |
-| `.hb-seg` | Segmented control for mode switches. Two or three options, past that use a select |
+| `.hb-seg` | Segmented control for mode switches. Two or three options, past that use a select. `.is-toggle` fills ink when on, for a view switch beside a focal value |
 | `.hb-dial` | The one giant primary readout per tool. VT323 on an ink plate, pink tabular digits, digits individually clickable |
 | `.hb-sticker` | Rotated hand-lettered tag. The one place Permanent Marker is allowed at small size. One per view |
 | `.hb-tiles` / `.hb-tile` | Preset tap targets, 96 px minimum, marker name over a Plex sub, active tile fills pink |
@@ -530,6 +538,10 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-wave` | Audio strip on the void: waveform or level history, label, figure, playhead (section 10) |
 | `.hb-checks` / `.hb-readouts` / `.hb-gauges` | Check result table, readout grid, gauge rows (section 10) |
 | `.hb-status` / `.hb-ctl` / `.hb-feeds` / `.hb-heat` | Status line, inline toolbar control, small multiples, heat table (section 10) |
+| `.hb-sparks` / `.hb-spark` | Drive rows: label, sparkline with threshold and switch ticks, value, state chip; opens a larger chart (section 11) |
+| `.hb-choice` / `.hb-opt` | Choice bars: score, hatched commitment, struck penalty, chance, the chosen row outlined (section 11) |
+| `.hb-causal` / `.hb-cev` | Cause timeline: events newest first with the chain that led to each, filter chips, pins (section 11) |
+| `.hb-caps` / `.hb-cap` | Capability panel: one row per optional feature with state, needs, size, licence, reason and one button (section 11) |
 
 Status pills must always declare their own color. A pill inheriting paper text
 onto a light panel became unreadable once; `.hb-pill` sets `color` explicitly
@@ -864,3 +876,95 @@ write it this way, and the components build their words the same way:
 | focal pink in a model view | the running download |
 | chat faces | Special Elite for both speakers; code in a reply stays a `pre` block |
 | fonts for offline pages | `fonts-inline.css`, latin subset only |
+
+---
+
+## 11. Minds and capabilities
+
+A page that shows an agent thinking: what it wants, what it weighed, why
+it acted, and what the page can turn on. The dog-simulator minds tab and
+its capability drawer set the shape (`web-ai-knowledge`
+`research/dog-sim-ux.md` sections 3 and 5); any page that logs drives or
+loads optional models uses the same four pieces. Every class stands alone
+for vanilla pages (`playground/minds-static.html`); the Vue components add
+the words, the trend, the keyboard and the live region.
+
+| Piece | Class | Component |
+|---|---|---|
+| drive rows | `.hb-sparks` of `.hb-spark` | HbSparkRows |
+| choice bars | `.hb-choice`, `.hb-choice-list` of `.hb-opt` | HbChoiceBars |
+| cause timeline | `.hb-causal`, `.hb-causal-list` of `.hb-cev` | HbCausalLog |
+| capability panel | `.hb-caps`, `.hb-caps-list` of `.hb-cap` | HbCapabilities |
+| rate limited live region | `.hb-sr` with `aria-live="polite"` | useLiveAnnounce |
+
+### Primitives
+
+| Primitive | Values |
+|---|---|
+| spark row | label 72 px (96 from 641), inline SVG polyline in ink 1.5 px on sunk paper `--hb-spark-h` tall, a dashed ink 3 rule at the threshold, ink 3 ticks along the foot where the agent switched, VT323 17 px value, a 10 px caps chip: the trend word (`rising`, `falling`, `steady` dashed) or `over 0.70` filled ink. The chip sits under the label on a phone and in its own 84 px column from 641 px |
+| larger chart | the same series `--hb-spark-big-h` tall, ticks full height, `2 minutes ago` and `now 0.42` in VT323 under it, the sentence in Special Elite |
+| choice row | label column sized to the longest label up to 40 percent (one subgrid, so bars line up), bar 12 px on sunk paper: base score ink 2 (ink on the top scoring row), commitment hatched ink on paper, repeat penalty an outlined struck segment; score VT323 ink 3, chance VT323 ink |
+| chosen row | 4 px ink left rule, sunk paper, `*` after the label, the base bar pink; `.hb-choice.is-quiet` draws it ink |
+| zero row | ink 4 text |
+| why and meta | the reason in Special Elite 13.5 px above the bars; the dials (temperature, commitment, next look) in Plex 11 px ink 3 below |
+| timeline event | VT323 16 px stamp, agent in Plex 10 px caps ink, kind icon and word ink 3, the text in Special Elite 13.5 px; the chain indented on a 2 px dashed ink 4 rule, oldest first, Plex 11.5 px, at most three links |
+| kind icons | sense `eye` (or `wind`, `ear-listen`), choice `code-branch`, act `paw`, model `brain`, reward `heart`, cue `comment` |
+| filters | `.hb-chip.is-toggle`, flat, one group for agents and one for kinds, all on at first; on means shown |
+| pin | a 44 px square, `thumbtack` in ink 4; pressed fills ink. Pinned events leave the flow and sit in a `pinned` group at the top with a 4 px ink rule and sunk paper |
+| group heads | ink bar, Plex 10 px caps paper, sticky inside the scrolling list |
+| capability row | raised paper, 2 px ink, 6 px left rule in the state color; name in Plex 11 px caps with an icon and a verdict; one `.hb-btn-2` small button; needs as flat sunk chips (`webgpu`, `microphone`, `camera`, a model, the size with its source word); a missing need struck through in warn with `missing:` for screen readers; the reason in Special Elite warn (err when failed); the dependency line in ink; the consent line in ink 2; the progress while loading; the licence line |
+| summary | `2 of 9 on` in VT323 18 px over the rows |
+
+### States of a capability
+
+| State | Left rule | Verdict | Button |
+|---|---|---|---|
+| off | ink 4 | `off`, dashed | the action: `load and turn on`, `download and turn on`, `allow the microphone` |
+| loading | ink | `loading 42 percent`, blinking | `cancel`; the progress under the needs |
+| on | ok | `on` | `turn off`, or none when it cannot be turned off here |
+| failed | err | `failed` | `try again`; the error named beside it |
+| unavailable | warn | `cannot run here` | the action, disabled, `aria-describedby` the reason |
+
+A row the device cannot run stays in the list, so people learn it exists.
+A dependent row names its parent and says the button does both: `needs dog
+cortex, small (about 320 MB). the button turns on both.` A permission row
+says what is asked before the browser asks.
+
+### Pink budget
+
+| View | The one pink |
+|---|---|
+| minds | the chosen bar of the agent the view is about; the second agent's bars are `quiet`, every sparkline stays ink. Use `current` on a spark row only in a view with no choice bars |
+| capability panel | the running download; a second download is paper (`is-quiet`); `quiet` on HbCapabilities when the panel shares a view with a chosen bar |
+| timeline | none; rules, pins and filters are ink |
+| a view switch | `.hb-seg.is-toggle`, ink when on, so the agent switch never competes |
+
+### Accessibility
+
+| Rule | Value |
+|---|---|
+| rows | spark rows, choice rows and events each carry one `.hb-sr` sentence and hide their visual parts: `hunger 0.42, falling over 30 s, under the 0.70 mark`, `fetch, score 0.86, chance 71 percent, commitment bonus 0.12, chosen`, `1:04.3, dog, choice: chase, after saw squirrel at 6.1 m` |
+| trend word | from the change over the last 60 samples: past 4 percent of the range is rising or falling |
+| live region | polite, rate limited by `useLiveAnnounce`: one message per 4 s at most for drive crossings and choices, 8 s for the timeline, 3 s for capability changes; the newest waiting message wins, a repeat is dropped. A vanilla page keeps the same gap |
+| progress in a panel | HbProgress `live=false` inside the capability panel, so the percent is not read on every step; the row verdict and the meter's `aria-valuetext` carry it |
+| keyboard | a spark row is a button with `aria-expanded` and `aria-controls`; filter chips and pins use `aria-pressed`; the timeline list is a focusable region that scrolls; tabs move with the arrow keys, Home and End |
+
+### Mobile
+
+| Rule | Value |
+|---|---|
+| spark rows | 44 px tall, the chip under the label; a tap opens the larger chart |
+| choice labels | wrap to two lines on a phone, cut with an ellipsis from 641 px |
+| timeline | scrolls inside its own frame up to `--hb-log-h`, never the page; the chain wraps under its stamp; the pin is a 44 px square, 32 px with a fine pointer from 641 px |
+| capability row | the button drops under the name until the panel is 420 px wide (a container query), then sits beside it |
+| two agents | a `.hb-seg.is-toggle` switch on a phone, two columns from 901 px (page layout) |
+
+### Defaults the owner may change
+
+| Item | Default |
+|---|---|
+| history window | 120 s at 2 Hz, 240 samples |
+| threshold mark | 0.7, where the dog simulator writes a memory |
+| commitment drawing | hatched, beside the base score |
+| timeline depth | three cause links, 60 events after the pins |
+

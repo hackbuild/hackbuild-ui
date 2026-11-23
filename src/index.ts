@@ -67,6 +67,19 @@ export type { HbVerdictStatus } from './components/HbVerdict.vue'
 export type { HbReadoutRow } from './components/HbReadouts.vue'
 export type { HbGaugeRow } from './components/HbGauges.vue'
 
+// minds and capabilities: drive sparklines, choice bars, the cause
+// timeline and the capability panel for pages that show an agent thinking
+export { default as HbSparkRows } from './components/HbSparkRows.vue'
+export { default as HbChoiceBars } from './components/HbChoiceBars.vue'
+export { default as HbCausalLog } from './components/HbCausalLog.vue'
+export { default as HbCapabilities } from './components/HbCapabilities.vue'
+export { useLiveAnnounce } from './composables/useLiveAnnounce'
+export type { HbSparkRow } from './components/HbSparkRows.vue'
+export type { HbChoiceOption } from './components/HbChoiceBars.vue'
+export type { HbCausalEvent, HbCausalKind } from './components/HbCausalLog.vue'
+export type { HbCap, HbCapNeed, HbCapNeedKind, HbCapState, HbCapVerb } from './components/HbCapabilities.vue'
+export type { LiveAnnounce } from './composables/useLiveAnnounce'
+
 // page sections
 export { default as HbNav } from './components/HbNav.vue'
 export { default as HbHero } from './components/HbHero.vue'

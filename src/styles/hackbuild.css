@@ -166,7 +166,7 @@ body.hb::before{
   padding:9px 14px; cursor:pointer; opacity:.6;
   flex:0 0 auto; white-space:nowrap; text-decoration:none;
 }
-.hb-tab:hover{ opacity:1 }
+@media (hover:hover) and (pointer:fine){ .hb-tab:hover{ opacity:1 } }
 .hb-tab[aria-selected="true"],.hb-tab.is-active{
   opacity:1; color:var(--hb-pink); border-bottom-color:var(--hb-pink);
 }
@@ -203,7 +203,7 @@ body.hb::before{
   margin:calc(-1 * var(--hb-s4)) calc(-1 * var(--hb-s5)) var(--hb-s3);
   padding:7px var(--hb-s5);
 }
-.hb-panel:hover{ }                     /* panels do not move. only cards do. */
+@media (hover:hover) and (pointer:fine){ .hb-panel:hover{ } }                     /* panels do not move. only cards do. */
 
 .hb-card{
   background:var(--hb-paper-raised);
@@ -214,9 +214,9 @@ body.hb::before{
   transition:transform var(--hb-t-fast), box-shadow var(--hb-t-fast);
 }
 a.hb-card{ display:block; color:inherit; text-decoration:none }
-a.hb-card:hover,.hb-card.is-interactive:hover{
+@media (hover:hover) and (pointer:fine){ a.hb-card:hover,.hb-card.is-interactive:hover{
   transform:translate(-2px,-2px); box-shadow:var(--hb-shadow-xl);
-}
+} }
 
 /* Dark instrument surface: canvases, scopes, waterfalls, consoles, 3D views. */
 .hb-stage{
@@ -273,7 +273,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 }
 /* Text on a pink fill is ink: 4.62:1 against 3.32:1 for paper (computed,
    WCAG relative luminance). Paper on pink fails AA at 11 px. */
-.hb-btn:hover{ background:var(--hb-pink); border-color:var(--hb-pink); color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-btn:hover{ background:var(--hb-pink); border-color:var(--hb-pink); color:var(--hb-ink) } }
 .hb-btn:active{ transform:translate(3px,3px); box-shadow:0 0 0 var(--hb-ink) }
 .hb-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 .hb-btn[disabled],.hb-btn.is-disabled{
@@ -281,14 +281,14 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   border-color:var(--hb-ink-4); box-shadow:none; cursor:not-allowed;
 }
 .hb-btn-2{ background:var(--hb-paper-raised); color:var(--hb-ink) }
-.hb-btn-2:hover{ background:var(--hb-pink); color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-btn-2:hover{ background:var(--hb-pink); color:var(--hb-ink) } }
 .hb-btn-danger{ background:var(--hb-pink); border-color:var(--hb-pink); color:var(--hb-ink) }
-.hb-btn-danger:hover{ background:var(--hb-pink-deep); border-color:var(--hb-pink-deep) }
+@media (hover:hover) and (pointer:fine){ .hb-btn-danger:hover{ background:var(--hb-pink-deep); border-color:var(--hb-pink-deep) } }
 .hb-btn-ghost{
   background:transparent; color:var(--hb-paper);
   border:1px solid rgba(245,240,230,.35); box-shadow:none;
 }
-.hb-btn-ghost:hover{ background:transparent; border-color:var(--hb-pink); color:var(--hb-pink) }
+@media (hover:hover) and (pointer:fine){ .hb-btn-ghost:hover{ background:transparent; border-color:var(--hb-pink); color:var(--hb-pink) } }
 .hb-btn-sm{ font-size:10px; padding:5px 10px }
 .hb-btn-lg{ font-size:12px; padding:11px 20px }
 .hb-btn-block{ display:flex; width:100%; justify-content:center }
@@ -432,7 +432,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 }
 .hb-table td{ padding:6px 8px; border-bottom:1px solid rgba(26,26,26,.2) }
 .hb-table tbody tr:nth-child(even){ background:var(--hb-paper-sunk) }
-.hb-table tbody tr:hover{ background:var(--hb-pink-10) }
+@media (hover:hover) and (pointer:fine){ .hb-table tbody tr:hover{ background:var(--hb-pink-10) } }
 .hb-table .num{ text-align:right; font-variant-numeric:tabular-nums }
 
 /* Console / log. Newest line at the top, one color per severity. */
@@ -539,6 +539,11 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 }
 .hb-seg > button:last-child{ border-right:0 }
 .hb-seg > button.is-on{ background:var(--hb-pink); color:var(--hb-ink) }
+/* A view switch that is not the step's primary selection: ink when on,
+   so the pink stays with the focal value. */
+.hb-seg.is-toggle > button.is-on{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-seg > button{ min-height:44px }
+@media(min-width:641px) and (pointer:fine){ .hb-seg > button{ min-height:0 } }
 .hb-bar-ink .hb-seg,.hb-header .hb-seg{ box-shadow:none; border-color:var(--hb-paper) }
 .hb-bar-ink .hb-seg > button,.hb-header .hb-seg > button{
   background:transparent; color:var(--hb-paper); border-right-color:var(--hb-paper);
@@ -569,7 +574,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-dial .sep{ color:var(--hb-paper); opacity:.4 }
 /* Digits are individually clickable: click the top half to raise, bottom to lower. */
 .hb-dial .d{ cursor:ns-resize; padding:0 1px }
-.hb-dial .d:hover{ background:var(--hb-pink); color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-dial .d:hover{ background:var(--hb-pink); color:var(--hb-ink) } }
 
 /* Band sticker. A rotated hand-lettered tag, the one place Permanent Marker
    is allowed at small size. One per view, never more. */
@@ -593,7 +598,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   display:flex; flex-direction:column; gap:4px; justify-content:flex-end;
   transition:transform var(--hb-t-fast), box-shadow var(--hb-t-fast);
 }
-.hb-tile:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--hb-pink) }
+@media (hover:hover) and (pointer:fine){ .hb-tile:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--hb-pink) } }
 .hb-tile:active{ transform:translate(1px,1px); box-shadow:1px 1px 0 var(--hb-ink) }
 .hb-tile.is-on{ background:var(--hb-pink); color:var(--hb-ink); border-color:var(--hb-ink) }
 .hb-tile .n{ font-family:var(--hb-display); font-size:17px; line-height:1.05 }
@@ -623,7 +628,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   color:inherit; text-align:left;
 }
 .hb-row:last-child{ border-bottom:0 }
-.hb-row:hover{ background:var(--hb-pink-10) }
+@media (hover:hover) and (pointer:fine){ .hb-row:hover{ background:var(--hb-pink-10) } }
 .hb-row.is-on{ background:var(--hb-pink); color:var(--hb-ink) }
 /* A pink readout inside a pink row is invisible. Flip it to ink. */
 .hb-row.is-on .hb-readout,.hb-row.is-on .hb-label{ color:var(--hb-ink) }
@@ -642,6 +647,8 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-fold[open] > summary::before{ content:"-" }
 .hb-fold[open] > summary{ border-bottom:var(--hb-border) solid var(--hb-ink) }
 .hb-fold > div{ padding:var(--hb-s3) }
+.hb-fold > summary{ min-height:44px }
+@media(min-width:641px) and (pointer:fine){ .hb-fold > summary{ min-height:0 } }
 
 /* Modal. The display rule must be beaten by [hidden] explicitly or the close
    button does nothing. This bug shipped once. */
@@ -736,9 +743,9 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   background:none; border:0; color:var(--hb-ink);
   padding:8px 14px; cursor:pointer; text-align:left; text-decoration:none;
 }
-.hb-menu-item:hover{ background:var(--hb-pink); color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-menu-item:hover{ background:var(--hb-pink); color:var(--hb-ink) } }
 .hb-menu-item[disabled]{ color:var(--hb-ink-4); cursor:not-allowed }
-.hb-menu-item[disabled]:hover{ background:none; color:var(--hb-ink-4) }
+@media (hover:hover) and (pointer:fine){ .hb-menu-item[disabled]:hover{ background:none; color:var(--hb-ink-4) } }
 .hb-menu-rule{ border:0; border-top:1px dashed rgba(26,26,26,.3); margin:4px 0 }
 
 /* Drawer. A full-height panel that slides in from an edge. The mobile home
@@ -899,16 +906,16 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   cursor:pointer; text-decoration:none;
   transition:background var(--hb-t);
 }
-.hb-iconbtn:hover{ background:var(--hb-pink); color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-iconbtn:hover{ background:var(--hb-pink); color:var(--hb-ink) } }
 .hb-iconbtn:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--hb-ink) }
 /* on ink and in footers: ghost squares */
 .hb-on-ink .hb-iconbtn,.hb-footer .hb-iconbtn{
   background:transparent; color:var(--hb-paper);
   border-color:rgba(245,240,230,.4); box-shadow:none;
 }
-.hb-on-ink .hb-iconbtn:hover,.hb-footer .hb-iconbtn:hover{
+@media (hover:hover) and (pointer:fine){ .hb-on-ink .hb-iconbtn:hover,.hb-footer .hb-iconbtn:hover{
   border-color:var(--hb-pink); color:var(--hb-pink); background:transparent;
-}
+} }
 /* 44 px touch targets on phones and touch screens. */
 @media(min-width:641px) and (pointer:fine){ .hb-iconbtn{ width:34px; height:34px } }
 
@@ -937,12 +944,12 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   color:var(--hb-paper); opacity:.75; text-decoration:none;
   padding:8px 12px; border:var(--hb-border) solid transparent;
 }
-.hb-nav-link:hover{ opacity:1; border-color:var(--hb-pink) }
+@media (hover:hover) and (pointer:fine){ .hb-nav-link:hover{ opacity:1; border-color:var(--hb-pink) } }
 .hb-nav-link.is-active,.hb-nav-link[aria-current="page"]{ opacity:1; color:var(--hb-pink) }
 .hb-nav-cta{
   background:var(--hb-pink); border-color:var(--hb-pink); opacity:1;
 }
-.hb-nav-cta:hover{ background:var(--hb-pink-deep); border-color:var(--hb-pink-deep) }
+@media (hover:hover) and (pointer:fine){ .hb-nav-cta:hover{ background:var(--hb-pink-deep); border-color:var(--hb-pink-deep) } }
 .hb-nav-toggle{ display:inline-flex; margin-left:auto }
 @media(min-width:761px){
   .hb-nav{ padding:0 max(var(--hb-s5), env(safe-area-inset-right)) 0 max(var(--hb-s5), env(safe-area-inset-left)) }
@@ -989,7 +996,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   text-transform:uppercase; letter-spacing:.09em;
   color:var(--hb-pink); text-decoration:none; white-space:nowrap;
 }
-.hb-sechead .hb-sechead-link:hover{ text-decoration:underline }
+@media (hover:hover) and (pointer:fine){ .hb-sechead .hb-sechead-link:hover{ text-decoration:underline } }
 
 /* Footer. Ink, pink top rule, link columns, a social row of icon squares,
    and the stamp line at the bottom. */
@@ -1006,7 +1013,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   font-family:var(--hb-utility); font-size:12px;
   color:var(--hb-paper); opacity:.75; text-decoration:none;
 }
-.hb-footer-col a:hover{ opacity:1; color:var(--hb-pink) }
+@media (hover:hover) and (pointer:fine){ .hb-footer-col a:hover{ opacity:1; color:var(--hb-pink) } }
 .hb-footer-social{ display:flex; gap:8px; margin-top:var(--hb-s3) }
 .hb-footer-bottom{
   display:flex; align-items:center; gap:var(--hb-s4); flex-wrap:wrap;
@@ -1053,7 +1060,7 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
   color:var(--hb-pink); text-decoration:none;
   display:inline-flex; align-items:center; gap:5px;
 }
-.hb-link:hover{ text-decoration:underline }
+@media (hover:hover) and (pointer:fine){ .hb-link:hover{ text-decoration:underline } }
 
 /* Media card. Plate on top, tags, marker title, copy, quiet links. The
    project card every page rebuilt. */
@@ -1068,10 +1075,10 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 /* The hover every source page agreed on: lift, a half degree of rotation,
    and the pink shadow. */
-a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
+@media (hover:hover) and (pointer:fine){ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   transform:translate(-2px,-4px) rotate(-.5deg);
   box-shadow:7px 7px 0 var(--hb-pink);
-}
+} }
 /* On an ink band the card's ink border, ink shadow and ink media plate all
    vanish into the background. Flip the border to paper and rest flat; the
    pink lift on hover stays. */
@@ -1113,7 +1120,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
    muted gray and got hard to read. */
 .hb-media-body h3{ font-size:22px; line-height:1.25 }
 .hb-media-body h3 a{ color:var(--hb-ink); text-decoration:none }
-.hb-media-body h3 a:hover{ color:var(--hb-pink) }
+@media (hover:hover) and (pointer:fine){ .hb-media-body h3 a:hover{ color:var(--hb-pink) } }
 /* Descriptions clamp to two lines so a grid of cards stays level. */
 .hb-media-body p{
   margin:0; color:var(--hb-ink-2); font-size:13.5px; line-height:1.55;
@@ -1129,7 +1136,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   border-top:1px dashed rgba(26,26,26,.18);
 }
 .hb-media-foot a{ color:var(--hb-ink-3); text-decoration:none; display:inline-flex; align-items:center; gap:8px }
-.hb-media-foot a:hover{ color:var(--hb-pink) }
+@media (hover:hover) and (pointer:fine){ .hb-media-foot a:hover{ color:var(--hb-pink) } }
 .hb-media-foot .hb-stats{ margin-left:auto }
 
 /* Video frame. The one pink border in a video section, void backing, a
@@ -1207,7 +1214,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   font-family:var(--hb-utility); font-size:12.5px;
 }
 .hb-track:last-child{ border-bottom:0 }
-.hb-track:hover{ background:var(--hb-pink-10); border-left-color:var(--hb-pink) }
+@media (hover:hover) and (pointer:fine){ .hb-track:hover{ background:var(--hb-pink-10); border-left-color:var(--hb-pink) } }
 .hb-track.is-on{ background:var(--hb-pink); color:var(--hb-paper); border-left-color:var(--hb-ink) }
 .hb-track .no{
   font-family:var(--hb-readout); font-size:19px; color:var(--hb-ink-4);
@@ -1326,7 +1333,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   border:1px solid var(--hb-ink-border); padding:calc(var(--hb-s1) / 2) var(--hb-s1); cursor:pointer;
   min-width:44px; min-height:44px;
 }
-.hb-cams > button:hover{ color:var(--hb-paper) }
+@media (hover:hover) and (pointer:fine){ .hb-cams > button:hover{ color:var(--hb-paper) } }
 .hb-cams > button.is-on,.hb-cams > button[aria-pressed="true"]{ color:var(--hb-paper); border-color:var(--hb-paper) }
 .hb-cams > button:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:1px }
 @media(min-width:641px){ .hb-cams > button{ padding:var(--hb-s1) var(--hb-s2) } }
@@ -1364,7 +1371,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 /* Materials. Pinned first in the rail on every step: swatch, extruder,
    material, the parts it prints, its role. */
 .hb-mat .hb-row{ cursor:default; gap:var(--hb-s2); font-size:11px; padding:var(--hb-s1) var(--hb-s2) }
-.hb-mat .hb-row:hover{ background:none }
+@media (hover:hover) and (pointer:fine){ .hb-mat .hb-row:hover{ background:none } }
 .hb-mat-sw{ width:18px; height:18px; flex:0 0 auto; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-mat-color, var(--hb-paper-edge)) }
 .hb-mat-ex{ font-family:var(--hb-readout); font-size:15px; color:var(--hb-ink-3); width:18px; flex:0 0 auto }
 .hb-mat-name{ font-weight:600; flex:0 0 auto }
@@ -1398,7 +1405,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
   display:inline-flex; align-items:center; justify-content:center;
   background:transparent; color:var(--hb-ink-3); border:0; cursor:pointer;
 }
-.hb-prow-reset:hover{ color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-prow-reset:hover{ color:var(--hb-ink) } }
 .hb-prow-reset:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:1px }
 .hb-prow-reset[hidden]{ display:none }
 .hb-prow-why{ flex:1 0 100%; font-family:var(--hb-body); font-size:12px; color:var(--hb-ink-3) }
@@ -1837,7 +1844,7 @@ a.hb-media-card:hover,.hb-media-card.is-interactive:hover{
 .hb-tseg-t{ font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-3); white-space:nowrap; font-variant-numeric:tabular-nums }
 .hb-tseg-text{ font-family:var(--hb-body); font-size:14px; line-height:1.5; overflow-wrap:anywhere }
 button.hb-tseg{ width:100%; background:none; border-top:0; border-right:0; text-align:left; cursor:pointer; color:inherit; font:inherit }
-button.hb-tseg:hover{ background:var(--hb-paper-sunk) }
+@media (hover:hover) and (pointer:fine){ button.hb-tseg:hover{ background:var(--hb-paper-sunk) } }
 .hb-tseg.is-now{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-tseg.is-now .hb-tseg-t{ color:var(--hb-pink) }
 .hb-tseg.is-partial .hb-tseg-text{ color:var(--hb-ink-3) }
@@ -1892,7 +1899,7 @@ button.hb-tseg:hover{ background:var(--hb-paper-sunk) }
 .hb-table.hb-checks td.why{ color:var(--hb-ink-2); overflow-wrap:anywhere; min-width:16ch; white-space:normal }
 .hb-table.hb-checks td.id{ font-weight:600; white-space:nowrap }
 .hb-table.hb-checks tr.is-fail td.id{ box-shadow:inset 4px 0 0 var(--hb-err) }
-.hb-table.hb-checks tbody tr:hover{ background:inherit }
+@media (hover:hover) and (pointer:fine){ .hb-table.hb-checks tbody tr:hover{ background:inherit } }
 
 /* Table row mark: the rows a step used, such as the recall hits handed
    to the model. An ink rule on the first cell, never pink. */
@@ -1916,3 +1923,235 @@ button.hb-tseg:hover{ background:var(--hb-paper-sunk) }
   .hb-msg.is-streaming .hb-msg-text::after{ animation:none }
   .hb-progress.is-busy > .hb-meter > i{ animation:none; width:100% !important; opacity:.45 }
 }
+
+/* ==========================================================================
+   20. MINDS AND CAPABILITIES
+   What an agent wants, what it weighed, why it acted, and what the page
+   can turn on: drive sparkline rows, choice bars, the cause timeline and
+   the capability panel. Taken from the dog-simulator minds tab design
+   (two agents, one timeline) and its capability drawer. Every class
+   stands alone for vanilla pages; the Vue components bind to them.
+   GUIDELINES 11 holds the rules and the pink budget: the chosen bar or
+   the current trace, never both, and the running download in the panel.
+   ========================================================================== */
+
+/* Spark rows. Label, a sparkline of recent history with a threshold rule
+   and switch ticks, the value, a state chip. Ink trace on sunk paper; the
+   current row may take the one pink trace. Each row is 44 px on a phone
+   and may be a button that opens the larger chart under it. */
+.hb-sparks{ display:flex; flex-direction:column; margin:0; padding:0; list-style:none; min-width:0 }
+.hb-sparks > li{ display:block; min-width:0 }
+.hb-spark{
+  display:grid; grid-template-columns:72px minmax(0,1fr) 40px; align-items:center;
+  position:relative; gap:0 var(--hb-s2); min-height:44px; width:100%; min-width:0;
+  padding:var(--hb-s1); border:0; border-bottom:1px dashed rgba(26,26,26,.2);
+  background:transparent; color:var(--hb-ink); text-align:left;
+  font-family:var(--hb-utility); font-size:12px;
+}
+.hb-sparks > li:last-child > .hb-spark:not([aria-expanded="true"]){ border-bottom:0 }
+button.hb-spark{ cursor:pointer }
+@media (hover:hover) and (pointer:fine){ button.hb-spark:hover{ background:var(--hb-paper-sunk) } }
+.hb-spark-label{ grid-column:1; grid-row:1 / span 2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.hb-spark:has(> .hb-spark-chip:not(:empty)) > .hb-spark-label{ grid-row:1; align-self:end }
+.hb-spark-line,.hb-spark-value{ grid-row:1 / span 2 }
+.hb-spark-line{ display:block; width:100%; height:var(--hb-spark-h); background:var(--hb-paper-sunk); overflow:visible }
+.hb-spark-value{ font-family:var(--hb-readout); font-size:17px; line-height:1; text-align:right; font-variant-numeric:tabular-nums }
+.hb-spark-chip{
+  grid-column:1; grid-row:2; justify-self:start; margin:0;
+  font-family:var(--hb-utility); font-size:10px; font-weight:700; line-height:1.4;
+  text-transform:uppercase; letter-spacing:.1em; white-space:nowrap;
+  color:var(--hb-ink-3); border:1px solid currentColor; padding:0 6px;
+}
+.hb-spark-chip:empty{ display:none }
+.hb-spark-chip.is-hi{ background:var(--hb-ink); color:var(--hb-paper); border-color:var(--hb-ink) }
+.hb-spark-chip.is-lo{ border-style:dashed }
+/* svg parts, drawn by the page or the component */
+.hb-spark-trace{ fill:none; stroke:var(--hb-ink); stroke-width:1.5; stroke-linejoin:miter; vector-effect:non-scaling-stroke }
+.hb-spark-th{ stroke:var(--hb-ink-3); stroke-width:1; stroke-dasharray:3 3; vector-effect:non-scaling-stroke }
+.hb-spark-tick{ stroke:var(--hb-ink-3); stroke-width:1; vector-effect:non-scaling-stroke }
+.hb-spark-now{ fill:var(--hb-ink) }
+.hb-spark.is-cur .hb-spark-label{ font-weight:700 }
+.hb-spark.is-cur .hb-spark-trace{ stroke:var(--hb-pink); stroke-width:2 }
+.hb-spark.is-cur .hb-spark-now{ fill:var(--hb-pink) }
+/* The larger chart a row opens: the same series, an axis line, words. */
+.hb-spark-big{
+  display:flex; flex-direction:column; gap:var(--hb-s1);
+  padding:var(--hb-s2) var(--hb-s1) var(--hb-s3); border-bottom:1px dashed rgba(26,26,26,.2);
+}
+.hb-spark-big[hidden]{ display:none }
+.hb-spark-big > svg{ display:block; width:100%; height:var(--hb-spark-big-h); background:var(--hb-paper-sunk); border:1px solid var(--hb-paper-edge) }
+.hb-spark-axis{ display:flex; justify-content:space-between; gap:var(--hb-s2); font-family:var(--hb-readout); font-size:14px; color:var(--hb-ink-3) }
+.hb-spark-note{ font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
+@media(min-width:641px){
+  .hb-spark{ grid-template-columns:96px minmax(0,1fr) 48px 84px; gap:0 var(--hb-s3); padding-block:0 }
+  .hb-spark-label,.hb-spark:has(> .hb-spark-chip:not(:empty)) > .hb-spark-label,.hb-spark-line,.hb-spark-value{ grid-row:1; align-self:center }
+  .hb-spark-chip{ grid-column:4; grid-row:1; justify-self:stretch; text-align:center; overflow:hidden; text-overflow:ellipsis }
+}
+@media(min-width:641px) and (pointer:fine){ .hb-spark{ min-height:32px } }
+
+/* Choice bars. The options an agent weighed: label, a bar split into the
+   base score, the commitment bonus (hatched) and a struck penalty, the
+   score and the chance in VT323. The chosen row takes a 4 px ink rule
+   and the one pink bar; the top scoring row is bold; zero rows dim. */
+.hb-choice{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-choice-list{
+  display:grid; grid-template-columns:fit-content(40%) minmax(0,1fr) 36px 40px;
+  margin:0; padding:0; list-style:none;
+}
+.hb-opt{
+  display:grid; grid-column:1 / -1; grid-template-columns:subgrid; align-items:center;
+  position:relative; gap:0 var(--hb-s2); min-height:32px; padding:0 var(--hb-s1) 0 var(--hb-s2);
+  border-left:4px solid transparent; border-bottom:1px dashed rgba(26,26,26,.2);
+  font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink);
+}
+.hb-opt:last-child{ border-bottom:0 }
+.hb-opt-label{ min-width:64px; overflow-wrap:anywhere; line-height:1.25; padding-block:2px }
+@media(min-width:641px){ .hb-opt-label{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-block:0 } }
+.hb-opt-bar{ display:flex; height:12px; min-width:0; background:var(--hb-paper-sunk); overflow:hidden }
+.hb-opt-bar > i{ display:block; height:100%; flex:0 0 auto }
+.hb-opt-base{ background:var(--hb-ink-2) }
+.hb-opt-bonus{
+  background:repeating-linear-gradient(135deg, var(--hb-ink) 0 2px, var(--hb-paper-raised) 2px 5px);
+  box-shadow:inset 0 0 0 1px var(--hb-ink);
+}
+.hb-opt-penalty{
+  background:linear-gradient(var(--hb-ink-3), var(--hb-ink-3)) center / 100% 1px no-repeat;
+  box-shadow:inset 0 0 0 1px var(--hb-ink-3);
+}
+.hb-opt-score,.hb-opt-prob{ font-family:var(--hb-readout); font-size:16px; line-height:1; text-align:right; font-variant-numeric:tabular-nums }
+.hb-opt-score{ color:var(--hb-ink-3) }
+.hb-opt.is-top .hb-opt-label{ font-weight:700 }
+.hb-opt.is-top .hb-opt-base{ background:var(--hb-ink) }
+.hb-opt.is-chosen{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
+.hb-opt.is-chosen .hb-opt-bar{ background:var(--hb-paper-raised) }
+.hb-opt.is-chosen .hb-opt-base{ background:var(--hb-pink) }
+.hb-opt.is-chosen .hb-opt-label::after{ content:" *"; font-weight:700 }
+.hb-choice.is-quiet .hb-opt.is-chosen .hb-opt-base{ background:var(--hb-ink) }
+.hb-opt.is-zero{ color:var(--hb-ink-4) }
+.hb-opt.is-zero .hb-opt-score{ color:var(--hb-ink-4) }
+.hb-choice-why{ margin:0; font-family:var(--hb-body); font-size:13.5px; line-height:1.5; color:var(--hb-ink) }
+.hb-choice-meta{ margin:0; font-family:var(--hb-utility); font-size:11px; line-height:1.5; color:var(--hb-ink-3); overflow-wrap:anywhere }
+.hb-choice-key{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) var(--hb-s3); margin:0; font-family:var(--hb-utility); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink-3) }
+.hb-choice-key > span{ display:inline-flex; align-items:center; gap:var(--hb-s1) }
+.hb-choice-key i{ display:inline-block; width:14px; height:10px }
+.hb-choice-key .hb-opt-base{ background:var(--hb-ink) }
+@media(min-width:641px){
+  .hb-choice-list{ grid-template-columns:fit-content(40%) minmax(0,1fr) 40px 44px }
+  .hb-opt{ gap:0 var(--hb-s3) }
+}
+
+/* Cause timeline. Events from one or more agents, newest first: time,
+   agent, kind icon, the text, and the chain that led to it (a sense, a
+   choice, an action) indented under it. Filters are toggle chips; a pin
+   keeps an event at the top. No pink here: rules and pins are ink. */
+.hb-causal{ display:flex; flex-direction:column; gap:var(--hb-s3); min-width:0 }
+.hb-causal-filters{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); align-items:center }
+.hb-causal-filters > .hb-label,.hb-causal-flabel{
+  flex:1 1 100%; font-family:var(--hb-utility); font-size:10px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink-3);
+}
+.hb-causal-filters .hb-chip{ box-shadow:none }
+.hb-causal-list{
+  margin:0; padding:0; list-style:none; max-height:var(--hb-log-h); overflow:auto; overscroll-behavior:contain;
+  border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); color:var(--hb-ink);
+}
+.hb-causal-list > ol{ margin:0; padding:0; list-style:none }
+.hb-causal-group{
+  position:sticky; top:0; z-index:1; margin:0;
+  font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+  background:var(--hb-ink); color:var(--hb-paper); padding:2px var(--hb-s3);
+}
+.hb-causal-empty{ padding:var(--hb-s3); font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-3) }
+.hb-cev{
+  position:relative; display:grid; grid-template-columns:minmax(0,1fr) 44px; gap:2px var(--hb-s2); align-items:start;
+  padding:var(--hb-s2) var(--hb-s1) var(--hb-s2) var(--hb-s3);
+  border-bottom:1px dashed rgba(26,26,26,.2); border-left:4px solid transparent;
+}
+.hb-cev:last-child{ border-bottom:0 }
+.hb-cev-hd{ display:flex; align-items:center; flex-wrap:wrap; gap:2px var(--hb-s2); min-width:0 }
+.hb-cev-t{ font-family:var(--hb-readout); font-size:16px; line-height:1; color:var(--hb-ink-3); font-variant-numeric:tabular-nums; white-space:nowrap }
+.hb-cev-agent,.hb-cev-kind{
+  display:inline-flex; align-items:center; gap:var(--hb-s1);
+  font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+}
+.hb-cev-agent{ color:var(--hb-ink) }
+.hb-cev-kind{ color:var(--hb-ink-3) }
+.hb-cev-text{ grid-column:1; margin:0; font-family:var(--hb-body); font-size:13.5px; line-height:1.45; overflow-wrap:anywhere }
+.hb-cev-pin{
+  grid-column:2; grid-row:1 / span 2; justify-self:end;
+  width:44px; height:44px; display:inline-flex; align-items:center; justify-content:center;
+  background:transparent; color:var(--hb-ink-4); border:var(--hb-border) solid transparent; cursor:pointer;
+}
+@media (hover:hover) and (pointer:fine){ .hb-cev-pin:hover{ color:var(--hb-ink); border-color:var(--hb-ink) } }
+.hb-cev-pin[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper); border-color:var(--hb-ink) }
+.hb-cev.is-pinned{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
+.hb-cev.is-new .hb-cev-t{ color:var(--hb-ink) }
+/* The chain: what led here, oldest first, one line each, indented on a
+   dashed rule. */
+.hb-cev-chain{
+  grid-column:1; margin:var(--hb-s1) 0 0; padding:0 0 0 var(--hb-s3); list-style:none;
+  border-left:2px dashed var(--hb-ink-4); display:flex; flex-direction:column; gap:2px;
+}
+.hb-cev-chain > li{
+  display:block; min-width:0; overflow-wrap:anywhere;
+  font-family:var(--hb-utility); font-size:11.5px; line-height:1.45; color:var(--hb-ink-2);
+}
+.hb-cev-chain > li > .hb-icon{ vertical-align:-1px; margin-right:var(--hb-s1); color:var(--hb-ink-3) }
+.hb-cev-chain .hb-cev-t{ font-size:14px; margin-right:var(--hb-s2) }
+@media(min-width:641px){
+  .hb-causal-filters > .hb-label,.hb-causal-flabel{ flex:0 0 auto }
+}
+@media(min-width:641px) and (pointer:fine){
+  .hb-cev{ grid-template-columns:minmax(0,1fr) 32px }
+  .hb-cev-pin{ width:32px; height:32px }
+}
+
+/* Capability panel. What the page can turn on: one row per optional
+   feature with its state, what it needs, the size with its source word,
+   the licence, the reason when it cannot run, and one button. The left
+   rule carries the state; a loading row holds the progress. */
+.hb-caps{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0; container-type:inline-size }
+.hb-caps-sum{ display:flex; align-items:baseline; gap:var(--hb-s2); margin:0; font-family:var(--hb-readout); font-size:18px; color:var(--hb-ink) }
+.hb-caps-sum > small{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-caps-list{ display:flex; flex-direction:column; gap:var(--hb-s2); margin:0; padding:0; list-style:none }
+.hb-cap{
+  display:grid; grid-template-columns:minmax(0,1fr); gap:var(--hb-s1) var(--hb-s3); align-items:center;
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:var(--hb-border) solid var(--hb-ink); border-left-width:6px; border-left-color:var(--hb-ink-4);
+  padding:var(--hb-s2) var(--hb-s3); min-width:0; position:relative;
+}
+.hb-cap-hd{ display:flex; align-items:center; gap:var(--hb-s1) var(--hb-s2); flex-wrap:wrap; min-width:0 }
+.hb-cap-hd > .hb-icon{ flex:0 0 auto }
+.hb-cap-name{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; overflow-wrap:anywhere }
+.hb-cap-act{ justify-self:start }
+.hb-cap-needs{ display:flex; flex-wrap:wrap; gap:var(--hb-s1); margin:0; padding:0; list-style:none }
+.hb-cap-need{
+  display:inline-flex; align-items:center; gap:var(--hb-s1);
+  font-family:var(--hb-utility); font-size:10.5px; line-height:1.5; color:var(--hb-ink-2);
+  background:var(--hb-paper-sunk); border:1px solid var(--hb-paper-edge); padding:0 6px;
+}
+.hb-cap-need.is-missing{ color:var(--hb-warn); border-color:currentColor; background:transparent; text-decoration:line-through }
+.hb-cap-why,.hb-cap-dep,.hb-cap-ask{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
+.hb-cap-why{ color:var(--hb-warn) }
+.hb-cap-dep{ color:var(--hb-ink) }
+.hb-cap > .hb-licence{ padding:var(--hb-s1) var(--hb-s2) }
+.hb-cap.is-on{ border-left-color:var(--hb-ok) }
+.hb-cap.is-loading{ border-left-color:var(--hb-ink) }
+.hb-cap.is-failed{ border-left-color:var(--hb-err) }
+.hb-cap.is-failed .hb-cap-why{ color:var(--hb-err) }
+.hb-cap.is-unavailable{ border-left-color:var(--hb-warn) }
+.hb-cap.is-unavailable .hb-cap-name{ color:var(--hb-ink-3) }
+/* From 420 px of panel width the button sits beside the name, the rest
+   wraps under both. */
+@container (min-width:420px){
+  .hb-cap{ grid-template-columns:minmax(0,1fr) auto }
+  .hb-cap > *{ grid-column:1 / -1 }
+  .hb-cap > .hb-cap-hd{ grid-column:1 }
+  .hb-cap > .hb-cap-act{ grid-column:2; grid-row:1; justify-self:end }
+}
+
+/* `.hb p` sets a bottom margin at a higher specificity; these paragraphs
+   space by their container's gap instead. */
+.hb .hb-cev-text,.hb .hb-choice-why,.hb .hb-choice-meta,.hb .hb-choice-key,
+.hb .hb-spark-note,.hb .hb-caps-sum,.hb .hb-cap-why,.hb .hb-cap-dep,.hb .hb-cap-ask,
+.hb .hb-causal-empty{ margin:0 }
