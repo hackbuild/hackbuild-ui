@@ -349,8 +349,13 @@ a.hb-card:hover,.hb-card.is-interactive:hover{
 .hb-input:focus,.hb-select:focus,.hb-textarea:focus{
   outline:none; border-color:var(--hb-pink); box-shadow:2px 2px 0 var(--hb-pink);
 }
-/* 16 px on phones and touch screens, or iOS zooms the page on focus */
-@media(min-width:641px) and (pointer:fine){ .hb-input,.hb-select,.hb-textarea{ font-size:13px } }
+/* 16 px and 44 px tall on phones and touch screens, or iOS zooms the page
+   on focus and a finger misses the field */
+.hb-input,.hb-select{ min-height:44px }
+@media(min-width:641px) and (pointer:fine){
+  .hb-input,.hb-select,.hb-textarea{ font-size:13px }
+  .hb-input,.hb-select{ min-height:0 }
+}
 .hb-input::placeholder,.hb-textarea::placeholder{ color:var(--hb-ink-4) }
 .hb-input.is-invalid,.hb-select.is-invalid,.hb-textarea.is-invalid{
   border-color:var(--hb-err);

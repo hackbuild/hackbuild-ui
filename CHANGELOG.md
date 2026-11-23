@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2
+
+- `.hb-input` and `.hb-select` are 44 px tall on phones and touch
+  screens; 0.4.1 left them at 41 and 43 px. They compact at 641 px and up
+  with a fine pointer, like the buttons.
+
 ## 0.4.1
 
 - Mobile first. Every `max-width` media and container query in

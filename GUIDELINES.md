@@ -434,7 +434,7 @@ tagline. Read every "under 640 px" in this file as the base state.
 | Rule | Value |
 |---|---|
 | touch targets | buttons, chips, tabs, icon buttons, cam buttons, the param row reset and ranges are 44 px tall; they compact only at 641 px and up with a fine pointer (ranges at 821 px) |
-| fields | `.hb-input`, `.hb-select`, `.hb-textarea` and the composer are 16 px, so iOS does not zoom on focus; 13 px (composer 14) only at 641 px and up with a fine pointer |
+| fields | `.hb-input`, `.hb-select`, `.hb-textarea` and the composer are 16 px, so iOS does not zoom on focus, and inputs and selects are 44 px tall; 13 px (composer 14) and their natural height only at 641 px and up with a fine pointer |
 | safe area | the header, nav, toolbar, status strip and shell pad by `env(safe-area-inset-*)` when the inset is larger than the gutter; the page sets `viewport-fit=cover` to use it |
 | viewport | square and at most 62svh first, 16 by 9 at 641 px; the hud stacks and the scene verbs shrink until the viewport is 561 px wide |
 | app shell | stacked and scrolling as one page first; pinned work column beside the rail at 901 px |
