@@ -487,7 +487,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-slider` | Label, track, live value. The default control of every panel |
 | `.hb-list` / `.hb-row` | Bookmarks, device lists, capture sessions. 44 px tall on a coarse pointer |
 | `.hb-acts` | Button row: the verbs of one thing under a form, card or picked row. Wraps; `.is-end` pushes right, `.is-fill` shares the width; 44 px buttons on a coarse pointer. A toolbar holds global settings, this does not. `HbActions` |
-| `.hb-toolpage` | Tool page: the parts of one tool (engine bar, chat, rack) stacked with one gap. `.is-grow` on the part that fills the rest. Use it instead of a local margin between parts |
+| `.hb-toolpage` | Tool page: the parts of one tool (engine bar, chat, rack) stacked with one gap. `.is-grow` on the part that fills the rest. Use it instead of a local margin between parts. `.is-split` puts a side column (`.is-side`: rack, queue, list) beside the main part from 1024 px; `.is-full` spans both (engine bar) |
 | `.hb-fold` | Disclosure. Fiddly controls fold away rather than being deleted; easy mode is a fold, not a different app. `.hb-fold-num` is the bracketed section number, `.hb-fold-done` the ok word |
 | `.hb-tabs.is-num` / `.hb-tab.is-done` / `.hb-tabs-select` | Numbered tabs in the order of work, a done tab's number filled ok green; the select that replaces a strip that would clip |
 | `.hb-empty-hint` | The line a tab or fold shows while it has nothing: what to do first |
