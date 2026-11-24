@@ -1140,3 +1140,18 @@ Vanilla: `rackQueue(load)` loads one slot at a time, `presetJobs`,
 Vanilla: `gateNote`, `wakePills`, `wakeSummary`, `wakeBar`, `wakeError`;
 `maskKey`, `keyCheck`, `KEY_NOTE`; `CUSTOM_MODES`, `customFields`,
 `customErrors`, `customId`, `deriveId`, `checkText`; `toastStore`.
+
+### Chat: message, think, tool call, context, chats
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbChat` | `.hb-chat-hd`, `-title`, `-hd-acts`, `-empty`, `-empty-text`, `-examples`, `.hb-chat-key > .hb-apikey` | header with clear, export, import; messages through `HbMessage` or the `message` slot; example chips in the empty state; the `above` slot holds the context meter. One primary button reads send, then stop while a reply streams; Escape stops. Enter sends on a fine pointer; on a coarse pointer Enter adds a line and the button sends (ctrl or cmd Enter sends on both); IME composition is respected. Up in an empty composer edits the last turn. The composer grows from 44 to 200 px. The log follows new text only when pinned within 80 px of the bottom, and always after a send |
+| `HbMessage` | `.hb-msg-name`, `-stats`, `-parts`, `-pending`, `-tools`, `-err`, `-seen`, `-used`, `-used-item`, `-used-score`, `-acts`, `-act`, `-edit` | the who line carries the stats strip with its source word; think fold; the pending line names what the turn waits on; tool cards; the reply, split on blank lines into at most 5 boxes when `split` (text past the cap joins the last box); the error card in the turn with its fix; `seen:`; `memory used (n)` with scores that emit `recall`. Actions: speak, redo, copy (reads copied for a second), delete (asks twice in place), edit on your own turns (ctrl Enter sends the edit, Escape backs out). The row hides while the turn streams |
+| `HbThink` | `.hb-think.is-plan`, `.is-memory`, `.is-live` | open while `streaming`, summary `thinking...`; closed after, `reasoning (n chars)`. Plan and working memory tags use the same fold in amber and slime |
+| `HbToolCall` | `.hb-tool`, `-row`, `-caret`, `-name`, `-args`, `-state`, `-body`, `-label`, `-pre`, `.is-chip` | one line when finished: name, arguments cut at 80, calling, ok or error with the time; open with its arguments while running; result cut at 1200; `restored` says the result was in the history |
+| `HbContextMeter` | `.hb-ctx`, `-hd`, `-label`, `-words`, `-bar`, `-legend`, `-banner`, `-pill`, `.hb-ctx-p0` to `-p5` | stacked bar on the void by source with a counted legend, amber from 75 percent; at 95 percent the banner says the context is full with new chat and drop oldest turns. The pill reads `ctx 37%` for a header |
+| `HbConversationList` | `.hb-convs`, `-hd`, `-new`, `-list`, `-item`, `-open`, `-title`, `-meta`, `-rename`, `-acts`, `-act`, `-foot`, `-note`, `-empty` | the chats rail: new at the head; rows newest first with when and how many messages; rename in place, duplicate, delete on a second press; Up and Down move between chats; export and import at the foot with where chats live |
+
+Vanilla: `splitParts`, `statsText`, `clip`, `argsLine`, `argsBlock`,
+`TOOL_WORDS`, `composerKey`, `coarsePointer`, `autosize`, `pinned`,
+`contextUse`, `relTime`.

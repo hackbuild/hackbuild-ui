@@ -49,3 +49,5 @@ export { CUSTOM_MODES, deriveId, customFields, customErrors, customId, checkText
 export type { CheckState, CustomCheck, CustomField, CustomMode, CustomModeDef, CustomValues } from './custom'
 export { toastStore } from './toast'
 export type { ToastAction, ToastItem, ToastKind, ToastOptions, ToastSnapshot, ToastStore } from './toast'
+export { splitParts, statsText, clip, argsLine, argsBlock, TOOL_WORDS, composerKey, coarsePointer, autosize, pinned, contextUse, relTime } from './chat'
+export type { ComposerAction, ComposerKeyState, ContextSegment, ContextUse, MessageStats, ToolState } from './chat'

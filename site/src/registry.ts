@@ -84,6 +84,17 @@ export const registry: RegistryGroup[] = [
     ],
   },
   {
+    category: 'chat',
+    entries: [
+      { name: 'HbChat', blurb: 'transcript, actions, one primary that reads stop' },
+      { name: 'HbMessage', blurb: 'every hidden input one fold away' },
+      { name: 'HbThink', blurb: 'think text, open while it streams' },
+      { name: 'HbToolCall', blurb: 'one line when done, open while running' },
+      { name: 'HbContextMeter', blurb: 'what fills the context, the full banner' },
+      { name: 'HbConversationList', blurb: 'the chats rail' },
+    ],
+  },
+  {
     category: 'surfaces',
     entries: [
       { name: 'HbPanel', blurb: 'raised paper with the block shadow' },
