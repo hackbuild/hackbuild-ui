@@ -21,7 +21,7 @@ export interface HbWelcomeStart {
   primary?: boolean
 }
 
-interface Props {
+export interface Props {
   /** The tool name. */
   title: string
   /** Pink trailing part of the title, usually the dot. */
