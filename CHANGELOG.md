@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.4
+
+- HbDrawer: `size` sm, md, lg sets the side drawer to 340, 440 or 560 px
+  from `--hb-drawer-*` tokens; `drawer(el, {size})` in vanilla.
+- HbConversationList: row actions lift on focus within the row; F2
+  renames, Delete arms delete. `listRowKey()` in the vanilla entry.
+- HbModelRack: a pick with no catalogue record shows as a row that names
+  it, with remove; emits `remove(slot)`. HbModelSlot takes `missing`.
+  `slotMissing()` in the vanilla entry.
+
 ## 0.6.3
 
 - toastStore: calls setTimeout and clearTimeout unbound; Chrome threw
