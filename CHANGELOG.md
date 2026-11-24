@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.1
+
+- Transcription: HbLevelRail (speech kept and cut, floor and gate in dB,
+  segments, seek in seconds), HbQueueStrip (one strip per file with
+  status, wave, measured line, remove).
+- HbTranscript: dropped lines with their reason, speaker, edit in place,
+  search, follow, time format, 44 px rows. Segment fields match the
+  transcribe package.
+- Vanilla: `railBars`, `transcriptRows`, `stripStatus`, `stripMeta` and
+  their helpers.
+
 ## 0.6.0
 
 - The vanilla entry (`@virgilvox/hackbuild-ui/vanilla`) with tests, seven
