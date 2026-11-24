@@ -1516,7 +1516,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 @media (hover:hover) and (pointer:fine){ .hb-mat .hb-row:hover{ background:none } }
 .hb-mat-sw{ width:18px; height:18px; flex:0 0 auto; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-mat-color, var(--hb-paper-edge)) }
 .hb-mat-ex{ font-family:var(--hb-readout); font-size:15px; color:var(--hb-ink-3); width:18px; flex:0 0 auto }
-.hb-mat-name{ font-weight:600; flex:0 0 auto }
+.hb-mat-name{ font-weight:600; flex:0 1 auto; min-width:0; overflow-wrap:anywhere }
 .hb-mat-parts{ color:var(--hb-ink-2); flex:1 1 auto; min-width:0; overflow-wrap:anywhere }
 .hb-mat-role{ font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3); flex:0 0 auto }
 
