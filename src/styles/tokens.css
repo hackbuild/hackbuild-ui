@@ -119,6 +119,9 @@
   --hb-modal-sm: 520px;         /* modal panel, a confirm */
   --hb-modal-md: 640px;         /* modal panel, the default */
   --hb-modal-lg: 880px;         /* modal panel, a form or table */
+  --hb-drawer-sm: 340px;        /* side drawer, the default rail */
+  --hb-drawer-md: 440px;        /* side drawer, a manager or settings */
+  --hb-drawer-lg: 560px;        /* side drawer, a wide form */
   --hb-wave-h:  72px;           /* audio strip height */
   --hb-lrail-h: 110px;          /* level rail height */
   --hb-qwave-h: 44px;           /* queue strip waveform height */

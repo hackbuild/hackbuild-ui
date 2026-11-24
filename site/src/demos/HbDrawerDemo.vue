@@ -20,7 +20,7 @@ const code = `<HbDrawer v-model="open">
 <HbDrawer v-model="rack" side="bottom" title="rack">...</HbDrawer>
 
 <!-- a sheet under 761 px, the right drawer from it, no matchMedia here -->
-<HbDrawer v-model="log" side="auto" title="event log">...</HbDrawer>`
+<HbDrawer v-model="models" side="auto" size="md" title="models">...</HbDrawer>`
 </script>
 
 <template>
@@ -70,13 +70,13 @@ const code = `<HbDrawer v-model="open">
 
   <DemoSection
     title="Side by width"
-    note="side auto: the bottom sheet under the breakpoint (761 px by default) and the right drawer from it, switching live as the width changes. As a sheet it closes any other open sheet."
+    note="side auto: the bottom sheet under the breakpoint (761 px by default) and the right drawer from it, switching live as the width changes. As a sheet it closes any other open sheet. size md makes the side drawer 440 px, room for a model manager; a sheet stays full width."
   >
     <div class="demo-row">
-      <HbButton @click="auto = true">open the event log</HbButton>
+      <HbButton @click="auto = true">open the models</HbButton>
     </div>
-    <HbDrawer v-model="auto" side="auto" title="event log">
-      <p style="margin: 0">A sheet on a phone, a right drawer on a wide screen.</p>
+    <HbDrawer v-model="auto" side="auto" size="md" title="models">
+      <p style="margin: 0">A sheet on a phone, a 440 px right drawer on a wide screen.</p>
     </HbDrawer>
   </DemoSection>
 
@@ -84,6 +84,7 @@ const code = `<HbDrawer v-model="open">
     :rows="[
       { prop: 'v-model', type: 'boolean' },
       { prop: 'side', type: `'left' | 'right' | 'bottom' | 'auto'`, default: `'right'`, notes: 'bottom is the sheet; auto is the sheet under breakpoint, right from it' },
+      { prop: 'size', type: `'sm' | 'md' | 'lg'`, default: `'sm'`, notes: '340, 440 or 560 px side drawer, a class; a sheet stays full width' },
       { prop: 'breakpoint', type: 'number', default: '761', notes: 'px where side auto switches' },
       { prop: 'title', type: 'string', notes: 'head with a close button; the accessible name' },
       { prop: 'label', type: 'string', notes: 'accessible name when there is no title' },

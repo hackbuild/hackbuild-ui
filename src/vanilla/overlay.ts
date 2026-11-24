@@ -40,6 +40,9 @@ export interface DrawerOptions extends OverlayOptions {
   /** Width in px where side 'auto' turns from sheet to right drawer.
       Default 761, where the suite's tab strip returns. */
   breakpoint?: number
+  /** Side drawer width from the drawer tokens: sm 340, md 440, lg 560 px.
+      Sets `.is-md` or `.is-lg`; a sheet stays full width. */
+  size?: 'sm' | 'md' | 'lg'
 }
 
 // Open overlays, newest last. Escape and the Tab trap act on the top one.
@@ -186,6 +189,8 @@ export function drawer(el: HTMLElement, options: DrawerOptions = {}): OverlayHan
   const side = options.side ?? 'right'
   el.classList.toggle('is-left', side === 'left')
   el.classList.toggle('is-sheet', side === 'bottom')
+  el.classList.toggle('is-md', options.size === 'md')
+  el.classList.toggle('is-lg', options.size === 'lg')
   const panel = el.querySelector<HTMLElement>(':scope > .hb-drawer-panel') ?? el
   const view = el.ownerDocument.defaultView
   const query = side === 'auto' && typeof view?.matchMedia === 'function'

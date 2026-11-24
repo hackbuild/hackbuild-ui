@@ -500,7 +500,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-switch` | Rectangular toggle, knob slides, pink when on. Keyed off `aria-checked` |
 | `.hb-check` | Checkbox and radio row, native control carrying the pink accent |
 | `.hb-menu-wrap` / `.hb-menu` / `.hb-menu-item` | Dropdown action menu under a trigger |
-| `.hb-drawer` | Full-height panel sliding from an edge. The mobile home of the rail. `.is-sheet` is the bottom sheet: 74 percent tall, safe area padded, one open at a time. `.hb-drawer-hd` is the title row with the close button |
+| `.hb-drawer` | Full-height panel sliding from an edge. The mobile home of the rail. `.is-sheet` is the bottom sheet: 74 percent tall, safe area padded, one open at a time. `.hb-drawer-hd` is the title row with the close button. `.is-md` and `.is-lg` set the side drawer to 440 and 560 px from the drawer tokens (default 340); a sheet stays full width |
 | `.hb-avatar` | A square with an ink border. This system does not crop people into circles |
 | `.hb-skeleton` | Paper-edge block that breathes while the real thing loads |
 | `.hb-spinner` | Three meter segments blinking in order. No circles |
@@ -990,7 +990,7 @@ composables call the same functions, and so do `HbTabs`, `HbDrawer`,
 |---|---|---|
 | `tabs(el)` | `.hb-tabs` of `role="tab"` buttons | one tab in the tab order; arrows select with wrap, Home and End; `aria-controls` panels shown and hidden |
 | `modal(el)` | `.hb-modal > .hb-panel` | focus in, Tab trap, Escape, scrim click, `data-hb-close`, focus back to the opener, scroll lock |
-| `drawer(el, {side})` | `.hb-drawer > .hb-drawer-panel` | the modal rules; `side: 'left'` sets `.is-left`, `side: 'bottom'` sets `.is-sheet`, and opening a sheet closes any other open sheet; `side: 'auto'` is the sheet under `breakpoint` (761 px) and the right drawer from it, live, so a consumer never reads matchMedia for it |
+| `drawer(el, {side, size})` | `.hb-drawer > .hb-drawer-panel` | the modal rules; `size: 'md'` or `'lg'` sets `.is-md` or `.is-lg`; `side: 'left'` sets `.is-left`, `side: 'bottom'` sets `.is-sheet`, and opening a sheet closes any other open sheet; `side: 'auto'` is the sheet under `breakpoint` (761 px) and the right drawer from it, live, so a consumer never reads matchMedia for it |
 | `menu(wrap)` | `.hb-menu-wrap`, trigger, `.hb-menu` | arrows with wrap, Home, End, a letter jumps, Escape returns focus, a press outside closes; `onToggle` reports open and close |
 | `dropRoutes(target, routes)` | optional `.hb-dropzone.is-cover` overlay | files routed by type, one call per route, the rest rejected; a dropped folder is walked; `paste: true` routes pasted files; `.is-over`, `.is-reject` and `data-route` while a file hovers |
 | `hotkeys(table)` | none | scopes, ignores typing in fields, `ctrl` reads cmd on a Mac, `list()` feeds a key map |

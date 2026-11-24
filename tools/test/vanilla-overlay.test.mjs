@@ -181,3 +181,15 @@ test("drawer: side auto is a sheet under the breakpoint and the right drawer fro
   sheet.dispose();
   d.close();
 });
+
+test("drawer: size sets the width class, the default sets none", () => {
+  const d = dom(HTML);
+  const h = drawer(d.$("#d"), { size: "md" });
+  assert.equal(d.$("#d").classList.contains("is-md"), true);
+  h.dispose();
+  const h2 = drawer(d.$("#d"), {});
+  assert.equal(d.$("#d").classList.contains("is-md"), false);
+  assert.equal(d.$("#d").classList.contains("is-lg"), false);
+  h2.dispose();
+  d.close();
+});

@@ -17,6 +17,9 @@ interface Props {
   title?: string
   /** Accessible name when there is no title. */
   label?: string
+  /** Side drawer width: sm 340 px, md 440 px, lg 560 px, a class from the
+      drawer tokens. The bottom sheet stays full width. */
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -26,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   label: undefined,
   breakpoint: 761,
+  size: 'sm',
 })
 
 const open = defineModel<boolean>({ default: false })
@@ -53,6 +57,7 @@ watch(open, async (isOpen) => {
     open: true,
     side: props.side,
     breakpoint: props.breakpoint,
+    size: props.size,
     label: props.title ?? props.label,
     closeOnScrim: props.closeOnBackdrop,
     closeOnEscape: props.closeOnEscape,
@@ -70,8 +75,8 @@ onBeforeUnmount(release)
 
 <template>
   <Teleport to="body">
-    <!-- Side auto: the vanilla drawer owns .is-sheet, so no class binding. -->
-    <div v-if="open" ref="root" class="hb-drawer hb" :class="props.side === 'auto' ? undefined : { 'is-left': props.side === 'left', 'is-sheet': props.side === 'bottom' }">
+    <!-- Side auto: the vanilla drawer owns .is-sheet, so no class binding for it. -->
+    <div v-if="open" ref="root" class="hb-drawer hb" :class="[props.size === 'sm' ? '' : `is-${props.size}`, props.side === 'auto' ? '' : { 'is-left': props.side === 'left', 'is-sheet': props.side === 'bottom' }]">
       <div class="hb-drawer-panel" role="dialog" aria-modal="true">
         <div v-if="props.title" class="hb-drawer-hd">
           <span>{{ props.title }}</span>
