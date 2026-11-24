@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.9.0
+
+- The refined look is the default for app chrome and tool panels:
+  `--hb-border` is 1.5px, `--hb-border-em` 2px for the primary button,
+  modal, stage and viewport, shadows 2, 3, 4 and 6 px. Marketing blocks,
+  `.hb-prose` and `.hb-zine` keep the 2 px zine values.
+- VT323 readout sizes `--hb-readout-sm`, `-md`, `-lg`; pills, slot
+  states, log tags and memory kind chips set in VT323.
+- One four state vocabulary, `--hb-state-off`, `-load`, `-ok`, `-err`,
+  lit on ink: every load indicator blinks amber in two steps, a hollow
+  square under reduced motion. `.hb-led`. HbPill `off` and `load`,
+  HbStatusBar cell `state`, event log `load` kind amber.
+- Readability: `--hb-ok-ink` and `--hb-warn-ink` for signal text on paper
+  (5.07:1 and 5.28:1, computed); muted lines that used ink 4 use ink 3;
+  an off pill dims by colour, not opacity.
+- Stages: `.hb-stage-lit` (HbStage and HbViewport `look="lit"`),
+  `.hb-stage-void` (HbViewport `look="graph"`), `.hb-stage-tag`,
+  `.hb-viewport-host` for a 3D canvas.
+- `.hb-dotgrid` paper; the app shell carries it and drops the grain.
+- `.hb-instrument`: opt in rack density with 44 px touch targets kept.
+- HbMessage `boxed`: reply boxes with a hard shadow.
+- `.hb-toolpage.is-split` puts the stage first under 1024 px;
+  `.is-source-order` keeps the markup order.
+- `.hb-fixture` banner on every demo and component page; demos no longer
+  show a real model name in a fake loading state.
+- `.hb-stroke` for inline stroke icons. Docs page `#/look`.
+
 ## 0.8.1
 
 - Phone layout for stage plus rack, a fixture demo at `#/demos/phone-rack`.
