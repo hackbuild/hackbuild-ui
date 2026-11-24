@@ -14,6 +14,8 @@ const nav = [
   { label: 'demos', to: '/demos' },
 ]
 
+const vanillaHref = `${import.meta.env.BASE_URL}vanilla.html`
+
 function isHere(to: string) {
   if (to === '/') return route.path === '/'
   return route.path.startsWith(to)
@@ -38,6 +40,7 @@ function isHere(to: string) {
       >
         {{ item.label }}
       </router-link>
+      <a class="hb-tab" :href="vanillaHref">vanilla</a>
     </nav>
     <router-view />
     <HbToaster />

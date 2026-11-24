@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&family=VT323&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet" />
+  <title>hack.build vanilla behaviour</title>
+  <meta name="description" content="The kit behaviour as plain functions over the classes: tabs, drawer, modal, menu, drop routes, hotkeys, persisted state, confirms, undo, activity. No framework on this page." />
+</head>
+<body class="hb hb-halftone">
+<header class="hb-header">
+  <h1>hack<span>.</span><span class="hb-suffix">vanilla</span></h1>
+  <span class="hb-tagline is-tool">the kit behaviour with no framework</span>
+</header>
+<nav class="hb-tabs vd-back" aria-label="site">
+  <a class="hb-tab" href="./">home</a>
+  <a class="hb-tab" href="./#/components">components</a>
+  <a class="hb-tab is-active" href="./vanilla.html" aria-current="page">vanilla</a>
+</nav>
+
+<main class="vd-main">
+  <p class="vd-lede">Every block on this page is plain markup with the hackbuild classes and one call from <code>@virgilvox/hackbuild-ui/vanilla</code>. No Vue is loaded. Each call returns a handle; <code>dispose()</code> removes its listeners.</p>
+
+  <div class="vd-grid">
+    <section class="hb-panel" id="s-tabs" aria-labelledby="h-tabs">
+      <h2 class="hb-panel-hd-inst" id="h-tabs">tabs <span class="hb-hd-aux">tabs(el)</span></h2>
+      <nav class="hb-tabs" id="demo-tabs" aria-label="tool">
+        <button class="hb-tab" role="tab" type="button" id="tab-chat" data-value="chat" aria-controls="panel-chat">chat</button>
+        <button class="hb-tab" role="tab" type="button" id="tab-memory" data-value="memory" aria-controls="panel-memory">memory</button>
+        <button class="hb-tab" role="tab" type="button" id="tab-voice" data-value="voice" aria-controls="panel-voice">voice</button>
+        <button class="hb-tab" role="tab" type="button" id="tab-body" data-value="body" aria-controls="panel-body">body</button>
+      </nav>
+      <div class="vd-tabpanel" role="tabpanel" id="panel-chat" aria-labelledby="tab-chat">chat panel. arrow keys move, home and end jump.</div>
+      <div class="vd-tabpanel" role="tabpanel" id="panel-memory" aria-labelledby="tab-memory">memory panel.</div>
+      <div class="vd-tabpanel" role="tabpanel" id="panel-voice" aria-labelledby="tab-voice">voice panel.</div>
+      <div class="vd-tabpanel" role="tabpanel" id="panel-body" aria-labelledby="tab-body">body panel.</div>
+      <p class="hb-status" id="tabs-out" role="status">tab: chat, kept across reloads</p>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-over">
+      <h2 class="hb-panel-hd-inst" id="h-over">drawer and modal <span class="hb-hd-aux">drawer(el), modal(el)</span></h2>
+      <div class="vd-row">
+        <button class="hb-btn hb-btn-2" type="button" id="open-drawer">settings drawer</button>
+        <button class="hb-btn hb-btn-2" type="button" id="open-modal">about modal</button>
+      </div>
+      <p class="hb-status" id="over-out" role="status">focus moves in, tab stays inside, esc closes, focus comes back.</p>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-menu">
+      <h2 class="hb-panel-hd-inst" id="h-menu">menu <span class="hb-hd-aux">menu(wrap)</span></h2>
+      <div class="hb-menu-wrap" id="demo-menu">
+        <button class="hb-btn hb-btn-2" type="button">workspace</button>
+        <div class="hb-menu" id="demo-menu-list">
+          <button class="hb-menu-item" type="button" data-value="new">new project</button>
+          <button class="hb-menu-item" type="button" data-value="open">open</button>
+          <button class="hb-menu-item" type="button" data-value="rename">rename</button>
+          <button class="hb-menu-item" type="button" disabled>import, a job is running</button>
+          <button class="hb-menu-item" type="button" data-value="export">export</button>
+        </div>
+      </div>
+      <p class="hb-status" id="menu-out" role="status">nothing picked</p>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-drop">
+      <h2 class="hb-panel-hd-inst" id="h-drop">drop routes <span class="hb-hd-aux">dropRoutes(window, routes)</span></h2>
+      <p class="vd-note">drop files anywhere on the page. images, audio, models (.glb, .vrm) and .json go to their own route; anything else is refused by name.</p>
+      <ul class="vd-routes" id="drop-out" aria-live="polite"></ul>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-keys">
+      <h2 class="hb-panel-hd-inst" id="h-keys">hotkeys <span class="hb-hd-aux">hotkeys(table)</span></h2>
+      <p class="vd-note">typing in a field is ignored. the map below comes from the same table.</p>
+      <div id="keymap"></div>
+      <p class="hb-status" id="keys-out" role="status">press a key</p>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-pers">
+      <h2 class="hb-panel-hd-inst" id="h-pers">persisted <span class="hb-hd-aux">persisted(key, initial)</span></h2>
+      <div class="hb-field">
+        <label class="hb-label" for="pers-name">project name</label>
+        <input class="hb-input" id="pers-name" autocomplete="off">
+        <span class="hb-hint" id="pers-hint">stored as hb:vanilla:name, version 2. reload to check.</span>
+      </div>
+      <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="pers-reset">reset to scratch</button>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-conf">
+      <h2 class="hb-panel-hd-inst" id="h-conf">confirm <span class="hb-hd-aux">confirmInline(btn), confirmDialog()</span></h2>
+      <p class="vd-note">small things confirm in place. large ones ask once in a dialog.</p>
+      <div class="vd-row">
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="clear-chat">clear chat</button>
+      </div>
+      <div class="vd-row">
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="wipe">wipe project</button>
+      </div>
+      <p class="hb-status" id="conf-out" role="status">12 messages, 14 documents</p>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-undo">
+      <h2 class="hb-panel-hd-inst" id="h-undo">undo stack <span class="hb-hd-aux">undoStack(80)</span></h2>
+      <ol class="vd-notes" id="undo-list"></ol>
+      <div class="vd-row">
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="undo-add">add a note</button>
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="undo-undo">undo</button>
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="undo-redo">redo</button>
+      </div>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-act">
+      <h2 class="hb-panel-hd-inst" id="h-act">activity <span class="hb-hd-aux">activity()</span></h2>
+      <p class="vd-note">oldest first. a task that ends inside its 300 ms delay never shows.</p>
+      <div class="vd-row">
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="act-slow">load a model</button>
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="act-fast">cached read</button>
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="act-fail">bad file</button>
+      </div>
+      <ul class="vd-tasks" id="act-list" aria-live="polite"></ul>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-copy">
+      <h2 class="hb-panel-hd-inst" id="h-copy">copy <span class="hb-hd-aux">copier()</span></h2>
+      <div class="vd-row">
+        <code class="vd-code" id="copy-src">npm i @virgilvox/hackbuild-ui</code>
+        <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="copy-btn">copy</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="hb-drawer" id="demo-drawer">
+  <div class="hb-drawer-panel">
+    <h2 class="hb-panel-hd-inst">settings</h2>
+    <div class="hb-field">
+      <label class="hb-label" for="drawer-temp">temperature</label>
+      <input class="hb-input" id="drawer-temp" value="0.7">
+    </div>
+    <div class="vd-row">
+      <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="drawer-side">move to the left</button>
+      <button class="hb-btn hb-btn-sm" type="button" data-hb-close>done</button>
+    </div>
+  </div>
+</div>
+
+<div class="hb-modal" id="demo-modal">
+  <div class="hb-panel">
+    <h2 class="hb-panel-hd-inst">about this page</h2>
+    <p class="vd-note">a modal over .hb-modal markup. tab stays in here. esc, the dim area or close shut it.</p>
+    <div class="vd-row vd-end">
+      <button class="hb-btn hb-btn-sm" type="button" data-hb-close>close</button>
+    </div>
+  </div>
+</div>
+
+<div class="hb-modal" id="confirm-modal">
+  <div class="hb-panel">
+    <h2 class="hb-panel-hd-inst" data-hb-confirm="title"></h2>
+    <p class="vd-note" data-hb-confirm="message"></p>
+    <div class="vd-row vd-end">
+      <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" data-hb-confirm="cancel"></button>
+      <button class="hb-btn hb-btn-sm" type="button" data-hb-confirm="ok"></button>
+    </div>
+  </div>
+</div>
+
+<div class="hb-dropzone is-cover is-window" id="drop-cover"><span id="drop-label">drop to route</span></div>
+
+<script type="module" src="/src/vanilla.ts"></script>
+</body>
+</html>
