@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { HbModelManager, HbModelRack, type HbModelStatus, type HbRackSlotState, type HbResident, type HbStoredWeight } from '@hackbuild/ui'
+import { HbCustomModelForm, HbModelManager, HbModelRack, type HbCustomEntry, type HbModelStatus, type HbRackSlotState, type HbResident, type HbStoredWeight } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 import { catalogue, fits, groupOrder, machine, rackPresets, rackSlots, reasons } from '../fixtures/models'
@@ -27,6 +27,7 @@ function unload(id: string) {
   resident.value = resident.value.filter((r) => r.id !== id)
   states.value = { ...states.value, [id]: { state: 'stored' } }
 }
+const custom = ref<HbCustomEntry[]>([])
 function load(id: string) { states.value = { ...states.value, [id]: { state: 'downloading', loaded: 0, total: null } } }
 function cancel(id: string) {
   const next = { ...states.value }
@@ -71,6 +72,9 @@ const code = `<HbDrawer v-model:open="open" side="bottom" label="models">
       >
         <template #rack>
           <HbModelRack v-model="picks" :slots="rackSlots.slice(0, 3)" :states="rackStates" :presets="rackPresets.slice(0, 2)" />
+        </template>
+        <template #custom>
+          <HbCustomModelForm :modes="['onnx', 'gguf', 'endpoint']" :saved="custom" @add="(e) => (custom = [e, ...custom])" @remove="(id) => (custom = custom.filter((c) => c.id !== id))" />
         </template>
       </HbModelManager>
     </div>

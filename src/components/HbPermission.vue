@@ -18,11 +18,15 @@ interface Props {
   stateText?: string
   /** The one action that can change the state: 'allow', 'try again'. Empty hides it. */
   action?: string
+  /** The working alternative when the state cannot change here: 'type instead', 'upload an image'. */
+  alt?: string
+  /** What still works without it: ['typing', 'the scripted replies']. */
+  stillWorks?: string[]
 }
 
-const props = withDefaults(defineProps<Props>(), { icon: 'shield-halved', reason: '', stateText: '', action: '' })
+const props = withDefaults(defineProps<Props>(), { icon: 'shield-halved', reason: '', stateText: '', action: '', alt: '', stillWorks: () => [] })
 
-const emit = defineEmits<{ act: [] }>()
+const emit = defineEmits<{ act: []; alt: [] }>()
 
 const VERDICT: Record<HbPermissionState, [HbVerdictStatus, string]> = {
   checking: ['running', 'checking'],
@@ -50,6 +54,13 @@ const classes = computed(() =>
       <HbVerdict :status="verdict[0]" :text="props.stateText || verdict[1]" />
     </div>
     <div v-if="props.reason || $slots.default" class="hb-perm-why" :role="props.state === 'denied' || props.state === 'missing' ? 'alert' : undefined"><slot>{{ props.reason }}</slot></div>
-    <button v-if="props.action" type="button" class="hb-btn hb-btn-2 hb-btn-sm hb-perm-act" @click="emit('act')">{{ props.action }}</button>
+    <div v-if="props.stillWorks.length || $slots.still" class="hb-perm-still">
+      <span class="hb-perm-still-hd">still works</span>
+      <slot name="still"><ul><li v-for="w in props.stillWorks" :key="w">{{ w }}</li></ul></slot>
+    </div>
+    <span v-if="props.action || props.alt" class="hb-perm-acts">
+      <button v-if="props.action" type="button" class="hb-btn hb-btn-2 hb-btn-sm" @click="emit('act')">{{ props.action }}</button>
+      <button v-if="props.alt" type="button" class="hb-btn hb-btn-sm" @click="emit('alt')">{{ props.alt }}</button>
+    </span>
   </div>
 </template>

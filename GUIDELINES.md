@@ -1124,3 +1124,19 @@ field filters by `data-search`. Words: `sizeText`, `vramText`,
 Vanilla: `rackQueue(load)` loads one slot at a time, `presetJobs`,
 `presetText`, `rackGate(slots, states)` and `storageText(estimate)`:
 `1.9 GB of 12 GB used here. the browser may clear it. press keep to ask it not to.`
+
+### Wake gate, tiers, key, custom model
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbWakeGate` | `.hb-wake`, `-scrim`, `-head`, `-body`, `-title`, `-lede`, `-rows`, `-row`, `-label`, `-bar`, `-note`, `-gnote`, `-acts`, `-err` | one press is the audio gesture and starts every load; one row per subsystem with label, 12 px bar and note: pink loading, slime ready, red failed, paper off; a required row carries a star. An optional row that fails marks its row and pill and the rest goes on; a required row that fails writes the failure line and both buttons come back. The note under the picker is built from size, origin and quota. `overlay` pins it over the page and focuses wake |
+| `HbTierCards` | `.hb-tiers`, `-list`, `-foot`, `-echo`, `.hb-tier`, `-pick`, `-icon`, `-main`, `-head`, `-name`, `-size`, `-sub`, `-terms`, `-note`, `-bar`, `-why`, `-body` | a radiogroup of cards (arrows, Home, End): name, size badge, the engine, cost and privacy, one sentence, a capability bar; a tier this machine cannot run is dashed with the reason. The body slot opens under the picked card only, where the remote tier asks for its key. The footer echoes the pick; start waits on a pick and `canStart` |
+| `HbApiKey` | `.hb-apikey`, `-row`, `-mask`, `-state`, `-note` | password field, checked by shape: `enter your key to continue.`, `waiting for a valid key.`, `key looks valid.`; the readout shows the first 4 and last 4; the note by the field says the key stays in this browser, is never saved and goes only to the endpoint picked. The part writes the key nowhere |
+| `HbCustomModelForm` | `.hb-cmf`, `-runtime`, `-caveat`, `-fields`, `-check`, `-check-out`, `-check-lines`, `-acts`, `-saved`, `-chips`, `-chip`, `-chip-name`, `-chip-mode`, `-chip-x` | four ways in as chips: onnx repo, mlc weights plus .wasm (base model reuse or a url), gguf repo plus file, your endpoint. Every field names the way it fails; errors show after blur or a press. Check costs one request and reports files and the measured size; saved entries are chips, press to pick, x to remove. Sits in the `custom` slot of `HbModelManager` |
+| `HbPermission` | `.hb-perm-acts`, `.hb-perm-still`, `-still-hd` | `alt` is the working alternative as a second button; `stillWorks` lists what runs without it |
+| `HbToaster` | `.hb-toasts`, `.hb-toast.is-ok`, `.is-warn`, `.is-err`, `.is-held`, `.hb-toast-msg`, `.hb-toast-act` | one transient toast, the rule coloured by kind, one action; errors are held above it until ok is pressed, three at most |
+| `HbCallout` | `.hb-callout-title`, `.hb-callout-acts` | a short head and an actions slot for inline fixes; err is announced as an alert |
+
+Vanilla: `gateNote`, `wakePills`, `wakeSummary`, `wakeBar`, `wakeError`;
+`maskKey`, `keyCheck`, `KEY_NOTE`; `CUSTOM_MODES`, `customFields`,
+`customErrors`, `customId`, `deriveId`, `checkText`; `toastStore`.

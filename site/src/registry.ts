@@ -76,6 +76,11 @@ export const registry: RegistryGroup[] = [
       { name: 'HbModelRack', blurb: 'slots by job, presets with their total' },
       { name: 'HbModelSlot', blurb: 'one organ: select, load, bar, status' },
       { name: 'HbEngineBar', blurb: 'the picker shrunk to one line' },
+      { name: 'HbWakeGate', blurb: 'one row per subsystem, wake and no voice' },
+      { name: 'HbTierCards', blurb: 'engine tiers by cost and privacy' },
+      { name: 'HbCustomModelForm', blurb: 'your own weights, checked before fetch' },
+      { name: 'HbApiKey', blurb: 'masked key that is never saved' },
+      { name: 'HbPermission', blurb: 'a permission, the way around, what still works' },
     ],
   },
   {
@@ -144,7 +149,7 @@ export const registry: RegistryGroup[] = [
     entries: [
       { name: 'HbModal', blurb: 'centered panel over a scrim' },
       { name: 'HbDrawer', blurb: 'panel sliding from an edge' },
-      { name: 'HbToaster', blurb: 'one toast, gone in about a second' },
+      { name: 'HbToaster', blurb: 'one toast at a time, errors held' },
       { name: 'HbSpinner', blurb: 'three segments blinking in order' },
       { name: 'HbSkeleton', blurb: 'breathing block while loading' },
       { name: 'HbEmptyState', blurb: 'dashed well that says what to do' },
