@@ -36,6 +36,9 @@ interface Props {
   text?: string
   /** Split the reply on blank lines into short boxes. Off for tools. */
   split?: boolean
+  /** The FERRULE turn: a who tag on a plate and each part a raised box
+      with a hard shadow. Pair with split for a persona. */
+  boxed?: boolean
   /** Box cap when split. */
   cap?: number
   /** The reply streams: a block cursor ends the last box. */
@@ -65,6 +68,7 @@ const props = withDefaults(defineProps<Props>(), {
   name: '',
   text: '',
   split: false,
+  boxed: false,
   cap: 5,
   streaming: false,
   pending: '',
@@ -165,7 +169,7 @@ function run(a: HbMessageAction) {
 <template>
   <div
     class="hb-msg"
-    :class="{ 'is-user': props.who === 'user', 'is-system': props.who === 'system', 'is-streaming': props.streaming, 'is-split': parts.length > 1, 'has-err': !!props.error }"
+    :class="{ 'is-user': props.who === 'user', 'is-system': props.who === 'system', 'is-streaming': props.streaming, 'is-split': parts.length > 1, 'is-boxed': props.boxed, 'has-err': !!props.error }"
   >
     <span class="hb-msg-who">
       <span class="hb-msg-name">{{ whoName }}</span>

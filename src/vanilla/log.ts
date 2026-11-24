@@ -1,6 +1,6 @@
 import { emitter } from './emit'
 
-export type EventTone = 'pink' | 'info' | 'ok' | 'warn' | 'err' | 'dim'
+export type EventTone = 'pink' | 'info' | 'ok' | 'warn' | 'err' | 'dim' | 'load'
 
 export interface EventKind {
   /** Printed in the tag column; default the kind in capitals. */
@@ -48,7 +48,7 @@ export const EVENT_KINDS: Record<string, EventKind> = {
   sense: { tag: 'eye', tone: 'dim' },
   note: { tag: 'note', tone: 'dim' },
   think: { tag: 'think', tone: 'warn' },
-  load: { tag: 'load', tone: 'dim' },
+  load: { tag: 'load', tone: 'load' },
 }
 
 export function kindOf(kinds: Record<string, EventKind>, kind: string): Required<EventKind> {

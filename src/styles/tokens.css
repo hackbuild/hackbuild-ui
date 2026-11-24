@@ -85,12 +85,40 @@
   --hb-tagline:  'Libre Baskerville', Georgia, serif;         /* the tagline only */
 
   /* ---- structure -------------------------------------------------------- */
-  --hb-border:    2px;
-  --hb-border-hd: 3px;          /* header rule, active tab, emphasis */
-  --hb-shadow:    3px 3px 0 var(--hb-ink);
-  --hb-shadow-lg: 5px 5px 0 var(--hb-ink);
-  --hb-shadow-xl: 7px 7px 0 var(--hb-ink);
+  /* The refined look (0.9.0): app chrome and tool panels draw a 1.5 px
+     line and shadows tuned to it, as FERRULE and ARBOR do. Marketing
+     blocks, docs prose and .hb-zine restore the 2 px zine values. */
+  --hb-border:    1.5px;        /* panels, fields, controls, chips, pills */
+  --hb-border-em: 2px;          /* emphasis: primary button, modal, drawer, stage */
+  --hb-border-hd: 3px;          /* header rule, active tab, focus rings */
+  --hb-shadow-sm: 2px 2px 0 var(--hb-ink);   /* chips, hover on a quiet control */
+  --hb-shadow:    3px 3px 0 var(--hb-ink);   /* controls */
+  --hb-shadow-lg: 4px 4px 0 var(--hb-ink);   /* panels, cards, reply boxes */
+  --hb-shadow-xl: 6px 6px 0 var(--hb-ink);   /* hover lift */
   --hb-shadow-pink: 5px 5px 0 var(--hb-pink);
+
+  /* ---- readout sizes. VT323 sits small on its body: these are the three
+     steps the originals use for tags, pills and instrument heads. ------- */
+  --hb-readout-sm: 15px;        /* log tags, chip counters, kind chips */
+  --hb-readout-md: 17px;        /* pills, status cells, gauge values */
+  --hb-readout-lg: 19px;        /* stage tags, who lines, gate checks */
+
+  /* ---- four state vocabulary. One meaning per colour on every pill, bar,
+     chip, log tag and status cell. Load blinks in two steps; under reduced
+     motion it is a hollow square. On ink these resolve to the lit set. -- */
+  --hb-state-off:  var(--hb-ink-4);
+  --hb-state-load: var(--hb-warn);
+  --hb-state-ok:   var(--hb-ok);
+  --hb-state-err:  var(--hb-err);
+  /* Signal colours as small text on paper. --hb-ok reads 3.08:1 and
+     --hb-warn 3.05:1 on paper (computed, WCAG); these read 5.07:1 and
+     5.28:1 on paper, 4.76:1 and 4.96:1 on sunk (computed). */
+  --hb-ok-ink:   #137540;
+  --hb-warn-ink: #8f5600;
+
+  /* ---- paper dot grid. FERRULE and ARBOR page: 1 px ink dots at 7 px. -- */
+  --hb-dot:      rgba(26,26,26,.07);
+  --hb-dot-step: 7px;
 
   /* ---- spacing. 4 px base. ---------------------------------------------- */
   --hb-s1: 4px;  --hb-s2: 8px;  --hb-s3: 12px; --hb-s4: 16px;

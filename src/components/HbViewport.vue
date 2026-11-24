@@ -15,6 +15,9 @@ interface Props {
   coverNote?: string
   /** The cover is a failure: the note takes the lit error color. */
   coverError?: boolean
+  /** void: black (the default). lit: the pink glow over diagonal
+      hairlines on sunk paper. graph: the void with the pink graph rule. */
+  look?: 'void' | 'lit' | 'graph'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -24,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   coverTitle: '',
   coverNote: '',
   coverError: false,
+  look: 'void',
 })
 
 defineSlots<{
@@ -55,7 +59,7 @@ const style = computed(() => (fill.value ? undefined : { '--hb-vp-ratio': props.
 <template>
   <section
     class="hb-viewport"
-    :class="{ 'is-fill': fill, 'is-quiet': props.quiet }"
+    :class="{ 'is-fill': fill, 'is-quiet': props.quiet, 'hb-stage-lit': props.look === 'lit', 'hb-stage-void': props.look === 'graph' }"
     :style="style"
     :aria-label="props.label || undefined"
   >

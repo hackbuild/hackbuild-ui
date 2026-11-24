@@ -8,6 +8,8 @@ export interface HbStatusCell {
   /** 1 always shows, 2 from 481 px of bar width, 3 from 761 px. A phone
       keeps the priority 1 cells. Default 1. */
   priority?: 1 | 2 | 3
+  /** A state light before the label: off, load, ok, err. */
+  state?: 'off' | 'load' | 'ok' | 'err'
 }
 
 interface Props {
@@ -34,12 +36,12 @@ const emit = defineEmits<{ press: [] }>()
   <footer class="hb-statusbar" :class="{ 'is-button': !!props.action }">
     <button v-if="props.action" type="button" class="hb-statusbar-btn" @click="emit('press')">
       <slot>
-        <span v-for="c in props.cells" :key="c.key" :data-priority="c.priority && c.priority > 1 ? c.priority : undefined">{{ c.label }} <b>{{ c.value }}</b></span>
+        <span v-for="c in props.cells" :key="c.key" :data-priority="c.priority && c.priority > 1 ? c.priority : undefined"><i v-if="c.state" class="hb-led" :class="`is-${c.state}`" aria-hidden="true" />{{ c.label }} <b>{{ c.value }}</b><span v-if="c.state" class="hb-sr"> ({{ c.state }})</span></span>
       </slot>
       <span class="hb-sr">, {{ props.action }}</span>
     </button>
     <slot v-else>
-      <span v-for="c in props.cells" :key="c.key" :data-priority="c.priority && c.priority > 1 ? c.priority : undefined">{{ c.label }} <b>{{ c.value }}</b></span>
+      <span v-for="c in props.cells" :key="c.key" :data-priority="c.priority && c.priority > 1 ? c.priority : undefined"><i v-if="c.state" class="hb-led" :class="`is-${c.state}`" aria-hidden="true" />{{ c.label }} <b>{{ c.value }}</b><span v-if="c.state" class="hb-sr"> ({{ c.state }})</span></span>
     </slot>
   </footer>
 </template>
