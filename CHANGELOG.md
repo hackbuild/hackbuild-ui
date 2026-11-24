@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.6
+
+- `.hb-toolpage.is-split`: side column beside the main part from 1024 px;
+  `.is-side`, `.is-full`.
+- `sizeWord()`: kb under 1 MB; the queue strip no longer reads "0 mb".
+
 ## 0.6.5
 
 - `.hb-toolpage`: stacks the parts of one tool with one gap; `.is-grow`
