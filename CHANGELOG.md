@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.9.1
+
+- `.hb-toolpage.is-split.is-stage`: stage wide on the left, a side column
+  of 340 to 520 px on the right holding chat, from 1024 px (FERRULE).
+  Under 1024 px the stage comes first and the side column follows.
+- `--hb-stage-h-sm` (default `38dvh`): the stage height of an
+  `.is-stage` tool page under 1024 px. A viewport with `aspect="fill"`
+  ignores it.
+- HbViewport with a `pad` slot puts its top corners in one grid,
+  `.hb-ov-top`; on a touch phone held sideways the telemetry group moves
+  under the top right content, clear of the stick.
+- HbSendTo: a dropdown of target tools with icons and disabled reasons.
+- Demo `#/demos/stage-chat`.
+
 ## 0.9.0
 
 - The refined look is the default for app chrome and tool panels:
