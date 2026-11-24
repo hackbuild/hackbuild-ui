@@ -16,6 +16,8 @@ interface Props {
   used?: boolean
   /** No edit, no forget. */
   readonly?: boolean
+  /** Kept in every prompt, never ranked out. Shows the pin and the on state. */
+  pinned?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -25,11 +27,13 @@ const props = withDefaults(defineProps<Props>(), {
   when: '',
   used: false,
   readonly: false,
+  pinned: false,
 })
 
 const emit = defineEmits<{
   forget: []
   edit: [text: string]
+  pin: [pinned: boolean]
 }>()
 
 const ents = computed(() => (Array.isArray(props.entity) ? props.entity : props.entity ? [props.entity] : []))
@@ -72,8 +76,9 @@ onBeforeUnmount(() => clearTimeout(timer))
 <template>
   <!-- Kind chip carries the score; title, text, entity chips; edit and a
        ghost forget that asks once in place. -->
-  <div class="hb-mem" :class="{ 'is-used': props.used }">
+  <div class="hb-mem" :class="{ 'is-used': props.used, 'is-pinned': props.pinned }">
     <div class="hb-mem-body">
+      <span v-if="props.pinned" class="hb-mem-pin"><HbIcon name="thumbtack" :size="10" />pinned</span>
       <span class="hb-mem-kind">{{ props.kind }}<b v-if="scoreText(props.score)" class="hb-mem-score">{{ scoreText(props.score) }}</b></span>
       <b v-if="props.title" class="hb-mem-title">{{ props.title }}</b>
       <span v-if="!editing" class="hb-mem-text">{{ props.text }}</span>
@@ -88,6 +93,15 @@ onBeforeUnmount(() => clearTimeout(timer))
       </div>
     </div>
     <div v-if="!props.readonly && !editing" class="hb-mem-acts">
+      <button
+        type="button"
+        class="hb-mem-act"
+        :class="{ 'is-on': props.pinned }"
+        :aria-pressed="props.pinned"
+        :aria-label="props.pinned ? 'unpin memory' : 'pin memory'"
+        :title="props.pinned ? 'unpin' : 'pin'"
+        @click="emit('pin', !props.pinned)"
+      ><HbIcon name="thumbtack" :size="12" /></button>
       <button ref="editBtn" type="button" class="hb-mem-act" aria-label="edit memory" title="edit" @click="edit"><HbIcon name="pen" :size="12" /></button>
       <button
         type="button"

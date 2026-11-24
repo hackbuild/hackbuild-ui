@@ -8,7 +8,7 @@ import HbIcon from './HbIcon.vue'
 import type { IconName } from '../icons'
 import type { ToolState } from '../vanilla/chat'
 
-export type HbMessageAction = 'speak' | 'retry' | 'copy' | 'remove' | 'edit'
+export type HbMessageAction = 'speak' | 'retry' | 'remember' | 'copy' | 'remove' | 'edit'
 
 export interface HbRecalled {
   title: string
@@ -56,6 +56,8 @@ interface Props {
   seen?: string
   /** Actions in order. Default by speaker. Empty array hides the row. */
   actions?: HbMessageAction[] | null
+  /** Already saved to memory: the remember action reads 'in memory'. */
+  remembered?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -74,11 +76,13 @@ const props = withDefaults(defineProps<Props>(), {
   recalled: () => [],
   seen: '',
   actions: null,
+  remembered: false,
 })
 
 const emit = defineEmits<{
   speak: []
   retry: []
+  remember: []
   copy: [text: string]
   remove: []
   edit: [text: string]
@@ -140,16 +144,18 @@ function onEditKey(e: KeyboardEvent) {
 }
 defineExpose({ startEdit })
 
-const ICON: Record<HbMessageAction, IconName> = { speak: 'wave', retry: 'redo', copy: 'copy', remove: 'trash', edit: 'pen' }
+const ICON: Record<HbMessageAction, IconName> = { speak: 'wave', retry: 'redo', remember: 'brain', copy: 'copy', remove: 'trash', edit: 'pen' }
 function label(a: HbMessageAction): string {
   if (a === 'copy') return copyState.value === 'copied' ? 'copied' : copyState.value === 'failed' ? 'copy failed' : 'copy'
   if (a === 'remove') return armed.value ? 'delete?' : 'delete'
   if (a === 'retry') return 'redo'
+  if (a === 'remember') return props.remembered ? 'in memory' : 'remember'
   return a
 }
 function run(a: HbMessageAction) {
   if (a === 'speak') emit('speak')
   else if (a === 'retry') emit('retry')
+  else if (a === 'remember') emit('remember')
   else if (a === 'copy') onCopy()
   else if (a === 'remove') onRemove()
   else startEdit()
@@ -203,7 +209,8 @@ function run(a: HbMessageAction) {
         :key="a"
         type="button"
         class="hb-msg-act"
-        :class="{ 'is-armed': a === 'remove' && armed }"
+        :class="{ 'is-armed': a === 'remove' && armed, 'is-on': a === 'remember' && props.remembered }"
+        :aria-pressed="a === 'remember' ? props.remembered : undefined"
         @click="run(a)"
         @blur="a === 'remove' && armed ? (armed = false) : undefined"
       >

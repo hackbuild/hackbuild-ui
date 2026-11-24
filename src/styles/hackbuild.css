@@ -349,6 +349,9 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-field .hb-error{
   font-family:var(--hb-utility); font-size:11px; color:var(--hb-err);
 }
+/* hint: one muted line under a control or a part, anywhere */
+.hb-hint{ margin:0; font-family:var(--hb-utility); font-size:11px; line-height:1.45; color:var(--hb-ink-3); overflow-wrap:anywhere }
+.hb-on-ink .hb-hint,.hb-stage .hb-hint{ color:var(--hb-lit-label) }
 .hb-field .hb-hint{
   font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-4);
 }
@@ -702,6 +705,7 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-acts.is-fill > *{ flex:1 1 auto; justify-content:center }
 /* tool page: the parts of one tool stacked with one gap; a part may grow to fill */
 .hb-toolpage{ display:flex; flex-direction:column; gap:var(--hb-s3); min-width:0; min-height:0 }
+.hb-toolpage > *{ flex-shrink:0 }
 .hb-toolpage > .is-grow{ flex:1 1 auto; min-height:0 }
 /* split: a side column (rack, queue, list) beside the main part from 1024 px */
 @media (min-width:1024px){
@@ -3309,6 +3313,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 }
 @media (hover:hover) and (pointer:fine){ .hb-msg-act:hover{ box-shadow:2px 2px 0 var(--hb-ink) } }
 .hb-msg-act:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-msg-act.is-on{ background:var(--hb-paper-sunk) }
 .hb-msg-act.is-armed{ background:var(--hb-pink); border-color:var(--hb-pink) }
 .hb-msg-edit{ display:flex; flex-direction:column; gap:var(--hb-s1); width:100%; min-width:0 }
 .hb-msg-edit > .hb-textarea{ width:100%; box-sizing:border-box; resize:none; font-family:var(--hb-body); font-size:16px }
@@ -3445,6 +3450,9 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
    then edit and a ghost forget that asks once in place. */
 .hb-mem{ display:flex; align-items:stretch; min-width:0; background:var(--hb-paper-raised); border:1.5px solid var(--hb-ink) }
 .hb-mem.is-used{ box-shadow:3px 3px 0 var(--hb-ink) }
+.hb-mem.is-pinned{ border-left:4px solid var(--hb-ink) }
+.hb-mem-pin{ display:inline-flex; align-items:center; gap:3px; margin-right:6px; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--hb-ink); vertical-align:1px }
+.hb-mem-act.is-on{ color:var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-mem-body{ flex:1 1 auto; min-width:0; padding:var(--hb-s2) var(--hb-s3); font-family:var(--hb-body); font-size:13.5px; line-height:1.4; overflow-wrap:anywhere }
 .hb-mem-kind,.hb-mem-ent{ display:inline-flex; align-items:baseline; gap:4px; margin-right:6px; padding:0 5px; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; vertical-align:1px }
 .hb-mem-kind{ background:var(--hb-ink); color:var(--hb-paper) }

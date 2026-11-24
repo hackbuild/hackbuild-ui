@@ -6,8 +6,10 @@ import PropsTable from '../components/PropsTable.vue'
 
 const text = ref('the dog is called pixel and likes the red ball.')
 const gone = ref(false)
+const pinned = ref(true)
 const code = `<HbMemoryItem kind="rule" :score="1.03" text="answer in two sentences." />
-<HbMemoryItem kind="note" title="dog" :text="text" entity="pixel" when="nov 4 added" @edit="text = $event" @forget="remove" />`
+<HbMemoryItem kind="note" title="dog" :text="text" entity="pixel" when="nov 4 added" @edit="text = $event" @forget="remove" />
+<HbMemoryItem kind="rule" text="..." :pinned="pinned" @pin="pinned = $event" />`
 </script>
 
 <template>
@@ -15,6 +17,7 @@ const code = `<HbMemoryItem kind="rule" :score="1.03" text="answer in two senten
     <div class="demo-col" style="max-width: 520px">
       <HbMemoryItem kind="rule" :score="1.03" text="answer in two sentences unless asked for more." used />
       <HbMemoryItem v-if="!gone" kind="note" title="dog" :text="text" entity="pixel" when="nov 4 added" @edit="text = $event" @forget="gone = true" />
+      <HbMemoryItem kind="rule" text="always answer in lowercase." :pinned="pinned" when="kept in every prompt" @pin="pinned = $event" />
       <HbMemoryItem kind="episode" text="shared character: this memory is read only." :entity="['bail', 'relief']" readonly />
     </div>
   </DemoSection>
@@ -25,8 +28,8 @@ const code = `<HbMemoryItem kind="rule" :score="1.03" text="answer in two senten
       { prop: 'entity', type: 'string | string[]' },
       { prop: 'score', type: 'number | null' },
       { prop: 'when', type: 'string' },
-      { prop: 'used / readonly', type: 'boolean' },
-      { prop: 'emits', type: 'edit, forget' },
+      { prop: 'used / readonly / pinned', type: 'boolean' },
+      { prop: 'emits', type: 'edit, forget, pin (next pinned state)' },
     ]"
   />
 </template>

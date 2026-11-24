@@ -25,6 +25,8 @@ export interface HbChatLine {
   seen?: string
   /** Override the actions for this line. */
   actions?: HbMessageAction[]
+  /** Saved to memory: the remember action reads 'in memory'. */
+  remembered?: boolean
 }
 
 interface Props {
@@ -78,6 +80,7 @@ const emit = defineEmits<{
   stop: []
   speak: [index: number]
   retry: [index: number]
+  remember: [index: number]
   copy: [index: number]
   remove: [index: number]
   edit: [index: number, text: string]
@@ -194,8 +197,10 @@ watch(draft, () => nextTick(() => box.value && autosize(box.value)))
             :recalled="line.recalled"
             :seen="line.seen"
             :actions="actsFor(line)"
+            :remembered="line.remembered"
             @speak="emit('speak', i)"
             @retry="emit('retry', i)"
+            @remember="emit('remember', i)"
             @copy="emit('copy', i)"
             @remove="emit('remove', i)"
             @edit="(t: string) => emit('edit', i, t)"

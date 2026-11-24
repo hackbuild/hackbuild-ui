@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { HbEngineBar } from '@hackbuild/ui'
+import { HbEngineBar, HbQueueStrip, type HbQueueItem } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 
 const code = `<HbEngineBar :model="label" :state="state" device="webgpu" :rate="31" :shared-with="['chat', 'room']" :size-m-b="1733" @change="manager.open()" />`
+const queue: HbQueueItem[] = [
+  { id: 1, name: 'standup.wav', status: 'done' },
+  { id: 2, name: 'interview part 2.m4a', status: 'running', phase: 'working', pct: 42 },
+  { id: 3, name: 'voice memo.ogg', status: 'queued' },
+]
+const page = `<div class="hb-toolpage is-split">
+  <HbEngineBar class="is-full" ... />
+  <div class="hb-bar is-full">...</div>
+  <section class="is-side"><HbQueueStrip :items="queue" /><p class="hb-hint">...</p></section>
+  <section>main part</section>
+</div>`
 </script>
 
 <template>
@@ -19,6 +30,24 @@ const code = `<HbEngineBar :model="label" :state="state" device="webgpu" :rate="
       <HbEngineBar model="hermes 3 llama 3.2 3b" state="loading" :pct="null" />
       <HbEngineBar model="hermes 3 llama 3.2 3b" state="loaded" device="webgpu" :rate="31" :shared-with="['chat', 'room']" />
       <HbEngineBar model="qwen3 0.6b" state="fault" error="the model ran out of gpu memory. unload the image model, or pick the next row down." />
+    </div>
+  </DemoSection>
+
+  <DemoSection
+    title="On a tool page"
+    note="Class .hb-toolpage stacks the parts of a tool with one gap; every part holds its height and only .is-grow takes the rest. .is-split puts the .is-side column beside the main part from 1024 px; .is-full spans both. .hb-hint is the muted line under a part."
+    :code="page"
+  >
+    <div class="hb-toolpage is-split" style="border: 1.5px dashed var(--hb-ink-4); padding: 8px">
+      <HbEngineBar class="is-full" model="whisper base" state="loaded" device="webgpu" />
+      <div class="hb-bar is-full"><span class="hb-ctl">queue <b class="hb-readout">3</b></span></div>
+      <section class="is-side" style="display: flex; flex-direction: column; gap: 6px">
+        <HbQueueStrip :items="queue" />
+        <p class="hb-hint">drop audio files on the page to add them.</p>
+      </section>
+      <section class="hb-panel" style="padding: 12px; min-height: 160px">
+        <p class="hb-hint">the main part: transcript of the selected file.</p>
+      </section>
     </div>
   </DemoSection>
 

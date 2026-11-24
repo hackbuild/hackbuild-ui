@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { HbMessage, useToast } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 
 const { toast } = useToast()
+const kept = ref(false)
 const persona = 'yo.\n\nvirtual me, running in your browser. nothing leaves this tab.\n\nask me anything.'
 const code = `<HbMessage who="assistant" name="moheeb*" :text="reply" split :stats="{ tokPerSec: 31.2, firstMs: 640, tokens: 44 }"
   :recalled="hits" seen="a person at a desk, one hand raised" @speak="speak" @retry="redo" @recall="openMemory" />`
@@ -25,6 +27,9 @@ const code = `<HbMessage who="assistant" name="moheeb*" :text="reply" split :sta
         :stats="{ tokPerSec: 31.2, firstMs: 640, tokens: 44 }"
         seen="a person at a desk, one hand raised"
         :recalled="[{ title: 'bio: who i am', score: 0.91 }, { title: 'projects: the hackerspace', score: 0.74 }]"
+        :actions="['speak', 'retry', 'remember', 'copy', 'remove']"
+        :remembered="kept"
+        @remember="kept = !kept"
         @speak="toast('speak')"
         @retry="toast('redo')"
         @recall="(r) => toast(`open ${r.title} in memory`)"
@@ -49,9 +54,10 @@ const code = `<HbMessage who="assistant" name="moheeb*" :text="reply" split :sta
       { prop: 'error / note', type: 'string' },
       { prop: 'stats', type: '{tokPerSec, firstMs, tokens, source}' },
       { prop: 'think / tools / recalled / seen', type: 'string / HbToolCallData[] / {title, score, ref}[] / string' },
-      { prop: 'actions', type: `('speak' | 'retry' | 'copy' | 'remove' | 'edit')[]`, notes: 'default by speaker; [] hides' },
+      { prop: 'actions', type: `('speak' | 'retry' | 'remember' | 'copy' | 'remove' | 'edit')[]`, notes: 'default by speaker; [] hides; remember is opt in' },
+      { prop: 'remembered', type: 'boolean', notes: 'remember reads in memory' },
       { prop: 'slots', type: 'think, tools, recalled, default' },
-      { prop: 'emits', type: 'speak, retry, copy, remove, edit, recall' },
+      { prop: 'emits', type: 'speak, retry, remember, copy, remove, edit, recall' },
     ]"
   />
 </template>
