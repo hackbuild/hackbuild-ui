@@ -34,8 +34,12 @@ export interface OverlayHandle {
 
 export interface DrawerOptions extends OverlayOptions {
   /** 'bottom' is the phone sheet: `.is-sheet`, 74 percent tall, and one
-      sheet open at a time (opening one closes the others). */
-  side?: 'left' | 'right' | 'bottom'
+      sheet open at a time (opening one closes the others). 'auto' is the
+      sheet under `breakpoint` and the right drawer from it, live. */
+  side?: 'left' | 'right' | 'bottom' | 'auto'
+  /** Width in px where side 'auto' turns from sheet to right drawer.
+      Default 761, where the suite's tab strip returns. */
+  breakpoint?: number
 }
 
 // Open overlays, newest last. Escape and the Tab trap act on the top one.
@@ -53,10 +57,11 @@ function release(doc: Document) {
   if (locks > 0 && --locks === 0) doc.body.style.overflow = savedOverflow
 }
 
-// Open bottom sheets. Opening one closes the others.
-const sheets = new Set<OverlayHandle>()
+// Drawers that are or can turn into bottom sheets, with their roots.
+// Opening a sheet closes the other open sheets.
+const sheets = new Map<OverlayHandle, HTMLElement>()
 
-function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions, group?: Set<OverlayHandle>): OverlayHandle {
+function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions, group?: Map<OverlayHandle, HTMLElement>): OverlayHandle {
   const doc = root.ownerDocument
   const me = {}
   let isOpen = false
@@ -102,7 +107,9 @@ function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions, group
 
   function open() {
     if (isOpen) return
-    if (group) for (const other of [...group]) if (other !== handle) other.close('api')
+    if (group && root.classList.contains('is-sheet')) {
+      for (const [other, el] of [...group]) if (other !== handle && el.classList.contains('is-sheet')) other.close('api')
+    }
     isOpen = true
     back = doc.activeElement as HTMLElement | null
     root.hidden = false
@@ -152,7 +159,7 @@ function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions, group
       o.trigger?.removeEventListener('click', onTrigger)
     },
   }
-  group?.add(handle)
+  group?.set(handle, root)
   if (o.open) open()
   return handle
 }
@@ -172,10 +179,24 @@ export function modal(el: HTMLElement, options: OverlayOptions = {}): OverlayHan
 
 /** A drawer over `.hb-drawer > .hb-drawer-panel` markup, with the modal's
     focus, Escape, scrim and return rules. `side` sets `.is-left`, or
-    `.is-sheet` for the bottom sheet; one sheet is open at a time. */
+    `.is-sheet` for the bottom sheet; one sheet is open at a time. Side
+    'auto' follows the width live: a sheet under `breakpoint`, the right
+    drawer from it. */
 export function drawer(el: HTMLElement, options: DrawerOptions = {}): OverlayHandle {
-  el.classList.toggle('is-left', options.side === 'left')
-  el.classList.toggle('is-sheet', options.side === 'bottom')
+  const side = options.side ?? 'right'
+  el.classList.toggle('is-left', side === 'left')
+  el.classList.toggle('is-sheet', side === 'bottom')
   const panel = el.querySelector<HTMLElement>(':scope > .hb-drawer-panel') ?? el
-  return overlay(el, panel, options, options.side === 'bottom' ? sheets : undefined)
+  const view = el.ownerDocument.defaultView
+  const query = side === 'auto' && typeof view?.matchMedia === 'function'
+    ? view.matchMedia(`(min-width: ${options.breakpoint ?? 761}px)`)
+    : null
+  const read = () => { el.classList.toggle('is-sheet', !query?.matches) }
+  if (side === 'auto') read()
+  query?.addEventListener('change', read)
+  const handle = overlay(el, panel, options, side === 'bottom' || side === 'auto' ? sheets : undefined)
+  if (!query) return handle
+  const dispose = handle.dispose
+  handle.dispose = () => { query.removeEventListener('change', read); dispose() }
+  return handle
 }

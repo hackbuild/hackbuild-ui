@@ -153,3 +153,31 @@ test("modal: closeOnEscape false holds Escape over a drawer beneath", () => {
   dr.dispose();
   d.close();
 });
+
+test("drawer: side auto is a sheet under the breakpoint and the right drawer from it, live", () => {
+  const d = dom(`<div class="hb-drawer" id="s"><div class="hb-drawer-panel"><button id="a">a</button></div></div>
+<div class="hb-drawer" id="x"><div class="hb-drawer-panel"><button id="b">b</button></div></div>`);
+  d.window.happyDOM.setViewport({ width: 390, height: 800 });
+  const sheet = drawer(d.$("#s"), { side: "bottom" });
+  const auto = drawer(d.$("#x"), { side: "auto" });
+  const el = d.$("#x");
+  assert.equal(el.classList.contains("is-sheet"), true, "a sheet at 390");
+  sheet.open();
+  auto.open();
+  assert.equal(sheet.isOpen, false, "as a sheet it closes the open sheet");
+  auto.close();
+  d.window.happyDOM.setViewport({ width: 1024, height: 800 });
+  assert.equal(el.classList.contains("is-sheet"), false, "the right drawer at 1024");
+  assert.equal(el.classList.contains("is-left"), false);
+  sheet.open();
+  auto.open();
+  assert.equal(sheet.isOpen, true, "as a side drawer it leaves the sheet open");
+  auto.dispose();
+  d.window.happyDOM.setViewport({ width: 390, height: 800 });
+  assert.equal(el.classList.contains("is-sheet"), false, "dispose stops following the width");
+  const narrow = drawer(el, { side: "auto", breakpoint: 300 });
+  assert.equal(el.classList.contains("is-sheet"), false, "breakpoint moves the switch");
+  narrow.dispose();
+  sheet.dispose();
+  d.close();
+});

@@ -5,8 +5,11 @@ import HbIcon from './HbIcon.vue'
 
 interface Props {
   /** 'bottom' is the phone sheet: 74 percent tall, safe area padded, one
-      sheet open at a time. */
-  side?: 'left' | 'right' | 'bottom'
+      sheet open at a time. 'auto' is that sheet under `breakpoint` and
+      the right drawer from it, following the width live. */
+  side?: 'left' | 'right' | 'bottom' | 'auto'
+  /** Width in px where side 'auto' switches. Default 761. */
+  breakpoint?: number
   closeOnBackdrop?: boolean
   closeOnEscape?: boolean
   /** Heading in the drawer head, with the close button beside it. Also
@@ -22,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnEscape: true,
   title: undefined,
   label: undefined,
+  breakpoint: 761,
 })
 
 const open = defineModel<boolean>({ default: false })
@@ -48,6 +52,7 @@ watch(open, async (isOpen) => {
   handle = drawer(root.value, {
     open: true,
     side: props.side,
+    breakpoint: props.breakpoint,
     label: props.title ?? props.label,
     closeOnScrim: props.closeOnBackdrop,
     closeOnEscape: props.closeOnEscape,
@@ -65,7 +70,8 @@ onBeforeUnmount(release)
 
 <template>
   <Teleport to="body">
-    <div v-if="open" ref="root" class="hb-drawer hb" :class="{ 'is-left': props.side === 'left', 'is-sheet': props.side === 'bottom' }">
+    <!-- Side auto: the vanilla drawer owns .is-sheet, so no class binding. -->
+    <div v-if="open" ref="root" class="hb-drawer hb" :class="props.side === 'auto' ? undefined : { 'is-left': props.side === 'left', 'is-sheet': props.side === 'bottom' }">
       <div class="hb-drawer-panel" role="dialog" aria-modal="true">
         <div v-if="props.title" class="hb-drawer-hd">
           <span>{{ props.title }}</span>
