@@ -95,7 +95,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbThink', blurb: 'think text, open while it streams' },
       { name: 'HbToolCall', blurb: 'one line when done, open while running' },
       { name: 'HbContextMeter', blurb: 'what fills the context, the full banner' },
-      { name: 'HbConversationList', blurb: 'the chats rail' },
+      { name: 'HbConversationList', blurb: 'the chats or documents rail' },
     ],
   },
   {
@@ -131,6 +131,7 @@ export const registry: RegistryGroup[] = [
     category: 'controls',
     entries: [
       { name: 'HbButton', blurb: 'ink fill, pink on hover, presses down' },
+      { name: 'HbActions', blurb: 'a row of verbs that wraps' },
       { name: 'HbChip', blurb: 'filter and multi select toggle' },
       { name: 'HbChipGroup', blurb: 'one or several on, a distinct off' },
       { name: 'HbToggleRow', blurb: 'label, why and switch as one target' },

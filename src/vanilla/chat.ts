@@ -121,6 +121,13 @@ export function contextUse(segments: readonly ContextSegment[], budget: number, 
   }
 }
 
+/** The meta line of a chat or document row: kind, when, how many messages. Parts it lacks are left out. */
+export function listMeta(item: { updated: number | string; count?: number; kind?: string }, now = Date.now()): string {
+  const parts = [item.kind, relTime(item.updated, now)]
+  if (item.count != null) parts.push(`${item.count} msg`)
+  return parts.filter(Boolean).join(', ')
+}
+
 /** 'just now', '12 min ago', '3 h ago', '2 d ago', or the date. */
 export function relTime(t: number | string | Date, now = Date.now()): string {
   const ms = typeof t === 'number' ? t : new Date(t).getTime()

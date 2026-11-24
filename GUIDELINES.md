@@ -485,7 +485,8 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-tiles` / `.hb-tile` | Preset tap targets, 96 px minimum, marker name over a Plex sub, active tile fills pink |
 | `.hb-segmeter` | Segmented signal meter. Slime below the threshold, the whole lit run flips pink above it |
 | `.hb-slider` | Label, track, live value. The default control of every panel |
-| `.hb-list` / `.hb-row` | Bookmarks, device lists, capture sessions |
+| `.hb-list` / `.hb-row` | Bookmarks, device lists, capture sessions. 44 px tall on a coarse pointer |
+| `.hb-acts` | Button row: the verbs of one thing under a form, card or picked row. Wraps; `.is-end` pushes right, `.is-fill` shares the width; 44 px buttons on a coarse pointer. A toolbar holds global settings, this does not. `HbActions` |
 | `.hb-fold` | Disclosure. Fiddly controls fold away rather than being deleted; easy mode is a fold, not a different app. `.hb-fold-num` is the bracketed section number, `.hb-fold-done` the ok word |
 | `.hb-tabs.is-num` / `.hb-tab.is-done` / `.hb-tabs-select` | Numbered tabs in the order of work, a done tab's number filled ok green; the select that replaces a strip that would clip |
 | `.hb-empty-hint` | The line a tab or fold shows while it has nothing: what to do first |
@@ -1136,7 +1137,7 @@ Vanilla: `rackQueue(load)` loads one slot at a time, `presetJobs`,
 | `HbApiKey` | `.hb-apikey`, `-row`, `-mask`, `-state`, `-note` | password field, checked by shape: `enter your key to continue.`, `waiting for a valid key.`, `key looks valid.`; the readout shows the first 4 and last 4; the note by the field says the key stays in this browser, is never saved and goes only to the endpoint picked. The part writes the key nowhere |
 | `HbCustomModelForm` | `.hb-cmf`, `-runtime`, `-caveat`, `-fields`, `-check`, `-check-out`, `-check-lines`, `-acts`, `-saved`, `-chips`, `-chip`, `-chip-name`, `-chip-mode`, `-chip-x` | four ways in as chips: onnx repo, mlc weights plus .wasm (base model reuse or a url), gguf repo plus file, your endpoint. Every field names the way it fails; errors show after blur or a press. Check costs one request and reports files and the measured size; saved entries are chips, press to pick, x to remove. Sits in the `custom` slot of `HbModelManager` |
 | `HbPermission` | `.hb-perm-acts`, `.hb-perm-still`, `-still-hd` | `alt` is the working alternative as a second button; `stillWorks` lists what runs without it |
-| `HbToaster` | `.hb-toasts`, `.hb-toast.is-ok`, `.is-warn`, `.is-err`, `.is-held`, `.hb-toast-msg`, `.hb-toast-act` | one transient toast, the rule coloured by kind, one action; errors are held above it until ok is pressed, three at most |
+| `HbToaster` | `.hb-toasts`, `.hb-toast.is-ok`, `.is-warn`, `.is-err`, `.is-held`, `.hb-toast-msg`, `.hb-toast-act` | one transient toast, the rule coloured by kind, one action; errors are held above it until ok is pressed, three at most; the store calls setTimeout unbound, so it runs in Chrome |
 | `HbCallout` | `.hb-callout-title`, `.hb-callout-acts` | a short head and an actions slot for inline fixes; err is announced as an alert |
 
 Vanilla: `gateNote`, `wakePills`, `wakeSummary`, `wakeBar`, `wakeError`;
@@ -1152,7 +1153,7 @@ Vanilla: `gateNote`, `wakePills`, `wakeSummary`, `wakeBar`, `wakeError`;
 | `HbThink` | `.hb-think.is-plan`, `.is-memory`, `.is-live` | open while `streaming`, summary `thinking...`; closed after, `reasoning (n chars)`. Plan and working memory tags use the same fold in amber and slime |
 | `HbToolCall` | `.hb-tool`, `-row`, `-caret`, `-name`, `-args`, `-state`, `-body`, `-label`, `-pre`, `.is-chip` | one line when finished: name, arguments cut at 80, calling, ok or error with the time; open with its arguments while running; result cut at 1200; `restored` says the result was in the history |
 | `HbContextMeter` | `.hb-ctx`, `-hd`, `-label`, `-words`, `-bar`, `-legend`, `-banner`, `-pill`, `.hb-ctx-p0` to `-p5` | stacked bar on the void by source with a counted legend, amber from 75 percent; at 95 percent the banner says the context is full with new chat and drop oldest turns. The pill reads `ctx 37%` for a header |
-| `HbConversationList` | `.hb-convs`, `-hd`, `-new`, `-list`, `-item`, `-open`, `-title`, `-meta`, `-rename`, `-acts`, `-act`, `-foot`, `-note`, `-empty` | the chats rail: new at the head; rows newest first with when and how many messages; rename in place, duplicate, delete on a second press; Up and Down move between chats; export and import at the foot with where chats live |
+| `HbConversationList` | `.hb-convs`, `-hd`, `-new`, `-list`, `-item`, `-open`, `-title`, `-meta`, `-rename`, `-acts`, `-act`, `-foot`, `-note`, `-empty` | the chats rail, or any saved list with `noun` (document, sketch): every label reads from it. New at the head; rows newest first with kind, when and how many messages, each left out when absent; `creatable`, `duplicable`, `exportable`, `importable` hide their buttons; 44 px rows and buttons on a coarse pointer; rename in place, duplicate, delete on a second press; Up and Down move between chats; export and import at the foot with where chats live |
 
 Vanilla: `splitParts`, `statsText`, `clip`, `argsLine`, `argsBlock`,
 `TOOL_WORDS`, `composerKey`, `coarsePointer`, `autosize`, `pinned`,

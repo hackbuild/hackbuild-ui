@@ -1,7 +1,7 @@
 // Chat: split replies, stats words, composer keys, pinned scroll, the context budget, list times.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { splitParts, statsText, clip, argsLine, composerKey, pinned, contextUse, relTime } from "../../src/vanilla/chat.ts";
+import { splitParts, statsText, clip, argsLine, composerKey, pinned, contextUse, relTime, listMeta } from "../../src/vanilla/chat.ts";
 
 test("a reply splits on blank lines, at most 5 boxes, nothing dropped", () => {
   assert.deepEqual(splitParts("a\n\nb\n\n\nc"), ["a", "b", "c"]);
@@ -58,4 +58,11 @@ test("relative times for the chats rail", () => {
   assert.equal(relTime(now - 3 * 3600e3, now), "3 h ago");
   assert.equal(relTime(now - 2 * 86400e3, now), "2 d ago");
   assert.equal(relTime(now - 40 * 86400e3, now), "2026-10-15");
+});
+
+test("listMeta names kind, when and count, leaving out what a row lacks", () => {
+  const now = Date.UTC(2026, 10, 24, 12, 0);
+  assert.equal(listMeta({ updated: now - 4 * 60e3, count: 12 }, now), "4 min ago, 12 msg");
+  assert.equal(listMeta({ updated: now - 3 * 3600e3, kind: "sketch" }, now), "sketch, 3 h ago");
+  assert.equal(listMeta({ updated: now, kind: "", count: 0 }, now), "just now, 0 msg");
 });
