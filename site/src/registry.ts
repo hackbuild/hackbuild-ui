@@ -110,6 +110,17 @@ export const registry: RegistryGroup[] = [
     ],
   },
   {
+    category: 'speech and image',
+    entries: [
+      { name: 'HbSpokenText', blurb: 'the line lit word by word as it is spoken' },
+      { name: 'HbMethodCard', blurb: 'a method with its trade, time, quality, size and fallback' },
+      { name: 'HbImageSlot', blurb: 'upload, camera then capture, paste or sample, one info line' },
+      { name: 'HbCameraTile', blurb: 'the feed with corner tags and a denied state' },
+      { name: 'HbHistoryStrip', blurb: 'recent runs, a press restores the settings' },
+      { name: 'HbSeed', blurb: 'seed with dice and a lock' },
+    ],
+  },
+  {
     category: 'surfaces',
     entries: [
       { name: 'HbPanel', blurb: 'raised paper with the block shadow' },

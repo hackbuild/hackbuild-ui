@@ -3586,3 +3586,125 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 @media (hover:hover) and (pointer:fine){ .hb-qstrip-x:hover{ color:var(--hb-err) } }
 .hb-qstrip-empty{ padding:var(--hb-s4) var(--hb-s3); text-align:center; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
 @media (prefers-reduced-motion:reduce){ .hb-qstrip-bar > i{ transition:none } }
+
+/* Spoken text. The rap battle verse box: the line as word spans, the
+   spoken word lit, earlier words kept, later words dim, the speaker's
+   name above. Pink marks only the word in the mouth. */
+.hb-spoken{ margin:0; min-width:0; padding:var(--hb-s3) var(--hb-s4); background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink) }
+.hb-spoken-who{ margin-bottom:var(--hb-s1); font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--hb-ink-3) }
+.hb-spoken-line{ margin:0; font-family:var(--hb-body); font-size:clamp(16px, 3.6vw, 22px); line-height:1.6; overflow-wrap:anywhere }
+.hb-spoken-w{ color:var(--hb-ink-4); transition:color var(--hb-t-fast), background var(--hb-t-fast) }
+.hb-spoken-w.is-done{ color:var(--hb-ink) }
+.hb-spoken-w.is-on{ color:var(--hb-ink); background:var(--hb-pink); box-shadow:0 0 0 2px var(--hb-pink) }
+.hb-spoken:not(.is-live) .hb-spoken-w:not(.is-done){ color:var(--hb-ink-2) }
+.hb-stage .hb-spoken,.hb-on-ink .hb-spoken{ background:var(--hb-void); border-color:var(--hb-ink-border) }
+.hb-stage .hb-spoken-w,.hb-on-ink .hb-spoken-w{ color:var(--hb-lit-dim) }
+.hb-stage .hb-spoken-w.is-done,.hb-on-ink .hb-spoken-w.is-done,.hb-stage .hb-spoken-w.is-on,.hb-on-ink .hb-spoken-w.is-on{ color:var(--hb-paper) }
+.hb-stage .hb-spoken-w.is-on,.hb-on-ink .hb-spoken-w.is-on{ color:var(--hb-ink) }
+@media (prefers-reduced-motion:reduce){ .hb-spoken-w{ transition:none } }
+
+/* Method card. The rhythm game engine cards: a letter badge, the name
+   over the trade, the time and three quality squares on the right, the
+   size it costs, and the reason another method answered. The chosen card
+   lifts on a hard shadow with a pink badge. */
+.hb-methods{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-method{
+  display:flex; align-items:center; gap:var(--hb-s3); width:100%; min-width:0; min-height:44px;
+  padding:var(--hb-s2) var(--hb-s3); text-align:left; font:inherit; color:var(--hb-ink); cursor:pointer;
+  background:var(--hb-paper-sunk); border:var(--hb-border) solid var(--hb-ink);
+}
+.hb-method:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+@media (hover:hover) and (pointer:fine){ .hb-method:not(:disabled):not(.is-active):hover{ background:var(--hb-paper-raised) } }
+.hb-method.is-active{ background:var(--hb-paper-raised); box-shadow:3px 3px 0 var(--hb-ink) }
+.hb-method:disabled{ cursor:not-allowed; color:var(--hb-ink-3); border-color:var(--hb-ink-4) }
+.hb-method-badge{ flex:none; width:34px; height:34px; display:grid; place-items:center; font-family:var(--hb-readout); font-size:22px; line-height:1; background:var(--hb-ink); color:var(--hb-paper) }
+.hb-method.is-active .hb-method-badge{ background:var(--hb-pink); color:var(--hb-ink) }
+.hb-method:disabled .hb-method-badge{ background:var(--hb-ink-4) }
+.hb-method-body{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:2px }
+.hb-method-label{ font-family:var(--hb-body); font-size:15px; font-weight:700; line-height:1.15 }
+.hb-method-state{ margin-left:var(--hb-s2); font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-method.is-failed .hb-method-state{ color:var(--hb-err) }
+.hb-method.is-loading .hb-method-state{ color:var(--hb-warn) }
+.hb-method.is-stored .hb-method-state{ color:var(--hb-ok) }
+.hb-method-trade{ font-family:var(--hb-utility); font-size:11.5px; line-height:1.35; color:var(--hb-ink-2) }
+.hb-method-notice{ font-family:var(--hb-utility); font-size:11px; line-height:1.35; color:var(--hb-warn) }
+.hb-method-meta{ flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:3px; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--hb-ink-3); white-space:nowrap }
+.hb-method-q{ display:inline-flex; gap:3px }
+.hb-method-q > i{ width:9px; height:9px; border:1.5px solid var(--hb-ink) }
+.hb-method-q > i.is-on{ background:var(--hb-ink) }
+@media (max-width:379px){ .hb-method{ flex-wrap:wrap } .hb-method-meta{ flex-direction:row; align-items:center; gap:var(--hb-s2); margin-left:calc(34px + var(--hb-s3)) } }
+
+/* Camera tile. The camera booth feed: the picture on the void, a utility
+   tag in each corner (timer, record, effect, model), a blinking record
+   dot, and a denied state that keeps the box and says what it needs. */
+.hb-camtile{ position:relative; margin:0; width:100%; min-width:0; aspect-ratio:var(--hb-camtile-ar, 4 / 3); overflow:hidden; background:var(--hb-void); border:var(--hb-border) solid var(--hb-ink) }
+.hb-camtile-video,.hb-camtile > canvas{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block }
+.hb-camtile.is-mirror .hb-camtile-video{ transform:scaleX(-1) }
+.hb-camtile-tag{ position:absolute; z-index:1; max-width:calc(50% - 12px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--hb-lit-label); background:rgba(10,10,10,.6); padding:1px 5px }
+.hb-camtile-tag.is-tl{ top:6px; left:6px } .hb-camtile-tag.is-tr{ top:6px; right:6px } .hb-camtile-tag.is-bl{ bottom:6px; left:6px } .hb-camtile-tag.is-br{ bottom:6px; right:6px }
+.hb-camtile-tag.is-ok{ color:var(--hb-slime) }
+.hb-camtile-tag.is-warn{ color:var(--hb-lit-warn) }
+.hb-camtile-tag.is-rec{ color:var(--hb-lit-err) }
+.hb-camtile-tag.is-dim{ color:var(--hb-lit-dim) }
+.hb-camtile-rec{ position:absolute; z-index:1; top:9px; right:9px; width:8px; height:8px; background:var(--hb-lit-err); animation:hb-blink 1s step-end infinite }
+.hb-camtile-tag.is-tr ~ .hb-camtile-rec{ top:26px }
+.hb-camtile-none{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--hb-s2); padding:var(--hb-s3); text-align:center; font-family:var(--hb-utility); font-size:11px; text-transform:uppercase; letter-spacing:.16em; color:var(--hb-lit-label) }
+.hb-camtile-none > svg{ color:var(--hb-lit-dim) }
+.hb-camtile.is-denied{ border-color:var(--hb-err) }
+@media (prefers-reduced-motion:reduce){ .hb-camtile-rec{ animation:none } }
+
+/* Image slot. The face swap input panel: a titled box that shows the
+   picture, the live camera or an empty well; upload, camera that turns
+   into capture, paste and sample under it; one line for what the tool
+   found or what failed. Drop and paste land on the whole slot. */
+.hb-islot{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0; padding:var(--hb-s3); background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink) }
+.hb-islot:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-islot.is-over{ outline:var(--hb-border-hd) dashed var(--hb-ink); outline-offset:-6px; background:var(--hb-paper-sunk) }
+.hb-islot-hd{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--hb-ink-3) }
+.hb-islot-box{ position:relative; min-width:0; aspect-ratio:var(--hb-islot-ar, 1 / 1); background:var(--hb-paper-sunk); border:1.5px solid var(--hb-ink); overflow:hidden }
+.hb-islot-box > .hb-camtile{ position:absolute; inset:0; height:100%; aspect-ratio:auto; border:0 }
+.hb-islot-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; background:var(--hb-void) }
+.hb-islot-empty{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--hb-s2); padding:var(--hb-s3); text-align:center; border:2px dashed var(--hb-ink-4); margin:var(--hb-s2); font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-islot-acts > label{ position:relative }
+.hb-islot-file{ position:absolute; inset:calc(var(--hb-border) * -1); width:auto; height:auto; min-height:0; opacity:0; cursor:pointer }
+.hb-islot-acts > label:focus-within{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-islot-info.is-ok{ color:var(--hb-ok) }
+.hb-islot-info.is-warn{ color:var(--hb-warn) }
+.hb-islot-info.is-err{ color:var(--hb-err) }
+
+/* History strip. The image tool's run strip: up to eight thumbs, newest
+   first, the current one ringed; a press restores the run and its
+   settings. Remove is a corner x on a fine pointer and one 44 px button
+   for the run on screen on touch. .is-grid shows label and meta. */
+.hb-hist{ display:flex; align-items:flex-start; gap:var(--hb-s2); min-width:0 }
+.hb-hist-empty{ margin:0; padding:var(--hb-s2) 0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-hist-list{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); margin:0; padding:0; list-style:none; min-width:0; flex:1 1 auto }
+.hb-hist-item{ position:relative; flex:none }
+.hb-hist-thumb{ display:block; width:var(--hb-hist-size, 56px); height:var(--hb-hist-size, 56px); padding:0; overflow:hidden; cursor:pointer; background:var(--hb-paper-sunk); border:1.5px solid var(--hb-ink) }
+.hb-hist-thumb > img{ width:100%; height:100%; object-fit:cover; display:block }
+.hb-hist-thumb:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-hist-item.is-current .hb-hist-thumb{ border:var(--hb-border-hd) solid var(--hb-ink); box-shadow:3px 3px 0 var(--hb-ink) }
+.hb-hist-x{ position:absolute; top:-6px; right:-6px; width:20px; height:20px; padding:0; display:none; align-items:center; justify-content:center; background:var(--hb-paper-raised); color:var(--hb-ink); border:1.5px solid var(--hb-ink); cursor:pointer }
+.hb-hist-x:focus-visible{ display:inline-flex; outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:1px }
+@media (hover:hover) and (pointer:fine){
+  .hb-hist-item:hover .hb-hist-x,.hb-hist-item:focus-within .hb-hist-x{ display:inline-flex }
+  .hb-hist-x:hover{ color:var(--hb-err) }
+  .hb-hist-drop{ display:none }
+}
+.hb-hist-drop{ flex:none }
+.hb-hist.is-grid .hb-hist-list{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)) }
+.hb-hist.is-grid .hb-hist-item{ display:flex; flex-direction:column; border:1.5px solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb-hist.is-grid .hb-hist-item.is-current{ box-shadow:3px 3px 0 var(--hb-ink) }
+.hb-hist.is-grid .hb-hist-thumb{ width:100%; height:auto; aspect-ratio:1 / 1; border:0; border-bottom:1.5px solid var(--hb-ink); box-shadow:none }
+.hb-hist-cap{ display:flex; flex-direction:column; gap:2px; padding:var(--hb-s1) var(--hb-s2); padding-right:44px; min-width:0 }
+.hb-hist-label{ font-family:var(--hb-body); font-size:12.5px; line-height:1.3; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical }
+.hb-hist-meta{ font-family:var(--hb-utility); font-size:10px; color:var(--hb-ink-3); overflow-wrap:anywhere }
+.hb-hist.is-grid .hb-hist-x{ display:inline-flex; top:auto; bottom:0; right:0; width:44px; height:44px; border:0; border-left:1px dashed var(--hb-ink-4); background:transparent; color:var(--hb-ink-3) }
+
+/* Seed. The image tool's seed row: a whole number, the dice, and a lock
+   that keeps the seed for the next run or rolls a new one each run. */
+.hb-seed{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2); min-width:0 }
+.hb-seed > .hb-ctl{ flex:1 1 160px }
+.hb-seed-input{ font-family:var(--hb-readout); font-size:20px; font-variant-numeric:tabular-nums }
+.hb-seed-lock[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-seed-err{ flex:1 1 100%; color:var(--hb-err) }

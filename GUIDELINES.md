@@ -1205,3 +1205,19 @@ Vanilla: `bubbleTtl`, `bubbleTimer`.
 The docs site keeps the 16 px shell gutter on every page and its grid
 columns shrink below their code blocks: no sideways scroll at 320 px on
 any component page (measured, 111 pages).
+
+### Speech and image: spoken text, method card, image slot, camera tile, history strip, seed
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbSpokenText` | `.hb-spoken`, `-who`, `-line`, `-w`, `.is-on`, `.is-done`, `.is-live` | the line as word spans: the spoken word pink, earlier words ink, later words dim. `time` against the word times, or `active` from a boundary event (`wordAtChar`), which wins. `spokenWords` estimates times at about 2.2 words a second at rate 1 (inferred from the original's pace) for a voice with no timing. Screen readers read the line once. `breaks` ends a line after a comma or a full stop. Void on a stage or on ink |
+| `HbMethodCard` | `.hb-methods`, `.hb-method`, `-badge`, `-body`, `-label`, `-state`, `-trade`, `-notice`, `-meta`, `-q`, `.is-active`, `.is-<state>` | a radio card: letter badge, name over the trade, time and three quality squares on the right with the size (`0` reads no download, a download names its size), the state word toned, and the notice that names why another method answered. The chosen card lifts on a hard shadow with a pink badge; `unsupported` is disabled. Arrow keys move through a `.hb-methods` radiogroup |
+| `HbImageSlot` | `.hb-islot`, `-hd`, `-box`, `-img`, `-empty`, `-acts`, `-file`, `-info`, `.is-over`, `.is-live`, `.is-filled` | one image input: upload, camera that turns into capture and stop, paste (clipboard read, or ctrl v on the focused slot), sample, clear. Drop lands on the whole slot. The value is `{url, name, from, blob?}`; object urls are revoked when replaced. Camera failures read through `cameraFault` and name the way around (`camera blocked. allow it in the site settings, or upload a file.`); a denied camera keeps the box. `info` is the line for what the tool found |
+| `HbCameraTile` | `.hb-camtile`, `-video`, `-tag`, `-rec`, `-none`, `.is-tl`, `.is-tr`, `.is-bl`, `.is-br`, `.is-ok`, `.is-warn`, `.is-rec`, `.is-dim`, `.is-denied`, `.is-live`, `.is-mirror` | the feed on the void at 4 by 3 (`--hb-camtile-ar`), a utility tag per corner, a square record dot, mirrored by default. Denied and off keep the same box. The default slot lays a canvas over the video |
+| `HbHistoryStrip` | `.hb-hist`, `-list`, `-item`, `-thumb`, `-cap`, `-label`, `-meta`, `-x`, `-drop`, `-empty`, `.is-grid`, `.is-current` | newest first, at most eight (`historyPush`); a press emits `restore` for the page to bring back the image and its settings; the title carries the run line (`runMeta`) and the prompt. Remove: the corner x on a fine pointer, one 44 px button for the run on screen on touch, Delete on a focused thumb; arrows move between thumbs. `grid` shows the label and run line with a 44 px remove |
+| `HbSeed` | `.hb-seed`, `-input`, `-lock`, `-err` | a whole number in a readout face, the dice, and a lock: kept, the seed repeats; unlocked, `nextSeed` rolls one per run. A value that is not 0 to 4294967294 is refused in place |
+
+Vanilla: `spokenWords`, `toSpoken`, `spokenIndex`, `wordAtChar`;
+`METHOD_WORDS`, `methodMeta`, `qualitySquares`; `cameraFault`,
+`openCamera`, `closeCamera`, `captureFrame`; `historyPush`, `runMeta`;
+`SEED_MAX`, `rollSeed`, `parseSeed`, `nextSeed`.
