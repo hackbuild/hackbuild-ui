@@ -700,6 +700,9 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-acts{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2); min-width:0 }
 .hb-acts.is-end{ justify-content:flex-end }
 .hb-acts.is-fill > *{ flex:1 1 auto; justify-content:center }
+/* tool page: the parts of one tool stacked with one gap; a part may grow to fill */
+.hb-toolpage{ display:flex; flex-direction:column; gap:var(--hb-s3); min-width:0; min-height:0 }
+.hb-toolpage > .is-grow{ flex:1 1 auto; min-height:0 }
 @media(pointer:coarse){ .hb-acts > .hb-btn,.hb-acts > .hb-iconbtn{ min-height:44px } }
 
 /* Disclosure. Fiddly controls fold away instead of being deleted. */
