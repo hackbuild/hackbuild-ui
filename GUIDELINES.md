@@ -997,6 +997,8 @@ composables call the same functions, and so do `HbTabs`, `HbDrawer`,
 | `undoStack(limit)` | none | snapshot undo and redo, 80 steps by default |
 | `activity()` | none | tasks oldest first, a delay that hides fast work, failures kept with their message |
 | `copier()` | none | copy with idle, copied and failed states |
+| `activityLine(el, store)` | `.hb-activity` with `-label`, `-more`, `-line > -fill` | draws the oldest task, its percent and the count of the rest; hidden while idle |
+| `searchList(input, list)` | a field over `role="option"` items, optional `role="group"` sections | the combobox pattern: typing hides what does not match, up and down move the active item with wrap, Enter picks, Escape clears a query first |
 
 Escape acts on the newest open overlay only. A widget that takes a key
 with `preventDefault` wins over the overlay, and the overlay wins over a
@@ -1010,3 +1012,21 @@ viewport, pink dashes for a type a route takes, ink dashes with
 
 A `.hb-btn` with the `hidden` attribute is hidden; the class sets `display`,
 which would otherwise outrank the attribute.
+
+## 13. Suite shell
+
+The parts of the suite header and its navigation. Section 2.1 of the
+suite design sets the strips; these are the parts that fill them.
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbSuiteNav` | `.hb-suitenav`, `-groups`, `-tools`, `-btn`, `-sheet`, `-opt` | groups as tabs on ink and the group's tools as chips in the toolbar row from 761 px of the nav's own width (a container query); below that one 44 px "group / tool" button opens the grouped list in a bottom sheet with a search field. A group tab returns to the last tool used in it. `keys` binds alt+1 to alt+9 and `[` `]` |
+| `HbWorkspaceMenu` | `.hb-wsmenu`, `-btn`, `-menu`, `-sheet` | the workspace name opens a menu of new, open, rename, duplicate, export, import, delete; the level is a segmented toggle from 641 px. Below 641 px one menu button opens a sheet with a level button that cycles. `busy` disables every action and shows why |
+| `HbPills` | `.hb-pills`, `.hb-pills-dots`, `.hb-dot` | one pill per subsystem, off, load, ok, warn, err. A pill with `goto` is a button. Below 641 px one 44 px button of dots, with a ready count from 360 px, opens `HbStatusList` in a sheet |
+| `HbStatusList` | `.hb-statuslist` | one 44 px line per subsystem: state in words and what it means now, the fallback named |
+| `HbActivity` | `.hb-activity`, `.hb-activity-line` | the oldest task, its percent, `+n` for the rest; a 2 px line on the header's bottom edge fills for a known fraction and slides for an unknown one. A press lists the tasks with cancel. Below 641 px only the spinner and percent |
+
+Pink stays with the group tab: the current tool chip is ink, the level
+toggle is paper when on, and pills on ink take the lit colours. The
+header is `position: relative` so the activity line sits on its edge.
+Menu items are 44 px tall on a coarse pointer.

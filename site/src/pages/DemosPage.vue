@@ -18,6 +18,11 @@ const demos = [
     text: 'A form-heavy tool page: fields, segs, switches, sliders and folds arranged the way a real config screen ends up.',
   },
   {
+    to: '#/demos/suite-shell',
+    label: 'suite header and nav',
+    text: 'Workspace and level, status pills, the activity line, then seven groups with their tools. Under 761 px the nav is one group / tool button that opens a sheet with search.',
+  },
+  {
     to: '#/demos/shell-rack',
     label: 'shell: stage and rack',
     text: 'The stage beside a numbered rack of tabs. Under 901 px the rack is a sheet, opened from the dock; stage and split modes.',

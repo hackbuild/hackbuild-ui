@@ -28,7 +28,7 @@ const demo = computed(() => {
           all components
         </HbButton>
         <template v-if="entry && demo">
-          <h1 style="font-size: 34px; margin-top: 8px">{{ entry.name }}</h1>
+          <h1 style="font-size: 34px; margin-top: 8px; overflow-wrap: anywhere">{{ entry.name }}</h1>
           <p style="margin-top: 6px; color: var(--hb-ink-2)">{{ entry.blurb }}</p>
           <div class="demo-col" style="margin-top: 20px">
             <component :is="demo" :key="name" />

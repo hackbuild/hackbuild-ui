@@ -51,6 +51,16 @@ export const registry: RegistryGroup[] = [
     ],
   },
   {
+    category: 'suite shell',
+    entries: [
+      { name: 'HbSuiteNav', blurb: 'groups and tools, a sheet on a phone' },
+      { name: 'HbWorkspaceMenu', blurb: 'workspace actions and the level' },
+      { name: 'HbPills', blurb: 'one status pill per subsystem' },
+      { name: 'HbStatusList', blurb: 'one line per subsystem, in words' },
+      { name: 'HbActivity', blurb: 'what the app waits on, a 2 px line' },
+    ],
+  },
+  {
     category: 'surfaces',
     entries: [
       { name: 'HbPanel', blurb: 'raised paper with the block shadow' },

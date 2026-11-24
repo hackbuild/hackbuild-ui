@@ -19,6 +19,7 @@ export const router = createRouter({
     { path: '/demos/shell-rack', component: () => import('./pages/DemoShellRack.vue'), meta: { bare: true } },
     { path: '/demos/shell-bench', component: () => import('./pages/DemoShellBench.vue'), meta: { bare: true } },
     { path: '/demos/shell-transcript', component: () => import('./pages/DemoShellTranscript.vue'), meta: { bare: true } },
+    { path: '/demos/suite-shell', component: () => import('./pages/DemoSuiteShell.vue'), meta: { bare: true } },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
   scrollBehavior(to) {

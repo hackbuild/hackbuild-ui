@@ -2260,3 +2260,199 @@ button.hb-spark{ cursor:pointer }
 /* A button the behaviour hides (keep, while not armed) stays hidden:
    .hb-btn sets display, which outranks the hidden attribute. */
 .hb-btn[hidden]{ display:none }
+
+/* ==========================================================================
+   22. SUITE NAV
+   HbSuiteNav. Groups as tabs on ink and the group's tools as chips in the
+   toolbar row from 761 px of container width; below that one 44 px
+   "group / tool" button that opens the grouped list in a bottom sheet with
+   a search field. The width is the nav's own (container query), so a nav
+   in a narrow column takes the button.
+   ========================================================================== */
+.hb-suitenav{ display:block; container:hb-suitenav / inline-size; min-width:0 }
+.hb-suitenav-wide{ display:none }
+.hb-suitenav-phone{ display:block; background:var(--hb-ink) }
+.hb-suitenav-tools{ display:none }
+@container hb-suitenav (min-width:761px){
+  .hb-suitenav:not(.is-sheet) .hb-suitenav-wide{ display:block }
+  .hb-suitenav:not(.is-sheet) .hb-suitenav-phone{ display:none }
+  .hb-suitenav:not(.is-sheet) .hb-suitenav-tools{ display:flex }
+}
+.hb-suitenav.is-strip .hb-suitenav-wide{ display:block }
+.hb-suitenav.is-strip .hb-suitenav-phone{ display:none }
+.hb-suitenav.is-strip .hb-suitenav-tools{ display:flex }
+/* Seven tools scroll inside the strip, never the page. */
+.hb-suitenav-tools{ gap:var(--hb-s2); overflow-x:auto; min-width:0; max-width:100%; padding:2px 4px 4px 0 }
+.hb-suitenav-tools > .hb-chip{ flex:0 0 auto }
+/* The current tool is ink, so the pink stays with the group tab. */
+.hb-suitenav-tools > .hb-chip.is-on{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-suitenav-bar:empty{ display:none }
+.hb-suitenav-btn{
+  display:flex; align-items:center; gap:var(--hb-s2); width:100%; min-height:44px;
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em;
+  background:transparent; color:var(--hb-paper); border:0;
+  border-bottom:var(--hb-border-hd) solid var(--hb-pink);
+  padding:0 max(var(--hb-s4), env(safe-area-inset-right)) 0 max(var(--hb-s4), env(safe-area-inset-left));
+  cursor:pointer; text-align:left;
+}
+.hb-suitenav-path{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.hb-suitenav-path b{ color:var(--hb-pink); font-weight:600; padding:0 .5em }
+.hb-suitenav-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-suitenav-sheet{ display:flex; flex-direction:column; gap:var(--hb-s3) }
+.hb-suitenav-sheet > .hb-input{ font-size:16px }
+.hb-suitenav-list{ display:flex; flex-direction:column; gap:var(--hb-s3) }
+.hb-suitenav-list > [role="group"]{ display:flex; flex-direction:column; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb-suitenav-list > [role="group"][hidden]{ display:none }
+.hb-suitenav-head{
+  font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+  background:var(--hb-ink); color:var(--hb-paper); padding:4px var(--hb-s3);
+}
+.hb-suitenav-opt{
+  display:flex; align-items:center; gap:var(--hb-s3); min-height:44px; width:100%;
+  font-family:var(--hb-utility); font-size:12.5px; color:var(--hb-ink); text-align:left;
+  background:none; border:0; border-bottom:1px dashed rgba(26,26,26,.25);
+  padding:0 var(--hb-s3); cursor:pointer;
+}
+.hb-suitenav-opt:last-child{ border-bottom:0 }
+.hb-suitenav-opt[hidden]{ display:none }
+.hb-suitenav-opt small{ margin-left:auto; font-size:10.5px; color:var(--hb-ink-3) }
+.hb-suitenav-opt[aria-current="page"]{ font-weight:700; box-shadow:inset 4px 0 0 var(--hb-ink) }
+.hb-suitenav-opt.is-active{ background:var(--hb-pink); color:var(--hb-ink) }
+.hb-suitenav-opt.is-active small{ color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-suitenav-opt:hover{ background:var(--hb-pink-10) } .hb-suitenav-opt.is-active:hover{ background:var(--hb-pink) } }
+.hb .hb-suitenav-empty,.hb-suitenav-empty{ margin:0; font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-3) }
+
+/* ==========================================================================
+   23. WORKSPACE MENU
+   HbWorkspaceMenu. In the header: the workspace name as a menu trigger and
+   the disclosure level as a segmented toggle from 641 px; below that one
+   44 px menu button opens a sheet holding the name, a level button that
+   cycles, the actions and the other workspaces. Busy disables every action
+   and says why.
+   ========================================================================== */
+.hb-wsmenu{ display:inline-flex; align-items:center; gap:var(--hb-s3); min-width:0 }
+.hb-wsmenu-wide,.hb-wsmenu-level{ display:none }
+@media(min-width:641px){
+  .hb-wsmenu-wide{ display:inline-block }
+  .hb-wsmenu-level{ display:inline-flex }
+  .hb-wsmenu-phone{ display:none }
+}
+.hb-wsmenu-btn{
+  display:inline-flex; align-items:center; gap:var(--hb-s2); min-height:44px; max-width:16rem;
+  font-family:var(--hb-utility); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.09em;
+  background:transparent; color:inherit; border:1px solid rgba(245,240,230,.4); padding:0 var(--hb-s3); cursor:pointer;
+}
+.hb-wsmenu-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0 }
+@media(pointer:fine){ .hb-wsmenu-btn{ min-height:32px } }
+/* The level is a view switch, not the focal value: paper when on, so the
+   one pink stays with the group tab. */
+.hb-header .hb-seg.is-toggle > button.is-on{ background:var(--hb-paper); color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-wsmenu-btn:hover{ border-color:var(--hb-pink); color:var(--hb-pink) } }
+.hb-wsmenu-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-wsmenu-menu{ min-width:15rem }
+.hb-wsmenu-menu .hb-menu-item small,.hb-wsmenu-row small{ margin-left:auto; font-size:10px; color:var(--hb-ink-3); text-transform:none; letter-spacing:0 }
+.hb-wsmenu-proj{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; text-transform:none; letter-spacing:0 }
+.hb-menu-item.hb-wsmenu-del{ color:var(--hb-err) }
+.hb .hb-wsmenu-busy,.hb-wsmenu-busy{ margin:0; padding:6px 14px; font-family:var(--hb-utility); font-size:11px; color:var(--hb-warn) }
+.hb-wsmenu-sheet{ display:flex; flex-direction:column; gap:var(--hb-s3); color:var(--hb-ink) }
+.hb-wsmenu-sheet .hb-wsmenu-busy{ padding:0 }
+.hb-wsmenu-acts{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--hb-s2) }
+.hb-wsmenu-acts > .hb-btn{ justify-content:center }
+.hb-wsmenu-head{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-wsmenu-row{ min-height:44px }
+.hb-wsmenu-sheet > .hb-wsmenu-del{ justify-content:center }
+/* Menu items are 44 px on a coarse pointer, here and in every menu. */
+@media(pointer:coarse){ .hb-menu-item{ min-height:44px } }
+
+/* ==========================================================================
+   24. STATUS PILLS AND STATUS LIST
+   HbPills: one pill per subsystem in the header (off, load, ok, warn, err).
+   Under 641 px the pills drop to one 44 px button of dots with a ready
+   count from 360 px, which opens HbStatusList in a sheet. HbStatusList is
+   one line per subsystem: the state in words and what it means now.
+   ========================================================================== */
+.hb-pills{ display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0 }
+.hb-pills > button.hb-pill{ cursor:pointer }
+.hb-pills > button.hb-pill:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-pill.is-off{ opacity:.6 }
+@media(pointer:coarse){ .hb-pills > button.hb-pill{ min-height:44px } }
+.hb-pills.is-compact > .hb-pill{ display:none }
+.hb-pills-dots{ display:inline-flex; align-items:center; gap:5px; min-height:44px; min-width:44px; padding:0 var(--hb-s2); background:transparent; color:inherit; border:1px solid currentColor; cursor:pointer }
+.hb-pills-dots:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-pills-count{ display:none; font-family:var(--hb-readout); font-size:15px; line-height:1; margin-left:2px }
+@media(min-width:360px){ .hb-pills-count{ display:inline } }
+@media(min-width:641px){
+  .hb-pills.is-compact > .hb-pill{ display:inline-flex }
+  .hb-pills.is-compact > .hb-pills-dots{ display:none }
+}
+/* On ink the pills drop the paper plate and keep the state colours. */
+.hb-header .hb-pill,.hb-on-ink .hb-pill{ background:transparent; color:var(--hb-paper); border-color:rgba(245,240,230,.55) }
+.hb-header .hb-pill.is-ok::before,.hb-on-ink .hb-pill.is-ok::before{ background:var(--hb-slime) }
+.hb-header .hb-pill.is-warn,.hb-on-ink .hb-pill.is-warn{ color:var(--hb-lit-warn); border-color:var(--hb-lit-warn) }
+.hb-header .hb-pill.is-warn::before,.hb-on-ink .hb-pill.is-warn::before{ background:var(--hb-lit-warn) }
+.hb-header .hb-pill.is-err,.hb-on-ink .hb-pill.is-err{ color:var(--hb-lit-err); border-color:var(--hb-lit-err) }
+.hb-header .hb-pill.is-err::before,.hb-on-ink .hb-pill.is-err::before{ background:var(--hb-lit-err) }
+.hb-header .hb-pill.is-busy::before,.hb-on-ink .hb-pill.is-busy::before{ background:var(--hb-paper) }
+/* The status dot: round, one of the radius exceptions (the pill dot). */
+.hb-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--hb-ink-4); flex:0 0 auto }
+.hb-dot.is-ok,.is-ok > * > .hb-dot{ background:var(--hb-ok) }
+.hb-dot.is-warn,.is-warn > * > .hb-dot{ background:var(--hb-warn) }
+.hb-dot.is-err,.is-err > * > .hb-dot{ background:var(--hb-err) }
+.hb-dot.is-load,.is-load > * > .hb-dot{ background:var(--hb-ink); animation:hb-blink 1s infinite }
+.hb-header .hb-dot.is-ok,.hb-on-ink .hb-dot.is-ok{ background:var(--hb-slime) }
+.hb-header .hb-dot.is-warn,.hb-on-ink .hb-dot.is-warn{ background:var(--hb-lit-warn) }
+.hb-header .hb-dot.is-err,.hb-on-ink .hb-dot.is-err{ background:var(--hb-lit-err) }
+.hb-header .hb-dot.is-load,.hb-on-ink .hb-dot.is-load{ background:var(--hb-paper) }
+.hb-pills-dots.is-err{ border-color:var(--hb-lit-err) }
+.hb-statuslist{ list-style:none; margin:0; padding:0; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); color:var(--hb-ink) }
+.hb-statuslist > li{ border-bottom:1px dashed rgba(26,26,26,.25) }
+.hb-statuslist > li:last-child{ border-bottom:0 }
+.hb-statuslist-row{
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:2px var(--hb-s2);
+  width:100%; min-height:44px; padding:6px var(--hb-s3); background:none; border:0; color:inherit; text-align:left;
+  font-family:var(--hb-utility); font-size:11px;
+}
+button.hb-statuslist-row{ cursor:pointer }
+@media (hover:hover) and (pointer:fine){ button.hb-statuslist-row:hover{ background:var(--hb-pink-10) } }
+button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-statuslist-name{ font-weight:700; text-transform:uppercase; letter-spacing:.09em }
+.hb-statuslist-state{ font-family:var(--hb-readout); font-size:16px; line-height:1 }
+.hb-statuslist-note{ grid-column:2 / -1; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.is-warn > .hb-statuslist-row .hb-statuslist-state{ color:var(--hb-warn) }
+.is-err > .hb-statuslist-row .hb-statuslist-state,.is-err > .hb-statuslist-row .hb-statuslist-note{ color:var(--hb-err) }
+.is-off > .hb-statuslist-row{ color:var(--hb-ink-3) }
+
+/* ==========================================================================
+   25. ACTIVITY LINE
+   HbActivity: what the app waits on. The oldest task with its percent and
+   a count of the rest, and a 2 px line on the bottom edge of the header
+   (it carries position relative): a known fraction fills, an unknown one
+   slides. A press lists the tasks with cancel. Under 641 px the label
+   drops and the spinner and percent stay.
+   ========================================================================== */
+.hb-header{ position:relative }
+.hb-activity[hidden]{ display:none }
+.hb-activity{ min-width:0 }
+.hb-activity-btn{
+  display:inline-flex; align-items:center; gap:6px; min-height:44px; max-width:22rem; min-width:44px;
+  background:transparent; color:inherit; border:0; padding:0 var(--hb-s1); cursor:pointer;
+  font-family:var(--hb-utility); font-size:11px;
+}
+@media(pointer:fine){ .hb-activity-btn{ min-height:28px } }
+.hb-activity-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-activity-label{ display:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0 }
+.hb-activity-pct{ font-family:var(--hb-readout); font-size:16px; line-height:1; white-space:pre }
+.hb-activity-more{ opacity:.6 }
+@media(min-width:641px){ .hb-activity-label{ display:inline } }
+.hb-activity.is-err .hb-activity-pct,.hb-activity.is-err .hb-activity-label{ color:var(--hb-lit-err) }
+.hb-activity-list{ min-width:16rem }
+.hb-activity-list .hb-menu-item > span:last-child:not(:first-child){ margin-left:auto }
+.hb-activity-row{ text-transform:none; letter-spacing:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0 }
+.hb-activity-list .hb-menu-item[disabled]{ color:var(--hb-ink-2) }
+.hb-activity-line{ position:absolute; left:0; right:0; bottom:-3px; height:2px; overflow:hidden; pointer-events:none }
+.hb-activity-fill{ position:absolute; top:0; bottom:0; left:0; width:30%; background:var(--hb-paper); animation:hb-activity-slide 1.1s ease-in-out infinite }
+.hb-activity-line.is-known .hb-activity-fill{ animation:none; transition:width var(--hb-t) linear }
+.hb-activity-line.is-err .hb-activity-fill{ animation:none; width:100%; background:var(--hb-lit-err) }
+@keyframes hb-activity-slide{ from{ transform:translateX(-100%) } to{ transform:translateX(340%) } }
+@media (prefers-reduced-motion:reduce){ .hb-activity-line:not(.is-known) .hb-activity-fill{ animation:none; width:100%; opacity:.4 } }

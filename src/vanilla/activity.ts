@@ -120,3 +120,56 @@ export function activity(options: ActivityOptions = {}): Activity {
     },
   }
 }
+
+/** What an activity line shows: the oldest task, its percent, the rest. */
+export interface ActivitySummary {
+  /** The oldest task, or null when idle. */
+  first: ActivityTask | null
+  /** ' 42%' when the size is known, else ''. */
+  percent: string
+  /** How many more tasks run behind the first. */
+  more: number
+  /** One line per task, for a title. */
+  detail: string
+}
+
+/** ' 42%' for a known fraction, '' for an unknown one. */
+export function percentText(fraction: number | null): string {
+  return fraction === null ? '' : ` ${Math.round(Math.max(0, Math.min(1, fraction)) * 100)}%`
+}
+
+export function summarize(tasks: readonly ActivityTask[]): ActivitySummary {
+  const first = tasks[0] ?? null
+  return {
+    first,
+    percent: first ? percentText(first.fraction) : '',
+    more: Math.max(0, tasks.length - 1),
+    detail: tasks.map((t) => `${t.label}${t.error ? `: ${t.error}` : percentText(t.fraction)}`).join('\n'),
+  }
+}
+
+/**
+ * Draw a store into `.hb-activity` markup: `.hb-activity-label`,
+ * `.hb-activity-more` and a `.hb-activity-line` holding a
+ * `.hb-activity-fill`. The root is hidden while idle; `.is-known` marks a
+ * known fraction, `.is-err` a failed first task.
+ */
+export function activityLine(el: HTMLElement, store: Pick<Activity, 'list' | 'subscribe'>): { dispose(): void } {
+  const label = el.querySelector<HTMLElement>('.hb-activity-label')
+  const more = el.querySelector<HTMLElement>('.hb-activity-more')
+  const fill = el.querySelector<HTMLElement>('.hb-activity-fill')
+  if (!el.getAttribute('role')) el.setAttribute('role', 'status')
+  function draw(tasks: ActivityTask[]) {
+    const s = summarize(tasks)
+    el.hidden = !s.first
+    el.title = s.detail
+    el.classList.toggle('is-known', !!s.first && s.first.fraction !== null)
+    el.classList.toggle('is-err', !!s.first?.error)
+    if (label) label.textContent = s.first ? `${s.first.label}${s.first.error ? ' failed' : s.percent}` : ''
+    if (more) { more.textContent = s.more ? `+${s.more}` : ''; more.hidden = !s.more }
+    if (fill) fill.style.width = s.first && s.first.fraction !== null ? `${Math.round(s.first.fraction * 100)}%` : ''
+  }
+  draw(store.list())
+  const off = store.subscribe(draw)
+  return { dispose: off }
+}
