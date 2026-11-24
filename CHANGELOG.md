@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.7
+
+- HbSpokenText, HbMethodCard, HbImageSlot, HbCameraTile, HbHistoryStrip,
+  HbSeed; vanilla `media`: spoken word timing, method figures, camera
+  faults, run history, seeds.
+- HbMemoryItem: `pinned` and a pin action (`pin`). HbMessage: `remember`
+  action and `remembered`, forwarded by HbChat. HbSelect: `label`.
+- `.hb-hint`: a muted line anywhere. `.hb-toolpage` parts hold their
+  height, so a `.hb-bar` no longer shrinks into the next part.
+
 ## 0.6.6
 
 - `.hb-toolpage.is-split`: side column beside the main part from 1024 px;
