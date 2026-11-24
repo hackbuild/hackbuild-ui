@@ -487,7 +487,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-fold` | Disclosure. Fiddly controls fold away rather than being deleted; easy mode is a fold, not a different app. `.hb-fold-num` is the bracketed section number, `.hb-fold-done` the ok word |
 | `.hb-tabs.is-num` / `.hb-tab.is-done` / `.hb-tabs-select` | Numbered tabs in the order of work, a done tab's number filled ok green; the select that replaces a strip that would clip |
 | `.hb-empty-hint` | The line a tab or fold shows while it has nothing: what to do first |
-| `.hb-modal` | Centered panel over a scrim. `[hidden]` must beat the display rule explicitly or the close button does nothing. `.hb-modal-hd` is the title row with the close button, `.hb-modal-ft` the right aligned actions |
+| `.hb-modal` | Centered panel over a scrim. `[hidden]` must beat the display rule explicitly or the close button does nothing. `.hb-modal-hd` is the title row with the close button, `.hb-modal-ft` the right aligned actions. `.hb-panel.is-sm` and `.is-lg` set 520 and 880 px from the modal tokens; the default is 640 |
 | `.hb-toast` | Bottom center, ink plate, pink rule, gone in about a second |
 | `.hb-app` / `.hb-work` / `.hb-main` / `.hb-rail` | Full-height shell: pinned strips, one scrolling work column beside one scrolling rail |
 | `.hb-app-foot` / `.hb-dock` | The shell foot: the dock with the composer or the one primary action, over the status strip, pinned at every width |

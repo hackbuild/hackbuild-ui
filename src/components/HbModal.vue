@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { modal, type CloseReason, type OverlayHandle } from '../vanilla/overlay'
 import HbIcon from './HbIcon.vue'
 
 interface Props {
   title?: string
-  /** Panel max width in px. */
+  /** Panel width: sm 520 px, md 640 px, lg 880 px. */
+  size?: 'sm' | 'md' | 'lg'
+  /** Older px width, mapped to the nearest size: under 640 is sm, over is lg. */
   width?: number
   closable?: boolean
   closeOnBackdrop?: boolean
@@ -13,7 +15,6 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  width: 640,
   closable: true,
   closeOnBackdrop: true,
   closeOnEscape: true,
@@ -24,6 +25,11 @@ const open = defineModel<boolean>({ default: false })
 const emit = defineEmits<{
   close: [reason: CloseReason]
 }>()
+
+const panelClass = computed(() => {
+  const size = props.size ?? (props.width === undefined || props.width === 640 ? 'md' : props.width < 640 ? 'sm' : 'lg')
+  return size === 'md' ? 'hb-panel' : `hb-panel is-${size}`
+})
 
 const root = ref<HTMLElement | null>(null)
 let handle: OverlayHandle | null = null
@@ -63,7 +69,7 @@ onBeforeUnmount(release)
 <template>
   <Teleport to="body">
     <div v-if="open" ref="root" class="hb-modal hb" role="dialog" aria-modal="true" :aria-label="props.title">
-      <div class="hb-panel" :style="props.width !== 640 ? { maxWidth: props.width + 'px' } : undefined" tabindex="-1">
+      <div :class="panelClass" tabindex="-1">
         <div v-if="props.title || props.closable" class="hb-panel-hd hb-modal-hd">
           <span>{{ props.title }}</span>
           <button

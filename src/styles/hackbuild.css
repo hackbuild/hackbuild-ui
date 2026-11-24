@@ -698,10 +698,12 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   animation:hb-fade var(--hb-t-slow);
 }
 .hb-modal > .hb-panel{
-  position:relative; max-width:640px; width:100%; max-height:82vh; overflow:auto;
+  position:relative; max-width:var(--hb-modal-md); width:100%; max-height:82vh; overflow:auto;
   box-shadow:var(--hb-shadow-xl);
   animation:hb-drop var(--hb-t-slow);
 }
+.hb-modal > .hb-panel.is-sm{ max-width:var(--hb-modal-sm) }
+.hb-modal > .hb-panel.is-lg{ max-width:var(--hb-modal-lg) }
 @keyframes hb-drop{ from{ transform:translateY(-14px); opacity:0 } }
 @media(min-width:641px){ .hb-modal{ padding:var(--hb-s5) } }
 

@@ -39,7 +39,8 @@ const code = `<HbModal v-model="open" title="Save session">
     :rows="[
       { prop: 'v-model', type: 'boolean' },
       { prop: 'title', type: 'string' },
-      { prop: 'width', type: 'number', default: '640', notes: 'panel max width in px' },
+      { prop: 'size', type: `'sm' | 'md' | 'lg'`, default: 'md', notes: '520, 640 or 880 px, a class' },
+      { prop: 'width', type: 'number', notes: 'older px width, mapped to the nearest size' },
       { prop: 'closable', type: 'boolean', default: 'true' },
       { prop: 'closeOnBackdrop', type: 'boolean', default: 'true' },
       { prop: 'closeOnEscape', type: 'boolean', default: 'true' },

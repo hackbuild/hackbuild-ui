@@ -116,6 +116,9 @@
   --hb-rail:    336px;          /* bench rail beside the stage */
   --hb-tray:    210px;          /* bench tray under the stage */
   --hb-inset-w: 320px;          /* picture in picture card on a viewport */
+  --hb-modal-sm: 520px;         /* modal panel, a confirm */
+  --hb-modal-md: 640px;         /* modal panel, the default */
+  --hb-modal-lg: 880px;         /* modal panel, a form or table */
   --hb-wave-h:  72px;           /* audio strip height */
   --hb-chat-h:  360px;          /* chat log and transcript scroll ceiling */
   --hb-spark-h: 28px;           /* sparkline height in a drive row */

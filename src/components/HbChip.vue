@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useHotkeys } from '../composables/useHotkeys'
+import { ref, watch } from 'vue'
+import { sharedHotkeys } from '../composables/useHotkeys'
+import { onEnd } from '../composables/scope'
 
 export interface Props {
   disabled?: boolean
   /** A toggle inside a bench: fills ink when on, so pink stays free for
       the one primary selection of a step. */
   toggle?: boolean
-  /** A key that presses the chip, shown on it: '1', 'm'. Bound once, in
-      the shared registry, for the life of the chip. */
+  /** A key that presses the chip, shown on it: '1', 'm'. Bound in the
+      shared registry and rebound when it changes. */
   hotkey?: string
   /** What the key does, for the key map. Default: the chip's text. */
   hotkeyLabel?: string
@@ -39,17 +40,28 @@ function toggle(event: MouseEvent) {
   emit('click', event)
 }
 
-if (props.hotkey) {
-  useHotkeys([{
-    keys: props.hotkey,
-    label: props.hotkeyLabel || `chip ${props.hotkey}`,
-    group: props.hotkeyGroup,
-    run: () => {
-      if (props.disabled || !el.value) return false
-      el.value.click()
-    },
-  }])
-}
+let unbind: (() => void) | null = null
+
+watch(
+  () => [props.hotkey, props.hotkeyLabel, props.hotkeyGroup] as const,
+  ([key, label, group]) => {
+    unbind?.()
+    unbind = null
+    if (!key) return
+    unbind = sharedHotkeys().add([{
+      keys: key,
+      label: label || `chip ${key}`,
+      group,
+      run: () => {
+        if (props.disabled || !el.value) return false
+        el.value.click()
+      },
+    }])
+  },
+  { immediate: true },
+)
+
+onEnd(() => unbind?.())
 </script>
 
 <template>
