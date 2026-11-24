@@ -4079,3 +4079,129 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 }
 @media (prefers-reduced-motion:reduce){ .hb-transport{ transition:none } }
 @media(pointer:coarse){ .hb-ov-b .hb-btn{ min-width:44px; min-height:44px } }
+
+/* Context menu. A raised panel at the pressed point with the thing's name
+   on an ink bar, rows that send a sentence. Placed inside the area that
+   owns it; rows are sentences, so they keep their case. The area takes
+   right click, a long press on touch and the menu key or Shift+F10; the
+   long press does not select text or raise the phone's own callout. */
+.hb-ctx-area{ position:relative; -webkit-touch-callout:none; -webkit-user-select:none; user-select:none }
+.hb-ctx-area:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-ctx{
+  position:absolute; left:0; top:0; z-index:var(--hb-z-dropdown);
+  display:flex; flex-direction:column; min-width:180px; max-width:min(280px, calc(100% - 16px));
+  background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:4px 4px 0 var(--hb-pink); -webkit-user-select:none; user-select:none;
+}
+.hb-ctx[hidden]{ display:none }
+.hb-ctx-title{
+  font-family:var(--hb-readout); font-size:18px; line-height:1.2;
+  background:var(--hb-ink); color:var(--hb-slime); padding:2px var(--hb-s2);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.hb-ctx .hb-menu-item{
+  text-transform:none; letter-spacing:0; font-weight:500; font-size:12px;
+  border-top:1px dashed var(--hb-ink-4); padding:7px var(--hb-s2);
+}
+.hb-ctx .hb-ctx-title + .hb-menu-item{ border-top:0 }
+.hb-ctx .hb-menu-item:focus-visible{ outline:none; background:var(--hb-pink); color:var(--hb-ink) }
+
+/* Step card. One decision tied to its input: step number, the action
+   chip, the call's time; the frame the model saw beside the streamed
+   text, the thought and the result. The left edge says the state. */
+.hb-step{
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:1px solid var(--hb-ink-4); border-left:4px solid var(--hb-ink);
+  padding:var(--hb-s2) var(--hb-s3); min-width:0;
+}
+.hb-step.is-thinking{ border-left-color:var(--hb-pink) }
+.hb-step.is-fail{ border-left-color:var(--hb-err) }
+.hb-step.is-done{ border-left-color:var(--hb-ok) }
+.hb-step-head{ display:flex; align-items:center; gap:var(--hb-s2); margin-bottom:var(--hb-s2) }
+.hb-step-n{ font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-3); text-transform:uppercase }
+.hb-step-act{
+  font-family:var(--hb-utility); font-size:10px; font-weight:600; letter-spacing:.06em;
+  border:1px solid var(--hb-ink); padding:2px 6px; background:var(--hb-paper);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0;
+}
+.hb-step.is-thinking .hb-step-act{ background:var(--hb-pink) }
+.hb-step.is-fail .hb-step-act{ background:var(--hb-err); color:var(--hb-paper); border-color:var(--hb-err) }
+.hb-step-ms{ margin-left:auto; font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-3); white-space:nowrap }
+.hb-step-body{ display:flex; gap:var(--hb-s2); align-items:flex-start }
+.hb-step-thumb{
+  flex:none; width:64px; height:64px; object-fit:cover; display:block;
+  border:1px solid var(--hb-ink); background:var(--hb-void);
+}
+.hb-step-thumb.is-none{
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  font-family:var(--hb-utility); font-size:10px; color:var(--hb-lit-dim);
+}
+.hb-step-text{ flex:1; min-width:0; font-family:var(--hb-utility); font-size:12px; line-height:1.45; overflow-wrap:anywhere }
+.hb-step-text p{ margin:0 0 4px }
+.hb-step-text p:last-child{ margin-bottom:0 }
+.hb-step-thought{ color:var(--hb-ink-2) }
+.hb-step-result{ color:var(--hb-ink-3) }
+.hb-step-text b{ font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--hb-ink-3); margin-right:4px }
+@media(min-width:641px){ .hb-step-thumb{ width:74px; height:74px } }
+
+/* Prompt inspector. Three cards: what the last call cost and the session
+   counters, the last plan as one line of JSON, and the full context sent
+   with the raw reply after '>>>'. Long text wraps and scrolls inside its
+   card; nothing scrolls the page sideways. */
+.hb-pinsp{ display:flex; flex-direction:column; gap:var(--hb-s3); min-width:0 }
+.hb-pinsp-card{ background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); min-width:0 }
+.hb-pinsp .hb-pinsp-hd{
+  display:flex; align-items:center; gap:var(--hb-s2); margin:0;
+  font-family:var(--hb-readout); font-weight:400; font-size:18px; text-transform:uppercase;
+  background:var(--hb-ink); color:var(--hb-paper); padding:2px var(--hb-s2);
+}
+.hb-pinsp .hb-pinsp-hd small{ font-family:var(--hb-utility); font-size:10px; text-transform:none; color:var(--hb-lit-dim) }
+.hb-pinsp-copy{
+  margin-left:auto; font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.08em;
+  background:none; color:var(--hb-paper); border:1px solid var(--hb-ink-border); padding:2px 8px; cursor:pointer;
+}
+.hb-pinsp-copy.is-copied{ color:var(--hb-lit-info) }
+.hb-pinsp-copy.is-failed{ color:var(--hb-lit-err) }
+@media(pointer:coarse){ .hb-pinsp-copy{ min-height:44px; min-width:44px } }
+.hb-pinsp-kv{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px var(--hb-s3);
+  margin:0; padding:var(--hb-s2) var(--hb-s3);
+}
+.hb-pinsp-kv dt{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-2) }
+.hb-pinsp-kv dd{ margin:0; font-family:var(--hb-readout); font-size:16px; text-align:right }
+.hb-pinsp-empty{ margin:0; padding:var(--hb-s2) var(--hb-s3); font-size:12px; color:var(--hb-ink-3) }
+/* Over the kit's pre: paper, not ink; no shadow or border of its own. */
+.hb-pinsp .hb-pinsp-pre{
+  margin:0; padding:var(--hb-s2) var(--hb-s3); max-height:var(--hb-pinsp-h, 320px); overflow:auto;
+  font-family:var(--hb-utility); font-size:11px; line-height:1.5; color:var(--hb-ink);
+  white-space:pre-wrap; overflow-wrap:anywhere; background:var(--hb-paper-sunk); border:0; box-shadow:none;
+}
+.hb-pinsp .hb-pinsp-pre.is-empty{ color:var(--hb-ink-3); background:none }
+.hb-pinsp-pre:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-pinsp-reply{ display:block; margin-top:var(--hb-s2); padding-top:var(--hb-s2); border-top:1px dashed var(--hb-ink-4); color:var(--hb-ink); font-weight:600 }
+
+/* Persona editor. Name, the prompt with its cost under it, the template
+   button, preset chips with a remove mark, an inline name to save under,
+   import and export. */
+.hb-persona{ display:flex; flex-direction:column; min-width:0 }
+.hb-persona .hb-textarea{ font-family:var(--hb-utility); font-size:12px; line-height:1.5 }
+.hb-persona-row{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); margin-bottom:var(--hb-s3) }
+.hb-persona-presets{ display:flex; flex-direction:column; gap:var(--hb-s2); margin-bottom:var(--hb-s3) }
+.hb-persona-chips{ display:flex; flex-wrap:wrap; gap:6px; align-items:center }
+.hb-persona-chip{
+  display:inline-flex; align-items:stretch; border:var(--hb-border) solid var(--hb-ink);
+  background:var(--hb-paper-raised); box-shadow:2px 2px 0 var(--hb-ink); max-width:100%;
+}
+.hb-persona-chip.is-on{ background:var(--hb-pink) }
+.hb-persona-chip.is-on .hb-persona-chip-x{ color:var(--hb-ink) }
+.hb-persona-chip button{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600; letter-spacing:.04em;
+  background:none; border:0; color:var(--hb-ink); cursor:pointer; padding:4px 8px;
+}
+.hb-persona-chip-n{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0 }
+.hb-persona-chip .hb-persona-chip-x{ border-left:1px solid var(--hb-ink); color:var(--hb-ink-3); padding:4px 7px }
+@media (hover:hover) and (pointer:fine){ .hb-persona-chip .hb-persona-chip-x:hover{ color:var(--hb-err) } .hb-persona-chip-n:hover{ text-decoration:underline } }
+.hb-persona-chip button:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:1px }
+@media(pointer:coarse){ .hb-persona-chip button{ min-height:44px; min-width:44px } }
+.hb-persona-save{ display:flex; gap:var(--hb-s2); align-items:stretch }
+.hb-persona-save .hb-input{ flex:1; min-width:0 }

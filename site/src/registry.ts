@@ -96,6 +96,9 @@ export const registry: RegistryGroup[] = [
       { name: 'HbToolCall', blurb: 'one line when done, open while running' },
       { name: 'HbContextMeter', blurb: 'what fills the context, the full banner' },
       { name: 'HbConversationList', blurb: 'the chats or documents rail' },
+      { name: 'HbPersonaEditor', blurb: 'name, templated prompt and its cost, presets, file' },
+      { name: 'HbStepCard', blurb: 'one agent step beside the frame it saw' },
+      { name: 'HbPromptInspector', blurb: 'the last prompt, reply, plan and cost' },
     ],
   },
   {
@@ -138,6 +141,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbNameHud', blurb: 'the name and one state word, privacy chips' },
       { name: 'HbTransport', blurb: 'play, chapters, scrub, speed and loop for a clip' },
       { name: 'HbPad', blurb: 'touch stick or d-pad and one action, keys too' },
+      { name: 'HbContextMenu', blurb: 'right click, long press or menu key; sends sentences' },
       { name: 'HbInset', blurb: 'a derived view: collapsible, view modes, one line head' },
       { name: 'HbWave', blurb: 'waveform or level rail with floor, gate and seek' },
       { name: 'HbBubble', blurb: 'speech over a point, clamped, reading time' },

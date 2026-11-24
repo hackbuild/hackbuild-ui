@@ -1276,7 +1276,22 @@ Vanilla: `captionText`, `hudWord`, `HUD_WORDS`; `pad`, `stickVector`,
 `rateText`, `chapterAt`, `chapterStep`, `chapterSpans`, `timeLine`,
 `transportKeys`, `idleChrome`.
 
-## 18. Parts added in 0.6.0 to 0.7.1
+### Persona, trace and context menu
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbPersonaEditor` | `.hb-persona`, `-row`, `-presets`, `-chips`, `-chip`, `-chip-n`, `-chip-x`, `-save`, `.is-on` | `v-model` is the character file `{v, name, prompt, first?, model?, params?, voice?, avatar?}`. The name labels every message. `insert template` adds `PERSONA_TEMPLATE` (Persona, Voice, Background, Behavior, Boundaries, Format, Example; the name filled in) after a blank line, so a written prompt is kept. The hint under the prompt is its cost: `cost` tokens, else an estimate at four characters a token. Presets are owned by the host: a chip loads the whole file, its mark emits `remove-preset`; the name to save under is an inline field, never a dialog. Import reads a json file and names the failure (`not json`, `no prompt`, a newer version) |
+| `HbStepCard` | `.hb-step`, `-head`, `-n`, `-act`, `-ms`, `-body`, `-thumb`, `-text`, `-stream`, `-thought`, `-result`, `.is-thinking`, `.is-ok`, `.is-fail`, `.is-done` | one decision of an agent loop beside the exact frame the model saw: `step 01`, the action chip, the call time; streamed text, thought and result clipped at a word (`clip`, 240). The left edge says the state; thinking is pink and busy. The `thumb` slot takes an `HbInset` |
+| `HbPromptInspector` | `.hb-pinsp`, `-card`, `-hd`, `-kv`, `-pre`, `-reply`, `-copy`, `-empty` | three cards: cost (last prompt and reply tokens, reply time, then the host's `counters` such as model calls, handled by reflex, plan cache hits), the last plan as one line of JSON, and the full context sent with the raw reply after `>>>`, with a copy button. Text wraps and scrolls inside its card (`--hb-pinsp-h`, 320 px). One tab from the chat |
+| `HbContextMenu` | `.hb-ctx-area`, `.hb-ctx`, `-title`; rows are `.hb-menu-item` | wraps the stage. Opens by right click, a long press on touch or pen (500 ms, 10 px slop; the click after it and the phone's own contextmenu are eaten), or the menu key or Shift+F10 on the focused element. `request` fires first with `{at, via, target}` so the host fills `title` and `items` for the thing pressed; no items keeps it shut. Placed below right of the point and clamped inside the area. Rows are sentences in their own case and send `say` through the same path as typing (`pick(item, say)`). Arrows, Home, End and a first letter move; Escape and a pick hand focus back to the opener; 44 px rows on a coarse pointer |
+
+Vanilla: `PERSONA_TEMPLATE`, `tokenEstimate`, `costLine`,
+`insertTemplate`, `matchPersona`, `presetLabel`, `personaJson`,
+`parsePersona`; `stepLabel`, `clipText`, `msText`, `promptText`,
+`planText`, `costRows`; `contextTrigger`, `ctxPanel`, `clampMenu`,
+`isMenuKey`, `stepIndex`, `LONG_PRESS_MS`, `LONG_PRESS_SLOP`.
+
+## 18. Parts added in 0.6.0 to 0.8.0
 
 Where to find each part added since 0.6.0. The docs site groups the same
 parts by category; the changelog has the detail.
@@ -1297,3 +1312,4 @@ parts by category; the changelog has the detail.
 | 0.6.8 | HbPromptCanvas, HbInstanceList, HbRange2, HbMonitorDock, HbSplit | 17, masks and views |
 | 0.7.0 | HbArtboard, HbPromptCanvas `bare` | 17, artboard |
 | 0.7.1 | HbStageCaption, HbNameHud, HbTransport, HbPad; HbViewport and HbStageOverlay `telemetry`, `hint`, `caption`, `pad` slots; HbMemoryPanel `pin`, HbHistoryStrip non image `thumb` | 17, stage, transport and pad |
+| 0.8.0 | HbPersonaEditor, HbStepCard, HbPromptInspector, HbContextMenu; HbImageSlot `ratio` | 17, persona, trace and context menu |
