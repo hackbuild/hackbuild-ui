@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.6.0
+
+- The vanilla entry (`@virgilvox/hackbuild-ui/vanilla`) with tests, seven
+  composables over it, and six parts moved onto it, plus the sheet.
+- Suite shell: shell modes, the dock and three shell recipes; HbSuiteNav,
+  HbWorkspaceMenu, HbPills, HbActivity, HbPalette, HbKeyMap, HbToolRail,
+  HbChipGroup, HbToggleRow.
+- Data and settings: HbEventLog, HbCodeBlock, HbHow, HbExportPanel,
+  HbSettingsForm, HbPresetChips, 44 px param rows.
+- Models: HbModelList, load phases and reasons, HbModelManager,
+  HbModelRack, HbModelSlot, HbEngineBar, HbWakeGate, HbTierCards,
+  HbApiKey, HbCustomModelForm.
+- Chat: message anatomy, HbThink, HbToolCall, HbContextMeter,
+  HbConversationList.
+- Memory and voice: HbMemoryPanel, HbMemoryItem, HbRecallTrace,
+  HbMicButton.
+- Collapse, rail base, ttl and copy marks; HbInset, HbWave, HbBubble,
+  HbWelcome, HbHash.
+- HbModal `size` (sm, md, lg) as classes over tokens `--hb-modal-sm`,
+  `--hb-modal-md`, `--hb-modal-lg`; `width` maps to the nearest size.
+- HbChip rebinds its hotkey when `hotkey` changes.
+- `.hb-mat-name` wraps instead of pushing the row sideways at 320 px.
+- Every component has a docs site demo. `tools/pin-ui` pins consumers.
+
 ## 0.5.0
 
 - The minds and capabilities layer, GUIDELINES.md 1.5 section 11, with
