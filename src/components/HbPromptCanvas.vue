@@ -16,7 +16,7 @@ export interface HbPromptMask {
   hidden?: boolean
 }
 
-interface Props {
+export interface Props {
   /** The image url. */
   image: string
   /** Natural size in pixels. Read from the image when left out. */

@@ -11,7 +11,7 @@ import {
   type ArtLayer, type ArtStroke, type ArtTool, type ArtTransform, type ArtView,
 } from '../vanilla/artboard'
 
-interface Props {
+export interface Props {
   /** Board size, board pixels. */
   width: number
   height: number

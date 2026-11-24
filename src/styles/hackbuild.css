@@ -810,6 +810,9 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   .hb-app{ height:100vh; height:100dvh; overflow:hidden }
   .hb-app > .hb-work{ grid-template-columns:minmax(0,1fr) 340px; overflow:hidden }
   .hb-app .hb-main,.hb-app .hb-rail{ overflow:auto }
+  /* No rail in the work row: the main column takes the full width, so a
+     tool page fills 1440 instead of leaving an empty 340 px track. */
+  .hb-app > .hb-work:not(:has(> .hb-rail)){ grid-template-columns:minmax(0,1fr) }
 }
 
 /* The foot: the dock (composer or primary action) over the status strip.

@@ -27,6 +27,10 @@ interface Props {
   infoTone?: '' | 'ok' | 'warn' | 'err'
   facingMode?: 'user' | 'environment'
   disabled?: boolean
+  /** Box shape: '1/1', '4/3', '16/9', any 'w/h', or 'auto' to follow the
+      picture (4/3 while empty). A wide box keeps the run button above the
+      fold on a tablet. */
+  ratio?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -38,6 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
   infoTone: '',
   facingMode: 'user',
   disabled: false,
+  ratio: '1/1',
 })
 
 const model = defineModel<HbImageValue | null>({ default: null })
@@ -51,6 +56,16 @@ const box = ref<HTMLElement | null>(null)
 const fault = ref('')
 const denied = ref(false)
 let made = ''
+const natural = ref('')
+const boxStyle = computed(() => {
+  const r = props.ratio.trim()
+  const ar = r === 'auto' ? natural.value || '4 / 3' : r.replace('/', ' / ')
+  return { '--hb-islot-ar': ar }
+})
+function onImg(e: Event) {
+  const img = e.target as HTMLImageElement
+  natural.value = img.naturalWidth && img.naturalHeight ? `${img.naturalWidth} / ${img.naturalHeight}` : ''
+}
 
 function set(v: HbImageValue | null) {
   if (made && made !== v?.url) { URL.revokeObjectURL(made); made = '' }
@@ -150,9 +165,9 @@ const has = (s: string) => (props.sources as string[]).includes(s)
     :aria-label="`${props.label || 'image'}: drop, paste or pick an image`"
   >
     <header v-if="props.label" class="hb-islot-hd">{{ props.label }}</header>
-    <div ref="box" class="hb-islot-box">
+    <div ref="box" class="hb-islot-box" :style="boxStyle">
       <HbCameraTile v-if="stream || denied" :stream="stream" :denied="denied" :tags="{ br: stream ? 'live' : '' }" />
-      <img v-else-if="model" class="hb-islot-img" :src="model.url" :alt="model.name">
+      <img v-else-if="model" class="hb-islot-img" :src="model.url" :alt="model.name" @load="onImg">
       <div v-else class="hb-islot-empty">
         <HbIcon name="image" :size="22" />
         <span>drop, paste or pick an image</span>
