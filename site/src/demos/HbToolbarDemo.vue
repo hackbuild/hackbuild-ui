@@ -19,7 +19,7 @@ const code = `<HbToolbar>
 <template>
   <DemoSection
     title="Toolbar"
-    note="Verbs and global settings on sunk paper. Branding stays in the header; figures stay in the status strip. Push things right with .hb-spacer."
+    note="Verbs and global settings on sunk paper. Branding stays in the header; figures stay in the status strip. Push things right with .hb-spacer. An empty toolbar takes no room."
     :code="code"
   >
     <div style="margin: -16px">

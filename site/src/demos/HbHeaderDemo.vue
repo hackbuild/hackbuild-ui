@@ -16,7 +16,7 @@ const code = `<HbHeader title="kerf" accent="." tagline="make things. break thin
 <template>
   <DemoSection
     title="Tool header"
-    note="Identity and state. The title is the tool name, not hack.build; the mark carries the brand. Verbs live in the toolbar, never here. The tagline drops below 900 px."
+    note="Identity and state. The title is the tool name, not hack.build; the mark carries the brand. Verbs live in the toolbar, never here. The title keeps its words whole: the parts beside it wrap first, and a title wider than the row ends in an ellipsis. The tagline drops below 900 px."
     :code="code"
   >
     <div style="margin: -16px">

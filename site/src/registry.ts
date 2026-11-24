@@ -48,7 +48,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbToolbar', blurb: 'verbs and global settings' },
       { name: 'HbGuide', blurb: 'step, goal and the bench verbs' },
       { name: 'HbSteps', blurb: 'numbered steps, a select when narrow' },
-      { name: 'HbStatusBar', blurb: 'figures strip, never a control' },
+      { name: 'HbStatusBar', blurb: 'figures strip, priority cells, one button form' },
       { name: 'HbStatusLine', blurb: 'one sentence, the failure named' },
       { name: 'HbAppShell', blurb: 'the full height tool layout' },
       { name: 'HbShell', blurb: 'centered content column' },

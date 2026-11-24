@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import {
-  HbActivity, HbAppShell, HbButton, HbHeader, HbPalette, HbPills, HbStatusBar, HbSuiteNav,
+  HbActivity, HbAppShell, HbDrawer, HbHeader, HbPalette, HbPills, HbStatusBar, HbSuiteNav,
   HbTag, HbViewport, HbWorkspaceMenu,
 } from '@hackbuild/ui'
 import { activity } from '@hackbuild/ui/vanilla'
@@ -16,6 +16,13 @@ store.set('weights', 'loading florence 2 base', 0.42, () => {})
 store.set('cache', 'checking the weights cache', null)
 onBeforeUnmount(() => store.dispose())
 const sections = [{ label: 'tools', items: suiteGroups.flatMap((g) => g.tools.map((t) => ({ key: t.key, label: t.label, hint: g.label }))) }]
+const logOpen = ref(false)
+const cells = computed(() => [
+  { key: 'job', label: 'job', value: 'weights 42%' },
+  { key: 'device', label: 'device', value: 'webgpu' },
+  { key: 'level', label: 'level', value: level.value, priority: 2 as const },
+  { key: 'stored', label: 'stored', value: '1.2 gb', priority: 3 as const },
+])
 const tool = computed(() => suiteGroups.flatMap((g) => g.tools).find((t) => t.key === route.value))
 </script>
 
@@ -36,17 +43,15 @@ const tool = computed(() => suiteGroups.flatMap((g) => g.tools).find((t) => t.ke
       </HbHeader>
     </template>
     <template #tabs>
-      <HbSuiteNav v-model:route="route" :groups="suiteGroups" keys>
-        <template #toolbar>
-          <span class="hb-spacer" />
-          <HbButton size="sm">run</HbButton>
-        </template>
-      </HbSuiteNav>
+      <HbSuiteNav v-model:route="route" :groups="suiteGroups" keys />
     </template>
     <HbPalette :sections="sections" @run="(k) => (route = k)" />
     <HbViewport :label="tool?.label ?? 'tool'" cover-title="fixture stage" cover-note="no model runs in this demo." />
     <template #statusbar>
-      <HbStatusBar><span>job <b>weights 42%</b></span><span>device <b>webgpu</b></span><span>level <b>{{ level }}</b></span></HbStatusBar>
+      <HbStatusBar :cells="cells" action="open the event log" @press="logOpen = true" />
     </template>
   </HbAppShell>
+  <HbDrawer v-model="logOpen" side="auto" title="event log">
+    <p style="margin: 0">fixture: no events in this demo.</p>
+  </HbDrawer>
 </template>
