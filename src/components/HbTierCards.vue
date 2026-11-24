@@ -9,7 +9,7 @@ export interface HbTier {
   label: string
   /** The model or engine behind it: 'hermes 3 llama 3.1 8b'. */
   sub?: string
-  /** Size badge: '4.7 GB (vendor)', 'api', 'none'. */
+  /** Size badge: '4.7 gb (vendor)', 'api', 'none'. */
   size?: string
   /** Who pays: 'free, runs on your gpu'. */
   cost?: string

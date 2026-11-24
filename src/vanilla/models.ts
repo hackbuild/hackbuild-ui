@@ -48,10 +48,11 @@ export interface ModelRowStatus {
   error?: string
 }
 
-/** 174 MB, 9.5 MB, 1.7 GB. */
+/** 174 mb, 9.5 mb, 1.7 gb. Decimal units, as sizeWord and the
+    catalogue: 1 gb is 1000 mb, 1 mb is 1e6 bytes. */
 export function mbText(mb: number): string {
-  if (mb >= 1024) return `${(mb / 1024).toFixed(1).replace(/\.0$/, "")} GB`
-  return mb < 10 ? `${mb.toFixed(1)} MB` : `${Math.round(mb)} MB`
+  if (mb >= 1000) return `${(mb / 1000).toFixed(1).replace(/\.0$/, "")} gb`
+  return mb < 10 ? `${mb.toFixed(1)} mb` : `${Math.round(mb)} mb`
 }
 
 /** The size with its source word, or 'size unknown'. */
@@ -60,12 +61,12 @@ export function sizeText(mb: number | null | undefined, source: SizeSource = 'un
   return source === 'unknown' ? `${mbText(mb)}, source unknown` : `${mbText(mb)} (${source})`
 }
 
-/** The second figure: 'vram 2.2 GB (vendor)', or '' when the record has none. */
+/** The second figure: 'vram 2.2 gb (vendor)', or '' when the record has none. */
 export function vramText(r: Pick<ModelRecordLike, 'vramMB' | 'vramSource'>): string {
   return r.vramMB ? `vram ${sizeText(r.vramMB, r.vramSource ?? 'unknown')}` : ''
 }
 
-/** The fact line: '3B, q4f16_1, vram 2.2 GB (vendor), context up to 4k'. */
+/** The fact line: '3B, q4f16_1, vram 2.2 gb (vendor), context up to 4k'. */
 export function factLine(r: ModelRecordLike): string {
   return [r.params, r.quant, vramText(r), r.ctx ? `context up to ${Math.round(r.ctx / 1024)}k` : '']
     .filter(Boolean)
@@ -175,15 +176,15 @@ export function sumFiles(files: readonly LoadFile[]): { loaded: number; total: n
   return { loaded, total, done }
 }
 
-const mbOf = (b: number) => b / (1024 * 1024)
+const mbOf = (b: number) => b / 1e6
 const mbNum = (b: number) => {
   const v = mbOf(b)
   return v < 10 ? v.toFixed(1) : String(Math.round(v))
 }
 
 /**
- * One line for a load: 'downloading 3 of 24 files, 412 of 2200 MB',
- * 'downloading 0.2 MB, total unknown', 'compiling'. No percent: the
+ * One line for a load: 'downloading 3 of 24 files, 412 of 2200 mb',
+ * 'downloading 0.2 mb, total unknown', 'compiling'. No percent: the
  * caller shows one only when the total is known.
  */
 export function loadText(p: { phase?: LoadPhase; loaded?: number; total?: number | null; files?: readonly LoadFile[]; error?: string }): string {
@@ -194,7 +195,7 @@ export function loadText(p: { phase?: LoadPhase; loaded?: number; total?: number
   const loaded = sum ? sum.loaded : p.loaded ?? 0
   const total = sum ? sum.total : p.total ?? null
   const files = p.files && p.files.length > 1 ? ` ${sum!.done} of ${p.files.length} files,` : ''
-  const amount = total ? `${mbNum(loaded)} of ${mbNum(total)} MB` : `${mbNum(loaded)} MB, total unknown`
+  const amount = total ? `${mbNum(loaded)} of ${mbNum(total)} mb` : `${mbNum(loaded)} mb, total unknown`
   return `${PHASE_WORDS[phase]}${files} ${amount}`
 }
 

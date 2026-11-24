@@ -88,7 +88,7 @@ export const METHOD_WORDS: Record<MethodState, string> = {
   unsupported: 'not on this device',
 }
 
-/** The figures on the right of a method card: '~15 s', '120 MB'. A
+/** The figures on the right of a method card: '~15 s', '120 mb'. A
     download names its size; a size of 0 reads 'no download'. */
 export function methodMeta(m: { time?: string; sizeMB?: number | null; state?: MethodState }): string[] {
   const out: string[] = []

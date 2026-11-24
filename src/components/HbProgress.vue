@@ -46,7 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{ cancel: []; resume: [] }>()
 
-const mb = (b: number) => (b / (1024 * 1024)).toFixed(b < 10 * 1024 * 1024 ? 1 : 0)
+const mb = (b: number) => (b / 1e6).toFixed(b < 1e7 ? 1 : 0)
 const sum = computed(() => (props.files.length ? sumFiles(props.files) : { loaded: props.loaded, total: props.total, done: 0 }))
 const bytesPhase = computed(() => props.phase === null || props.phase === 'download' || props.phase === 'cache')
 const known = computed(() => bytesPhase.value && sum.value.total !== null && sum.value.total > 0)
@@ -59,7 +59,7 @@ const words = computed(() => {
     return loadText({ phase: props.phase ?? 'download', loaded: props.loaded, total: props.total, files: props.files })
   }
   const amount = known.value
-    ? `${pct.value} percent, ${mb(props.loaded)} of ${mb(props.total as number)} MB`
+    ? `${pct.value} percent, ${mb(props.loaded)} of ${mb(props.total as number)} mb`
     : `${mb(props.loaded)} MB, total unknown`
   switch (props.state) {
     case 'idle': return 'waiting to start'
@@ -109,7 +109,7 @@ const classes = computed(() =>
       <ul>
         <li v-for="f in props.files" :key="f.name" :class="{ 'is-done': f.total !== null && f.total > 0 && f.loaded >= f.total }">
           <span class="hb-progress-file">{{ f.name }}</span>
-          <span class="hb-progress-fileamt">{{ f.total ? `${Math.floor(Math.min(1, f.loaded / f.total) * 100)}%` : `${mb(f.loaded)} MB` }}</span>
+          <span class="hb-progress-fileamt">{{ f.total ? `${Math.floor(Math.min(1, f.loaded / f.total) * 100)}%` : `${mb(f.loaded)} mb` }}</span>
         </li>
       </ul>
     </details>

@@ -26,7 +26,7 @@ export interface RackPreset {
   unknown?: string[]
 }
 
-/** 'laptop, 0.8 GB (measured)', '+ 1 size unknown' when a pick has none. */
+/** 'laptop, 0.8 gb (measured)', '+ 1 size unknown' when a pick has none. */
 export function presetText(p: RackPreset): string {
   const n = p.unknown?.length ?? 0
   return `${p.label}, ${mbText(p.totalMB)} (${p.totalSource})${n ? `, ${n} size unknown` : ''}`
@@ -121,9 +121,9 @@ export interface StorageLine {
   persisted?: boolean | null
 }
 
-const B = 1024 * 1024
+const B = 1e6
 
-/** '1.9 GB of 12 GB used here. the browser may clear it. press keep to ask it not to.' */
+/** '1.9 gb of 12 gb used here. the browser may clear it. press keep to ask it not to.' */
 export function storageText(s: StorageLine): string {
   const amount =
     s.used === null ? 'storage use unknown here.' : s.quota === null ? `${mbText(s.used / B)} used here.` : `${mbText(s.used / B)} of ${mbText(s.quota / B)} used here.`

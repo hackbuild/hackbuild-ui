@@ -36,9 +36,9 @@ test("a boundary event lands on its word", () => {
 });
 
 test("method figures name time and size, download says so", () => {
-  assert.deepEqual(methodMeta({ time: "~15 s", sizeMB: 120, state: "download" }), ["~15 s", "download 120 MB"]);
+  assert.deepEqual(methodMeta({ time: "~15 s", sizeMB: 120, state: "download" }), ["~15 s", "download 120 mb"]);
   assert.deepEqual(methodMeta({ time: "instant", sizeMB: 0 }), ["instant", "no download"]);
-  assert.deepEqual(methodMeta({ sizeMB: 1700, state: "stored" }), ["1.7 GB"]);
+  assert.deepEqual(methodMeta({ sizeMB: 1700, state: "stored" }), ["1.7 gb"]);
   assert.deepEqual(qualitySquares(2), [true, true, false]);
   assert.deepEqual(qualitySquares(9), [true, true, true]);
 });

@@ -29,7 +29,7 @@ export interface HbCap {
   icon?: IconName
   state: HbCapState
   needs?: Array<HbCapNeedKind | HbCapNeed>
-  /** '17.7 MB', 'about 3.3 GB'; empty when nothing downloads. */
+  /** '17.7 mb', 'about 3.3 gb'; empty when nothing downloads. */
   size?: string
   sizeSource?: HbSizeSource
   /** SPDX id or plain words. Empty hides the licence line. */

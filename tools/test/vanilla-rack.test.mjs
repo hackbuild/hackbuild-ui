@@ -11,8 +11,8 @@ const slots = [
 const preset = { id: "laptop", label: "laptop", picks: { brain: "b", embedder: "e", ears: "w" }, totalMB: 767, totalSource: "inferred" };
 
 test("a preset states its total with the source word and any unknown size", () => {
-  assert.equal(presetText(preset), "laptop, 767 MB (inferred)");
-  assert.equal(presetText({ ...preset, totalMB: 2756, unknown: ["x"] }), "laptop, 2.7 GB (inferred), 1 size unknown");
+  assert.equal(presetText(preset), "laptop, 767 mb (inferred)");
+  assert.equal(presetText({ ...preset, totalMB: 2756, unknown: ["x"] }), "laptop, 2.8 gb (inferred), 1 size unknown");
 });
 
 test("a preset loads only the slots not already ready with the same pick", () => {
@@ -43,8 +43,8 @@ test("the queue loads one slot at a time and moves on past a fault", () => {
 });
 
 test("the storage line says whether the browser may clear it", () => {
-  const GB = 1024 ** 3;
-  assert.equal(storageText({ used: 1.9 * GB, quota: 12 * GB }), "1.9 GB of 12 GB used here. the browser may clear it. press keep to ask it not to.");
+  const GB = 1e9;
+  assert.equal(storageText({ used: 1.9 * GB, quota: 12 * GB }), "1.9 gb of 12 gb used here. the browser may clear it. press keep to ask it not to.");
   assert.match(storageText({ used: 1.9 * GB, quota: null, persisted: true }), /kept: the browser will not clear it/);
   assert.equal(storageText({ used: null, quota: null }).startsWith("storage use unknown here."), true);
 });

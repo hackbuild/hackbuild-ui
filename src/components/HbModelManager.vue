@@ -166,7 +166,7 @@ function onEsc(e: KeyboardEvent) {
         <ul class="hb-mm-list">
           <li v-for="s in g.rows" :key="s.key" class="hb-mm-item">
             <span class="hb-mm-name">{{ s.label || nameOf(s.key) }}</span>
-            <span class="hb-mm-meta">{{ s.bytes === null ? 'size from the storage estimate' : mbText(s.bytes / (1024 * 1024)) }}<template v-if="s.lastUsed">. last used {{ s.lastUsed }}</template></span>
+            <span class="hb-mm-meta">{{ s.bytes === null ? 'size from the storage estimate' : mbText(s.bytes / 1e6) }}<template v-if="s.lastUsed">. last used {{ s.lastUsed }}</template></span>
             <span class="hb-mm-acts">
               <button
                 type="button"

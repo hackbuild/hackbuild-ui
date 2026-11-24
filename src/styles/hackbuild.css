@@ -297,6 +297,13 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   border:1px solid rgba(245,240,230,.35); box-shadow:none;
 }
 @media (hover:hover) and (pointer:fine){ .hb-btn-ghost:hover{ background:transparent; border-color:var(--hb-pink); color:var(--hb-pink) } }
+/* Disabled ghost: a paper edge fill with ink 3 text (4.46:1, computed,
+   WCAG relative luminance) and a dashed border, so it reads on paper and
+   on ink alike and still reads as off. */
+.hb-btn-ghost[disabled],.hb-btn-ghost.is-disabled{
+  background:var(--hb-paper-edge); color:var(--hb-ink-3); border:1px dashed var(--hb-ink-3); box-shadow:none;
+}
+@media (hover:hover) and (pointer:fine){ .hb-btn-ghost[disabled]:hover,.hb-btn-ghost.is-disabled:hover{ background:var(--hb-paper-edge); border-color:var(--hb-ink-3); color:var(--hb-ink-3) } }
 .hb-btn-sm{ font-size:10px; padding:5px 10px }
 .hb-btn-lg{ font-size:12px; padding:11px 20px }
 .hb-btn-block{ display:flex; width:100%; justify-content:center }

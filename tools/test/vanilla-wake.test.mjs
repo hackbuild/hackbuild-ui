@@ -5,11 +5,11 @@ import { gateNote, wakePills, wakeSummary, wakeBar, wakeError } from "../../src/
 
 test("the note states size with its source, a file origin, and a small quota", () => {
   const n = gateNote({ sizeMB: 5427, sizeSource: "vendor", origin: "file", quotaMB: 4096, extras: "the voice and memory models" });
-  assert.match(n.text, /first run downloads about 5.3 GB \(vendor\) for the brain, plus the voice and memory models\./);
+  assert.match(n.text, /first run downloads about 5.4 gb \(vendor\) for the brain, plus the voice and memory models\./);
   assert.match(n.text, /opened as a file/);
-  assert.match(n.text, /only 4 GB of storage quota/);
+  assert.match(n.text, /only 4.1 gb of storage quota/);
   assert.equal(n.warn, true);
-  assert.deepEqual(gateNote({ sizeMB: 300, quotaMB: 9000 }), { text: "first run downloads about 300 MB (unknown) for the brain. after that it loads from cache.", warn: false });
+  assert.deepEqual(gateNote({ sizeMB: 300, quotaMB: 9000 }), { text: "first run downloads about 300 mb (unknown) for the brain. after that it loads from cache.", warn: false });
   assert.match(gateNote({ webgpu: false }).text, /^no webgpu here/);
 });
 

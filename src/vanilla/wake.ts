@@ -13,7 +13,7 @@ export interface WakeSystem {
   state: WakeState
   /** 0 to 1 while loading, or null when the total is unknown. */
   pct?: number | null
-  /** What the row says now: 'waiting', '1.2 / 5.3 GB', 'ready, webgpu', the error. */
+  /** What the row says now: 'waiting', '1.2 / 5.3 gb', 'ready, webgpu', the error. */
   note?: string
   /** Only required rows hold the gate. Default false. */
   required?: boolean

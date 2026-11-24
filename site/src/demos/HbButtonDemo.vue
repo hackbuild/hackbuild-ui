@@ -24,6 +24,7 @@ const code = `<HbButton>connect</HbButton>
       <HbButton loading>saving</HbButton>
       <span style="background: var(--hb-void); padding: 12px; display: inline-flex">
         <HbButton variant="ghost">ghost on void</HbButton>
+        <HbButton variant="ghost" disabled>ghost, off</HbButton>
       </span>
     </div>
   </DemoSection>

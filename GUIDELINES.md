@@ -469,7 +469,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-panel` / `.hb-panel-hd` | Raised paper, 2 px ink border, 5 px shadow, marker heading over an ink rule |
 | `.hb-card` | Same, but lifts 2 px on hover to a 7 px shadow |
 | `.hb-stage` | The void with a pink offset shadow. Canvases, scopes, waterfalls, 3D views |
-| `.hb-btn` and variants | Ink fill, pink on hover, shadow collapses on press. `-2` secondary, `-danger` pink fill, `-ghost` for inside stages |
+| `.hb-btn` and variants | Ink fill, pink on hover, shadow collapses on press. `-2` secondary, `-danger` pink fill, `-ghost` for inside stages; disabled ghost is a paper edge fill, ink 3 text (4.46:1, computed) and a dashed border, readable on paper and ink |
 | `.hb-chip` | Filter and multi-select toggle, `.is-on` fills pink with ink text; `.is-toggle.is-on` fills ink for toggles inside a bench |
 | `.hb-pill` | Status with a leading dot. `.is-live` pulses pink, `.is-ok`, `.is-err` |
 | `.hb-input`, `.hb-select`, `.hb-textarea`, `.hb-range` | Paper field, ink border, pink focus ring and pink accent-color. Ranges are 44 px tall under 820 px and on touch screens, native thumb kept. `HbSelect label` wraps the select in an `.hb-ctl` label for a toolbar or controls row |
@@ -1313,6 +1313,7 @@ parts by category; the changelog has the detail.
 | 0.7.0 | HbArtboard, HbPromptCanvas `bare` | 17, artboard |
 | 0.7.1 | HbStageCaption, HbNameHud, HbTransport, HbPad; HbViewport and HbStageOverlay `telemetry`, `hint`, `caption`, `pad` slots; HbMemoryPanel `pin`, HbHistoryStrip non image `thumb` | 17, stage, transport and pad |
 | 0.8.0 | HbPersonaEditor, HbStepCard, HbPromptInspector, HbContextMenu; HbImageSlot `ratio` | 17, persona, trace and context menu |
+| 0.8.1 | sizes in decimal lowercase units (`mbText`: 1 gb is 1000 mb); disabled ghost button | 5, 17 |
 | 0.8.1 | HbAppShell `fit`, `.is-sheet-open`, `--hb-kb`, `--hb-foot-h`; HbChat `log`, `composer`; vanilla `keyboardInset`, `dockInsets` | 18, phone stage plus rack |
 
 ### Phone stage plus rack

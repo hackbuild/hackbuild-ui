@@ -12,11 +12,11 @@ const recs = [
 ];
 
 test("sizes keep their source word; unknown says so", () => {
-  assert.equal(sizeText(1733, "measured"), "1.7 GB (measured)");
-  assert.equal(sizeText(9.5, "vendor"), "9.5 MB (vendor)");
+  assert.equal(sizeText(1733, "measured"), "1.7 gb (measured)");
+  assert.equal(sizeText(9.5, "vendor"), "9.5 mb (vendor)");
   assert.equal(sizeText(null), "size unknown");
-  assert.equal(vramText(recs[0]), "vram 2.1 GB (vendor)");
-  assert.equal(factLine(recs[0]), "3B, q4f16_1, vram 2.1 GB (vendor), context up to 4k");
+  assert.equal(vramText(recs[0]), "vram 2.2 gb (vendor)");
+  assert.equal(factLine(recs[0]), "3B, q4f16_1, vram 2.2 gb (vendor), context up to 4k");
 });
 
 test("licence is optional and names only a refusal of commercial use", () => {
@@ -45,12 +45,12 @@ test("context sizes over the build limit stay listed and disabled", () => {
 });
 
 test("load text sums files, hides the total until every file states one, names the phase", () => {
-  const MB = 1024 * 1024;
+  const MB = 1e6;
   const files = [{ name: "a", loaded: 10 * MB, total: 10 * MB }, { name: "b", loaded: 2 * MB, total: 20 * MB }];
   assert.deepEqual(sumFiles(files), { loaded: 12 * MB, total: 30 * MB, done: 1 });
-  assert.equal(loadText({ files }), "downloading 1 of 2 files, 12 of 30 MB");
+  assert.equal(loadText({ files }), "downloading 1 of 2 files, 12 of 30 mb");
   assert.equal(sumFiles([...files, { name: "c", loaded: 0, total: null }]).total, null);
-  assert.equal(loadText({ loaded: 0.2 * MB, total: null }), "downloading 0.2 MB, total unknown");
+  assert.equal(loadText({ loaded: 0.2 * MB, total: null }), "downloading 0.2 mb, total unknown");
   assert.equal(loadText({ phase: "compile" }), "compiling");
   assert.equal(loadText({ phase: "error", error: "network dropped." }), "failed. network dropped.");
 });
