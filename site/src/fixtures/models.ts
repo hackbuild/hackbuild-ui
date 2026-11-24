@@ -3,7 +3,7 @@
 // results are what fitOf returns for one sample machine: webgpu with
 // shader-f16, 8 gb memory or more, no prompt api, 9.2 GB of storage free.
 // The kit never imports the library; these are plain records.
-import type { HbModelFit, HbModelRecord, HbReasonRow } from '@hackbuild/ui'
+import type { HbModelFit, HbModelRecord, HbRackPreset, HbRackSlot, HbReasonRow } from '@hackbuild/ui'
 
 export const catalogue: HbModelRecord[] = [
   {
@@ -90,4 +90,39 @@ export const reasons: HbReasonRow[] = [
   { key: 'device', label: 'device', value: 'webgpu', why: 'an adapter with shader-f16 answered the probe.', speed: 'fast' },
   { key: 'threads', label: 'threads', value: '4', why: 'cross origin isolated, 10 cores; four leave room for the page.' },
   { key: 'budget', label: 'budget', value: '3.6 GB', why: '45 percent of 8 gb memory, proposed until a browser run measures one.', edit: false },
+]
+
+/** Rack slots over catalogue rows; sizes copied from CATALOG with their source words. */
+export const rackSlots: HbRackSlot[] = [
+  {
+    slot: 'brain', label: 'brain', role: 'replies and plans', required: true,
+    options: [
+      { value: 'smollm2-135m-instruct', label: 'smollm2 135m', sizeMB: 174, sizeSource: 'measured' },
+      { value: 'smollm2-360m-instruct', label: 'smollm2 360m', sizeMB: 370, sizeSource: 'measured' },
+      { value: 'hermes-3-llama-3.2-3b-mlc', label: 'hermes 3 llama 3.2 3b', sizeMB: 1733, sizeSource: 'measured' },
+      { value: 'gemma-4-e4b-abliterated-gguf', label: 'gemma 4 e4b abliterated', sizeMB: 5057, sizeSource: 'measured', disabled: 'over memory' },
+    ],
+  },
+  {
+    slot: 'smallBrain', label: 'small brain', role: 'quick asides',
+    options: [
+      { value: 'smollm2-135m-instruct', label: 'smollm2 135m', sizeMB: 174, sizeSource: 'measured' },
+      { value: 'smollm2-360m-instruct', label: 'smollm2 360m', sizeMB: 370, sizeSource: 'measured' },
+    ],
+  },
+  { slot: 'embedder', label: 'embedder', role: 'memory search', required: true, sharedWith: ['memory', 'recall'], options: [{ value: 'all-minilm-l6-v2', label: 'all minilm l6 v2', sizeMB: 23, sizeSource: 'inferred' }] },
+  { slot: 'ears', label: 'ears', role: 'speech to text', options: [{ value: 'whisper-base', label: 'whisper base', sizeMB: 200, sizeSource: 'inferred' }] },
+  { slot: 'voice', label: 'voice', role: 'text to speech', options: [{ value: 'kokoro-82m', label: 'kokoro 82m', sizeMB: 330, sizeSource: 'inferred' }] },
+  { slot: 'depth', label: 'depth', role: 'distance from one image', options: [{ value: 'depth-anything-v2-small', label: 'depth anything v2 small', sizeMB: 100, sizeSource: 'inferred' }] },
+]
+
+/** PRESETS from the models library; totals computed the way presetTotal sums them (weakest source word wins). */
+export const rackPresets: HbRackPreset[] = [
+  { id: 'phone', label: 'phone', picks: { brain: 'smollm2-135m-instruct', embedder: 'all-minilm-l6-v2' }, totalMB: 197, totalSource: 'inferred' },
+  { id: 'laptop', label: 'laptop', picks: { brain: 'smollm2-360m-instruct', smallBrain: 'smollm2-135m-instruct', embedder: 'all-minilm-l6-v2', ears: 'whisper-base' }, totalMB: 767, totalSource: 'inferred' },
+  {
+    id: 'desktop', label: 'desktop',
+    picks: { brain: 'hermes-3-llama-3.2-3b-mlc', smallBrain: 'smollm2-360m-instruct', embedder: 'all-minilm-l6-v2', ears: 'whisper-base', voice: 'kokoro-82m', depth: 'depth-anything-v2-small' },
+    totalMB: 2756, totalSource: 'inferred',
+  },
 ]

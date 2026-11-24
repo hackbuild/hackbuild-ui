@@ -2902,3 +2902,102 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 @media(pointer:coarse){ .hb-model-ctx .hb-chip{ min-width:44px; justify-content:center } }
 .hb-model-legend-item + .hb-model-legend-item::before{ content:" " }
 .hb-modellist-tools > .hb-togrow{ padding:var(--hb-s1) var(--hb-s3) }
+
+/* ==========================================================================
+   33. SLOT RACK, ENGINE BAR, MODEL MANAGER
+   HbModelSlot: one organ per row: name and role, the model select with
+   size, a load button that names the size, the meta line, its own bar
+   and a status square: empty, loading, ready, fault with the message. A
+   fault marks its row only. HbModelRack: presets that state the summed
+   download, slots that load one after another, the gate line. HbEngineBar:
+   the picker shrunk to one line once a model is chosen. HbModelManager:
+   the drawer: machine, by job, catalogue, stored and loaded.
+   ========================================================================== */
+.hb-slot-in{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:var(--hb-s1) var(--hb-s3); align-items:start; min-width:0 }
+.hb-slot{
+  background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); border-left:6px solid var(--hb-ink-4);
+  padding:var(--hb-s2) var(--hb-s3); min-width:0; container-type:inline-size;
+}
+.hb-slot.is-ready{ border-left-color:var(--hb-ok) }
+.hb-slot.is-loading{ border-left-color:var(--hb-ink) }
+.hb-slot.is-fault{ border-left-color:var(--hb-err) }
+.hb-slot-id{ display:flex; flex-direction:column; gap:2px; min-width:0 }
+.hb-slot-name{ font-family:var(--hb-utility); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.1em }
+.hb-slot-role{ font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--hb-ink-3) }
+.hb-slot-mid{ grid-column:1 / -1; display:flex; flex-direction:column; gap:var(--hb-s1); min-width:0 }
+.hb-slot-row{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); align-items:center; min-width:0 }
+.hb-slot-pick{ flex:1 1 200px; min-width:0 }
+.hb-slot-pick > .hb-select{ width:100%; box-sizing:border-box; min-height:44px }
+@media(min-width:641px) and (pointer:fine){ .hb-slot-pick > .hb-select{ min-height:0 } }
+.hb-slot-meta{ font-family:var(--hb-utility); font-size:10.5px; color:var(--hb-ink-3) }
+.hb-slot-bar,.hb-engine-bar{ display:block; height:6px; background:var(--hb-ink); border:1px solid var(--hb-ink); position:relative; overflow:hidden }
+.hb-slot-bar > i,.hb-engine-bar > i{ display:block; height:100%; background:var(--hb-pink) }
+.hb-slot-bar.is-busy > i,.hb-engine-bar.is-busy > i{ animation:hb-sweep 1.4s steps(14) infinite }
+.hb .hb-slot-fault,.hb-slot-fault{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-err) }
+.hb-slot-stat{
+  grid-column:2; grid-row:1; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3);
+}
+.hb-slot-sq{ width:8px; height:8px; border:1px solid currentColor }
+.hb-slot.is-ready .hb-slot-stat{ color:var(--hb-ok) }
+.hb-slot.is-ready .hb-slot-sq,.hb-slot.is-fault .hb-slot-sq{ background:currentColor }
+.hb-slot.is-loading .hb-slot-stat{ color:var(--hb-ink) }
+.hb-slot.is-loading .hb-slot-sq{ background:currentColor; animation:hb-blink 1s infinite }
+.hb-slot.is-fault .hb-slot-stat{ color:var(--hb-err) }
+/* From 640 px of slot width the mortise three columns: name, controls, status. */
+@container (min-width:640px){
+  .hb-slot-in{ grid-template-columns:140px minmax(0,1fr) auto; align-items:center }
+  .hb-slot-mid{ grid-column:2; grid-row:1 }
+  .hb-slot-stat{ grid-column:3 }
+}
+@media (prefers-reduced-motion:reduce){ .hb-slot-bar.is-busy > i,.hb-engine-bar.is-busy > i,.hb-slot.is-loading .hb-slot-sq{ animation:none } }
+
+.hb-rack{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-rack-presets{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2) }
+.hb-rack-presets > .hb-btn[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-rack-plabel{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-rack-pnote{ flex:1 0 100%; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-rack-slots{ display:flex; flex-direction:column; gap:var(--hb-s2) }
+.hb .hb-rack-gate,.hb-rack-gate{ margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-2) }
+.hb-rack-gate.is-ready{ color:var(--hb-ok) }
+
+.hb-engine{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s1) var(--hb-s2);
+  background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); padding:var(--hb-s1) var(--hb-s2); min-width:0;
+}
+.hb-engine-dot{ flex:0 0 auto; width:10px; height:10px; border:2px solid var(--hb-ink-4) }
+.hb-engine.is-stored .hb-engine-dot{ border-color:var(--hb-ink) }
+.hb-engine.is-downloading .hb-engine-dot,.hb-engine.is-loading .hb-engine-dot{ background:var(--hb-ink); border-color:var(--hb-ink); animation:hb-blink 1s infinite }
+.hb-engine.is-loaded .hb-engine-dot{ background:var(--hb-ok); border-color:var(--hb-ok) }
+.hb-engine.is-fault .hb-engine-dot{ background:var(--hb-err); border-color:var(--hb-err) }
+.hb-engine-text{ flex:1 1 180px; min-width:0; display:flex; flex-wrap:wrap; align-items:baseline; gap:0 var(--hb-s2) }
+.hb-engine-model{ font-family:var(--hb-utility); font-size:12px; font-weight:700; color:var(--hb-ink); overflow-wrap:anywhere }
+.hb-engine.is-none .hb-engine-model{ font-weight:400; color:var(--hb-ink-2) }
+.hb-engine.is-fault .hb-engine-model{ color:var(--hb-err) }
+.hb-engine-facts,.hb-engine-shared{ font-family:var(--hb-utility); font-size:10.5px; color:var(--hb-ink-3) }
+.hb-engine-bar{ flex:1 0 100%; order:5 }
+.hb-engine-acts{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) }
+@media (prefers-reduced-motion:reduce){ .hb-engine-dot{ animation:none !important } }
+
+.hb-mm{ display:flex; flex-direction:column; min-width:0 }
+.hb-mm-sec{ display:flex; flex-direction:column; gap:var(--hb-s2); padding:var(--hb-s3) 0; border-bottom:var(--hb-border) solid var(--hb-ink); min-width:0 }
+.hb-mm-sec:first-child{ padding-top:0 }
+.hb-mm-sec:last-child{ border-bottom:0 }
+.hb .hb-mm-hd,.hb-mm-hd{
+  display:flex; align-items:center; gap:var(--hb-s2); margin:0;
+  font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em;
+}
+.hb-mm-n{ font-family:var(--hb-readout); font-size:16px; font-weight:400; letter-spacing:0; background:var(--hb-ink); color:var(--hb-paper); padding:0 6px; line-height:1.3 }
+.hb .hb-mm-sub,.hb-mm-sub{ margin:var(--hb-s1) 0 0; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-mm-storage{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2) }
+.hb .hb-mm-line,.hb-mm-line{ flex:1 1 220px; margin:0; font-family:var(--hb-body); font-size:13px; line-height:1.45; color:var(--hb-ink) }
+.hb .hb-mm-policy,.hb-mm-policy,.hb .hb-mm-empty,.hb-mm-empty{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-3) }
+.hb-mm-list{ list-style:none; margin:0; padding:0; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb-mm-item{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px var(--hb-s2); align-items:center;
+  padding:var(--hb-s1) var(--hb-s3); border-bottom:1px dashed rgba(26,26,26,.25);
+}
+.hb-mm-item:last-child{ border-bottom:0 }
+.hb-mm-name{ font-family:var(--hb-utility); font-size:12px; font-weight:700; overflow-wrap:anywhere }
+.hb-mm-meta{ grid-column:1; font-family:var(--hb-utility); font-size:10.5px; color:var(--hb-ink-3) }
+.hb-mm-acts{ grid-column:2; grid-row:1 / span 2; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:var(--hb-s1) }

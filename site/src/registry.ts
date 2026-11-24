@@ -72,6 +72,10 @@ export const registry: RegistryGroup[] = [
       { name: 'HbReasons', blurb: 'defaults with the reason for each' },
       { name: 'HbLicence', blurb: 'licence as recorded, optional' },
       { name: 'HbLoader', blurb: 'load panel that names the size' },
+      { name: 'HbModelManager', blurb: 'the drawer: machine, rack, catalogue, stored' },
+      { name: 'HbModelRack', blurb: 'slots by job, presets with their total' },
+      { name: 'HbModelSlot', blurb: 'one organ: select, load, bar, status' },
+      { name: 'HbEngineBar', blurb: 'the picker shrunk to one line' },
     ],
   },
   {

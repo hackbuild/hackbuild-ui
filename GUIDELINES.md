@@ -1111,3 +1111,16 @@ row's `[data-act]` buttons, arrows skip rows marked aria-disabled, a search
 field filters by `data-search`. Words: `sizeText`, `vramText`,
 `factLine`, `licenceText`, `loadText`, `sumFiles`, `ctxOptions`; data:
 `groupRecords`, `filterRecords`, `CENSORSHIP`, `RESPONSIBILITY`.
+
+### Rack, engine bar, manager
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbModelSlot` | `.hb-slot`, `-in`, `-id`, `-name`, `-role`, `-mid`, `-row`, `-pick`, `-meta`, `-bar`, `-fault`, `-stat`, `-sq` | one organ: name and role, a select whose options carry their size (an option this machine cannot run is disabled with the reason), a load button that names the size, `required` or `optional` with the size and source word, its own bar, a status square: empty, loading with the percent, ready, fault with the message. The 6 px left rule carries the state. From 640 px of slot width the three mortise columns, stacked below |
+| `HbModelRack` | `.hb-rack`, `-presets`, `-plabel`, `-pnote`, `-slots`, `-gate` | presets named by weight class, each button stating the summed download with the weakest source word (`laptop, 767 MB (inferred)`); a preset fills the slots it names and the rack loads the missing ones one after another; a fault marks one row and the queue moves on; the gate line names the required slots not ready, and a `gate` slot gets `ready` for the wake button |
+| `HbEngineBar` | `.hb-engine`, `-dot`, `-text`, `-model`, `-facts`, `-shared`, `-bar`, `-acts` | the picker after a pick: `no model. pick one.`, `<model> stored. press load.` with `load 1.7 GB`, downloading and loading with cancel, loaded with device, rate and `shared with:`, fault with the error; change always |
+| `HbModelManager` | `.hb-mm`, `-sec`, `-hd`, `-n`, `-sub`, `-storage`, `-line`, `-policy`, `-list`, `-item`, `-acts` | the drawer contents in four numbered sections: this machine (reasons), by job (the rack slot), catalogue (HbModelList with actions and the custom slot), stored and loaded: the storage line with keep, in memory with unload, stored weights grouped by keeper (the weight store, webllm) with remove on a second press |
+
+Vanilla: `rackQueue(load)` loads one slot at a time, `presetJobs`,
+`presetText`, `rackGate(slots, states)` and `storageText(estimate)`:
+`1.9 GB of 12 GB used here. the browser may clear it. press keep to ask it not to.`

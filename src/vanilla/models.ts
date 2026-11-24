@@ -50,7 +50,7 @@ export interface ModelRowStatus {
 
 /** 174 MB, 9.5 MB, 1.7 GB. */
 export function mbText(mb: number): string {
-  if (mb >= 1024) return `${(mb / 1024).toFixed(1)} GB`
+  if (mb >= 1024) return `${(mb / 1024).toFixed(1).replace(/\.0$/, "")} GB`
   return mb < 10 ? `${mb.toFixed(1)} MB` : `${Math.round(mb)} MB`
 }
 
