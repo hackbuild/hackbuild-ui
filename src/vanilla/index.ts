@@ -1,0 +1,25 @@
+// @virgilvox/hackbuild-ui/vanilla: the kit behaviour as plain functions
+// over the class layer, for pages with no framework. The Vue components
+// and composables call the same functions. Each returns a handle with
+// dispose(), which removes every listener it added.
+export { tabs } from './tabs'
+export type { TabsHandle, TabsOptions } from './tabs'
+export { modal, drawer } from './overlay'
+export type { CloseReason, DrawerOptions, OverlayHandle, OverlayOptions } from './overlay'
+export { menu } from './menu'
+export type { MenuHandle, MenuOptions } from './menu'
+export { dropRoutes, accepts } from './drop'
+export type { DropAccept, DropRoute, DropRoutesHandle, DropRoutesOptions, DropState } from './drop'
+export { hotkeys } from './hotkeys'
+export type { Hotkey, HotkeyRegistry, HotkeysOptions, KeyMapGroup, KeyMapItem } from './hotkeys'
+export { persisted } from './persisted'
+export type { Persisted, PersistedOptions } from './persisted'
+export { confirmInline, confirmDialog } from './confirm'
+export type { ConfirmDialog, ConfirmDialogOptions, ConfirmInlineHandle, ConfirmInlineOptions, ConfirmRequest } from './confirm'
+export { undoStack } from './undo'
+export type { UndoStack } from './undo'
+export { activity } from './activity'
+export type { Activity, ActivityOptions, ActivityTask } from './activity'
+export { copier } from './copy'
+export type { Copier, CopierOptions, CopyState } from './copy'
+export { focusables, isTyping } from './focus'

@@ -968,3 +968,38 @@ says what is asked before the browser asks.
 | commitment drawing | hatched, beside the base score |
 | timeline depth | three cause links, 60 events after the pins |
 
+
+## 12. Vanilla behaviour
+
+`@virgilvox/hackbuild-ui/vanilla` is the kit behaviour as plain functions
+over the classes, for pages with no framework. It imports nothing. Each
+function takes markup that already carries the classes and returns a
+handle whose `dispose()` removes every listener it added. The Vue
+composables call the same functions; the Vue components move onto them
+next.
+
+| Function | Markup | Behaviour |
+|---|---|---|
+| `tabs(el)` | `.hb-tabs` of `role="tab"` buttons | one tab in the tab order; arrows select with wrap, Home and End; `aria-controls` panels shown and hidden |
+| `modal(el)` | `.hb-modal > .hb-panel` | focus in, Tab trap, Escape, scrim click, `data-hb-close`, focus back to the opener, scroll lock |
+| `drawer(el, {side})` | `.hb-drawer > .hb-drawer-panel` | the modal rules; `side: 'left'` sets `.is-left` |
+| `menu(wrap)` | `.hb-menu-wrap`, trigger, `.hb-menu` | arrows with wrap, Home, End, a letter jumps, Escape returns focus, a press outside closes |
+| `dropRoutes(target, routes)` | optional `.hb-dropzone.is-cover` overlay | files routed by type, one call per route, the rest rejected; `.is-over`, `.is-reject` and `data-route` while a file hovers |
+| `hotkeys(table)` | none | scopes, ignores typing in fields, `ctrl` reads cmd on a Mac, `list()` feeds a key map |
+| `persisted(key, initial)` | none | localStorage with a version key, migrate or drop old records, follows other tabs |
+| `confirmInline(btn)` | a `.hb-btn` | first press arms `.hb-btn-danger` with keep beside it, second press runs |
+| `confirmDialog({el})` | `.hb-modal` with `data-hb-confirm` parts | one promise dialog at a time, focus on cancel for danger |
+| `undoStack(limit)` | none | snapshot undo and redo, 80 steps by default |
+| `activity()` | none | tasks oldest first, a delay that hides fast work, failures kept with their message |
+| `copier()` | none | copy with idle, copied and failed states |
+
+Escape acts on the newest open overlay only. A widget that takes a key
+with `preventDefault` wins over the overlay, and the overlay wins over a
+hotkey, because hotkeys listen on the window.
+
+The window drop cover is `.hb-dropzone.is-cover.is-window`: fixed over the
+viewport, pink dashes for a type a route takes, ink dashes with
+`.is-reject` for one no route takes.
+
+A `.hb-btn` with the `hidden` attribute is hidden; the class sets `display`,
+which would otherwise outrank the attribute.

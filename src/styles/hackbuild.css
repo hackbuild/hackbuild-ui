@@ -2155,3 +2155,16 @@ button.hb-spark{ cursor:pointer }
 .hb .hb-cev-text,.hb .hb-choice-why,.hb .hb-choice-meta,.hb .hb-choice-key,
 .hb .hb-spark-note,.hb .hb-caps-sum,.hb .hb-cap-why,.hb .hb-cap-dep,.hb .hb-cap-ask,
 .hb .hb-causal-empty{ margin:0 }
+
+/* ==========================================================================
+   21. VANILLA BEHAVIOUR HOOKS
+   The states the vanilla entry (`/vanilla`) writes on the class layer.
+   ========================================================================== */
+
+/* Window drop cover: dropRoutes on the window toggles .is-over, and
+   .is-reject when no route takes the hovering type. */
+.hb-dropzone.is-cover.is-window{ position:fixed; z-index:var(--hb-z-modal) }
+.hb-dropzone.is-cover.is-reject{ border-color:var(--hb-ink-3); color:var(--hb-ink-3) }
+/* A button the behaviour hides (keep, while not armed) stays hidden:
+   .hb-btn sets display, which outranks the hidden attribute. */
+.hb-btn[hidden]{ display:none }
