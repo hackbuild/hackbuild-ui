@@ -25,11 +25,11 @@ const page = `<div class="hb-toolpage is-split">
   >
     <div style="max-width: 640px; display: flex; flex-direction: column; gap: 8px">
       <HbEngineBar state="none" />
-      <HbEngineBar model="hermes 3 llama 3.2 3b" state="stored" :size-m-b="1733" />
-      <HbEngineBar model="hermes 3 llama 3.2 3b" state="downloading" :pct="0.37" />
-      <HbEngineBar model="hermes 3 llama 3.2 3b" state="loading" :pct="null" />
-      <HbEngineBar model="hermes 3 llama 3.2 3b" state="loaded" device="webgpu" :rate="31" :shared-with="['chat', 'room']" />
-      <HbEngineBar model="qwen3 0.6b" state="fault" error="the model ran out of gpu memory. unload the image model, or pick the next row down." />
+      <HbEngineBar model="sample model" state="stored" :size-m-b="1733" />
+      <HbEngineBar model="sample model" state="downloading" :pct="0.37" />
+      <HbEngineBar model="sample model" state="loading" :pct="null" />
+      <HbEngineBar model="sample model" state="loaded" device="webgpu" :rate="31" :shared-with="['chat', 'room']" />
+      <HbEngineBar model="sample model b" state="fault" error="the model ran out of gpu memory. unload the image model, or pick the next row down." />
     </div>
   </DemoSection>
 
@@ -39,7 +39,7 @@ const page = `<div class="hb-toolpage is-split">
     :code="page"
   >
     <div class="hb-toolpage is-split" style="border: 1.5px dashed var(--hb-ink-4); padding: 8px">
-      <HbEngineBar class="is-full" model="whisper base" state="loaded" device="webgpu" />
+      <HbEngineBar class="is-full" model="sample ears" state="loaded" device="webgpu" />
       <div class="hb-bar is-full"><span class="hb-ctl">queue <b class="hb-readout">3</b></span></div>
       <section class="is-side" style="display: flex; flex-direction: column; gap: 6px">
         <HbQueueStrip :items="queue" />

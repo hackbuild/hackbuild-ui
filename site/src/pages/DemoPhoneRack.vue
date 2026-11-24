@@ -50,6 +50,7 @@ onBeforeUnmount(() => clearTimeout(timer))
         <HbPill status="ok">brain</HbPill>
         <HbPill status="warn">eyes</HbPill>
       </HbHeader>
+      <p class="hb-fixture is-strip"><b>fixture</b> sample data: states, names and numbers are made up. no model loads here.</p>
     </template>
 
     <HbViewport aspect="fill" label="the room">

@@ -10,11 +10,11 @@ const store = activity()
 let timer: ReturnType<typeof setInterval> | null = null
 function start() {
   let f = 0.12
-  store.set('weights', 'loading qwen 2.5 0.5b', f, () => stop())
+  store.set('weights', 'loading sample model', f, () => stop())
   store.set('index', 'indexing memory', null)
   timer ??= setInterval(() => {
     f = f >= 1 ? 0.12 : f + 0.08
-    store.set('weights', 'loading qwen 2.5 0.5b', Math.min(1, f))
+    store.set('weights', 'loading sample model', Math.min(1, f))
   }, 700)
 }
 function stop() {
@@ -29,7 +29,7 @@ start()
 onBeforeUnmount(() => { stop(); store.dispose() })
 
 const code = `const store = activity()
-store.set('weights', 'loading qwen', 0.4, cancel)
+store.set('weights', 'loading sample model', 0.4, cancel)
 
 <HbHeader title="suite"><HbActivity :source="store" /></HbHeader>`
 </script>

@@ -5,7 +5,9 @@ import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 import { rackSlots } from '../fixtures/models'
 
-const brain = ref('hermes-3-llama-3.2-3b-mlc')
+const sample = ref('sample-model')
+/** The loading row shows a sample name: a fake load never names a real model. */
+const sampleOptions = [{ value: 'sample-model', label: 'sample model', sizeMB: null, sizeSource: 'unknown' as const }]
 const ears = ref('whisper-base')
 const emb = ref('all-minilm-l6-v2')
 const voice = ref('kokoro-82m')
@@ -24,7 +26,7 @@ const code = `<HbModelSlot v-model="pick" label="brain" role="replies and plans"
     :code="code"
   >
     <div style="max-width: 720px; display: flex; flex-direction: column; gap: 8px">
-      <HbModelSlot v-model="brain" v-bind="sl(0)" state="loading" :pct="0.42" />
+      <HbModelSlot v-model="sample" v-bind="sl(0)" :options="sampleOptions" state="loading" :pct="0.42" />
       <HbModelSlot v-model="emb" v-bind="sl(2)" state="ready" />
       <HbModelSlot v-model="ears" v-bind="sl(3)" state="fault" fault="the session build ran out of memory. unload the voice, or pick a smaller model." />
       <HbModelSlot v-model="voice" v-bind="sl(4)" />

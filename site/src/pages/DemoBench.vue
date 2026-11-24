@@ -97,6 +97,7 @@ onUnmounted(() => cancelAnimationFrame(raf))
         <span style="margin-left: auto" />
         <HbSeg v-model="mode" :options="['easy', 'advanced']" />
       </HbHeader>
+      <p class="hb-fixture is-strip"><b>fixture</b> sample data: states, names and numbers are made up. no model loads here.</p>
     </template>
     <template #tabs>
       <HbTabs v-model="tab" :tabs="['radio', 'sky', 'ghost', 'scanner', 'bench']" />

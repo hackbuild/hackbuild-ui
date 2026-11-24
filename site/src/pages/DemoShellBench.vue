@@ -33,6 +33,7 @@ function next() {
       <HbHeader title="relief" accent="." suffix="bench" tagline="a picture in, a printable relief out" tagline-kind="tool">
         <a class="hb-link" href="#/demos">exit demo</a>
       </HbHeader>
+      <p class="hb-fixture is-strip"><b>fixture</b> sample data: states, names and numbers are made up. no model loads here.</p>
     </template>
     <template #tabs>
       <HbSteps v-model="step" :steps="steps" label="steps" />

@@ -30,9 +30,9 @@ export const suiteGroups: HbSuiteGroup[] = [
 ]
 
 export const suiteStatus: HbStatusItem[] = [
-  { key: 'brain', label: 'brain', state: 'ok', title: 'qwen 2.5 0.5b on webgpu', goto: 'models' },
-  { key: 'voice', label: 'voice', state: 'load', title: 'kokoro loading, 41 percent' },
-  { key: 'ears', label: 'ears', state: 'off', title: 'whisper not loaded' },
+  { key: 'brain', label: 'brain', state: 'ok', title: 'sample model on webgpu (fixture)', goto: 'models' },
+  { key: 'voice', label: 'voice', state: 'load', title: 'sample voice loading, 41 percent (fixture)' },
+  { key: 'ears', label: 'ears', state: 'off', title: 'sample ears not loaded (fixture)' },
   { key: 'eyes', label: 'eyes', state: 'warn', title: 'no webgpu, running on wasm' },
   { key: 'memory', label: 'memory', state: 'ok', title: '212 items stored here' },
   { key: 'gpu', label: 'gpu', state: 'err', title: 'adapter lost, falling back to wasm' },

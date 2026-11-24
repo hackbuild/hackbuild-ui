@@ -23,6 +23,7 @@ const follow = ref(true)
         <HbPill status="ok">brain</HbPill>
         <HbPill status="warn">eyes</HbPill>
       </HbHeader>
+      <p class="hb-fixture is-strip"><b>fixture</b> sample data: states, names and numbers are made up. no model loads here.</p>
     </template>
     <template #toolbar>
       <HbToolbar>

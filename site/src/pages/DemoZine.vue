@@ -26,7 +26,7 @@ const principles = [
 </script>
 
 <template>
-  <div>
+  <div class="hb-zine">
     <HbNav :links="links" />
 
     <HbHero kicker="hardware · tools · tutorials">

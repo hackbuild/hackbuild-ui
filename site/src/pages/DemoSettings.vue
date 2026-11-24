@@ -31,6 +31,7 @@ function save() {
       <HbHeader title="kerf" accent="." tagline="make things. break things. repeat.">
         <HbPill status="ok">adopted</HbPill>
       </HbHeader>
+      <p class="hb-fixture is-strip"><b>fixture</b> sample data: states, names and numbers are made up. no model loads here.</p>
     </template>
     <template #tabs>
       <HbTabs v-model="tab" :tabs="['capture', 'audio', 'display', 'about']" />

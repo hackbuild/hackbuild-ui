@@ -4,7 +4,7 @@ import { HbLoader, type HbProgressState } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 
-const url = ref('https://huggingface.co/onnx-community/depth-anything-v2-small')
+const url = ref('https://example.com/sample-model')
 const state = ref<HbProgressState>('idle')
 const loaded = ref(0)
 let t = 0
@@ -30,7 +30,7 @@ const code = `<HbLoader v-model:url="url" title="depth model" :size-m-b="100" si
     <div style="max-width: 520px">
       <HbLoader
         v-model:url="url"
-        title="depth anything v2 small"
+        title="sample model"
         :size-m-b="100"
         size-source="inferred"
         licence="Apache-2.0"
