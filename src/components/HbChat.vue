@@ -54,6 +54,11 @@ interface Props {
   header?: boolean
   /** The title in the header row. */
   title?: string
+  /** Show the transcript. false leaves the composer alone, to dock it in
+      HbAppShell while the lines show elsewhere, such as a rack tab. */
+  log?: boolean
+  /** Show the composer. false leaves a read only transcript. */
+  composer?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -70,6 +75,8 @@ const props = withDefaults(defineProps<Props>(), {
   examples: () => [],
   header: false,
   title: '',
+  log: true,
+  composer: true,
 })
 
 const draft = defineModel<string>('draft', { default: '' })
@@ -163,7 +170,7 @@ watch(draft, () => nextTick(() => box.value && autosize(box.value)))
 </script>
 
 <template>
-  <section class="hb-chat" :aria-label="props.label">
+  <section class="hb-chat" :class="{ 'is-composer': !props.log }" :aria-label="props.label">
     <div v-if="props.header || $slots.header" class="hb-chat-hd">
       <slot name="header">
         <span class="hb-chat-title">{{ props.title || props.label }}</span>
@@ -178,7 +185,7 @@ watch(draft, () => nextTick(() => box.value && autosize(box.value)))
     <div v-if="props.keyField" class="hb-chat-key">
       <HbApiKey v-model="apiKey" :pattern="props.keyPattern" />
     </div>
-    <div ref="log" class="hb-chat-log" role="log" aria-live="polite" tabindex="0">
+    <div v-if="props.log" ref="log" class="hb-chat-log" role="log" aria-live="polite" tabindex="0">
       <template v-for="(line, i) in props.lines" :key="line.id ?? i">
         <slot name="message" :line="line" :index="i">
           <HbMessage
@@ -218,7 +225,7 @@ watch(draft, () => nextTick(() => box.value && autosize(box.value)))
       </slot>
     </div>
     <slot name="above" />
-    <form class="hb-composer" @submit.prevent="primary">
+    <form v-if="props.composer" class="hb-composer" @submit.prevent="primary">
       <slot name="composer-start" />
       <textarea
         ref="box"

@@ -1313,3 +1313,22 @@ parts by category; the changelog has the detail.
 | 0.7.0 | HbArtboard, HbPromptCanvas `bare` | 17, artboard |
 | 0.7.1 | HbStageCaption, HbNameHud, HbTransport, HbPad; HbViewport and HbStageOverlay `telemetry`, `hint`, `caption`, `pad` slots; HbMemoryPanel `pin`, HbHistoryStrip non image `thumb` | 17, stage, transport and pad |
 | 0.8.0 | HbPersonaEditor, HbStepCard, HbPromptInspector, HbContextMenu; HbImageSlot `ratio` | 17, persona, trace and context menu |
+| 0.8.1 | HbAppShell `fit`, `.is-sheet-open`, `--hb-kb`, `--hb-foot-h`; HbChat `log`, `composer`; vanilla `keyboardInset`, `dockInsets` | 18, phone stage plus rack |
+
+### Phone stage plus rack
+
+The room on a phone (`#/demos/phone-rack`). No original has it; it is
+built from P-SHELL-3, P-PHONE-1, P-PHONE-3 and P-PHONE-10.
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbAppShell fit` | `.hb-app.is-fit` | the shell is `100dvh` less the keyboard inset at every width and the page never scrolls; an `HbViewport aspect="fill"` in the main column takes the height left over the foot, at least 120 px. Measured: 492 px of stage at 390 by 664, 354 at 320 by 568, 210 at 844 by 390 |
+| keyboard and foot insets | `--hb-kb`, `--hb-foot-h` | written on the root by HbAppShell with a dock (vanilla `dockInsets`). `--hb-kb` is the layout viewport under the on-screen keyboard, from visualViewport, 0 when pinch zoomed. The sticky foot sits at `bottom: var(--hb-kb)` and a pinned shell shrinks by it |
+| rack sheet over a dock | `.hb-app.is-sheet-open`, `.hb-rail.is-above-dock` | the rack is a bottom sheet under 641 px and a right drawer to 900 px. With a dock the sheet runs from 26 percent of the height to the foot's top edge, the foot stays above the scrim so the composer is always in reach, the scrim drops to 40 percent, and the stage shows only its caption, one line, at its top edge. Seven tabs become a select in the sheet |
+| docked composer | `.hb-dock > .hb-chat` | `HbChat :log="false"` is the composer alone, one row at 320 px with a button in `composer-start`; `:composer="false"` is the transcript alone for a rack tab |
+
+Stage ratio by measurement: `fill` gave 492 px of height for a 358 px
+wide stage at 390 by 664 (measured). A fixed `--hb-vp-ratio-sm` of 1/1
+would leave 134 px empty there and 3/4 hits the 62svh cap at 412 px,
+leaving 80 (computed). `fill` in a fit shell leaves no gap at any size.
+

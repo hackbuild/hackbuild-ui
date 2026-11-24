@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, useSlots } from 'vue'
 import { cx } from '../utils/cx'
+import { dockInsets, type DockInsetsHandle } from '../vanilla/insets'
 import HbDrawer from './HbDrawer.vue'
 
 export type HbAppMode = 'stage' | 'split' | 'chat'
@@ -14,11 +15,16 @@ interface Props {
   recipe?: HbAppRecipe
   /** Heading of the rack sheet, also its accessible name. */
   railLabel?: string
+  /** Pin the shell to the dynamic viewport at every width: the page never
+      scrolls and a viewport with aspect 'fill' in the main column takes
+      the height left over the foot. The phone layout for stage plus rack. */
+  fit?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   recipe: undefined,
   railLabel: 'rack',
+  fit: false,
 })
 
 /** View mode where a tool has both a stage and a chat or rack: stage
@@ -32,21 +38,26 @@ const slots = useSlots()
 // Under 901 px the shell unpins; the rack recipe moves its rail into a
 // drawer there: a bottom sheet under 641 px, a right drawer above.
 const wide = ref(true)
-const phone = ref(false)
-let queries: MediaQueryList[] = []
+let query: MediaQueryList | null = null
 function read() {
-  wide.value = queries[0]?.matches ?? true
-  phone.value = !(queries[1]?.matches ?? true)
+  wide.value = query?.matches ?? true
   if (wide.value) railOpen.value = false
 }
+// With a dock, the keyboard inset and the foot height go on the root as
+// --hb-kb and --hb-foot-h: the foot lifts over the on-screen keyboard and
+// the rack sheet stops at the dock's top edge.
+const foot = ref<HTMLElement | null>(null)
+let insets: DockInsetsHandle | null = null
 onMounted(() => {
+  if (slots.dock && foot.value) insets = dockInsets(foot.value)
   if (typeof matchMedia !== 'function') return
-  queries = [matchMedia('(min-width: 901px)'), matchMedia('(min-width: 641px)')]
-  for (const q of queries) q.addEventListener('change', read)
+  query = matchMedia('(min-width: 901px)')
+  query.addEventListener('change', read)
   read()
 })
 onBeforeUnmount(() => {
-  for (const q of queries) q.removeEventListener('change', read)
+  query?.removeEventListener('change', read)
+  insets?.dispose()
 })
 
 const sheet = computed(() => props.recipe === 'rack' && !wide.value && !!slots.rail)
@@ -54,6 +65,8 @@ const classes = computed(() =>
   cx('hb-app hb', props.recipe && `is-${props.recipe}`, mode.value && `is-${mode.value}`, {
     'has-dock': !!slots.dock,
     'has-rail': !!slots.rail && !sheet.value,
+    'is-fit': props.fit,
+    'is-sheet-open': sheet.value && railOpen.value,
   }),
 )
 function openRail() {
@@ -79,14 +92,14 @@ function openRail() {
         <slot name="rail" />
       </aside>
     </div>
-    <div v-if="slots.dock || slots.statusbar" class="hb-app-foot">
+    <div v-if="slots.dock || slots.statusbar" ref="foot" class="hb-app-foot">
       <div v-if="slots.dock" class="hb-dock">
         <slot name="dock" :sheet="sheet" :open-rail="openRail" />
       </div>
       <slot name="statusbar" />
     </div>
-    <HbDrawer v-if="sheet" v-model="railOpen" :side="phone ? 'bottom' : 'right'" :title="props.railLabel">
-      <div class="hb-rail">
+    <HbDrawer v-if="sheet" v-model="railOpen" side="auto" :breakpoint="641" :title="props.railLabel">
+      <div class="hb-rail" :class="{ 'is-above-dock': !!slots.dock }">
         <slot name="rail" />
       </div>
     </HbDrawer>

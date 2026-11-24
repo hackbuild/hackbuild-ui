@@ -77,3 +77,5 @@ export { PERSONA_TEMPLATE, tokenEstimate, costLine, insertTemplate, matchPersona
 export type { PersonaFile, PersonaPreset } from './persona'
 export { stepLabel, clipText, msText, promptText, planText, costRows } from './trace'
 export type { StepState, PromptMessage, PromptCost } from './trace'
+export { keyboardInset, dockInsets } from './insets'
+export type { ViewLike, DockInsetsHandle } from './insets'

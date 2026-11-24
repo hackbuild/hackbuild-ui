@@ -28,6 +28,11 @@ const demos = [
     text: 'The stage beside a numbered rack of tabs. Under 901 px the rack is a sheet, opened from the dock; stage and split modes.',
   },
   {
+    to: '#/demos/phone-rack',
+    label: 'phone: stage and rack',
+    text: 'The room on a phone: the stage fills the screen over the docked composer, the seven rack tabs open as a bottom sheet with one caption line kept on the stage, a touch pad on the stage.',
+  },
+  {
     to: '#/demos/shell-bench',
     label: 'shell: stepped bench',
     text: 'Numbered steps and the guide sentence in the strips, the stage beside a parameter rail, next pinned in the dock.',

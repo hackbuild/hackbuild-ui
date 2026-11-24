@@ -66,6 +66,7 @@ const code = `<HbAppShell>
       { prop: 'v-model:mode', type: `'stage' | 'split' | 'chat'`, notes: 'stage hides the rail, chat hides the work column' },
       { prop: 'v-model:railOpen', type: 'boolean', notes: 'the rack sheet, rack recipe under 901 px' },
       { prop: 'railLabel', type: 'string', default: `'rack'`, notes: 'sheet heading' },
+      { prop: 'fit', type: 'boolean', default: 'false', notes: 'pin to the dynamic viewport; a fill viewport takes the height left over the foot' },
     ]"
   />
 </template>

@@ -803,11 +803,14 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
    ========================================================================== */
 
 .hb-app{ display:flex; flex-direction:column }
-.hb-app > .hb-work{ flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr); gap:var(--hb-s4); padding:var(--hb-s4) }
+.hb-app > .hb-work{
+  flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr); gap:var(--hb-s4);
+  padding:var(--hb-s4) max(var(--hb-s4), env(safe-area-inset-right)) var(--hb-s4) max(var(--hb-s4), env(safe-area-inset-left));
+}
 .hb-app .hb-main{ min-width:0; display:flex; flex-direction:column; gap:var(--hb-s4) }
 .hb-app .hb-rail{ min-width:0; display:flex; flex-direction:column; gap:var(--hb-s4) }
 @media(min-width:901px){
-  .hb-app{ height:100vh; height:100dvh; overflow:hidden }
+  .hb-app{ height:100vh; height:calc(100dvh - var(--hb-kb, 0px)); overflow:hidden }
   .hb-app > .hb-work{ grid-template-columns:minmax(0,1fr) 340px; overflow:hidden }
   .hb-app .hb-main,.hb-app .hb-rail{ overflow:auto }
   /* No rail in the work row: the main column takes the full width, so a
@@ -821,13 +824,21 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
    901 px the shell is pinned and the foot sits at its bottom edge. */
 .hb-app.has-dock{ min-height:100vh; min-height:100dvh }
 .hb-app.has-dock > .hb-work{ align-content:start }
-.hb-app-foot{ position:sticky; bottom:0; z-index:var(--hb-z-sticky) }
+/* --hb-kb is the part of the layout viewport under the on-screen keyboard
+   and --hb-foot-h the foot's height, both written by HbAppShell from
+   visualViewport (vanilla dockInsets). The foot lifts over the keyboard;
+   a pinned shell shrinks by it. */
+.hb-app-foot{ position:sticky; bottom:var(--hb-kb, 0px); z-index:var(--hb-z-sticky) }
 .hb-dock{
   display:flex; align-items:center; flex-wrap:wrap; gap:var(--hb-s2);
   background:var(--hb-paper-sunk); border-top:var(--hb-border-hd) solid var(--hb-ink);
   padding:var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-left));
 }
 .hb-dock > .hb-composer{ flex:1 1 100%; padding:0; border:0; background:none }
+/* HbChat with log off, docked: the composer alone, one row at 320 px. */
+.hb-dock > .hb-chat{ flex:1 1 100%; border:0; background:none; box-shadow:none }
+.hb-dock > .hb-chat > .hb-composer{ padding:0; border:0; background:none; flex-wrap:nowrap }
+.hb-dock > .hb-chat > .hb-composer > .hb-textarea{ flex:1 1 0; min-width:0 }
 .hb-dock > .hb-spacer{ flex:1 }
 /* Without a status strip under it the dock pads past the home bar itself. */
 .hb-app-foot > .hb-dock:last-child{ padding-bottom:max(var(--hb-s2), env(safe-area-inset-bottom)) }
@@ -860,6 +871,31 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   .hb-app.is-chat > .hb-work > .hb-rail{ width:100%; max-width:760px; justify-self:center }
 }
 .hb-drawer-panel > .hb-rail{ display:flex; flex-direction:column; gap:var(--hb-s3) }
+
+/* Fit (HbAppShell fit): the shell is the dynamic viewport at every width
+   and the page never scrolls. A viewport with aspect 'fill' in the main
+   column takes the height left over the foot, so the stage neither
+   leaves a gap nor runs under the composer, portrait or landscape. */
+.hb-app.is-fit{ height:100vh; height:calc(100dvh - var(--hb-kb, 0px)); min-height:0; overflow:hidden }
+.hb-app.is-fit > .hb-work{ align-content:stretch; grid-template-rows:minmax(0,1fr); overflow:hidden }
+.hb-app.is-fit .hb-main{ min-height:0; overflow:auto }
+.hb-app.is-fit .hb-main > .hb-viewport.is-fill{ flex:1 1 auto; height:auto; min-height:120px }
+
+/* Rack sheet open over a docked shell (phone and narrow tablet). The
+   foot stays above the scrim so the input is always in reach, the sheet
+   or side drawer stops at the foot's top edge, the scrim is light enough
+   to read the stage through, and the stage keeps a one line caption at
+   its top edge, the part the sheet leaves in view. */
+.hb-app.is-sheet-open > .hb-app-foot{ z-index:calc(var(--hb-z-drawer) + 1) }
+.hb-drawer:has(> .hb-drawer-panel > .hb-rail.is-above-dock)::before{ background:rgba(10,10,10,.4) }
+.hb-drawer:has(> .hb-drawer-panel > .hb-rail.is-above-dock) > .hb-drawer-panel{ bottom:calc(var(--hb-foot-h, 0px) + var(--hb-kb, 0px)) }
+.hb-drawer.is-sheet:has(> .hb-drawer-panel > .hb-rail.is-above-dock) > .hb-drawer-panel{ top:26%; height:auto; padding-bottom:var(--hb-s4) }
+.hb-app.is-sheet-open .hb-viewport > .hb-ov-tl,
+.hb-app.is-sheet-open .hb-viewport > .hb-ov-foot > :not(.hb-ov-cap),
+.hb-app.is-sheet-open .hb-caption-echo{ display:none }
+.hb-app.is-sheet-open .hb-viewport > .hb-ov-foot{ top:var(--hb-s2); bottom:auto }
+.hb-app.is-sheet-open .hb-caption-line{ max-height:calc(1.5em + 2 * var(--hb-s1)) }
+.hb-app.is-sheet-open .hb-caption-who{ display:inline; margin-right:var(--hb-s1) }
 
 /* Canvas inside a stage always fills it and stays block, or it leaves a
    baseline gap under itself and the pink shadow looks wrong. */
