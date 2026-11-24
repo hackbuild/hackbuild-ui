@@ -34,6 +34,9 @@ interface Props {
   readonly?: boolean
   /** Hover throttle in ms. */
   throttle?: number
+  /** No tool row, well or help: the host shows the tools, as inside
+      HbArtboard. Keys still work on the frame. */
+  bare?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,6 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
   label: 'image',
   readonly: false,
   throttle: 50,
+  bare: false,
 })
 
 const prompts = defineModel<SegPrompt[]>('prompts', { default: () => [] })
@@ -260,8 +264,8 @@ const TOOLS: { key: string; tool: PromptTool; word: string }[] = [
        boxes, all in image pixels. Hover emits for a preview, a press
        commits. Handles drag, take arrows, Enter flips keep and leave out,
        Delete removes. The frame takes keys: p n b, arrows, Enter. -->
-  <div class="hb-pc" :class="{ 'is-readonly': props.readonly }">
-    <div v-if="!props.readonly" class="hb-pc-tools" role="toolbar" aria-label="prompt tools">
+  <div class="hb-pc" :class="{ 'is-readonly': props.readonly, 'is-bare': props.bare }">
+    <div v-if="!props.readonly && !props.bare" class="hb-pc-tools" role="toolbar" aria-label="prompt tools">
       <div class="hb-seg is-toggle" role="group" aria-label="tool">
         <button v-for="t in TOOLS" :key="t.tool" type="button" :class="{ 'is-on': tool === t.tool }" :aria-pressed="tool === t.tool" :aria-keyshortcuts="t.key" @click="tool = t.tool">
           {{ t.word }}<span class="hb-pc-key" aria-hidden="true">{{ t.key }}</span>
@@ -309,7 +313,7 @@ const TOOLS: { key: string; tool: PromptTool; word: string }[] = [
         <span v-if="kb" class="hb-pc-cursor" :style="pct(cur().x, cur().y)" aria-hidden="true" />
       </div>
     </div>
-    <p :id="helpId" class="hb-pc-help">
+    <p :id="helpId" class="hb-pc-help" :class="{ 'hb-sr': props.bare }">
       <template v-if="props.readonly">prompts are shown, not placed</template>
       <template v-else>press to keep, leave out with n or a right press, drag a box with b. arrows move the cursor, enter places. drag a handle to move it, enter flips it, delete removes it</template>
     </p>

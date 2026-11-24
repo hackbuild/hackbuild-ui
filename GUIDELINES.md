@@ -1241,3 +1241,43 @@ Vanilla: `PROMPT_KEYS`, `containRect`, `toImage`, `toView`, `normBox`,
 `isBox`, `nudge`, `promptStep`, `promptWord`, `hoverThrottle`;
 `INSTANCE_COLOURS`, `instanceColour`, `scorePct`; `clampPair`,
 `rangePct`; `splitKey`, `splitAt`.
+
+### Artboard
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbArtboard` | `.hb-ab`, `-vp`, `-board`, `-img`, `-slot`, `-layer`, `-mask`, `-stroke`, `-sel`, `-h`, `-hsq`, `-hdot`, `-stem`, `-read`, `-guide`, `-ring`, `-ov`, `-cap`, `-zoom`, `-pct`, `-help`, `.is-fill`, `.is-paint`, `.is-pan`, `.is-live`, `.is-rot` | the relief bench face editor as a part. A board of `width` by `height` board pixels on the void, fitted with 16 px around it; the view is a zoom relative to fit plus a pan, so it stays fitted when the box resizes. Wheel zooms at the cursor (ctrl wheel, a trackpad pinch, faster); a drag on empty board, a middle or right drag, or space drag pans; two fingers pinch and pan; keys + - 0 1 and arrows; double click on empty board fits. Layers sit by centre, scale and rotation: drag moves (snaps to the board centre, alt off, shift locks an axis), corners scale, the dot rotates (square angles catch within 4 degrees, shift snaps 15). Arrows nudge 1 board pixel, 10 with shift; `[` `]` pick; Delete emits `remove`. Erase and restore paint red over the selected layer with a ring cursor; the stroke is emitted in the layer's own pixels and `applyStroke` writes it to a mask canvas, so the mask follows move, scale and rotate. Esc drops the brush. `caption` is the truth label, top left, with the zoom when it is not 1. The box takes the board's ratio up to 70vh; `fill` takes the parent's height, as inside `HbViewport`. Handles are 24 px, 44 px on a coarse pointer |
+
+The board is sized by layout, not by a scale transform, so a part in the
+default slot keeps its own handle sizes at any zoom. A primary press on
+a focusable element in the slot belongs to that element: `HbPromptCanvas
+bare` sits on the board, takes the press, and the board pans by middle
+or right drag, space, two fingers or keys. When a second finger lands
+the board cancels the first touch in the slot, so a pinch places
+nothing. The brush ring is round because it is the brush.
+
+Vanilla: `ART_KEYS`, `ART_FIT`, `fitScale`, `boardRect`, `toBoard`,
+`zoomAt`, `wheelFactor`, `pinch`, `toLayer`, `fromLayer`,
+`layerCorners`, `hitLayer`, `snapRot`, `snapTo`, `zoomWord`,
+`addStrokePoint`, `applyStroke`, `artViewKey`.
+
+## 18. Parts added in 0.6.0 to 0.7.0
+
+Where to find each part added since 0.6.0. The docs site groups the same
+parts by category; the changelog has the detail.
+
+| Version | Parts | Section |
+|---|---|---|
+| 0.6.0 | vanilla entry `@virgilvox/hackbuild-ui/vanilla` and its composables | 12 |
+| 0.6.0 | HbSuiteNav, HbWorkspaceMenu, HbPills, HbStatusList, HbActivity | 13 |
+| 0.6.0 | HbPalette, HbKeyMap, HbToolRail, HbChipGroup, HbToggleRow | 14 |
+| 0.6.0 | HbEventLog, HbCodeBlock, HbHow, HbExportPanel | 15 |
+| 0.6.0 | HbSettingsForm, HbPresetChips, param rows | 16 |
+| 0.6.0 | HbModelList, HbProgress phases, HbCapabilities, HbReasons, HbLicence, HbModelManager, HbModelRack, HbModelSlot, HbEngineBar, HbWakeGate, HbTierCards, HbApiKey, HbCustomModelForm | 17 |
+| 0.6.0 | HbMessage anatomy, HbThink, HbToolCall, HbContextMeter, HbConversationList; HbMemoryPanel, HbMemoryItem, HbRecallTrace, HbMicButton; HbInset, HbWave, HbBubble, HbWelcome, HbHash | 17 |
+| 0.6.1 | HbLevelRail, HbQueueStrip, HbTranscript rows | 17, transcription |
+| 0.6.2 to 0.6.4 | HbStatusBar cells and action, HbDrawer `side="auto"` and `size`, `.hb-acts`, list row keys, missing rack slots | 4c, 5, 12, 17 |
+| 0.6.5, 0.6.6 | `.hb-toolpage`, `.is-split`, `.is-grow` | 5 |
+| 0.6.7 | HbSpokenText, HbMethodCard, HbImageSlot, HbCameraTile, HbHistoryStrip, HbSeed; `.hb-hint` (5) | 17, speech and image |
+| 0.6.8 | HbPromptCanvas, HbInstanceList, HbRange2, HbMonitorDock, HbSplit | 17, masks and views |
+| 0.7.0 | HbArtboard, HbPromptCanvas `bare` | 17, artboard |

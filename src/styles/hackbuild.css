@@ -3832,3 +3832,72 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-split-bar:focus-visible{ outline:none }
 .hb-split-bar:focus-visible .hb-split-grip{ background:var(--hb-pink) }
 @media (pointer:coarse){ .hb-split-bar{ width:44px; margin-left:-22px } .hb-split-grip{ width:20px; height:44px } }
+
+/* Artboard. A board that pans and zooms inside a void box, layers placed
+   by centre, scale and rotation, a dashed pink box with square corners
+   and a rotate dot on the selected one (the relief bench face editor).
+   The board is sized by layout, never by a scale transform, so a part in
+   its slot keeps its handle sizes at any zoom. The erase mask is red over
+   the layer; the brush shows as a ring. */
+.hb-ab{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-ab.is-fill{ height:100% }
+.hb-viewport > .hb-ab{ position:absolute; inset:0 }
+.hb-ab-vp{
+  position:relative; overflow:hidden; min-width:0; aspect-ratio:var(--hb-ab-ratio, 4 / 3); max-height:var(--hb-ab-h, min(70vh, 560px)); min-height:240px;
+  background:var(--hb-void); border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
+  touch-action:none; user-select:none; -webkit-user-select:none; cursor:grab;
+}
+.hb-ab.is-fill .hb-ab-vp{ flex:1 1 auto; aspect-ratio:auto; max-height:none; min-height:0; border:0; box-shadow:none }
+.hb-ab-vp:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-ab-vp.is-pan{ cursor:grabbing }
+.hb-ab-vp.is-paint{ cursor:none }
+.hb-ab-board{ position:absolute; left:0; top:0; transform-origin:0 0; background:var(--hb-paper-sunk); outline:1px solid var(--hb-ink-3) }
+.hb-ab-img{ position:absolute; inset:0; width:100%; height:100%; display:block; pointer-events:none }
+.hb-ab-slot{ position:absolute; inset:0 }
+.hb-ab-slot:empty{ pointer-events:none }
+.hb-ab-layer{ position:absolute; transform-origin:50% 50%; pointer-events:none }
+.hb-ab-mask{ position:absolute; inset:0; background:var(--hb-lit-err); opacity:.25; mask-image:var(--hb-ab-src); -webkit-mask-image:var(--hb-ab-src); mask-size:100% 100%; -webkit-mask-size:100% 100%; mask-repeat:no-repeat; -webkit-mask-repeat:no-repeat }
+.hb-ab-mask.is-live{ opacity:.55 }
+.hb-ab-stroke{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; opacity:.55 }
+.hb-ab-stroke polyline{ fill:none; stroke:var(--hb-lit-err); stroke-linecap:round; stroke-linejoin:round }
+.hb-ab-stroke.is-restore polyline{ stroke:var(--hb-slime) }
+.hb-ab-sel{ position:absolute; transform-origin:50% 50%; pointer-events:none; outline:1.5px dashed var(--hb-pink) }
+.hb-ab-sel.is-paint{ outline-color:var(--hb-ink-3) }
+.hb-ab-h{
+  position:absolute; width:24px; height:24px; margin:-12px 0 0 -12px; padding:0; pointer-events:auto;
+  display:flex; align-items:center; justify-content:center; background:transparent; border:0; touch-action:none;
+}
+.hb-ab-h.is-tl{ left:0; top:0; cursor:nwse-resize }
+.hb-ab-h.is-tr{ left:100%; top:0; cursor:nesw-resize }
+.hb-ab-h.is-br{ left:100%; top:100%; cursor:nwse-resize }
+.hb-ab-h.is-bl{ left:0; top:100%; cursor:nesw-resize }
+.hb-ab-h.is-rot{ left:50%; top:-28px; cursor:crosshair }
+.hb-ab-hsq{ width:10px; height:10px; background:var(--hb-pink); outline:1px solid var(--hb-void) }
+.hb-ab-hdot{ width:12px; height:12px; background:var(--hb-pink); box-shadow:inset 0 0 0 3px var(--hb-void); outline:1px solid var(--hb-void) }
+.hb-ab-stem{ position:absolute; left:50%; top:-28px; height:28px; width:0; border-left:1.5px solid var(--hb-pink) }
+.hb-ab-h:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-paper); outline-offset:0 }
+@media (pointer:coarse){ .hb-ab-h{ width:44px; height:44px; margin:-22px 0 0 -22px } .hb-ab-h.is-rot{ top:-40px } .hb-ab-stem{ top:-40px; height:40px } }
+.hb-ab-read{ position:absolute; left:100%; top:100%; margin:var(--hb-s2) 0 0 var(--hb-s2); white-space:nowrap; font-family:var(--hb-readout); font-size:16px; color:var(--hb-slime); text-shadow:1px 1px 0 var(--hb-void) }
+.hb-ab-guide{ position:absolute; pointer-events:none; border:0 dashed var(--hb-slime) }
+.hb-ab-guide.is-x{ left:50%; top:0; bottom:0; border-left-width:1px }
+.hb-ab-guide.is-y{ top:50%; left:0; right:0; border-top-width:1px }
+.hb-ab-ring{ position:absolute; pointer-events:none; transform:translate(-50%, -50%); border-radius:50%; border:1.5px solid var(--hb-lit-err); outline:1px solid var(--hb-void) }
+.hb-ab-ring.is-restore{ border-color:var(--hb-slime) }
+.hb-ab-ov{ position:absolute; inset:0; pointer-events:none }
+.hb-ab-ov > *{ pointer-events:auto }
+.hb-ab-cap{ position:absolute; left:var(--hb-s2); top:var(--hb-s2); padding:0 var(--hb-s1); background:var(--hb-void); pointer-events:none; white-space:pre; font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-4) }
+.hb-ab-zoom{ position:absolute; right:var(--hb-s2); bottom:var(--hb-s2); z-index:6; display:flex; align-items:stretch; gap:var(--hb-s1) }
+.hb-ab-zoom > .hb-iconbtn{ width:32px; height:32px }
+.hb-ab-pct{ min-width:56px; padding:0 var(--hb-s1); background:var(--hb-void); color:var(--hb-paper); border:1px solid var(--hb-ink-3); font-family:var(--hb-readout); font-size:16px; font-variant-numeric:tabular-nums; cursor:pointer }
+.hb-ab-pct:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink) }
+@media (pointer:coarse){ .hb-ab-zoom > .hb-iconbtn{ width:44px; height:44px } .hb-ab-pct{ min-height:44px } }
+@media (max-width:420px){ .hb-ab-pct{ display:none } }
+.hb-ab-help{ margin:0; font-family:var(--hb-utility); font-size:11px; line-height:1.5; color:var(--hb-ink-3) }
+.hb-ab.is-fill .hb-ab-help{ display:none }
+@media (pointer:coarse){ .hb-ab-help{ display:none } }
+
+/* The prompt canvas inside an artboard: no tool row, well or help; the
+   host shows the tools. */
+.hb-pc.is-bare{ height:100% }
+.hb-pc.is-bare .hb-pc-well{ height:100%; background:none; border:0; box-shadow:none }
+.hb-pc.is-bare .hb-pc-frame{ max-width:none; height:100% }

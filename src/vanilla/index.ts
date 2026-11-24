@@ -63,3 +63,5 @@ export { spokenWords, toSpoken, spokenIndex, wordAtChar, METHOD_WORDS, methodMet
 export type { SpokenWord, MethodState, ImageSource, CameraFault, HistoryLike } from './media'
 export { PROMPT_KEYS, containRect, toImage, toView, normBox, isBox, nudge, promptStep, promptWord, hoverThrottle, INSTANCE_COLOURS, instanceColour, scorePct, clampPair, rangePct, splitKey, splitAt } from './vision'
 export type { SegPrompt, PromptTool, PromptRect } from './vision'
+export { ART_KEYS, ART_FIT, fitScale, boardRect, toBoard, zoomAt, wheelFactor, pinch, toLayer, fromLayer, layerCorners, hitLayer, snapRot, snapTo, zoomWord, addStrokePoint, applyStroke, artViewKey } from './artboard'
+export type { ArtTransform, ArtLayer, ArtView, ArtTool, ArtStroke, ArtRect } from './artboard'

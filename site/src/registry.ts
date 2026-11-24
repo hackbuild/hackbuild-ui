@@ -123,6 +123,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbRange2', blurb: 'two thumbs on one track for a near and far window' },
       { name: 'HbMonitorDock', blurb: 'raw feed and model views side by side, each folds' },
       { name: 'HbSplit', blurb: 'a compare wipe between two views of one image' },
+      { name: 'HbArtboard', blurb: 'pan and zoom a board, place layers, erase by brush, host a part' },
     ],
   },
   {
