@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.5
+
+- `.hb-toolpage`: stacks the parts of one tool with one gap; `.is-grow`
+  fills the rest.
+
 ## 0.6.4
 
 - HbDrawer: `size` sm, md, lg sets the side drawer to 340, 440 or 560 px
