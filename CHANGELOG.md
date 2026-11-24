@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.2
+
+- HbHeader: the title keeps its words whole and ends in an ellipsis past
+  the row.
+- An empty toolbar takes no room; HbSuiteNav's toolbar row collapses on a
+  phone unless its `toolbar` slot fills it.
+- HbStatusBar: `cells` with `priority` (2 from 481 px, 3 from 761 px of
+  strip width, or `data-priority` on slotted cells), and `action` with
+  `@press`, the strip as one button, 44 px on a coarse pointer.
+- HbDrawer and `drawer()`: `side="auto"` with `breakpoint` (761), the sheet
+  below and the right drawer above, live.
+
 ## 0.6.1
 
 - Transcription: HbLevelRail (speech kept and cut, floor and gate in dB,
