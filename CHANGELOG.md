@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.3
+
+- toastStore: calls setTimeout and clearTimeout unbound; Chrome threw
+  illegal invocation on the first toast.
+- HbConversationList: `noun` and `nouns` set every label, items take
+  `kind` and an optional `count`, and `creatable`, `duplicable`,
+  `importable` hide their buttons. `listMeta()` in the vanilla entry.
+- `.hb-row` is 44 px tall on a coarse pointer.
+- `.hb-acts` and HbActions: a button row that wraps, `is-end`, `is-fill`.
+
 ## 0.6.2
 
 - HbHeader: the title keeps its words whole and ends in an ellipsis past
