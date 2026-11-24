@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.0
+
+- HbArtboard: a board that pans and zooms by mouse, wheel, pinch and
+  keys, fits to view, shows an image or slot content, places layers by
+  centre, scale and rotation, and paints an erase and restore mask in
+  layer pixels; overlay slot and truth label. Vanilla `artboard`.
+- HbPromptCanvas `bare`: no tool row, well or help, for use on a board.
+- GUIDELINES section 18 lists every part added from 0.6.0 to 0.7.0.
+
+The 0.6 line in short: the vanilla entry and composables; the suite
+shell, keys and choices, logs and export, settings; models, chat, memory
+and voice; transcription; speech and image; masks and views.
+
 ## 0.6.8
 
 - HbPromptCanvas, HbInstanceList, HbRange2, HbMonitorDock, HbSplit;
