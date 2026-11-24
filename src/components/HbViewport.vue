@@ -43,7 +43,9 @@ defineSlots<{
   caption?: () => unknown
   /** Over the caption: a short note on how to drive the scene. */
   hint?: () => unknown
-  /** Under the top left content: HbHudStat figures, goal and thought. */
+  /** Under the top left content: HbHudStat figures, goal and thought.
+      With a pad slot it moves under the top right content on a touch
+      phone held sideways, where the stick covers the left. */
   telemetry?: () => unknown
   /** At the foot under the band: an HbPad. */
   pad?: () => unknown
@@ -64,11 +66,20 @@ const style = computed(() => (fill.value ? undefined : { '--hb-vp-ratio': props.
     :aria-label="props.label || undefined"
   >
     <slot />
-    <div v-if="$slots.tl || $slots.telemetry" class="hb-ov hb-ov-tl">
-      <slot name="tl" />
+    <!-- With a pad the top corners share a grid so telemetry can move to
+         the right on a phone held sideways, clear of the stick. -->
+    <div v-if="$slots.pad && ($slots.tl || $slots.tr || $slots.telemetry)" class="hb-ov hb-ov-top">
+      <div v-if="$slots.tl" class="hb-ov hb-ov-tl"><slot name="tl" /></div>
+      <div v-if="$slots.tr" class="hb-ov hb-ov-tr"><slot name="tr" /></div>
       <div v-if="$slots.telemetry" class="hb-ov-tele"><slot name="telemetry" /></div>
     </div>
-    <div v-if="$slots.tr" class="hb-ov hb-ov-tr"><slot name="tr" /></div>
+    <template v-else>
+      <div v-if="$slots.tl || $slots.telemetry" class="hb-ov hb-ov-tl">
+        <slot name="tl" />
+        <div v-if="$slots.telemetry" class="hb-ov-tele"><slot name="telemetry" /></div>
+      </div>
+      <div v-if="$slots.tr" class="hb-ov hb-ov-tr"><slot name="tr" /></div>
+    </template>
     <div v-if="$slots.bl" class="hb-ov hb-ov-bl"><slot name="bl" /></div>
     <div v-if="$slots.br" class="hb-ov hb-ov-br"><slot name="br" /></div>
     <div v-if="$slots.hint || $slots.caption || $slots.pad" class="hb-ov hb-ov-foot">

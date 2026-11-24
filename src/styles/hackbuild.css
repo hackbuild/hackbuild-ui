@@ -725,6 +725,33 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 @media (max-width:1023px){
   .hb-toolpage.is-split:not(.is-source-order) > .is-side{ order:1 }
 }
+/* stage split (FERRULE): the stage wide on the left, chat in a side column
+   of 340 to 520 px on the right, from 1024 px. The side column is held to
+   the window height so its log scrolls and its composer stays in view.
+   Under 1024 px the stage comes first at --hb-stage-h-sm and chat follows. */
+@media (min-width:1024px){
+  .hb-toolpage.is-split.is-stage{ grid-template-columns:minmax(0, 1fr) minmax(340px, 520px) }
+  .hb-toolpage.is-split.is-stage > :not(.is-side):not(.is-full){ grid-column:1 }
+  .hb-toolpage.is-split.is-stage > .is-side{
+    grid-column:2; grid-row:1 / span 8; display:flex; flex-direction:column; min-height:0;
+    max-height:calc(100vh - 2 * var(--hb-s3)); max-height:calc(100dvh - 2 * var(--hb-s3));
+  }
+  .hb-toolpage.is-split.is-stage > .is-side > .is-grow{ flex:1 1 auto; min-height:0 }
+}
+/* Phone stage height. 38dvh leaves the chat log and composer in reach for a
+   character (FERRULE); a room takes aspect="fill" in a fit shell instead,
+   which ignores the token. Any length works: 50dvh, 320px. */
+:root{ --hb-stage-h-sm:38dvh }
+@media (max-width:1023px){
+  .hb-toolpage.is-stage > .hb-viewport:not(.is-fill){
+    aspect-ratio:auto; height:38vh; height:var(--hb-stage-h-sm); max-height:none; min-height:160px;
+  }
+}
+/* A phone held sideways has too little height for 38dvh: the stage takes
+   most of the screen and chat scrolls under it. */
+@media (max-width:1023px) and (orientation:landscape) and (max-height:540px){
+  .hb-toolpage.is-stage > .hb-viewport:not(.is-fill){ height:85vh; height:85dvh }
+}
 @media(pointer:coarse){ .hb-acts > .hb-btn,.hb-acts > .hb-iconbtn{ min-height:44px } }
 
 /* Disclosure. Fiddly controls fold away instead of being deleted. */
@@ -903,6 +930,7 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-drawer:has(> .hb-drawer-panel > .hb-rail.is-above-dock) > .hb-drawer-panel{ bottom:calc(var(--hb-foot-h, 0px) + var(--hb-kb, 0px)) }
 .hb-drawer.is-sheet:has(> .hb-drawer-panel > .hb-rail.is-above-dock) > .hb-drawer-panel{ top:26%; height:auto; padding-bottom:var(--hb-s4) }
 .hb-app.is-sheet-open .hb-viewport > .hb-ov-tl,
+.hb-app.is-sheet-open .hb-viewport > .hb-ov-top,
 .hb-app.is-sheet-open .hb-viewport > .hb-ov-foot > :not(.hb-ov-cap),
 .hb-app.is-sheet-open .hb-caption-echo{ display:none }
 .hb-app.is-sheet-open .hb-viewport > .hb-ov-foot{ top:var(--hb-s2); bottom:auto }
@@ -954,6 +982,11 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-menu-item[disabled]{ color:var(--hb-ink-4); cursor:not-allowed }
 @media (hover:hover) and (pointer:fine){ .hb-menu-item[disabled]:hover{ background:none; color:var(--hb-ink-4) } }
 .hb-menu-rule{ border:0; border-top:1px dashed rgba(26,26,26,.3); margin:4px 0 }
+/* Send to: a dropdown of tools with what each takes and, when it cannot
+   take this now, why. The reason stays readable on a disabled row. */
+.hb-sendto .hb-menu{ min-width:15rem; max-width:min(22rem, calc(100vw - 2 * var(--hb-s3))) }
+.hb-sendto-name{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.hb-sendto-reason{ margin-left:auto; font-family:var(--hb-body); font-size:11px; font-weight:400; color:var(--hb-ink-3); text-transform:none; letter-spacing:0; text-align:right }
 
 /* Drawer. A full-height panel that slides in from an edge. The mobile home
    of the rail, and of any nav that will not fit a bar. */
@@ -3975,6 +4008,24 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 }
 .hb-ov-cap{ display:flex; justify-content:center }
 .hb-ov-tele{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--hb-s1) }
+/* With a pad the top corners share one grid, so the telemetry group can
+   change corner without moving in the markup: under the name hud by
+   default, under the top right content on a touch phone held sideways,
+   where the stick covers the left side of a short stage. */
+.hb-ov-top{
+  left:var(--hb-s3); right:var(--hb-s3); top:var(--hb-s3);
+  display:grid; grid-template-columns:auto auto; grid-template-areas:"tl tr" "tele ."; justify-content:space-between;
+  align-items:start; gap:var(--hb-s1) var(--hb-s3); pointer-events:none;
+}
+.hb-ov-top > .hb-ov{ position:static; max-width:none }
+.hb-ov-top > .hb-ov-tl{ grid-area:tl }
+.hb-ov-top > .hb-ov-tr{ grid-area:tr; justify-self:end }
+.hb-ov-top > .hb-ov-tele{ grid-area:tele }
+.hb-ov-top > * > *{ pointer-events:auto }
+@media (pointer:coarse) and (orientation:landscape) and (max-height:540px){
+  .hb-ov-top{ grid-template-areas:"tl tr" ". tele" }
+  .hb-ov-top > .hb-ov-tele{ justify-self:end; align-items:flex-end }
+}
 @media(min-width:641px){ .hb-ov-foot{ left:var(--hb-s3); right:var(--hb-s3); bottom:var(--hb-s3) } }
 /* Under 561 px of viewport the hint gives way to the scene: it names keys
    and mouse moves a phone does not have. */
