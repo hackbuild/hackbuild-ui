@@ -5,7 +5,9 @@ import HbHash from './HbHash.vue'
 import HbLicence from './HbLicence.vue'
 import HbProgress, { type HbProgressState } from './HbProgress.vue'
 
-export type HbSizeSource = 'measured' | 'vendor' | 'inferred' | 'unknown'
+import { mbText, type SizeSource } from '../vanilla/models'
+
+export type HbSizeSource = SizeSource
 
 interface Props {
   /** The file or model: 'quadruped codebook network'. */
@@ -21,8 +23,9 @@ interface Props {
   sizeMB?: number | null
   /** Where the size came from. */
   sizeSource?: HbSizeSource
+  /** As recorded; optional, one quiet line under the size, never a gate. */
   licence?: string
-  commercial?: boolean | null
+  commercial?: boolean | 'unknown' | null
   licenceHref?: string
   /** SHA-256 of the loaded bytes. */
   sha256?: string
@@ -34,7 +37,7 @@ interface Props {
   state?: HbProgressState
   /** The error, named. Shown under the actions. */
   error?: string
-  /** Words on the load button; the size and licence are added. */
+  /** Words on the load button; the size is added. */
   loadLabel?: string
 }
 
@@ -70,15 +73,8 @@ const emit = defineEmits<{
   resume: []
 }>()
 
-const size = computed(() => {
-  if (props.sizeMB === null) return 'size unknown'
-  const v = props.sizeMB >= 1024 ? `${(props.sizeMB / 1024).toFixed(1)} GB` : props.sizeMB >= 10 ? `${Math.round(props.sizeMB)} MB` : `${props.sizeMB.toFixed(1)} MB`
-  return `${v}, ${props.sizeSource}`
-})
-const button = computed(() => {
-  const bits = [props.sizeMB === null ? '' : size.value.split(',')[0], props.licence].filter(Boolean)
-  return bits.length ? `${props.loadLabel} (${bits.join(', ')})` : props.loadLabel
-})
+const size = computed(() => (props.sizeMB === null ? 'size unknown' : `${mbText(props.sizeMB)}, ${props.sizeSource}`))
+const button = computed(() => (props.sizeMB === null ? `${props.loadLabel}, size unknown` : `${props.loadLabel} ${mbText(props.sizeMB)}`))
 const running = computed(() => props.state === 'running')
 </script>
 
@@ -95,7 +91,7 @@ const running = computed(() => props.state === 'running')
       <div class="hb-kv"><span>size</span><span>{{ size }}</span></div>
       <div class="hb-kv"><span>sha-256</span><HbHash :hex="props.sha256" :expected="props.expectedSha256" :checking="props.hashing" /></div>
     </div>
-    <HbLicence v-if="props.licence" :licence="props.licence" :commercial="props.commercial" :href="props.licenceHref"><slot name="licence" /></HbLicence>
+    <HbLicence :licence="props.licence" :commercial="props.commercial" :href="props.licenceHref" quiet><slot name="licence" /></HbLicence>
     <HbProgress
       v-if="props.state !== 'idle'"
       :loaded="props.loaded"

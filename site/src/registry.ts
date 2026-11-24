@@ -64,6 +64,17 @@ export const registry: RegistryGroup[] = [
     ],
   },
   {
+    category: 'models',
+    entries: [
+      { name: 'HbModelList', blurb: 'grouped catalogue, fit chip, row state' },
+      { name: 'HbProgress', blurb: 'summed bar, phase words, file rows' },
+      { name: 'HbCapabilities', blurb: 'what this machine can turn on, and how fast' },
+      { name: 'HbReasons', blurb: 'defaults with the reason for each' },
+      { name: 'HbLicence', blurb: 'licence as recorded, optional' },
+      { name: 'HbLoader', blurb: 'load panel that names the size' },
+    ],
+  },
+  {
     category: 'surfaces',
     entries: [
       { name: 'HbPanel', blurb: 'raised paper with the block shadow' },

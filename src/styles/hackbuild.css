@@ -2765,3 +2765,140 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 /* Under 400 px the label takes its own line, its reset mark at the right
    end, so the control, number and unit keep one line between them. */
 @media(max-width:400px){ .hb-prow-label,.hb-setform .hb-prow-label{ flex-basis:100% } }
+
+/* ==========================================================================
+   32. MODEL CATALOGUE, LOAD PHASES, REASONS
+   HbModelList: search, censorship chips and the fits switch over groups
+   with sticky ink heads. A row is one radio (name, the owner's badge, the
+   note, size and vram each with a source word, censorship tag, fit chip,
+   tags) beside its state action; the reason under a row this machine
+   cannot run; the licence as one quiet line. The chosen row takes an ink
+   rule and opens its fact line and context sizes. HbProgress file rows,
+   HbReasons rows (label, value, why, edit), capability speed chips.
+   ========================================================================== */
+.hb-modellist{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0; container-type:inline-size }
+.hb-modellist-tools{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-modellist-search > .hb-input{ width:100%; box-sizing:border-box; min-height:44px }
+@media(min-width:641px) and (pointer:fine){ .hb-modellist-search > .hb-input{ min-height:0 } }
+.hb-modellist-tools > .hb-togrow{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb .hb-model-legend,.hb-model-legend{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
+.hb-model-legend b{ font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink) }
+.hb-modellist > .hb-models{ max-height:var(--hb-models-h, none); overflow:auto }
+.hb-model-group{ margin:0 }
+.hb-model-gh{
+  position:sticky; top:0; z-index:1; margin:0; padding:var(--hb-s1) var(--hb-s3);
+  background:var(--hb-ink); color:var(--hb-paper);
+  font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em;
+}
+.hb-model-rows{ list-style:none; margin:0; padding:0 }
+.hb-modellist .hb-model{ grid-template-columns:minmax(0,1fr); gap:var(--hb-s1) var(--hb-s3) }
+.hb-modellist .hb-model > *{ grid-column:1 / -1 }
+.hb-modellist .hb-model:last-child{ border-bottom:0 }
+.hb-model.is-chosen{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
+.hb-model.is-fault{ border-left-color:var(--hb-err) }
+.hb-model-pick{
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px; min-width:0; width:100%;
+  min-height:44px; margin:0; padding:0; border:0; background:transparent; color:inherit;
+  font:inherit; text-align:left; cursor:pointer;
+}
+.hb-model-pick:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-model-pick[aria-disabled="true"]{ cursor:not-allowed }
+.hb-model-pick[aria-disabled="true"] .hb-model-name{ color:var(--hb-ink-4) }
+.hb-model-head{ display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--hb-s1) var(--hb-s2); min-width:0 }
+.hb-model-pick .hb-model-name{ overflow-wrap:anywhere }
+.hb-model-badge{ font-family:var(--hb-readout); font-size:15px; line-height:1; color:var(--hb-ink-2) }
+.hb-model-def{ font-family:var(--hb-utility); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; background:var(--hb-ink); color:var(--hb-paper); padding:1px 5px }
+.hb-model-defwhy,.hb-model-note{ font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-model-defwhy{ color:var(--hb-ink) }
+.hb-model-pick .hb-model-meta{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-model-tags{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) }
+.hb-model-cens,.hb-model-fit,.hb-model-tag,.hb-model-state{
+  font-family:var(--hb-utility); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+  line-height:1.5; padding:0 4px; border:1px solid var(--hb-ink-3); color:var(--hb-ink-2);
+}
+.hb-model-cens.is-uncensored,.hb-model-cens.is-abliterated{ background:var(--hb-ink); border-color:var(--hb-ink); color:var(--hb-paper) }
+.hb-model-cens.is-unknown{ border-style:dashed }
+.hb-model-tag{ border-color:var(--hb-paper-edge); background:var(--hb-paper-sunk); font-weight:400 }
+.hb-model-fit.is-ok{ color:var(--hb-ok); border-color:currentColor }
+.hb-model-fit.is-warn{ color:var(--hb-warn); border-color:currentColor }
+.hb-model-fit.is-err{ color:var(--hb-err); border-color:currentColor }
+.hb-model-state{ border-style:dashed; color:var(--hb-ink) }
+.hb-model.is-loaded .hb-model-state{ border-style:solid; background:var(--hb-ink); color:var(--hb-paper) }
+.hb-model-bar{ display:block; width:100%; height:6px; background:var(--hb-paper-sunk); border:1px solid var(--hb-ink) }
+.hb-model-bar > i{ display:block; height:100%; background:var(--hb-ink) }
+.hb-model-icon:empty{ display:none }
+.hb-model-acts{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) var(--hb-s2); align-items:center }
+.hb .hb-model-why,.hb-modellist .hb-model-why{ margin:0 }
+.hb-model-why.is-fault{ color:var(--hb-err) }
+.hb-model-detail{ display:flex; flex-direction:column; gap:var(--hb-s1); padding-top:var(--hb-s1); border-top:1px dashed rgba(26,26,26,.25) }
+.hb .hb-model-facts,.hb-model-facts{ margin:0; font-family:var(--hb-utility); font-size:11.5px; color:var(--hb-ink) }
+.hb-model-notes{ margin:0; padding-left:var(--hb-s3); font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-model-ctx{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s1) var(--hb-s2) }
+.hb-model-ctxlabel{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-model-ctxnote{ flex:1 0 100%; font-family:var(--hb-body); font-size:12px; color:var(--hb-ink-3) }
+.hb-model-ctx .hb-chip[disabled]{ border-style:dashed; color:var(--hb-ink-4); box-shadow:none; cursor:not-allowed }
+.hb .hb-model-empty,.hb-model-empty{ margin:0; padding:var(--hb-s3); font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-3) }
+.hb .hb-model-echo,.hb-model-echo{ margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+/* From 480 px of list width the action sits beside the row. */
+@container (min-width:480px){
+  .hb-modellist .hb-model{ grid-template-columns:minmax(0,1fr) auto }
+  .hb-modellist .hb-model > .hb-model-pick{ grid-column:1 }
+  .hb-modellist .hb-model > .hb-model-acts{ grid-column:2; grid-row:1; align-self:start; justify-content:flex-end }
+}
+.hb-modellist.is-tiers .hb-model-pick{ display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:var(--hb-s3) }
+.hb-modellist.is-tiers .hb-model-pick > *{ grid-column:2 }
+.hb-modellist.is-tiers .hb-model-icon{ grid-column:1; grid-row:1 / span 6; width:36px; height:36px; display:flex; align-items:center; justify-content:center }
+
+/* Licence as one quiet line: a model row, a load panel. */
+.hb .hb-licence-q,.hb-licence-q{ margin:0; font-family:var(--hb-utility); font-size:10.5px; line-height:1.45; color:var(--hb-ink-3); overflow-wrap:anywhere }
+
+/* Load progress: the file rows fold under the summed bar. */
+.hb-progress-files{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-progress-files > summary{ cursor:pointer; display:flex; align-items:center; min-height:44px }
+@media(min-width:641px) and (pointer:fine){ .hb-progress-files > summary{ min-height:0 } }
+.hb-progress-files > summary:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-progress-files ul{ list-style:none; margin:0; padding:0; max-height:160px; overflow:auto }
+.hb-progress-files li{ display:flex; justify-content:space-between; gap:var(--hb-s2); padding:1px 0; border-bottom:1px dashed rgba(26,26,26,.2) }
+.hb-progress-files li.is-done{ color:var(--hb-ink-4) }
+.hb-progress-file{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.hb-progress-fileamt{ flex:0 0 auto; font-variant-numeric:tabular-nums; color:var(--hb-ink) }
+
+/* Capability speed chip and marks. */
+.hb-cap-speed{
+  font-family:var(--hb-utility); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+  line-height:1.5; padding:0 4px; border:1px solid currentColor; color:var(--hb-ink-3);
+}
+.hb-cap-speed.is-fast{ color:var(--hb-ok) }
+.hb-cap-speed.is-ok{ color:var(--hb-ink) }
+.hb-cap-speed.is-slow{ color:var(--hb-warn) }
+.hb-cap-speed.is-none{ border-style:dashed }
+.hb-cap-mark{ font-family:var(--hb-utility); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; line-height:1.5; padding:0 4px; background:var(--hb-ink); color:var(--hb-paper) }
+.hb-cap-mark.is-stored{ background:transparent; color:var(--hb-ink); border:1px dashed var(--hb-ink) }
+.hb-cap-act2{ justify-self:start }
+.hb .hb-caps-machine,.hb-caps-machine{ margin:0; font-family:var(--hb-utility); font-size:11.5px; color:var(--hb-ink) }
+.hb .hb-cap-without,.hb-cap-without{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-3) }
+@container (min-width:420px){
+  .hb-cap > .hb-cap-act2{ grid-column:2; justify-self:end }
+}
+
+/* Defaults with reasons: label, the value, why it was picked, edit. A
+   changed row reads 'your choice' in ink. */
+.hb-reasons{ margin:0; display:flex; flex-direction:column; min-width:0 }
+.hb-reason{
+  display:grid; grid-template-columns:minmax(64px,auto) minmax(0,1fr) auto; gap:var(--hb-s1) var(--hb-s3); align-items:center;
+  padding:var(--hb-s1) 0; border-bottom:1px dashed rgba(26,26,26,.25);
+}
+.hb-reason:last-child{ border-bottom:0 }
+.hb-reason-label{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-reason-body{ margin:0; display:flex; flex-wrap:wrap; align-items:baseline; gap:2px var(--hb-s2); min-width:0 }
+.hb-reason-value{ font-family:var(--hb-utility); font-size:12.5px; font-weight:700; color:var(--hb-ink); overflow-wrap:anywhere }
+.hb-reason-why{ flex:1 0 100%; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-reason.is-changed .hb-reason-why{ color:var(--hb-ink) }
+.hb-reason-edit{ margin:0 }
+@media(max-width:400px){
+  .hb-reason{ grid-template-columns:minmax(0,1fr) auto }
+  .hb-reason-label{ grid-column:1 / -1 }
+}
+@media(pointer:coarse){ .hb-model-ctx .hb-chip{ min-width:44px; justify-content:center } }
+.hb-model-legend-item + .hb-model-legend-item::before{ content:" " }
+.hb-modellist-tools > .hb-togrow{ padding:var(--hb-s1) var(--hb-s3) }

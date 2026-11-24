@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { cx } from '../utils/cx'
+import { loadText, sumFiles, type LoadFile, type LoadPhase } from '../vanilla/models'
 
 export type HbProgressState = 'idle' | 'running' | 'paused' | 'done' | 'failed'
+export type HbLoadPhase = LoadPhase
+export type HbProgressFile = LoadFile
 
 interface Props {
   /** Bytes so far. */
@@ -21,6 +24,10 @@ interface Props {
   label?: string
   /** Speak the words as they change. Off when a parent announces at its own pace. */
   live?: boolean
+  /** Named phase: download shows bytes, compile and warm show the word with a moving bar. */
+  phase?: LoadPhase | null
+  /** One row per file; the bar sums them, and the total is known only when every file states one. */
+  files?: LoadFile[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -33,17 +40,24 @@ const props = withDefaults(defineProps<Props>(), {
   actions: true,
   label: 'download',
   live: true,
+  phase: null,
+  files: () => [],
 })
 
 const emit = defineEmits<{ cancel: []; resume: [] }>()
 
 const mb = (b: number) => (b / (1024 * 1024)).toFixed(b < 10 * 1024 * 1024 ? 1 : 0)
-const known = computed(() => props.total !== null && props.total > 0)
-const fraction = computed(() => (known.value ? Math.min(1, props.loaded / (props.total as number)) : null))
+const sum = computed(() => (props.files.length ? sumFiles(props.files) : { loaded: props.loaded, total: props.total, done: 0 }))
+const bytesPhase = computed(() => props.phase === null || props.phase === 'download' || props.phase === 'cache')
+const known = computed(() => bytesPhase.value && sum.value.total !== null && sum.value.total > 0)
+const fraction = computed(() => (known.value ? Math.min(1, sum.value.loaded / (sum.value.total as number)) : null))
 const pct = computed(() => (fraction.value === null ? null : Math.floor(fraction.value * 100)))
 
 const words = computed(() => {
   if (props.text) return props.text
+  if (props.state === 'running' && (props.phase !== null || props.files.length)) {
+    return loadText({ phase: props.phase ?? 'download', loaded: props.loaded, total: props.total, files: props.files })
+  }
   const amount = known.value
     ? `${pct.value} percent, ${mb(props.loaded)} of ${mb(props.total as number)} MB`
     : `${mb(props.loaded)} MB, total unknown`
@@ -56,7 +70,7 @@ const words = computed(() => {
   }
 })
 
-const busy = computed(() => props.state === 'running' && fraction.value === null)
+const busy = computed(() => props.state === 'running' && fraction.value === null && props.phase !== 'ready')
 const width = computed(() => (props.state === 'done' ? 100 : fraction.value === null ? 30 : fraction.value * 100))
 const classes = computed(() =>
   cx('hb-progress', {
@@ -90,5 +104,14 @@ const classes = computed(() =>
     >
       <i :style="{ width: width + '%' }" />
     </div>
+    <details v-if="props.files.length > 1" class="hb-progress-files">
+      <summary>{{ props.files.length }} files</summary>
+      <ul>
+        <li v-for="f in props.files" :key="f.name" :class="{ 'is-done': f.total !== null && f.total > 0 && f.loaded >= f.total }">
+          <span class="hb-progress-file">{{ f.name }}</span>
+          <span class="hb-progress-fileamt">{{ f.total ? `${Math.floor(Math.min(1, f.loaded / f.total) * 100)}%` : `${mb(f.loaded)} MB` }}</span>
+        </li>
+      </ul>
+    </details>
   </div>
 </template>

@@ -5,7 +5,7 @@ import {
   HbDropzone, HbGauges, HbHeader, HbHudStat, HbInset,
   HbLoader, HbModelList, HbPanel, HbPermission, HbPill, HbProgress, HbReadouts,
   HbSeg, HbSparkRows, HbStatusBar, HbStatusLine, HbTabs, HbTranscript, HbViewport, HbWave,
-  type HbCap, type HbCapVerb, type HbChatLine, type HbCheckRow, type HbModelRow, type HbProgressState,
+  type HbCap, type HbCapVerb, type HbChatLine, type HbCheckRow, type HbModelRecord, type HbModelFit, type HbProgressState,
   type HbTranscriptSegment,
 } from '@hackbuild/ui'
 import { createMinds, rng } from './minds-sim'
@@ -214,12 +214,15 @@ function startLoad() {
 function cancelLoad() { clearInterval(dl); state.value = 'paused' }
 if (state.value === 'running') { loaded.value = total * 0.42; startLoad() }
 
-const models: HbModelRow[] = [
-  { id: 'qwen2.5-0.5b', label: 'qwen2.5 0.5b instruct', size: '945 MB, vendor', devices: 'webgpu or wasm', licence: 'weights Apache-2.0, commercial use allowed', disabled: null, first: 'webgpu q4f16' },
-  { id: 'smolvlm-256m', label: 'smolvlm 256m instruct', size: '260 MB, inferred', devices: 'webgpu or wasm', licence: 'weights Apache-2.0, commercial use allowed', disabled: null, first: 'wasm q8' },
-  { id: 'lfm2-vl-450m', label: 'lfm2-vl 450m', size: '320 MB, inferred', devices: 'webgpu', licence: 'weights LFM Open License v1.0, commercial use unknown', disabled: 'the gpu has no shader-f16. this model needs it.', first: null },
-  { id: 'sd-turbo', label: 'sd-turbo', size: '2.6 GB, vendor', devices: 'webgpu', licence: 'weights Stability AI Community License, no commercial use', disabled: null, first: 'webgpu fp16' },
+const models: HbModelRecord[] = [
+  { id: 'qwen2.5-0.5b', label: 'qwen2.5 0.5b instruct', sizeMB: 945, sizeSource: 'vendor', group: 'chat', censorship: 'stock', licence: 'Apache-2.0', commercial: true },
+  { id: 'smolvlm-256m', label: 'smolvlm 256m instruct', sizeMB: 260, sizeSource: 'inferred', group: 'vision', licence: 'Apache-2.0', commercial: true },
+  { id: 'lfm2-vl-450m', label: 'lfm2-vl 450m', sizeMB: 320, sizeSource: 'inferred', group: 'vision', licence: 'LFM Open License v1.0', commercial: 'unknown' },
+  { id: 'sd-turbo', label: 'sd-turbo', sizeMB: 2600, sizeSource: 'vendor', group: 'image', licence: 'Stability AI Community License', commercial: false },
 ]
+const modelFits: Record<string, HbModelFit> = {
+  'lfm2-vl-450m': { fit: 'needs f16', ok: false, reason: 'this gpu has no shader-f16.' },
+}
 const picked = ref<string | null>('qwen2.5-0.5b')
 const dlB = ref(6.2 * 1024 * 1024)
 
@@ -481,7 +484,7 @@ const fmt = (s: number) => s.toFixed(1)
         </HbLoader>
         <HbPanel>
           <h3 class="hb-panel-hd-inst">models</h3>
-          <HbModelList v-model="picked" :models="models" />
+          <HbModelList v-model="picked" :records="models" :fits="modelFits" :filters="false" />
         </HbPanel>
       </div>
       <div class="pg-col">

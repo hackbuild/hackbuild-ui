@@ -11,7 +11,9 @@ import type { IconName } from '../icons'
 
 export type HbCapState = 'off' | 'loading' | 'on' | 'failed' | 'unavailable'
 export type HbCapNeedKind = 'webgpu' | 'microphone' | 'camera' | 'model' | 'other'
-export type HbCapVerb = 'enable' | 'cancel' | 'disable' | 'retry'
+export type HbCapVerb = 'enable' | 'cancel' | 'disable' | 'retry' | 'unload'
+/** How fast it runs on this machine: a heads up, not a benchmark. */
+export type HbCapSpeed = 'fast' | 'ok' | 'slow' | 'none'
 
 export interface HbCapNeed {
   kind: HbCapNeedKind
@@ -48,6 +50,16 @@ export interface HbCap {
   /** Bytes so far and in all while loading. */
   loaded?: number
   total?: number | null
+  /** Speed chip: fast, ok, slow, or none when it cannot run here. */
+  speed?: HbCapSpeed
+  /** The one this page uses now for its job: a 'current' mark. */
+  current?: boolean
+  /** Its weights are in the store: a 'stored' mark, and turning on skips the download. */
+  stored?: boolean
+  /** What still works without it: 'chat runs on cpu with the small models.' */
+  without?: string
+  /** While on, a second button that frees its memory and keeps the weights stored. */
+  unload?: boolean
 }
 
 interface Props {
@@ -55,6 +67,8 @@ interface Props {
   label?: string
   /** The `2 of 9 on` line above the rows. */
   summary?: boolean
+  /** The machine in one line, from the probe: 'webgpu, apple metal-3, shader-f16, 8 gb memory or more'. */
+  machine?: string
   /** Every download in paper, not pink: another value owns the view. */
   quiet?: boolean
   announce?: boolean
@@ -64,6 +78,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   label: 'what you can turn on',
   summary: true,
+  machine: '',
   quiet: false,
   announce: true,
   announceGap: 3000,
@@ -78,6 +93,8 @@ const NEED: Record<HbCapNeedKind, IconName> = {
 const VERDICT: Record<HbCapState, HbVerdictStatus> = {
   off: 'not run', loading: 'running', on: 'pass', failed: 'fail', unavailable: 'warn',
 }
+
+const SPEED: Record<HbCapSpeed, string> = { fast: 'fast', ok: 'ok', slow: 'slow', none: 'n/a' }
 
 const byId = computed(() => new Map(props.caps.map((c) => [c.id, c])))
 const onCount = computed(() => props.caps.filter((c) => c.state === 'on').length)
@@ -117,7 +134,7 @@ function note(c: HbCap): { text: string; cls: string } | null {
 }
 function button(c: HbCap): { text: string; verb: HbCapVerb; disabled: boolean } | null {
   switch (c.state) {
-    case 'off': return { text: c.action || 'turn on', verb: 'enable', disabled: false }
+    case 'off': return { text: c.action || (c.stored ? 'load and turn on' : 'turn on'), verb: 'enable', disabled: false }
     case 'loading': return { text: 'cancel', verb: 'cancel', disabled: false }
     case 'on': return c.offAction === '' ? null : { text: c.offAction || 'turn off', verb: 'disable', disabled: false }
     case 'failed': return { text: 'try again', verb: 'retry', disabled: false }
@@ -144,6 +161,7 @@ watch(
 
 <template>
   <div class="hb-caps">
+    <p v-if="props.machine" class="hb-caps-machine">{{ props.machine }}</p>
     <p v-if="props.summary" class="hb-caps-sum">{{ onCount }} of {{ props.caps.length }} on</p>
     <ul class="hb-caps-list" :aria-label="props.label">
       <li
@@ -157,6 +175,9 @@ watch(
           <HbIcon v-if="c.icon" :name="c.icon" :size="16" />
           <span :id="`${uid}-${c.id}-n`" class="hb-cap-name">{{ c.name }}</span>
           <HbVerdict :status="VERDICT[c.state]" :text="stateWords(c)" />
+          <span v-if="c.speed" class="hb-cap-speed" :class="`is-${c.speed}`"><span class="hb-sr">speed here: </span>{{ SPEED[c.speed] }}</span>
+          <span v-if="c.current" class="hb-cap-mark">current</span>
+          <span v-if="c.stored" class="hb-cap-mark is-stored">stored</span>
         </div>
         <button
           v-if="button(c)"
@@ -166,6 +187,12 @@ watch(
           :aria-describedby="note(c) ? `${uid}-${c.id}-w` : undefined"
           @click="emit('act', c.id, button(c)!.verb)"
         >{{ button(c)!.text }}<span class="hb-sr">, {{ c.name }}</span></button>
+        <button
+          v-if="c.unload && c.state === 'on'"
+          type="button"
+          class="hb-btn hb-btn-2 hb-btn-sm hb-cap-act2"
+          @click="emit('act', c.id, 'unload')"
+        >unload<span class="hb-sr">, {{ c.name }}. the weights stay stored</span></button>
         <ul v-if="needs(c).length || c.size" class="hb-cap-needs" aria-label="needs">
           <li v-for="n in needs(c)" :key="n.kind + (n.label ?? '')" class="hb-cap-need" :class="{ 'is-missing': n.missing }">
             <HbIcon :name="NEED[n.kind]" :size="11" />
@@ -175,6 +202,7 @@ watch(
         </ul>
         <p v-if="note(c)" :id="`${uid}-${c.id}-w`" :class="note(c)!.cls">{{ note(c)!.text }}</p>
         <p v-if="c.ask && c.state === 'off'" class="hb-cap-ask">{{ c.ask }}</p>
+        <p v-if="c.without && c.state !== 'on'" class="hb-cap-without">without it: {{ c.without }}</p>
         <HbProgress
           v-if="c.state === 'loading'"
           :loaded="c.loaded ?? 0"
@@ -185,7 +213,7 @@ watch(
           :live="false"
           :label="c.name"
         />
-        <HbLicence v-if="c.licence" :licence="c.licence" :commercial="c.commercial ?? null" :what="c.licenceWhat ?? 'weights'" />
+        <HbLicence :licence="c.licence" :commercial="c.commercial ?? null" :what="c.licenceWhat ?? 'weights'" />
       </li>
     </ul>
     <p v-if="props.announce" class="hb-sr" role="status" aria-live="polite">{{ live.text.value }}</p>

@@ -1084,3 +1084,30 @@ Vanilla: `rangeRow(el)` binds a range and its number box (preview on
 input, commit on change, typed numbers clamped to the step);
 `shownAt`, `defaultsOf`, `changedKeys`, `resetValues`, `sectionsOf` and
 `matchPreset` work on the schema for pages with no framework.
+
+## 17. Models
+
+The parts take plain records shaped like a model library record (label,
+badge, group, note, `sizeMB` with `sizeSource`, params, quant, `vramMB`
+with its source, censorship, tags, tier, licence, commercial, notes, ctx)
+and a fit `{fit, ok, reason}` per id. The kit never imports the library.
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbModelList` | `.hb-modellist`, `-tools`, `-search`, `.hb-model-gh`, `.hb-model-pick`, `-badge`, `-def`, `-note`, `-meta`, `-cens`, `-fit`, `-tag`, `-state`, `-acts`, `-why`, `-detail`, `-facts`, `-ctx`, `-legend`, `-echo` | search on every width, censorship chips with an any chip, an "only what fits here" toggle row; groups with sticky ink heads, rows by size; each row one radio: the label, the owner's badge, the note, size and vram each with a source word, censorship tag, fit chip, tags, the state word. The action names the size: `download 1.7 GB`, then cancel, load and remove (in place confirm), unload, try again. A row this machine cannot run stays listed, off, with the reason. The chosen row opens its fact line and context sizes; sizes over the build limit are disabled. `tiers` variant: an icon slot and an ink bar from the tier. The line under the list echoes the pick |
+| `HbProgress` | `.hb-progress-files`, `-file`, `-fileamt` | `phase` (fetch, download, cache, compile, warm, ready, error) and `files`: one summed bar, `downloading 3 of 24 files, 412 of 2200 MB`; the percent shows only when every file states a total; compile and warm move the bar without a number; file rows fold under it |
+| `HbCapabilities` | `.hb-caps-machine`, `.hb-cap-speed`, `.hb-cap-mark`, `.hb-cap-without`, `.hb-cap-act2` | the machine in one line; a speed chip (fast ok, ok ink, slow warn, n/a dashed); `current` and `stored` marks; "without it:" line; `unload` frees memory and keeps the weights |
+| `HbReasons` | `.hb-reasons`, `.hb-reason`, `-label`, `-value`, `-why`, `-edit` | one row per default: value, why, edit; a changed row reads `your choice` |
+| `HbLicence` | `.hb-licence-q` | optional: empty renders nothing. `quiet` is one line, `licence as recorded: ...`. Nothing is gated on a licence |
+| `HbLoader` | | the button names the size (`load 100 MB`); the licence is the quiet line |
+
+Pink stays with the running download bar. Fit chips, censorship tags and
+the chosen row are ink, ok, warn or err. Every target is 44 px on a coarse
+pointer, context chips included.
+
+Vanilla: `modelList(el, {value, onChange, search, empty})` is the picker
+keys: a radiogroup of `[data-model]` radios, one in the tab order with its
+row's `[data-act]` buttons, arrows skip rows marked aria-disabled, a search
+field filters by `data-search`. Words: `sizeText`, `vramText`,
+`factLine`, `licenceText`, `loadText`, `sumFiles`, `ctxOptions`; data:
+`groupRecords`, `filterRecords`, `CENSORSHIP`, `RESPONSIBILITY`.
