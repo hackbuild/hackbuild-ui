@@ -692,6 +692,15 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 /* A pink readout inside a pink row is invisible. Flip it to ink. */
 .hb-row.is-on .hb-readout,.hb-row.is-on .hb-label{ color:var(--hb-ink) }
 .hb-row .hb-spacer{ margin-left:auto }
+/* A finger needs 44 px. Material rows are read, not pressed. */
+@media(pointer:coarse){ .hb-row{ min-height:44px } .hb-mat .hb-row{ min-height:0 } }
+
+/* Button row: a group of verbs under a form, a card or a picked row.
+   Wraps on a phone. is-end pushes it right, is-fill shares the width. */
+.hb-acts{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2); min-width:0 }
+.hb-acts.is-end{ justify-content:flex-end }
+.hb-acts.is-fill > *{ flex:1 1 auto; justify-content:center }
+@media(pointer:coarse){ .hb-acts > .hb-btn,.hb-acts > .hb-iconbtn{ min-height:44px } }
 
 /* Disclosure. Fiddly controls fold away instead of being deleted. */
 .hb-fold{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); margin-bottom:var(--hb-s3) }
@@ -3382,7 +3391,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-convs-foot{ flex:none; border-top:var(--hb-border) solid var(--hb-ink); padding:var(--hb-s2); display:flex; flex-direction:column; gap:var(--hb-s1) }
 .hb-convs-foot-acts{ display:flex; gap:var(--hb-s1); flex-wrap:wrap }
 .hb .hb-convs-note,.hb-convs-note{ margin:0; font-family:var(--hb-utility); font-size:10.5px; color:var(--hb-ink-3) }
-@media(pointer:coarse){ .hb-convs-new,.hb-convs-act{ min-width:44px; min-height:44px } .hb-convs-new{ width:44px; height:44px } }
+@media(pointer:coarse){ .hb-convs-new,.hb-convs-act{ min-width:44px; min-height:44px } .hb-convs-new{ width:44px; height:44px } .hb-convs-open,.hb-convs-foot-acts > .hb-btn{ min-height:44px } }
 
 .hb-chat-hd{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--hb-s2); padding:var(--hb-s1) var(--hb-s2) var(--hb-s1) var(--hb-s3); border-bottom:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-chat-title{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em }
