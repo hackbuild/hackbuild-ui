@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import {
-  HbActivity, HbAppShell, HbButton, HbHeader, HbPills, HbStatusBar, HbSuiteNav,
+  HbActivity, HbAppShell, HbButton, HbHeader, HbPalette, HbPills, HbStatusBar, HbSuiteNav,
   HbTag, HbViewport, HbWorkspaceMenu,
 } from '@hackbuild/ui'
 import { activity } from '@hackbuild/ui/vanilla'
@@ -15,6 +15,7 @@ const store = activity()
 store.set('weights', 'loading florence 2 base', 0.42, () => {})
 store.set('cache', 'checking the weights cache', null)
 onBeforeUnmount(() => store.dispose())
+const sections = [{ label: 'tools', items: suiteGroups.flatMap((g) => g.tools.map((t) => ({ key: t.key, label: t.label, hint: g.label }))) }]
 const tool = computed(() => suiteGroups.flatMap((g) => g.tools).find((t) => t.key === route.value))
 </script>
 
@@ -42,6 +43,7 @@ const tool = computed(() => suiteGroups.flatMap((g) => g.tools).find((t) => t.ke
         </template>
       </HbSuiteNav>
     </template>
+    <HbPalette :sections="sections" @run="(k) => (route = k)" />
     <HbViewport :label="tool?.label ?? 'tool'" cover-title="fixture stage" cover-note="no model runs in this demo." />
     <template #statusbar>
       <HbStatusBar><span>job <b>weights 42%</b></span><span>device <b>webgpu</b></span><span>level <b>{{ level }}</b></span></HbStatusBar>

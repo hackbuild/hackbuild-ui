@@ -32,6 +32,11 @@ export { default as HbActivity } from './components/HbActivity.vue'
 export type { HbSuiteGroup, HbSuiteTool } from './components/HbSuiteNav.vue'
 export type { HbWorkspaceProject } from './components/HbWorkspaceMenu.vue'
 export type { HbStatusItem, HbStatusState } from './components/HbStatusList.vue'
+export { default as HbPalette } from './components/HbPalette.vue'
+export { default as HbKeyMap } from './components/HbKeyMap.vue'
+export { default as HbToolRail } from './components/HbToolRail.vue'
+export type { HbPaletteItem, HbPaletteSection } from './components/HbPalette.vue'
+export type { HbRailTool } from './components/HbToolRail.vue'
 
 // bench layer: the strips, stage overlays and rail rows of a design bench
 export { default as HbSteps } from './components/HbSteps.vue'
@@ -129,6 +134,9 @@ export { default as HbSwitch } from './components/HbSwitch.vue'
 export { default as HbField } from './components/HbField.vue'
 export { default as HbSlider } from './components/HbSlider.vue'
 export { default as HbDropdown } from './components/HbDropdown.vue'
+export { default as HbChipGroup } from './components/HbChipGroup.vue'
+export { default as HbToggleRow } from './components/HbToggleRow.vue'
+export type { HbChipOption } from './components/HbChipGroup.vue'
 
 // data
 export { default as HbTag } from './components/HbTag.vue'

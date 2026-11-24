@@ -999,6 +999,11 @@ composables call the same functions, and so do `HbTabs`, `HbDrawer`,
 | `copier()` | none | copy with idle, copied and failed states |
 | `activityLine(el, store)` | `.hb-activity` with `-label`, `-more`, `-line > -fill` | draws the oldest task, its percent and the count of the rest; hidden while idle |
 | `searchList(input, list)` | a field over `role="option"` items, optional `role="group"` sections | the combobox pattern: typing hides what does not match, up and down move the active item with wrap, Enter picks, Escape clears a query first |
+| `palette(el, {registry})` | `.hb-modal.hb-palette > .hb-panel` with an `input` and `.hb-palette-list` | `/` and ctrl+k open it, focus in the cleared field, `searchList` inside, Enter runs and closes, Escape clears then closes, focus returns |
+| `keyMap(el, registry)` | none, it writes `.hb-keymap` | prints the registry's groups with each combo in `.hb-kbd` and follows changes |
+| `chipGroup(el, {multi})` | chips with `data-value`, optional `data-key` | single: a radiogroup with arrows and one tab stop; multi: aria-pressed toggles; the empty value is the off chip; letters bound in a registry |
+| `toolRail(el, {registry})` | `.hb-toolrail` of buttons with `data-tool`, `data-key`, `data-hint` | one tool pressed, arrows along the rail, letters bound from the same buttons, `.hb-toolrail-hint` shows the current gesture |
+| `toggleRow(el)` | `.hb-togrow` button | the row is the switch: aria-checked and `.is-on` flip on a press |
 
 Escape acts on the newest open overlay only. A widget that takes a key
 with `preventDefault` wins over the overlay, and the overlay wins over a
@@ -1030,3 +1035,16 @@ Pink stays with the group tab: the current tool chip is ink, the level
 toggle is paper when on, and pills on ink take the lit colours. The
 header is `position: relative` so the activity line sits on its edge.
 Menu items are 44 px tall on a coarse pointer.
+
+## 14. Keys and choices
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbPalette` | `.hb-palette`, `-field`, `-list`, `-item`, `-foot` | tools, models, documents and commands in sections; opens on `/` and ctrl+k; the active item is pink; the foot teaches the keys and hides on a touch screen |
+| `HbKeyMap` | `.hb-keymap` | the shared hotkey registry printed by group; ctrl reads cmd on a Mac; `scopes` narrows to one tool and the shell |
+| `HbToolRail` | `.hb-toolrail`, `-btn`, `-key`, `-hint` | 44 px icon buttons from `{id, label, icon, key, hint}`; the letter is printed in the corner and bound from the same data; the tool that is on fills ink; letters hide on a coarse pointer |
+| `HbChipGroup` | `.hb-chipgroup`, `.hb-chip-off`, `.hb-chip-key` | one on or several on; the off chip is dashed and turns warn when chosen |
+| `HbToggleRow` | `.hb-togrow`, `-label`, `-why`, `-sw` | label, one line of why and the switch as one 44 px button with role switch |
+
+Every printed key comes from a `hotkeys` registry, never typed by hand,
+so the hint and the binding cannot drift apart.

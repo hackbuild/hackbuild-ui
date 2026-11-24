@@ -58,6 +58,9 @@ export const registry: RegistryGroup[] = [
       { name: 'HbPills', blurb: 'one status pill per subsystem' },
       { name: 'HbStatusList', blurb: 'one line per subsystem, in words' },
       { name: 'HbActivity', blurb: 'what the app waits on, a 2 px line' },
+      { name: 'HbPalette', blurb: 'commands on / and ctrl+k' },
+      { name: 'HbKeyMap', blurb: 'the hotkey table, printed' },
+      { name: 'HbToolRail', blurb: 'tools with their key letters' },
     ],
   },
   {
@@ -77,6 +80,8 @@ export const registry: RegistryGroup[] = [
     entries: [
       { name: 'HbButton', blurb: 'ink fill, pink on hover, presses down' },
       { name: 'HbChip', blurb: 'filter and multi select toggle' },
+      { name: 'HbChipGroup', blurb: 'one or several on, a distinct off' },
+      { name: 'HbToggleRow', blurb: 'label, why and switch as one target' },
       { name: 'HbSeg', blurb: 'segmented mode switch' },
       { name: 'HbInput', blurb: 'text input on raised paper' },
       { name: 'HbTextarea', blurb: 'multiline input' },

@@ -2456,3 +2456,134 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-activity-line.is-err .hb-activity-fill{ animation:none; width:100%; background:var(--hb-lit-err) }
 @keyframes hb-activity-slide{ from{ transform:translateX(-100%) } to{ transform:translateX(340%) } }
 @media (prefers-reduced-motion:reduce){ .hb-activity-line:not(.is-known) .hb-activity-fill{ animation:none; width:100%; opacity:.4 } }
+
+/* ==========================================================================
+   26. COMMAND PALETTE
+   HbPalette. Opens on / and ctrl+k (cmd+k on a Mac) over the page: a
+   prompt field, sectioned items with a hint and a printed key, the empty
+   copy and a foot that teaches the keys. Near the top on a wide screen so
+   the list grows down; full width under 641 px.
+   ========================================================================== */
+.hb-modal.hb-palette{ align-items:flex-start; padding-top:max(var(--hb-s4), env(safe-area-inset-top)) }
+@media(min-width:641px){ .hb-modal.hb-palette{ padding-top:12vh } }
+.hb-palette > .hb-panel{ max-width:600px; padding:0; display:flex; flex-direction:column; max-height:min(72vh, 560px); overflow:hidden }
+.hb-palette-field{ display:flex; align-items:center; gap:var(--hb-s2); border-bottom:var(--hb-border) solid var(--hb-ink); padding:0 var(--hb-s3) }
+.hb-palette-prompt{ font-family:var(--hb-readout); font-size:22px; color:var(--hb-pink); line-height:1 }
+.hb-palette-input{
+  flex:1; min-width:0; min-height:48px; border:0; outline:0; background:transparent; color:var(--hb-ink);
+  font-family:var(--hb-utility); font-size:16px;
+}
+/* The field is the focus mark: a pink rule under it, no outline box. */
+.hb-palette-input:focus-visible,.hb .hb-palette-input:focus-visible{ outline:0 }
+.hb-palette-field:focus-within{ box-shadow:inset 0 -3px 0 var(--hb-pink) }
+.hb-palette-list{ overflow-y:auto; padding:var(--hb-s1) 0; min-height:0 }
+.hb-palette-list > [role="group"][hidden]{ display:none }
+.hb-palette-head{
+  display:block; padding:var(--hb-s2) var(--hb-s3) 2px;
+  font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3);
+}
+.hb-palette-item{
+  display:flex; align-items:center; gap:var(--hb-s3); width:100%; min-height:44px;
+  padding:0 var(--hb-s3); background:none; border:0; color:var(--hb-ink); text-align:left; cursor:pointer;
+  font-family:var(--hb-utility); font-size:12.5px;
+}
+@media(pointer:fine){ .hb-palette-item{ min-height:34px } }
+.hb-palette-item[hidden]{ display:none }
+.hb-palette-item.is-active{ background:var(--hb-pink); color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-palette-item:not(.is-active):hover{ background:var(--hb-pink-10) } }
+.hb-palette-label{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0 }
+.hb-palette-hint{ font-size:11px; color:var(--hb-ink-3); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0 }
+.hb-palette-item.is-active .hb-palette-hint{ color:var(--hb-ink) }
+.hb-palette-kbd{ margin-left:auto; display:inline-flex; align-items:center; gap:2px; flex:0 0 auto }
+.hb .hb-palette-empty,.hb .hb-palette-foot{ margin:0 }
+.hb-palette-empty{ padding:var(--hb-s3); font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-3) }
+.hb-palette-foot{
+  padding:6px var(--hb-s3); border-top:1px dashed rgba(26,26,26,.3);
+  font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3);
+}
+@media(pointer:coarse){ .hb-palette-foot{ display:none } }
+
+/* ==========================================================================
+   27. KEY MAP
+   HbKeyMap. The hotkey registry printed: a heading per group, the combos
+   in .hb-kbd beside what they do. ctrl prints as cmd on a Mac because the
+   registry formats it. Two columns from 641 px.
+   ========================================================================== */
+.hb-keymap{ display:grid; gap:var(--hb-s4); color:var(--hb-ink) }
+@media(min-width:641px){ .hb-keymap{ grid-template-columns:repeat(auto-fit, minmax(16rem, 1fr)) } }
+.hb-keymap-head,.hb .hb-keymap-head{
+  margin:0 0 var(--hb-s2); color:var(--hb-ink); line-height:1.3; padding-bottom:4px; border-bottom:var(--hb-border) solid var(--hb-ink);
+  font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+}
+.hb-keymap dl{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px var(--hb-s3); margin:0; align-items:baseline }
+.hb-keymap dt{ display:flex; flex-wrap:wrap; align-items:center; gap:2px; white-space:nowrap }
+.hb-keymap dd{ margin:0; font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-2) }
+.hb-keymap-or,.hb-keymap-plus{ font-family:var(--hb-utility); font-size:10px; color:var(--hb-ink-3); padding:0 2px }
+.hb .hb-keymap-empty,.hb-keymap-empty{ margin:0; font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-3) }
+
+/* ==========================================================================
+   28. TOOL RAIL
+   HbToolRail. Icon buttons from tool data, each printing its key letter in
+   the corner; the same data binds the letters. The tool that is on fills
+   ink, and a hint pill states its gesture. 44 px buttons at every width.
+   ========================================================================== */
+.hb-toolrail-wrap{ display:inline-flex; flex-direction:column; align-items:flex-start; gap:var(--hb-s2); max-width:100% }
+.hb-toolrail{ display:inline-flex; flex-direction:column; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); box-shadow:2px 2px 0 var(--hb-ink); max-width:100% }
+.hb-toolrail-wrap.is-horizontal .hb-toolrail{ flex-direction:row; overflow-x:auto }
+.hb-toolrail-btn{
+  position:relative; width:44px; height:44px; flex:0 0 auto; padding:0;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:transparent; color:var(--hb-ink); border:0; cursor:pointer;
+}
+.hb-toolrail-btn + .hb-toolrail-btn{ border-top:1px dashed rgba(26,26,26,.25) }
+.hb-toolrail-wrap.is-horizontal .hb-toolrail-btn + .hb-toolrail-btn{ border-top:0; border-left:1px dashed rgba(26,26,26,.25) }
+.hb-toolrail-btn.is-on{ background:var(--hb-ink); color:var(--hb-paper) }
+@media (hover:hover) and (pointer:fine){ .hb-toolrail-btn:not(.is-on):hover{ background:var(--hb-pink-10) } }
+.hb-toolrail-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-toolrail-btn[disabled]{ color:var(--hb-ink-4); cursor:not-allowed }
+.hb-toolrail-key{ position:absolute; right:3px; bottom:1px; font-family:var(--hb-utility); font-size:9px; font-weight:700; opacity:.7 }
+/* Letters mean nothing without a keyboard. */
+@media(pointer:coarse){ .hb-toolrail-key{ display:none } }
+.hb .hb-toolrail-hint,.hb-toolrail-hint{
+  margin:0; max-width:100%; padding:3px 9px;
+  background:var(--hb-ink); color:var(--hb-paper);
+  font-family:var(--hb-utility); font-size:11px; line-height:1.4;
+}
+
+/* ==========================================================================
+   29. CHIP GROUP AND TOGGLE ROW
+   HbChipGroup: one or several chips on, arrows move in a single group, a
+   letter chooses through the hotkeys. The off chip is dashed and reads as
+   a different kind of choice; chosen, it turns warn. HbToggleRow: label,
+   one line of why, and the switch, as one 44 px button.
+   ========================================================================== */
+.hb-chipgroup{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); min-width:0 }
+.hb-chip-off{ border-style:dashed; box-shadow:none; background:transparent }
+.hb-chip.hb-chip-off.is-on{ background:transparent; color:var(--hb-warn); border-color:var(--hb-warn) }
+.hb-chip-key{ font-family:var(--hb-utility); font-size:9px; font-weight:700; opacity:.6; margin-left:2px }
+@media(pointer:coarse){ .hb-chip-key{ display:none } }
+.hb-togrow{
+  display:flex; align-items:center; gap:var(--hb-s3); width:100%; min-height:44px;
+  padding:6px 0; background:none; border:0; border-bottom:1px dashed rgba(26,26,26,.25);
+  color:var(--hb-ink); text-align:left; cursor:pointer;
+}
+.hb-togrow:last-child{ border-bottom:0 }
+.hb-togrow:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-togrow-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px }
+.hb-togrow-label{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em }
+.hb-togrow-why{ font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-togrow-sw{
+  position:relative; width:42px; height:22px; flex:0 0 auto;
+  background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink);
+  transition:background var(--hb-t);
+}
+.hb-togrow-sw::after{
+  content:""; position:absolute; top:2px; left:2px; width:14px; height:14px; background:var(--hb-ink);
+  transition:transform var(--hb-t), background var(--hb-t);
+}
+.hb-togrow.is-on .hb-togrow-sw{ background:var(--hb-pink-10); border-color:var(--hb-pink) }
+.hb-togrow.is-on .hb-togrow-sw::after{ transform:translateX(20px); background:var(--hb-pink) }
+.hb-togrow[disabled]{ cursor:not-allowed; color:var(--hb-ink-4) }
+.hb-togrow[disabled] .hb-togrow-why{ color:var(--hb-ink-4) }
+.hb-togrow[disabled] .hb-togrow-sw{ border-color:var(--hb-ink-4) }
+.hb-togrow[disabled] .hb-togrow-sw::after{ background:var(--hb-ink-4) }
