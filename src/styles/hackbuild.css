@@ -226,6 +226,7 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   color:var(--hb-paper);
   padding:var(--hb-s3);
 }
+.hb-stage-label{ color:var(--hb-paper); opacity:.6 }
 .hb-on-ink{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-on-ink .hb-label{ color:var(--hb-paper); opacity:.6 }
 /* Labels inside a paper surface stay ink even when the surface sits on an
@@ -314,6 +315,7 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 /* Toggle chip inside a bench. Ink fill when on, so the one pink stays free
    for the primary selection of a step. */
 .hb-chip.is-toggle.is-on{ background:var(--hb-ink); color:var(--hb-paper); border-color:var(--hb-ink) }
+@media(pointer:coarse){ .hb-chip{ min-height:44px; min-width:44px; justify-content:center } }
 
 /* Status pill. Always carry an explicit color: a light pill on a light panel
    inherited paper text once and became unreadable. */
@@ -426,7 +428,20 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   padding:5px 0; border-bottom:1px dashed rgba(26,26,26,.25);
 }
 .hb-kv:last-child{ border-bottom:0 }
-.hb-kv .hb-readout{ font-size:18px }
+.hb-kv .hb-readout{ font-size:18px; min-width:0; overflow-wrap:anywhere }
+.hb-kv > .hb-copymark{ align-self:center; margin-left:calc(var(--hb-s4) * -1 + var(--hb-s1)) }
+/* Copy mark. A quiet square after a value; reads check once copied and
+   x when the browser refused, then goes back after 1.5 s. */
+.hb-copymark{
+  flex:none; display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px; padding:0; background:transparent; color:var(--hb-ink-3);
+  border:1px solid transparent; cursor:pointer;
+}
+.hb-copymark:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:1px }
+.hb-copymark.is-copied{ color:var(--hb-ok) }
+.hb-copymark.is-failed{ color:var(--hb-err) }
+@media (hover:hover) and (pointer:fine){ .hb-copymark:hover{ color:var(--hb-ink); border-color:var(--hb-ink) } }
+@media(pointer:coarse){ .hb-copymark{ width:44px; height:44px } }
 
 /* ==========================================================================
    6. DATA
@@ -449,8 +464,9 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   background:var(--hb-void); color:var(--hb-paper);
   border:var(--hb-border) solid var(--hb-ink);
   font-family:var(--hb-readout); font-size:16px; line-height:1.35;
-  padding:var(--hb-s3); height:180px; overflow:auto;
+  padding:var(--hb-s3); height:var(--hb-console-h, 180px); overflow:auto;
 }
+.hb-console-empty{ color:var(--hb-lit-label) }
 .hb-console .t{ color:var(--hb-ink-4); margin-right:8px }
 .hb-console .hit{ color:var(--hb-pink) }
 
@@ -609,6 +625,13 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 }
 @media (hover:hover) and (pointer:fine){ .hb-tile:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--hb-pink) } }
 .hb-tile:active{ transform:translate(1px,1px); box-shadow:1px 1px 0 var(--hb-ink) }
+.hb-tile:disabled{ opacity:.45; cursor:not-allowed; transform:none; box-shadow:none }
+.hb-tile.is-small{ min-height:64px; padding:var(--hb-s2) }
+.hb-tile.is-small .n{ font-size:14px }
+.hb-tile-media{ display:block; aspect-ratio:4/3; margin:calc(var(--hb-s3) * -1) calc(var(--hb-s3) * -1) var(--hb-s1); background:var(--hb-void); border-bottom:var(--hb-border) solid var(--hb-ink); overflow:hidden }
+.hb-tile.is-small .hb-tile-media{ margin:calc(var(--hb-s2) * -1) calc(var(--hb-s2) * -1) var(--hb-s1) }
+.hb-tile-media > img,.hb-tile-media > canvas,.hb-tile-media > svg{ display:block; width:100%; height:100%; object-fit:cover }
+.hb-tiles.is-small{ grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:var(--hb-s2) }
 .hb-tile.is-on{ background:var(--hb-pink); color:var(--hb-ink); border-color:var(--hb-ink) }
 .hb-tile .n{ font-family:var(--hb-display); font-size:17px; line-height:1.05 }
 .hb-tile .s{ font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.08em; opacity:.6 }
@@ -1556,6 +1579,11 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-welcome-steps > li{ border:var(--hb-border) solid var(--hb-ink); padding:var(--hb-s2) }
 .hb-welcome-steps b{ display:block; font-family:var(--hb-readout); font-size:22px; font-weight:400; color:var(--hb-pink) }
 .hb-welcome-steps p{ margin:calc(var(--hb-s1) / 2) 0 0; font-size:12px }
+.hb-welcome-steps > li{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--hb-s1) }
+.hb-welcome-steps > li.is-done{ border-style:dashed; color:var(--hb-ink-3) }
+.hb-welcome-steps > li.is-done b{ color:var(--hb-ok) }
+.hb-welcome-count{ font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-2) }
+@media(pointer:coarse){ .hb-welcome-steps .hb-btn{ min-height:44px } }
 .hb-welcome-close{ position:absolute; top:var(--hb-s2); right:var(--hb-s2) }
 .hb-welcome .hb-tiles{ grid-template-columns:repeat(auto-fit,minmax(132px,1fr)) }
 @media(min-width:641px){ .hb-welcome-steps{ grid-template-columns:repeat(4,1fr) } }
@@ -1732,15 +1760,25 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 /* Inset. A picture in picture card on the viewport: the eye view, a
    depth map, a mask. Ink head, the media at its own ratio. */
 .hb-inset{
-  width:44cqw; margin:0;
+  width:min(100%, max(44cqw, 168px)); margin:0;
   background:var(--hb-void); color:var(--hb-paper);
   border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
 }
 .hb-inset-hd{
   font-family:var(--hb-readout); font-size:15px; letter-spacing:.04em; text-transform:uppercase;
   background:var(--hb-ink); color:var(--hb-paper); padding:2px var(--hb-s2);
-  display:flex; align-items:center; gap:var(--hb-s2);
+  display:flex; align-items:center; gap:var(--hb-s2); white-space:nowrap; min-width:0; overflow:hidden;
 }
+.hb-inset-title{ min-width:0; overflow:hidden; text-overflow:ellipsis }
+.hb-inset-toggle{ display:inline-flex; align-items:center; gap:var(--hb-s1); min-width:0; padding:0; background:transparent; border:0; color:inherit; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer }
+.hb-inset-caret{ flex:none; width:1ch }
+.hb-inset-modes{ display:flex; border-bottom:1px solid var(--hb-ink-border); background:var(--hb-ink) }
+.hb-inset-mode{ flex:1 1 0; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:1px 4px; background:transparent; border:0; color:var(--hb-lit-label); font-family:var(--hb-readout); font-size:14px; letter-spacing:.04em; text-transform:uppercase; cursor:pointer }
+.hb-inset-mode + .hb-inset-mode{ border-left:1px solid var(--hb-ink-border) }
+.hb-inset-mode[aria-pressed="true"]{ background:var(--hb-paper); color:var(--hb-ink) }
+.hb-inset-toggle:focus-visible,.hb-inset-mode:focus-visible{ outline:2px solid var(--hb-pink); outline-offset:1px }
+.hb-inset.is-closed{ box-shadow:none }
+@media(pointer:coarse){ .hb-inset-toggle,.hb-inset-mode{ min-height:44px } .hb-inset-toggle{ min-width:44px; flex:1 1 auto } .hb-inset-mode{ min-width:44px } }
 .hb-inset-media{ position:relative; aspect-ratio:var(--hb-inset-ratio, 4/3) }
 .hb-inset-media > canvas,.hb-inset-media > video,.hb-inset-media > img{ position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover }
 @container (min-width:561px){ .hb-inset{ width:min(var(--hb-inset-w), 46cqw) } }
@@ -1748,7 +1786,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 /* Bubble. A speech or thought bubble pinned over a point in the scene.
    The page sets left and top in px; the bubble sits above the point. */
 .hb-bubble{
-  position:absolute; z-index:8; pointer-events:none;
+  position:absolute; z-index:8; pointer-events:none; left:var(--hb-x, 0); top:var(--hb-y, 0);
   transform:translate(-50%, calc(-100% - 10px));
   background:var(--hb-paper-raised); color:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
@@ -1762,6 +1800,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 }
 .hb-bubble.is-ink{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-bubble[hidden]{ display:none }
+.hb-bubble.is-clamped > .hb-bubble-text{ display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:var(--hb-lines, 3); line-clamp:var(--hb-lines, 3); overflow:hidden }
 
 /* Drop zone. Drop a file or pick one. The file input lives inside. While
    a file hovers, the dashes go pink: structural, like the focus ring. */
@@ -2003,6 +2042,8 @@ button.hb-tseg{ width:100%; background:none; border-top:0; border-right:0; text-
   left:calc(var(--hb-at, 0) * 100%); background:var(--hb-paper);
 }
 .hb-wave.is-off > canvas{ opacity:.35 }
+.hb-wave.is-seek{ cursor:col-resize; touch-action:none }
+.hb-wave.is-seek:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 
 /* Feeds. Small multiples of a sense or a camera: each a void canvas with
    a utility caption, pixel art left square. */

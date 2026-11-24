@@ -36,6 +36,12 @@ const code = `<HbTiles>
         @click="active = index"
       />
     </HbTiles>
+    <p class="hb-label" style="margin: 24px 0 8px">small, with media, one disabled</p>
+    <HbTiles small style="max-width: 520px">
+      <HbTile v-for="(tile, index) in tiles" :key="tile.name" small :name="tile.name" :sub="tile.sub" :disabled="index === 3">
+        <template #media><svg viewBox="0 0 40 30" preserveAspectRatio="none"><polyline :points="`0,${20 - index * 3} 10,${12 + index} 20,${22 - index * 2} 30,${8 + index * 3} 40,15`" fill="none" stroke="var(--hb-slime)" stroke-width="1.5" /></svg></template>
+      </HbTile>
+    </HbTiles>
   </DemoSection>
 
   <PropsTable
@@ -43,6 +49,9 @@ const code = `<HbTiles>
       { prop: 'name', type: 'string', notes: 'required, the marker face' },
       { prop: 'sub', type: 'string', notes: 'the Plex sub line' },
       { prop: 'active', type: 'boolean', default: 'false' },
+      { prop: 'small', type: 'boolean', default: 'false', notes: '64 px; HbTiles small narrows the grid' },
+      { prop: 'disabled', type: 'boolean', default: 'false' },
+      { prop: 'slot media', type: 'thumb drawn from state, above the name' },
     ]"
   />
 </template>

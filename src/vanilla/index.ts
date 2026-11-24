@@ -55,3 +55,5 @@ export { kindWord, memoryCounts, scoreText, memoryMatch, recallScore, recallRank
 export type { MemoryEntry, RankedHit, RecallHit, RecallPart, RecallWeights } from './memory'
 export { micInput, micLive, MIC_WORDS } from './mic'
 export type { MicInput, MicInputOptions, MicState, RecognitionLike } from './mic'
+export { bubbleTtl, bubbleTimer } from './bubble'
+export type { BubbleTimerHandle } from './bubble'

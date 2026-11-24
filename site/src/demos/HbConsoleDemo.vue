@@ -30,7 +30,8 @@ const code = `<HbConsole :lines="[
     note="Void background, VT323, newest line at the top, one color per severity from the lit set. Pass lines oldest first; the component flips them."
     :code="code"
   >
-    <HbConsole :lines="lines" height="150px" />
+    <HbConsole :lines="lines" height="150px" :max="40" />
+    <HbConsole :lines="[]" height="64px" empty="no actions yet. load the model, give a command." style="margin-top: 12px" />
     <div style="margin-top: 12px">
       <HbButton size="sm" variant="secondary" @click="append">append a line</HbButton>
     </div>
@@ -41,6 +42,8 @@ const code = `<HbConsole :lines="[
       { prop: 'lines', type: 'Array<{text, t?, level?}>', notes: 'level: ok, warn, err, info, hit' },
       { prop: 'newestFirst', type: 'boolean', default: 'true' },
       { prop: 'height', type: 'string', default: `'180px'` },
+      { prop: 'max', type: 'number', default: '0', notes: 'keep the newest n lines' },
+      { prop: 'empty', type: 'string', default: `'nothing logged yet.'` },
     ]"
   />
 </template>

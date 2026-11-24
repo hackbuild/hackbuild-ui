@@ -1,10 +1,11 @@
 /* Site-specific layout glue. Tokens and components come from the system;
    this file only arranges the docs shell and demo canvases. */
 
-.site-main{ padding:var(--hb-s6) 0 var(--hb-s8) }
+.site-main{ padding-top:var(--hb-s6); padding-bottom:var(--hb-s8) }
 
 /* components section: sticky side nav beside content */
 .site-cols{ display:grid; grid-template-columns:220px 1fr; gap:var(--hb-s6); align-items:start }
+.site-cols > *{ min-width:0 }
 .site-side{ position:sticky; top:var(--hb-s4); max-height:calc(100vh - 32px); overflow:auto; padding-right:var(--hb-s2) }
 @media(max-width:900px){
   .site-cols{ grid-template-columns:1fr }
@@ -76,3 +77,6 @@
 /* code blocks on the site */
 .site-code{ position:relative; margin:0 }
 .site-code .copy{ position:absolute; top:8px; right:8px }
+.demo-inset-fill{ position:absolute; inset:0; background:var(--hb-ink-inset) }
+.demo-inset-fill.is-depth{ background:var(--hb-lit-dim) }
+.demo-inset-fill.is-mask{ background:var(--hb-plate-teal) }

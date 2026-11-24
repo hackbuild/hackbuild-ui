@@ -1168,3 +1168,23 @@ Vanilla: `splitParts`, `statsText`, `clip`, `argsLine`, `argsBlock`,
 Vanilla: `memoryCounts`, `kindWord`, `scoreText`, `memoryMatch` (keyword
 stub for demos and stores with no ranker), `recallScore`, `recallRank`,
 `recallLine`; `micInput`, `micLive`, `MIC_WORDS`.
+
+### Small changes: inset, wave, welcome, tiles, console, bubble, stage, kv, hash, chip
+
+| Part | Classes | Change |
+|---|---|---|
+| `HbInset` | `.hb-inset-title`, `-toggle`, `-caret`, `-modes`, `-mode`, `.is-closed` | the head stays one line and cuts title and aux with an ellipsis; `collapsible` with `v-model:open` hides the media from the head; `modes` with `v-model:mode` put a view bar under the head. Width is at least 168 px so the head and the bar hold their 44 px targets on a phone |
+| `HbWave` | `.is-seek` | the level rail base: `kept` colours each bar slime or grey, `floor` a dashed amber line, `gate` a dotted red line, `ticks` along the foot; `seekable` turns it into a slider that takes a click, a drag, or arrow keys (shift for 10 percent, Home, End) and emits `seek` |
+| `HbWelcome` | `.hb-welcome-n`, `-count`, `li.is-done` | steps tick from live state (`done`), show a live `count`, or carry an `action` that emits `step`; starts take a `thumb`; `persistKey` remembers a close |
+| `HbTile`, `HbTiles` | `.hb-tile.is-small`, `.hb-tile-media`, `.hb-tiles.is-small` | `small` for a preset grid in a panel; a `media` slot above the name; `disabled` |
+| `HbConsole` | `.hb-console-empty` | `max` keeps the newest lines; `empty` names what will land there; height through `--hb-console-h`, no inline style |
+| `HbBubble` | `.hb-bubble-text`, `.is-clamped` | clamped at `lines` (3); `ttl` in ms or `auto` for reading time, 1.5 s plus 60 ms a character; `hold` keeps it up while the voice speaks; emits `update:show` and `expire`; position through `--hb-x` and `--hb-y` |
+| `HbStage` | `.hb-stage-label` | the label colour is a class, no inline style |
+| `HbKv`, `HbHash` | `.hb-copymark`, `.is-copied`, `.is-failed` | `copy` adds a quiet mark after the value that reads check once copied and x when the browser refused, 44 px on a coarse pointer |
+| `HbChip` | `.hb-chip-key` | `hotkey` shows the key on the chip and binds it in the shared registry with `hotkeyLabel` and `hotkeyGroup` for the key map; 44 px on a coarse pointer |
+
+Vanilla: `bubbleTtl`, `bubbleTimer`.
+
+The docs site keeps the 16 px shell gutter on every page and its grid
+columns shrink below their code blocks: no sideways scroll at 320 px on
+any component page (measured, 111 pages).

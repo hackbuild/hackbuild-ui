@@ -109,6 +109,10 @@ export const registry: RegistryGroup[] = [
       { name: 'HbPanel', blurb: 'raised paper with the block shadow' },
       { name: 'HbCard', blurb: 'panel that lifts when interactive' },
       { name: 'HbStage', blurb: 'the void, where the machine draws' },
+      { name: 'HbInset', blurb: 'a derived view: collapsible, view modes, one line head' },
+      { name: 'HbWave', blurb: 'waveform or level rail with floor, gate and seek' },
+      { name: 'HbBubble', blurb: 'speech over a point, clamped, reading time' },
+      { name: 'HbWelcome', blurb: 'steps that tick from live state, three starts' },
       { name: 'HbCallout', blurb: 'pink left rule, one or two per page' },
       { name: 'HbFold', blurb: 'disclosure for fiddly controls' },
       { name: 'HbSticker', blurb: 'rotated hand lettered tag' },
@@ -143,6 +147,7 @@ export const registry: RegistryGroup[] = [
     entries: [
       { name: 'HbTag', blurb: 'static VT323 tag on a plate' },
       { name: 'HbKv', blurb: 'label left, readout right' },
+      { name: 'HbHash', blurb: 'sha-256 against the known hash, copy mark' },
       { name: 'HbTable', blurb: 'ink head, stripes, pink wash on hover' },
       { name: 'HbList', blurb: 'bordered stack of rows' },
       { name: 'HbRow', blurb: 'list row, fills pink when active' },
