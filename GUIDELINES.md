@@ -1296,4 +1296,4 @@ parts by category; the changelog has the detail.
 | 0.6.7 | HbSpokenText, HbMethodCard, HbImageSlot, HbCameraTile, HbHistoryStrip, HbSeed; `.hb-hint` (5) | 17, speech and image |
 | 0.6.8 | HbPromptCanvas, HbInstanceList, HbRange2, HbMonitorDock, HbSplit | 17, masks and views |
 | 0.7.0 | HbArtboard, HbPromptCanvas `bare` | 17, artboard |
-| 0.7.1 | HbStageCaption, HbNameHud, HbTransport, HbPad; HbViewport and HbStageOverlay `telemetry`, `hint`, `caption`, `pad` slots | 17, stage, transport and pad |
+| 0.7.1 | HbStageCaption, HbNameHud, HbTransport, HbPad; HbViewport and HbStageOverlay `telemetry`, `hint`, `caption`, `pad` slots; HbMemoryPanel `pin`, HbHistoryStrip non image `thumb` | 17, stage, transport and pad |

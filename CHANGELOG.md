@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.1
+
+- HbStageCaption, HbNameHud, HbTransport, HbPad. Vanilla `stage`, `pad`,
+  `transport` (`transportKeys`, `idleChrome`).
+- HbViewport and HbStageOverlay: `telemetry`, `hint`, `caption` and
+  `pad` slots; HbStageOverlay gains the `b` band.
+- HbMemoryPanel passes `pinned` to each row and emits `pin(id, next)`.
+- HbHistoryStrip: `thumb` takes svg markup or a short label, `thumb`
+  slot; vanilla `thumbKind`, `thumbSrc`.
+- HbMethodCard: the size and time line wraps under 380 px.
+
 ## 0.7.0
 
 - HbArtboard: a board that pans and zooms by mouse, wheel, pinch and
