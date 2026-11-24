@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { HbButton, HbHudStat, HbProgress, HbTag, HbViewport } from '@hackbuild/ui'
+import { ref } from 'vue'
+import { HbButton, HbHudStat, HbNameHud, HbPad, HbProgress, HbStageCaption, HbTag, HbViewport, type PadVector } from '@hackbuild/ui'
+import { CHAR_NAME, ECHO, REPLY } from '../fixtures/stage'
+
+const move = ref<PadVector>({ x: 0, y: 0 })
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 
@@ -11,6 +15,17 @@ const code = `<HbViewport label="scene" aspect="16/9">
 </script>
 
 <template>
+  <DemoSection title="Character stage" note="The 0.7.1 slots on one stage: name hud with a privacy chip top left, telemetry under it, then at the foot a hint, the caption, the verb band and the pad. The pad shows on a touch screen only. On a phone this stage asks for 3/4 through --hb-vp-ratio-sm.">
+    <HbViewport label="character stage" style="--hb-vp-ratio-sm: 3/4">
+      <template #tl><HbNameHud :name="CHAR_NAME" state="talking"><HbTag>camera on</HbTag></HbNameHud></template>
+      <template #telemetry><HbHudStat label="goal" value="red block" /><HbHudStat label="turn" :value="4" :digits="0" /></template>
+      <template #tr><HbHudStat label="fps" :value="59.9" /></template>
+      <template #hint><span>drag to orbit, arrows to walk</span></template>
+      <template #caption><HbStageCaption :echo="ECHO" :line="REPLY" :who="CHAR_NAME" :max-chars="160" /></template>
+      <template #b><HbButton>wave</HbButton><HbButton>sit</HbButton></template>
+      <template #pad><HbPad v-model="move" action="act" /></template>
+    </HbViewport>
+  </DemoSection>
   <DemoSection title="Viewport" note="The scene a tool draws in, with corner overlays and a bottom band of verbs. Under 640 px it goes square." :code="code">
     <HbViewport label="scene">
       <template #tl><HbTag>orbit</HbTag></template>
@@ -33,7 +48,7 @@ const code = `<HbViewport label="scene" aspect="16/9">
       { prop: 'label', type: 'string' },
       { prop: 'coverTitle / coverNote', type: 'string' },
       { prop: 'coverError', type: 'boolean', default: 'false' },
-      { prop: 'slots', type: 'default, tl, tr, bl, br, b, center, cover' },
+      { prop: 'slots', type: 'default, tl, tr, bl, br, b, center, cover; telemetry, hint, caption, pad' },
     ]"
   />
 </template>

@@ -30,7 +30,7 @@ const code = `<HbStageOverlay graph>
     :rows="[
       { prop: 'graph', type: 'boolean', default: 'false' },
       { prop: 'quiet', type: 'boolean', default: 'false', notes: 'drops the pink shadow' },
-      { prop: 'slots', type: 'default, tl, tr, bl, br, center' },
+      { prop: 'slots', type: 'default, tl, tr, bl, br, center; b, telemetry, hint, caption, pad' },
     ]"
   />
 </template>

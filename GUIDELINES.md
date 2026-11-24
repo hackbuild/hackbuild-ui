@@ -1261,7 +1261,22 @@ Vanilla: `ART_KEYS`, `ART_FIT`, `fitScale`, `boardRect`, `toBoard`,
 `layerCorners`, `hitLayer`, `snapRot`, `snapTo`, `zoomWord`,
 `addStrokePoint`, `applyStroke`, `artViewKey`.
 
-## 18. Parts added in 0.6.0 to 0.7.0
+### Stage, transport and pad
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbViewport`, `HbStageOverlay` slots | `.hb-ov-foot`, `.hb-ov-hint`, `.hb-ov-cap`, `.hb-ov-pad`, `.hb-ov-tele` | `telemetry` stacks under the top left content (goal, turn, figures). The foot stacks `hint`, `caption`, `b` and `pad` from the top down and passes presses through to the scene except on its controls. The hint hides under 561 px of viewport, since it names keys and mouse moves. `HbStageOverlay` gains the `b` band too |
+| `HbStageCaption` | `.hb-caption`, `-echo`, `-line`, `-who` | `echo` is what the user said, small in lit info; `line` is the reply on the void with `who` over it. A long line keeps its last `maxChars` (320), cut at a word, and the box is bottom aligned, so the newest words stay. Two lines under 561 px of viewport, four above. `aria-live` polite on the line |
+| `HbNameHud` | `.hb-namehud`, `-name`, `-state`, `.is-idle`, `.is-thinking`, `.is-listening`, `.is-talking` | the name on paper and one state word from the signal that drives the mouth and the mic gate: idle quiet, thinking lit warn, listening lit info with a live square, talking pink. The default slot takes privacy chips (`camera on`, `mic live`), shown while a track is live |
+| `HbTransport` | `.hb-transport`, `.hb-tp-row`, `-btn`, `-track`, `-chaps`, `-chap`, `-scrub`, `-time`, `.is-idle` | play, previous and next, a chapter strip over the scrub, time, speed and loop on one ink bar. Chapters share the strip by length; previous goes to the start of the current chapter after 2 s, else the one before. With no chapters previous and next emit `step`. `keys` binds Space (play, pause), Escape (stop) and the arrows (step) on the window, ignored while typing and where the focused control owns the key. `idle` fades the bar while the pointer rests and the clip plays; focus inside keeps it. The scrub takes its own row under 561 px; 44 px targets on a coarse pointer |
+| `HbPad` | `.hb-pad`, `-base`, `-knob`, `-arrow`, `-n`, `-s`, `-w`, `-e`, `-act`, `.is-dpad`, `.is-always` | a stick or d-pad and one action button for moving a body on a phone. Shown on a coarse pointer only unless `always`. The base takes the pointer (`touch-action: none`) and holds it by pointer capture, so the drag survives leaving the base; release returns to rest. Dead zone 0.12 of the radius, rescaled past it; the d-pad snaps to eight directions. Focused, the base reads the arrow keys; `keys` reads arrows and WASD on the window and `actionKey` (e) acts. Screen axes: forward is y below zero. Square, like everything else: the circle is in the vector, not the drawing |
+
+Vanilla: `captionText`, `hudWord`, `HUD_WORDS`; `pad`, `stickVector`,
+`snap8`, `keyVector`, `dirWord`, `PAD_KEYS`; `RATES`, `nextRate`,
+`rateText`, `chapterAt`, `chapterStep`, `chapterSpans`, `timeLine`,
+`transportKeys`, `idleChrome`.
+
+## 18. Parts added in 0.6.0 to 0.7.1
 
 Where to find each part added since 0.6.0. The docs site groups the same
 parts by category; the changelog has the detail.
@@ -1281,3 +1296,4 @@ parts by category; the changelog has the detail.
 | 0.6.7 | HbSpokenText, HbMethodCard, HbImageSlot, HbCameraTile, HbHistoryStrip, HbSeed; `.hb-hint` (5) | 17, speech and image |
 | 0.6.8 | HbPromptCanvas, HbInstanceList, HbRange2, HbMonitorDock, HbSplit | 17, masks and views |
 | 0.7.0 | HbArtboard, HbPromptCanvas `bare` | 17, artboard |
+| 0.7.1 | HbStageCaption, HbNameHud, HbTransport, HbPad; HbViewport and HbStageOverlay `telemetry`, `hint`, `caption`, `pad` slots | 17, stage, transport and pad |

@@ -3901,3 +3901,174 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-pc.is-bare{ height:100% }
 .hb-pc.is-bare .hb-pc-well{ height:100%; background:none; border:0; box-shadow:none }
 .hb-pc.is-bare .hb-pc-frame{ max-width:none; height:100% }
+
+/* Viewport foot and the 0.7.1 slots. The foot stacks hint, caption, the
+   verb band and the pad from the top down, pinned to the bottom edge and
+   passing presses through to the scene except on its controls. The
+   telemetry group sits in the top left corner under the name hud. */
+.hb-ov-foot{
+  left:var(--hb-s2); right:var(--hb-s2); bottom:var(--hb-s2);
+  align-items:stretch; gap:var(--hb-s2); pointer-events:none;
+}
+.hb-ov-foot > .hb-ov-b{ position:static; pointer-events:none }
+.hb-ov-foot > .hb-ov-b > *,.hb-ov-foot > .hb-ov-pad > *{ pointer-events:auto }
+.hb-ov-hint{ display:none; justify-content:center }
+.hb-ov-hint > *{
+  font-family:var(--hb-body); font-size:12px; line-height:1.4; max-width:100%;
+  background:color-mix(in srgb, var(--hb-void) 80%, transparent); color:var(--hb-paper);
+  border:1px solid var(--hb-ink-border); padding:var(--hb-s1) var(--hb-s2);
+}
+.hb-ov-cap{ display:flex; justify-content:center }
+.hb-ov-tele{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--hb-s1) }
+@media(min-width:641px){ .hb-ov-foot{ left:var(--hb-s3); right:var(--hb-s3); bottom:var(--hb-s3) } }
+/* Under 561 px of viewport the hint gives way to the scene: it names keys
+   and mouse moves a phone does not have. */
+@container (min-width:561px){ .hb-ov-hint{ display:flex } }
+
+/* Stage caption. What the user said as a small lit info echo, the reply
+   as a body line on the void, the speaker in the lit label. The line
+   keeps its newest words: it is cut to a tail and bottom aligned, so an
+   overflow leaves at the top. Presses pass through to the scene. */
+.hb-caption{
+  display:flex; flex-direction:column; align-items:center; gap:var(--hb-s1);
+  max-width:min(720px, 100%); pointer-events:none; text-align:center;
+}
+.hb-caption-echo{
+  font-family:var(--hb-utility); font-size:11px; letter-spacing:.03em; color:var(--hb-lit-info);
+  background:color-mix(in srgb, var(--hb-void) 80%, transparent);
+  border:1px solid var(--hb-ink-border); padding:calc(var(--hb-s1) / 2) var(--hb-s2); max-width:100%;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.hb-caption-line{
+  display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden;
+  max-height:calc(2 * 1.5em + 2 * var(--hb-s1));
+  font-family:var(--hb-body); font-size:14px; line-height:1.5; color:var(--hb-paper);
+  background:color-mix(in srgb, var(--hb-void) 86%, transparent);
+  border:1px solid var(--hb-ink-border); border-left:var(--hb-border-hd) solid var(--hb-paper);
+  padding:var(--hb-s1) var(--hb-s2); overflow-wrap:anywhere;
+}
+.hb-caption-who{
+  display:block; font-family:var(--hb-utility); font-size:10px; font-weight:400;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--hb-lit-label);
+}
+@container (min-width:561px){
+  .hb-caption-line{ font-size:16px; padding:var(--hb-s2) var(--hb-s3); max-height:calc(4 * 1.5em + 2 * var(--hb-s2)) }
+  .hb-caption-echo{ white-space:normal; overflow-wrap:anywhere }
+}
+
+/* Name hud. The name on paper, the state word beside it in the readout
+   face: idle quiet, thinking lit warn, listening lit info with a live
+   square, talking pink. Chips that say a camera or mic is live follow. */
+.hb-namehud{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s1); font-family:var(--hb-readout); font-size:17px; line-height:1 }
+.hb-namehud-name{
+  font-weight:400; background:var(--hb-paper); color:var(--hb-ink);
+  border:1px solid var(--hb-ink); padding:3px var(--hb-s2) 2px; text-transform:uppercase;
+}
+.hb-namehud-state{
+  display:inline-flex; align-items:center; gap:var(--hb-s1);
+  background:color-mix(in srgb, var(--hb-void) 80%, transparent); color:var(--hb-lit-label);
+  border:1px solid var(--hb-ink-border); padding:3px var(--hb-s2) 2px;
+}
+.hb-namehud.is-thinking .hb-namehud-state{ color:var(--hb-lit-warn) }
+.hb-namehud.is-listening .hb-namehud-state{ color:var(--hb-lit-info) }
+.hb-namehud.is-listening .hb-namehud-state::before{ content:""; width:7px; height:7px; background:var(--hb-lit-err) }
+.hb-namehud.is-talking .hb-namehud-state{ background:var(--hb-pink); color:var(--hb-paper); border-color:var(--hb-pink) }
+.hb-namehud .hb-tag{ font-size:13px }
+@container (min-width:561px){ .hb-namehud{ font-size:19px } }
+
+/* Transport. Play, previous and next, the chapter strip over the scrub,
+   the time, speed and loop. One ink bar; the scrub takes its own row
+   under 561 px of container. Chapter cells share the clip by length;
+   the current one is paper, the ones played are dim. The whole bar
+   fades while the pointer rests and the clip plays (is-idle). */
+.hb-transport{
+  container-type:inline-size; width:100%;
+  background:var(--hb-ink); color:var(--hb-paper);
+  border:var(--hb-border) solid var(--hb-ink);
+  transition:opacity var(--hb-t-slow);
+}
+.hb-transport.is-idle{ opacity:0 }
+.hb-transport.is-idle:focus-within{ opacity:1 }
+.hb-tp-row{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s1); padding:var(--hb-s1) }
+.hb-tp-btn{
+  display:inline-grid; place-items:center; min-width:36px; height:36px; padding:0 var(--hb-s1);
+  background:var(--hb-ink-2); color:var(--hb-paper); border:1px solid var(--hb-ink-border);
+  font-family:var(--hb-readout); font-size:16px; line-height:1; cursor:pointer;
+}
+.hb-tp-btn.is-play{ background:var(--hb-paper); color:var(--hb-ink); border-color:var(--hb-paper) }
+.hb-tp-btn[aria-pressed="true"]{ background:var(--hb-paper); color:var(--hb-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-tp-btn:hover{ border-color:var(--hb-paper) } }
+.hb-tp-btn:focus-visible,.hb-tp-chap:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:1px }
+.hb-tp-btn:disabled{ opacity:.4; cursor:default }
+.hb-tp-track{ order:9; flex:1 0 100%; min-width:0; display:flex; flex-direction:column; gap:2px }
+.hb-tp-chaps{ display:flex; gap:2px; overflow:hidden }
+.hb-tp-chap{
+  flex:var(--hb-share, 1) 1 0; min-width:18px; height:20px; padding:0 var(--hb-s1); overflow:hidden;
+  background:color-mix(in srgb, var(--hb-paper) 14%, transparent); color:var(--hb-lit-label);
+  border:1px solid var(--hb-ink-border); cursor:pointer;
+  font-family:var(--hb-utility); font-size:10px; text-align:left; white-space:nowrap; text-overflow:ellipsis;
+}
+.hb-tp-chap.is-done{ background:color-mix(in srgb, var(--hb-paper) 30%, transparent); color:var(--hb-paper) }
+.hb-tp-chap.is-on{ background:var(--hb-paper); color:var(--hb-ink); border-color:var(--hb-paper) }
+.hb-tp-scrub{ width:100%; height:28px; margin:0; accent-color:var(--hb-pink) }
+.hb-tp-time{ font-family:var(--hb-readout); font-size:17px; color:var(--hb-lit-label); white-space:nowrap; font-variant-numeric:tabular-nums; padding:0 var(--hb-s1) }
+.hb-tp-sp{ flex:1 1 0 }
+@container (min-width:561px){
+  .hb-tp-track{ order:0; flex:1 1 160px }
+  .hb-tp-sp{ display:none }
+}
+@media(pointer:coarse){
+  .hb-tp-btn{ min-width:44px; height:44px }
+  .hb-tp-chap{ height:44px; min-width:44px }
+  .hb-tp-scrub{ height:44px }
+}
+
+/* Pad. A touch stick or d-pad for moving a body on a phone, and one
+   action button that names what it does. Square like everything else:
+   the knob is clamped to a circle in the vector, not in the drawing.
+   Shown on a coarse pointer only, unless is-always. The base takes the
+   pointer (touch-action none) and holds it by pointer capture. */
+.hb-pad{ display:none; justify-content:space-between; align-items:flex-end; gap:var(--hb-s3); pointer-events:none }
+.hb-pad.is-always{ display:flex }
+@media(pointer:coarse){ .hb-pad{ display:flex } }
+.hb-pad > *{ pointer-events:auto }
+.hb-pad-base{
+  --hb-pad-r:24px;
+  position:relative; width:92px; height:92px; flex:0 0 auto;
+  background:color-mix(in srgb, var(--hb-void) 70%, transparent);
+  border:var(--hb-border) solid var(--hb-paper); box-shadow:var(--hb-shadow);
+  touch-action:none; user-select:none; -webkit-user-select:none; cursor:grab;
+}
+.hb-pad-base:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:2px }
+.hb-pad-base::before,.hb-pad-base::after{ content:""; position:absolute; background:var(--hb-ink-border) }
+.hb-pad-base::before{ left:50%; top:var(--hb-s2); bottom:var(--hb-s2); width:1px }
+.hb-pad-base::after{ top:50%; left:var(--hb-s2); right:var(--hb-s2); height:1px }
+.hb-pad-knob{
+  position:absolute; left:50%; top:50%; width:44px; height:44px; z-index:1;
+  background:var(--hb-paper); border:var(--hb-border) solid var(--hb-ink);
+  transform:translate(calc(-50% + var(--hb-pad-x, 0) * var(--hb-pad-r)), calc(-50% + var(--hb-pad-y, 0) * var(--hb-pad-r)));
+}
+.hb-pad-base:not([data-dir=""]) .hb-pad-knob{ background:var(--hb-pink); border-color:var(--hb-paper) }
+.hb-pad.is-dpad .hb-pad-knob{ display:none }
+.hb-pad-arrow{ position:absolute; width:0; height:0; border:7px solid transparent; z-index:1 }
+.hb-pad-n{ left:50%; top:var(--hb-s1); transform:translateX(-50%); border-bottom-color:var(--hb-lit-label) }
+.hb-pad-s{ left:50%; bottom:var(--hb-s1); transform:translateX(-50%); border-top-color:var(--hb-lit-label) }
+.hb-pad-w{ top:50%; left:var(--hb-s1); transform:translateY(-50%); border-right-color:var(--hb-lit-label) }
+.hb-pad-e{ top:50%; right:var(--hb-s1); transform:translateY(-50%); border-left-color:var(--hb-lit-label) }
+.hb-pad-base[data-dir*="n"] .hb-pad-n{ border-bottom-color:var(--hb-pink) }
+.hb-pad-base[data-dir*="s"] .hb-pad-s{ border-top-color:var(--hb-pink) }
+.hb-pad-base[data-dir*="w"] .hb-pad-w{ border-right-color:var(--hb-pink) }
+.hb-pad-base[data-dir*="e"] .hb-pad-e{ border-left-color:var(--hb-pink) }
+.hb-pad-act{
+  min-width:56px; height:56px; padding:0 var(--hb-s2);
+  background:var(--hb-paper); color:var(--hb-ink); border:var(--hb-border) solid var(--hb-ink);
+  box-shadow:var(--hb-shadow); cursor:pointer; touch-action:manipulation;
+  font-family:var(--hb-utility); font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+}
+.hb-pad-act:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--hb-ink) }
+.hb-pad-act:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:2px }
+@container (min-width:561px){
+  .hb-pad-base{ --hb-pad-r:30px; width:104px; height:104px }
+}
+@media (prefers-reduced-motion:reduce){ .hb-transport{ transition:none } }
+@media(pointer:coarse){ .hb-ov-b .hb-btn{ min-width:44px; min-height:44px } }
