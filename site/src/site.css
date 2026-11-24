@@ -44,6 +44,7 @@
 .demo-back{
   position:fixed; bottom:14px; right:14px; z-index:var(--hb-z-sticky);
 }
+.demo-rack-body{ padding-top:var(--hb-s3) }
 
 /* home hero */
 .home-hero{ position:relative; padding:var(--hb-s8) 0 var(--hb-s7) }

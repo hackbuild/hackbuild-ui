@@ -709,6 +709,52 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   .hb-app .hb-main,.hb-app .hb-rail{ overflow:auto }
 }
 
+/* The foot: the dock (composer or primary action) over the status strip.
+   Stacked under 901 px the page scrolls as one, so the foot sticks to the
+   bottom of the screen: the input never scrolls away (phone rule). From
+   901 px the shell is pinned and the foot sits at its bottom edge. */
+.hb-app.has-dock{ min-height:100vh; min-height:100dvh }
+.hb-app.has-dock > .hb-work{ align-content:start }
+.hb-app-foot{ position:sticky; bottom:0; z-index:var(--hb-z-sticky) }
+.hb-dock{
+  display:flex; align-items:center; flex-wrap:wrap; gap:var(--hb-s2);
+  background:var(--hb-paper-sunk); border-top:var(--hb-border-hd) solid var(--hb-ink);
+  padding:var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-left));
+}
+.hb-dock > .hb-composer{ flex:1 1 100%; padding:0; border:0; background:none }
+.hb-dock > .hb-spacer{ flex:1 }
+/* Without a status strip under it the dock pads past the home bar itself. */
+.hb-app-foot > .hb-dock:last-child{ padding-bottom:max(var(--hb-s2), env(safe-area-inset-bottom)) }
+@media(min-width:641px){ .hb-dock{ padding-left:max(var(--hb-s5), env(safe-area-inset-left)); padding-right:max(var(--hb-s5), env(safe-area-inset-right)) } }
+@media(min-width:901px){ .hb-app-foot{ position:static } }
+
+/* Recipes. rack: stage beside a rack of tabs, 360 px at 1024 and 408 px
+   (ARBOR's width) from about 1460; under 901 px the rack is a sheet.
+   bench: numbered steps and the guide in the strips, the parameter rail
+   beside the work. transcript: the stage stays short (38dvh) over the
+   transcript on a phone, and the transcript column is the wide one. */
+.hb-app.is-rack .hb-rail,.hb-app.is-bench .hb-rail{ gap:var(--hb-s3) }
+/* The rack's tabs share its width equally and tighten, so seven fit the
+   408 px rack; HbTabs still swaps them for a select before one clips. */
+.hb-app.is-rack .hb-rail > .hb-tabs-host > .hb-tabs{ gap:0 }
+.hb-app.is-rack .hb-rail > .hb-tabs-host > .hb-tabs > .hb-tab{ flex:1 1 auto; padding-left:var(--hb-s2); padding-right:var(--hb-s2); letter-spacing:.04em }
+.hb-app.is-transcript .hb-viewport{ max-height:38vh; max-height:38dvh }
+@media(min-width:901px){
+  .hb-app.is-rack.has-rail > .hb-work{ grid-template-columns:minmax(0,1fr) clamp(360px, 28vw, 408px) }
+  .hb-app.is-bench.has-rail > .hb-work{ grid-template-columns:minmax(0,1fr) 360px }
+  .hb-app.is-transcript.has-rail > .hb-work{ grid-template-columns:minmax(0,2fr) minmax(360px,3fr) }
+  .hb-app.is-transcript .hb-viewport{ max-height:none }
+}
+/* View modes (stage, split, chat), for tools with both a stage and a
+   chat or rack. Split is the plain layout. */
+.hb-app.is-stage .hb-rail{ display:none }
+.hb-app.is-chat > .hb-work > .hb-main{ display:none }
+@media(min-width:901px){
+  .hb-app.is-stage.has-rail > .hb-work,.hb-app.is-chat.has-rail > .hb-work{ grid-template-columns:minmax(0,1fr) }
+  .hb-app.is-chat > .hb-work > .hb-rail{ width:100%; max-width:760px; justify-self:center }
+}
+.hb-drawer-panel > .hb-rail{ display:flex; flex-direction:column; gap:var(--hb-s3) }
+
 /* Canvas inside a stage always fills it and stays block, or it leaves a
    baseline gap under itself and the pink shadow looks wrong. */
 .hb-scope{ display:block; width:100%; background:var(--hb-void) }
@@ -1338,7 +1384,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
   text-transform:uppercase; white-space:nowrap; flex:0 0 auto;
 }
 .hb-guide-goal{ display:none; flex:1 1 auto; min-width:0 }
-.hb-guide-verbs{ display:flex; gap:var(--hb-s1); margin-left:auto; flex:0 0 auto }
+.hb-guide-verbs{ display:flex; flex-wrap:wrap; justify-content:flex-end; gap:var(--hb-s1); margin-left:auto; flex:0 1 auto; min-width:0 }
 .hb-guide-verbs .hb-btn{ box-shadow:none }
 .hb-guide-verbs .hb-btn{ width:44px; height:44px; padding:0; justify-content:center }
 .hb-guide-verbs .hb-btn > .hb-guide-verb-label{

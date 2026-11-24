@@ -17,6 +17,21 @@ const demos = [
     label: 'settings',
     text: 'A form-heavy tool page: fields, segs, switches, sliders and folds arranged the way a real config screen ends up.',
   },
+  {
+    to: '#/demos/shell-rack',
+    label: 'shell: stage and rack',
+    text: 'The stage beside a numbered rack of tabs. Under 901 px the rack is a sheet, opened from the dock; stage and split modes.',
+  },
+  {
+    to: '#/demos/shell-bench',
+    label: 'shell: stepped bench',
+    text: 'Numbered steps and the guide sentence in the strips, the stage beside a parameter rail, next pinned in the dock.',
+  },
+  {
+    to: '#/demos/shell-transcript',
+    label: 'shell: transcript',
+    text: 'A short stage over the conversation with the composer pinned above the status strip; stage, split and chat modes.',
+  },
 ]
 </script>
 

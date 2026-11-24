@@ -20,6 +20,7 @@ export { default as HbTabs } from './components/HbTabs.vue'
 export { default as HbToolbar } from './components/HbToolbar.vue'
 export { default as HbStatusBar } from './components/HbStatusBar.vue'
 export { default as HbAppShell } from './components/HbAppShell.vue'
+export type { HbAppMode, HbAppRecipe } from './components/HbAppShell.vue'
 export { default as HbShell } from './components/HbShell.vue'
 
 // bench layer: the strips, stage overlays and rail rows of a design bench

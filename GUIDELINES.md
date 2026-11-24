@@ -444,7 +444,7 @@ tagline. Read every "under 640 px" in this file as the base state.
 | fields | `.hb-input`, `.hb-select`, `.hb-textarea` and the composer are 16 px, so iOS does not zoom on focus, and inputs and selects are 44 px tall; 13 px (composer 14) and their natural height only at 641 px and up with a fine pointer |
 | safe area | the header, nav, toolbar, status strip and shell pad by `env(safe-area-inset-*)` when the inset is larger than the gutter; the page sets `viewport-fit=cover` to use it |
 | viewport | square and at most 62svh first, 16 by 9 at 641 px; the hud stacks and the scene verbs shrink until the viewport is 561 px wide |
-| app shell | stacked and scrolling as one page first; pinned work column beside the rail at 901 px |
+| app shell | stacked and scrolling as one page first; pinned work column beside the rail at 901 px. The dock (composer or primary action) sticks above the status strip while the shell is stacked, so the input never scrolls away; the rack recipe moves its rail into a bottom sheet under 641 px and a right drawer to 900 px |
 | hover | every `:hover` rule sits inside `@media (hover:hover) and (pointer:fine)`, so a tap on a touch screen leaves no pink behind; `:active` and `:focus-visible` stay for touch and keys |
 
 ### Do not
@@ -490,6 +490,9 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-modal` | Centered panel over a scrim. `[hidden]` must beat the display rule explicitly or the close button does nothing. `.hb-modal-hd` is the title row with the close button, `.hb-modal-ft` the right aligned actions |
 | `.hb-toast` | Bottom center, ink plate, pink rule, gone in about a second |
 | `.hb-app` / `.hb-work` / `.hb-main` / `.hb-rail` | Full-height shell: pinned strips, one scrolling work column beside one scrolling rail |
+| `.hb-app-foot` / `.hb-dock` | The shell foot: the dock with the composer or the one primary action, over the status strip, pinned at every width |
+| `.hb-app.is-stage` / `.is-split` / `.is-chat` | View modes for a tool with a stage and a chat or rack: stage hides the rail, chat hides the work column and centres the rail at 760 px, split shows both |
+| `.hb-app.is-rack` / `.is-bench` / `.is-transcript` | The three shell recipes. rack: stage beside a 360 to 408 px rack of tabs, a sheet under 901 px. bench: steps and guide in the strips, a 360 px parameter rail. transcript: the stage held to 38dvh over the transcript on a phone, beside it at 2 to 3 from 901 px |
 | `.hb-scope` | Canvas inside a stage. Block and full width, or it leaves a baseline gap and the pink shadow sits wrong |
 | `.hb-switch` | Rectangular toggle, knob slides, pink when on. Keyed off `aria-checked` |
 | `.hb-check` | Checkbox and radio row, native control carrying the pink accent |

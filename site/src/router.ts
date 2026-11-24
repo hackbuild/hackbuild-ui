@@ -16,6 +16,9 @@ export const router = createRouter({
     { path: '/demos/bench', component: () => import('./pages/DemoBench.vue'), meta: { bare: true } },
     { path: '/demos/zine', component: () => import('./pages/DemoZine.vue'), meta: { bare: true } },
     { path: '/demos/settings', component: () => import('./pages/DemoSettings.vue'), meta: { bare: true } },
+    { path: '/demos/shell-rack', component: () => import('./pages/DemoShellRack.vue'), meta: { bare: true } },
+    { path: '/demos/shell-bench', component: () => import('./pages/DemoShellBench.vue'), meta: { bare: true } },
+    { path: '/demos/shell-transcript', component: () => import('./pages/DemoShellTranscript.vue'), meta: { bare: true } },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
   scrollBehavior(to) {
