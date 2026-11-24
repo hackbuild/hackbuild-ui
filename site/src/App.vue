@@ -10,6 +10,7 @@ const nav = [
   { label: 'home', to: '/' },
   { label: 'components', to: '/components' },
   { label: 'tokens', to: '/tokens' },
+  { label: 'look', to: '/look' },
   { label: 'brand', to: '/brand' },
   { label: 'demos', to: '/demos' },
 ]

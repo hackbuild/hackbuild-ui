@@ -82,3 +82,18 @@
 .demo-inset-fill.is-mask{ background:var(--hb-plate-teal) }
 .demo-pair{ display:grid; gap:var(--hb-s4); align-items:start; min-width:0 }
 @media(min-width:900px){ .demo-pair{ grid-template-columns:minmax(0, 1fr) 260px } }
+
+/* look page: docs layout only */
+.look-h{ margin:32px 0 10px }
+.look-cap{ display:block; margin-bottom:6px }
+.look-pair{ display:grid; grid-template-columns:minmax(0,1fr); gap:20px; align-items:start }
+@media(min-width:900px){ .look-pair{ grid-template-columns:repeat(2, minmax(0,1fr)) } }
+.look-pills,.look-row,.look-states{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 10px }
+.look-row{ margin-top:10px }
+.look-state{ display:inline-flex; align-items:center; gap:6px; font-family:var(--hb-readout); font-size:var(--hb-readout-md) }
+.look-stage{ min-height:160px }
+.look-papers{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px }
+.look-paper{ height:120px; border:var(--hb-border) solid var(--hb-ink); padding:8px }
+.look-chat{ display:flex; flex-direction:column; gap:12px; min-width:0 }
+.look-table{ overflow-x:auto; max-width:100% }
+.look-page .hb-statusbar{ margin-top:12px }

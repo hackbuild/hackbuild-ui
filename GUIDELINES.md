@@ -309,16 +309,20 @@ is the point. Pressing a control collapses its shadow and moves it by the same
 offset, so the thing physically goes down.
 
 ```css
+2px 2px 0 var(--hb-ink)    /* chips, small buttons */
 3px 3px 0 var(--hb-ink)    /* controls */
-5px 5px 0 var(--hb-ink)    /* panels and cards */
-7px 7px 0 var(--hb-ink)    /* hover and hero */
+4px 4px 0 var(--hb-ink)    /* panels, cards, reply boxes (5 px in the zine scope) */
+6px 6px 0 var(--hb-ink)    /* hover lift (7 px in the zine scope) */
 5px 5px 0 var(--hb-pink)   /* the one stage per view */
 ```
 
 ### Borders and radius
 
-2 px ink on panels, cards, fields and buttons. 3 px for the header rule, the
-active tab underline, and focus rings. Dashed 2 px for internal dividers.
+1.5 px ink on panels, fields, chips, pills and quiet controls
+(`--hb-border`); 2 px for emphasis: the primary button, the modal panel,
+the stage and the viewport (`--hb-border-em`). Marketing blocks, docs
+prose and `.hb-zine` keep 2 px everywhere (section 19). 3 px for the
+header rule, the active tab underline, and focus rings.
 Radius is zero everywhere; the only exceptions are the circular section number
 badge and nav dots. A rounded button means the artifact has left the system.
 
@@ -1315,6 +1319,7 @@ parts by category; the changelog has the detail.
 | 0.8.0 | HbPersonaEditor, HbStepCard, HbPromptInspector, HbContextMenu; HbImageSlot `ratio` | 17, persona, trace and context menu |
 | 0.8.1 | sizes in decimal lowercase units (`mbText`: 1 gb is 1000 mb); disabled ghost button | 5, 17 |
 | 0.8.1 | HbAppShell `fit`, `.is-sheet-open`, `--hb-kb`, `--hb-foot-h`; HbChat `log`, `composer`; vanilla `keyboardInset`, `dockInsets` | 18, phone stage plus rack |
+| 0.9.0 | refined look tokens, `.hb-zine`, `.hb-instrument`, `.hb-led`, stage looks, `.hb-dotgrid`, `.hb-fixture`, `.hb-viewport-host`, HbMessage `boxed`, HbStatusBar cell `state` | 19 |
 
 ### Phone stage plus rack
 
@@ -1332,4 +1337,89 @@ Stage ratio by measurement: `fill` gave 492 px of height for a 358 px
 wide stage at 390 by 664 (measured). A fixed `--hb-vp-ratio-sm` of 1/1
 would leave 134 px empty there and 3/4 hits the 62svh cap at 412 px,
 leaving 80 (computed). `fill` in a fit shell leaves no gap at any size.
+
+## 19. The refined look
+
+FERRULE, ARBOR and BAIL draw a finer line than the zine pages: 1.5 px
+panels and controls, shadows tuned to it, VT323 on every tag and status
+word, the work area as a lit stage inside a paper page, and one four
+state vocabulary. From 0.9.0 it is the default for app chrome and tool
+panels, set through the tokens, so a suite tool gets it with no class.
+Marketing blocks (hero, cta, cover, footer, nav, media card, timeline,
+plaque, playlist, section head, ink block), `.hb-prose` and any
+`.hb-zine` container keep the 2 px zine values. The comparison is the
+docs page `#/look`.
+
+Why the default: the originals are the bar, and all three run the thin
+line in their app chrome. Measured on `#/look` at 1440 by 900, the same
+20 lines of state take 783 px in the default and 632 px in
+`.hb-instrument` (measured), about 28 lines per 900 px screen in the
+instrument (computed).
+
+### Tokens
+
+| Token | Value | Use |
+|---|---|---|
+| `--hb-border` | 1.5px | panels, fields, controls, chips, pills; 2px in the zine scope |
+| `--hb-border-em` | 2px | primary button, modal panel, stage, viewport |
+| `--hb-shadow-sm`, `--hb-shadow`, `--hb-shadow-lg`, `--hb-shadow-xl` | 2, 3, 4, 6 px | chips; controls; panels and reply boxes; hover lift |
+| `--hb-readout-sm`, `-md`, `-lg` | 15, 17, 19 px | VT323: log tags and kind chips; pills, status cells, gauge values; stage tags and who lines |
+| `--hb-state-off`, `-load`, `-ok`, `-err` | ink 4, warn, ok, err | the four states; the lit set (lit label, lit warn, slime, lit err) on ink, the header, the stage, the viewport and the status bar |
+| `--hb-ok-ink`, `--hb-warn-ink` | #137540, #8f5600 | signal colours as small text on paper |
+| `--hb-dot`, `--hb-dot-step` | 7 percent ink, 7 px | the dot grid |
+
+VT323 is set only through `--hb-readout`; no rule names the face
+directly. Pills, status list states, slot states, log tags and memory
+kind chips use it.
+
+### Readability
+
+| Pair | Ratio (computed, WCAG) | Rule |
+|---|---|---|
+| ink 3 on paper, raised, sunk | 5.15, 5.75, 4.83 | muted text and labels; not on paper edge (4.46) |
+| ink 4 on paper | 2.74 | placeholders and disabled only. Field hints, log times, empty lines, track numbers, queue numbers and unspoken words moved to ink 3 |
+| ok on paper | 3.08 | fills and borders only; text takes `--hb-ok-ink` (5.07) |
+| warn on paper | 3.05 | fills and borders only; text takes `--hb-warn-ink` (5.28) |
+| err on paper | 5.13 | text and fills |
+| lit label on ink | 5.60 | off state words on ink |
+
+An off pill is dimmed by colour (ink 3 text, ink 4 border), not by
+opacity, so its word keeps 4.5:1.
+
+### Four states
+
+| State | Light | On paper | On ink | Motion |
+|---|---|---|---|---|
+| off | ink 4 | ink 3 word | lit label word | none |
+| load | warn | warn ink word | lit warn | two step blink, 1 s; reduced motion: a hollow square |
+| ok | ok | ok ink word | slime | none |
+| err | err | err word | lit err | none |
+
+Applied to `HbPill` (`status` gains `off` and `load`), `HbPills`, the
+status dot, `HbStatusList`, `.hb-status`, the verdict, `HbModelSlot`,
+`HbEngineBar`, `HbToolCall`, `HbEventLog` (the `load` kind is amber) and
+`HbStatusBar` cells (`state`). Bars keep the pink fill while they load,
+slime when done and red on a fault, as FERRULE's gate bars. Warn stays a
+fifth, static tone for a degraded but working part.
+
+### Classes
+
+| Class | Use |
+|---|---|
+| `.hb-zine` | the 2 px zine values on any container |
+| `.hb-instrument` | rack density: 12.5 px base, tighter spacing, VT323 values, 26 px status rows on a fine pointer; buttons, selects and fields stay 44 px on a coarse pointer |
+| `.hb-led`, `.is-off`, `.is-load`, `.is-ok`, `.is-err` | the 8 px state light |
+| `.hb-stage-lit` | FERRULE stage: a pink glow in three hard bands over 135 degree hairlines on sunk paper. `HbStage look="lit"`, `HbViewport look="lit"` |
+| `.hb-stage-void` | BAIL stage: the void with the 32 px pink graph rule. `HbViewport look="graph"` |
+| `.hb-stage-tag` | the stage corner plate: `<b>` ink name, `<span>` pink mode |
+| `.hb-viewport-host` | the element a 3D renderer appends its canvas to inside `HbViewport`: fills the frame, the canvas follows at 100 percent with no layout shift, touch goes to orbit. Size the renderer without touching the style (three.js `setSize(w, h, false)`) from a ResizeObserver on the host. Use it instead of `.hb-split-side` |
+| `.hb-dotgrid` | dot grid paper on any surface; on `body.hb` it replaces the grain. `.hb-app` carries it and drops the grain by default |
+| `.hb-fixture`, `.is-strip` | the fixture banner: a dashed sunk strip with an ink `fixture` plate. Every demo that shows sample state carries one at its top; a fake load never names a real model |
+| `.hb-stroke` | inline SVG as 2 px lines, square caps, mitre joins |
+| `HbMessage boxed` | FERRULE turn: VT323 who plate, each part a raised box with a 4 px shadow, your turns sunk |
+| `.hb-toolpage.is-split` | under 1024 px the stage comes first and the `.is-side` column drops below it; `.is-source-order` keeps the markup order |
+
+Icons: the baked set is Font Awesome solid, filled. FERRULE and ARBOR
+draw inline stroke icons with square caps; draw those with `.hb-stroke`
+rather than mixing a stroked glyph into the filled set.
 
