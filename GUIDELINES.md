@@ -398,8 +398,8 @@ a verb in the header or branding in the toolbar.
 |---|---|---|---|---|
 | header | identity and state | ink, 3 px pink bottom rule | 52 to 60 px | mark, title, status pill, mode switch, tagline |
 | tabs | destinations | ink, pink underline on active | 36 px | 3 to 8 tab buttons, nothing else |
-| toolbar | verbs and global settings | sunk paper, 2 px ink bottom | 46 px | connect, mode segments, chips, a readout pushed right |
-| status strip | counts and rates | ink, 3 px pink top rule, pinned bottom | 28 px | VT323 figures only, never a control |
+| toolbar | verbs and global settings | sunk paper, 2 px ink bottom | 46 px, none when empty | connect, mode segments, chips, a readout pushed right |
+| status strip | counts and rates | ink, 3 px pink top rule, pinned bottom | 28 px, 44 px as a button on a coarse pointer | VT323 figures; cells with `data-priority` 2 show from 481 px of strip width and 3 from 761 px, so a phone keeps two. At most one control: the whole strip as `.hb-statusbar-btn`, opening the log behind the figures |
 
 ### Header anatomy
 
@@ -407,7 +407,9 @@ Left to right, always in this order:
 
 1. The mark at 26 to 28 px. It appears here and nowhere else in the app.
 2. The tool name in Permanent Marker, trailing dot or suffix in pink. The title
-   is the tool name, not hack.build; the mark is what carries the brand.
+   is the tool name, not hack.build; the mark is what carries the brand. It
+   never breaks inside a word: the parts beside it wrap first, and a title
+   wider than the row ends in an ellipsis.
 3. The connection status pill. One pill, showing the connection, not the task.
 4. Everything else pushed right with `margin-left:auto`, usually the mode
    switch.
@@ -451,7 +453,7 @@ tagline. Read every "under 640 px" in this file as the base state.
 
 Put connect, save or export in the header. Put the mark in the toolbar or the
 footer as well. Stack more than four strips before content starts. Give the
-status strip a button. Let the tab row wrap to two lines; collapse it to a
+status strip more than one button. Let the tab row wrap to two lines; collapse it to a
 select first.
 
 ---
@@ -672,7 +674,7 @@ inventing a one-off.
 - [ ] One texture, applied once, and never on a stage or a dial plate
 - [ ] One panel-head style throughout, editorial or instrument, not both
 - [ ] On-void text uses the lit set, not the paper signal colors
-- [ ] Header holds no verbs; toolbar holds no branding; status strip holds no buttons
+- [ ] Header holds no verbs; toolbar holds no branding; status strip holds at most one button, the whole strip
 - [ ] Mobile first: base styles for a 360 px phone, wider layouts only through `min-width` queries
 - [ ] Touch targets 44 px on phones and touch screens, fields 16 px there
 - [ ] No horizontal scroll at 390 px
@@ -987,7 +989,7 @@ composables call the same functions, and so do `HbTabs`, `HbDrawer`,
 |---|---|---|
 | `tabs(el)` | `.hb-tabs` of `role="tab"` buttons | one tab in the tab order; arrows select with wrap, Home and End; `aria-controls` panels shown and hidden |
 | `modal(el)` | `.hb-modal > .hb-panel` | focus in, Tab trap, Escape, scrim click, `data-hb-close`, focus back to the opener, scroll lock |
-| `drawer(el, {side})` | `.hb-drawer > .hb-drawer-panel` | the modal rules; `side: 'left'` sets `.is-left`, `side: 'bottom'` sets `.is-sheet`, and opening a sheet closes any other open sheet |
+| `drawer(el, {side})` | `.hb-drawer > .hb-drawer-panel` | the modal rules; `side: 'left'` sets `.is-left`, `side: 'bottom'` sets `.is-sheet`, and opening a sheet closes any other open sheet; `side: 'auto'` is the sheet under `breakpoint` (761 px) and the right drawer from it, live, so a consumer never reads matchMedia for it |
 | `menu(wrap)` | `.hb-menu-wrap`, trigger, `.hb-menu` | arrows with wrap, Home, End, a letter jumps, Escape returns focus, a press outside closes; `onToggle` reports open and close |
 | `dropRoutes(target, routes)` | optional `.hb-dropzone.is-cover` overlay | files routed by type, one call per route, the rest rejected; a dropped folder is walked; `paste: true` routes pasted files; `.is-over`, `.is-reject` and `data-route` while a file hovers |
 | `hotkeys(table)` | none | scopes, ignores typing in fields, `ctrl` reads cmd on a Mac, `list()` feeds a key map |
@@ -1025,7 +1027,7 @@ suite design sets the strips; these are the parts that fill them.
 
 | Part | Classes | Behaviour |
 |---|---|---|
-| `HbSuiteNav` | `.hb-suitenav`, `-groups`, `-tools`, `-btn`, `-sheet`, `-opt` | groups as tabs on ink and the group's tools as chips in the toolbar row from 761 px of the nav's own width (a container query); below that one 44 px "group / tool" button opens the grouped list in a bottom sheet with a search field. A group tab returns to the last tool used in it. `keys` binds alt+1 to alt+9 and `[` `]` |
+| `HbSuiteNav` | `.hb-suitenav`, `-groups`, `-tools`, `-btn`, `-sheet`, `-opt` | groups as tabs on ink and the group's tools as chips in the toolbar row from 761 px of the nav's own width (a container query); below that one 44 px "group / tool" button opens the grouped list in a bottom sheet with a search field, and the toolbar row collapses unless the `toolbar` slot fills it. A group tab returns to the last tool used in it. `keys` binds alt+1 to alt+9 and `[` `]` |
 | `HbWorkspaceMenu` | `.hb-wsmenu`, `-btn`, `-menu`, `-sheet` | the workspace name opens a menu of new, open, rename, duplicate, export, import, delete; the level is a segmented toggle from 641 px. Below 641 px one menu button opens a sheet with a level button that cycles. `busy` disables every action and shows why |
 | `HbPills` | `.hb-pills`, `.hb-pills-dots`, `.hb-dot` | one pill per subsystem, off, load, ok, warn, err. A pill with `goto` is a button. Below 641 px one 44 px button of dots, with a ready count from 360 px, opens `HbStatusList` in a sheet |
 | `HbStatusList` | `.hb-statuslist` | one 44 px line per subsystem: state in words and what it means now, the fallback named |

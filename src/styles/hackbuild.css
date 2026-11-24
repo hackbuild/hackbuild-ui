@@ -143,9 +143,14 @@ body.hb::before{
   display:flex; align-items:center; gap:var(--hb-s4); flex-wrap:wrap;
 }
 .hb-header .hb-logo{ width:28px; height:28px; flex:0 0 auto }
-/* the title shrinks and wraps beside the mark on a phone instead of
-   dropping under it or pushing the page sideways */
-.hb-header h1{ font-size:20px; color:var(--hb-paper); flex:1 1 0; min-width:0; overflow-wrap:anywhere }
+/* the title keeps its words whole: the controls beside it wrap to the
+   next row first, and a title wider than the whole row ends in an
+   ellipsis instead of breaking inside a word or pushing the page sideways */
+.hb-header h1{
+  font-size:20px; color:var(--hb-paper); flex:1 1 auto; min-width:0; max-width:100%;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+@media(max-width:359px){ .hb-header h1{ font-size:18px } }
 @media(min-width:641px){ .hb-header h1{ font-size:24px; flex:0 1 auto } }
 .hb-header h1 span{ color:var(--hb-pink) }
 /* Suffix after the pink accent stays paper: PIP<span>.</span>bench. */
@@ -539,11 +544,16 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   min-height:46px;
 }
 .hb-bar .hb-spacer{ margin-left:auto }
+/* A toolbar with nothing in it takes no room: no empty sunk band under
+   the tabs. */
+.hb-bar:empty{ display:none }
 .hb-bar-ink{ background:var(--hb-ink); color:var(--hb-paper); border-bottom-color:var(--hb-pink) }
 @media(min-width:641px){ .hb-bar{ padding:var(--hb-s2) max(var(--hb-s5), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s5), env(safe-area-inset-left)) } }
 
-/* Status strip. Thin, VT323, counts and rates only. Never actions. */
+/* Status strip. Thin, VT323, counts and rates only. Its one possible
+   control is the whole strip as a button that opens the log behind it. */
 .hb-statusbar{
+  container:hb-statusbar / inline-size;
   display:flex; align-items:center; gap:var(--hb-s4); flex-wrap:wrap;
   background:var(--hb-ink); color:var(--hb-paper);
   font-family:var(--hb-readout); font-size:15px; line-height:1;
@@ -551,6 +561,23 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 }
 .hb-statusbar b{ color:var(--hb-pink); font-weight:400 }
 @media(min-width:641px){ .hb-statusbar{ gap:var(--hb-s5); padding-left:var(--hb-s5); padding-right:var(--hb-s5) } }
+/* Cell priority by the strip's own width: data-priority 2 shows from
+   481 px, 3 from 761 px, so a phone keeps two cells. */
+.hb-statusbar [data-priority="2"],.hb-statusbar [data-priority="3"]{ display:none }
+@container hb-statusbar (min-width:481px){ .hb-statusbar [data-priority="2"]{ display:revert } }
+@container hb-statusbar (min-width:761px){ .hb-statusbar [data-priority="3"]{ display:revert } }
+/* The button form fills the strip; 44 px tall on a coarse pointer. */
+.hb-statusbar.is-button{ padding:0 }
+.hb-statusbar-btn{
+  flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:inherit; flex-wrap:wrap;
+  background:none; color:inherit; border:0; cursor:pointer; text-align:left;
+  font:inherit; line-height:1;
+  padding:6px max(var(--hb-s4), env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(var(--hb-s4), env(safe-area-inset-left));
+}
+@media(min-width:641px){ .hb-statusbar-btn{ padding-left:var(--hb-s5); padding-right:var(--hb-s5) } }
+@media(pointer:coarse){ .hb-statusbar-btn{ min-height:44px } }
+.hb-statusbar-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+@media (hover:hover) and (pointer:fine){ .hb-statusbar-btn:hover{ background:rgba(245,240,230,.08) } }
 
 /* Segmented control. Mode switches, polarity, easy versus advanced.
    Two or three options only; past that it is a select. */
@@ -2384,6 +2411,11 @@ button.hb-spark{ cursor:pointer }
 /* The current tool is ink, so the pink stays with the group tab. */
 .hb-suitenav-tools > .hb-chip.is-on{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-suitenav-bar:empty{ display:none }
+/* On a phone the tool chips live in the sheet, so a bar holding only them
+   collapses; it returns with the strip, or with toolbar content. */
+.hb-suitenav-bar:not(:has(> :not(.hb-suitenav-tools))){ display:none }
+@container hb-suitenav (min-width:761px){ .hb-suitenav:not(.is-sheet) .hb-suitenav-bar:has(> .hb-suitenav-tools){ display:flex } }
+.hb-suitenav.is-strip .hb-suitenav-bar:has(> .hb-suitenav-tools){ display:flex }
 .hb-suitenav-btn{
   display:flex; align-items:center; gap:var(--hb-s2); width:100%; min-height:44px;
   font-family:var(--hb-utility); font-size:11px; font-weight:600;
