@@ -33,7 +33,9 @@ export interface OverlayHandle {
 }
 
 export interface DrawerOptions extends OverlayOptions {
-  side?: 'left' | 'right'
+  /** 'bottom' is the phone sheet: `.is-sheet`, 74 percent tall, and one
+      sheet open at a time (opening one closes the others). */
+  side?: 'left' | 'right' | 'bottom'
 }
 
 // Open overlays, newest last. Escape and the Tab trap act on the top one.
@@ -51,7 +53,10 @@ function release(doc: Document) {
   if (locks > 0 && --locks === 0) doc.body.style.overflow = savedOverflow
 }
 
-function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions): OverlayHandle {
+// Open bottom sheets. Opening one closes the others.
+const sheets = new Set<OverlayHandle>()
+
+function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions, group?: Set<OverlayHandle>): OverlayHandle {
   const doc = root.ownerDocument
   const me = {}
   let isOpen = false
@@ -97,6 +102,7 @@ function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions): Over
 
   function open() {
     if (isOpen) return
+    if (group) for (const other of [...group]) if (other !== handle) other.close('api')
     isOpen = true
     back = doc.activeElement as HTMLElement | null
     root.hidden = false
@@ -131,9 +137,8 @@ function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions): Over
   root.addEventListener('click', onClick)
   o.trigger?.addEventListener('click', onTrigger)
   root.hidden = true
-  if (o.open) open()
 
-  return {
+  const handle: OverlayHandle = {
     open,
     close,
     toggle,
@@ -142,10 +147,14 @@ function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions): Over
     },
     dispose() {
       if (isOpen) close('api')
+      group?.delete(handle)
       root.removeEventListener('click', onClick)
       o.trigger?.removeEventListener('click', onTrigger)
     },
   }
+  group?.add(handle)
+  if (o.open) open()
+  return handle
 }
 
 /**
@@ -154,14 +163,19 @@ function overlay(root: HTMLElement, panel: HTMLElement, o: OverlayOptions): Over
  * close it; focus goes back to what had it before. Any element inside
  * with `data-hb-close` closes it. Escape acts on the newest open overlay
  * only, and a handler that already took the key (preventDefault) wins.
+ * With closeOnEscape false the modal still holds Escape while it is the
+ * newest: the key closes nothing, and never falls to the overlay beneath.
  */
 export function modal(el: HTMLElement, options: OverlayOptions = {}): OverlayHandle {
   return overlay(el, el.querySelector<HTMLElement>(':scope > .hb-panel') ?? el, options)
 }
 
 /** A drawer over `.hb-drawer > .hb-drawer-panel` markup, with the modal's
-    focus, Escape, scrim and return rules. `side` sets `.is-left`. */
+    focus, Escape, scrim and return rules. `side` sets `.is-left`, or
+    `.is-sheet` for the bottom sheet; one sheet is open at a time. */
 export function drawer(el: HTMLElement, options: DrawerOptions = {}): OverlayHandle {
   el.classList.toggle('is-left', options.side === 'left')
-  return overlay(el, el.querySelector<HTMLElement>(':scope > .hb-drawer-panel') ?? el, options)
+  el.classList.toggle('is-sheet', options.side === 'bottom')
+  const panel = el.querySelector<HTMLElement>(':scope > .hb-drawer-panel') ?? el
+  return overlay(el, panel, options, options.side === 'bottom' ? sheets : undefined)
 }

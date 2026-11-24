@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { nextTick, onUnmounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { modal, type CloseReason, type OverlayHandle } from '../vanilla/overlay'
 import HbIcon from './HbIcon.vue'
 
 interface Props {
@@ -21,96 +22,62 @@ const props = withDefaults(defineProps<Props>(), {
 const open = defineModel<boolean>({ default: false })
 
 const emit = defineEmits<{
-  close: []
+  close: [reason: CloseReason]
 }>()
 
-const panelRef = ref<HTMLElement | null>(null)
-const previousActive = ref<HTMLElement | null>(null)
+const root = ref<HTMLElement | null>(null)
+let handle: OverlayHandle | null = null
 
-function close() {
-  if (!props.closable) return
-  open.value = false
-  emit('close')
-}
-
-function onBackdrop(event: MouseEvent) {
-  if (props.closeOnBackdrop && event.target === event.currentTarget) close()
-}
-
-function focusables(): HTMLElement[] {
-  if (!panelRef.value) return []
-  return Array.from(
-    panelRef.value.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    ),
-  )
-}
-
-function onKeydown(event: KeyboardEvent) {
-  if (props.closeOnEscape && event.key === 'Escape') {
-    close()
-    return
-  }
-  if (event.key === 'Tab') {
-    const items = focusables()
-    if (items.length === 0) return
-    const first = items[0]
-    const last = items[items.length - 1]
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault()
-      last.focus()
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault()
-      first.focus()
-    }
-  }
+// Behaviour is the vanilla modal's, on the shared overlay stack. Escape
+// acts on the newest open overlay only: a modal over a drawer closes
+// first, and a modal that is not closable, or has closeOnEscape off,
+// holds the key while it is on top, so Escape never closes the drawer
+// beneath it. A menu inside that takes Escape first keeps the modal open.
+function release() {
+  const h = handle
+  handle = null
+  h?.dispose()
 }
 
 watch(open, async (isOpen) => {
-  if (typeof document === 'undefined') return
-  if (isOpen) {
-    previousActive.value = document.activeElement as HTMLElement
-    document.body.style.overflow = 'hidden'
-    await nextTick()
-    const items = focusables()
-    ;(items[0] ?? panelRef.value)?.focus()
-  } else {
-    document.body.style.overflow = ''
-    previousActive.value?.focus()
-  }
-})
+  if (!isOpen) { release(); return }
+  await nextTick()
+  if (!root.value || handle) return
+  handle = modal(root.value, {
+    open: true,
+    label: props.title,
+    closeOnScrim: props.closable && props.closeOnBackdrop,
+    closeOnEscape: props.closable && props.closeOnEscape,
+    onClose(reason) {
+      if (!handle) return
+      handle = null
+      open.value = false
+      emit('close', reason)
+    },
+  })
+}, { immediate: true })
 
-onUnmounted(() => {
-  if (typeof document !== 'undefined') document.body.style.overflow = ''
-})
+onBeforeUnmount(release)
 </script>
 
 <template>
   <Teleport to="body">
-    <div
-      v-if="open"
-      class="hb-modal hb"
-      role="dialog"
-      aria-modal="true"
-      :aria-label="props.title"
-      @click="onBackdrop"
-      @keydown="onKeydown"
-    >
-      <div ref="panelRef" class="hb-panel" :style="{ maxWidth: props.width + 'px' }" tabindex="-1">
-        <div v-if="props.title || props.closable" class="hb-panel-hd" style="display: flex; align-items: center; gap: 8px">
-          <span style="flex: 1">{{ props.title }}</span>
+    <div v-if="open" ref="root" class="hb-modal hb" role="dialog" aria-modal="true" :aria-label="props.title">
+      <div class="hb-panel" :style="props.width !== 640 ? { maxWidth: props.width + 'px' } : undefined" tabindex="-1">
+        <div v-if="props.title || props.closable" class="hb-panel-hd hb-modal-hd">
+          <span>{{ props.title }}</span>
           <button
             v-if="props.closable"
             type="button"
             class="hb-iconbtn"
             aria-label="close"
-            @click="close"
+            data-hb-close
           >
             <HbIcon name="x" :size="16" />
           </button>
         </div>
         <slot />
-        <div v-if="$slots.footer" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px">
+        <div v-if="$slots.footer" class="hb-modal-ft">
           <slot name="footer" />
         </div>
       </div>

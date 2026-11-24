@@ -6,10 +6,13 @@ export interface MenuOptions {
   menu?: HTMLElement
   /** An item was chosen. Its value is `data-value`, else its text. */
   onSelect?: (value: string, item: HTMLElement) => void
+  /** The menu opened (true) or closed (false). */
+  onToggle?: (open: boolean) => void
 }
 
 export interface MenuHandle {
   open(focus?: 'first' | 'last'): void
+  toggle(): void
   close(returnFocus?: boolean): void
   readonly isOpen: boolean
   dispose(): void
@@ -53,6 +56,7 @@ export function menu(wrap: HTMLElement, options: MenuOptions = {}): MenuHandle {
       panel!.hidden = false
       trigger!.setAttribute('aria-expanded', 'true')
       doc.addEventListener('pointerdown', onOutside)
+      options.onToggle?.(true)
     }
     const list = items()
     ;(focus === 'last' ? list[list.length - 1] : list[0])?.focus()
@@ -65,6 +69,7 @@ export function menu(wrap: HTMLElement, options: MenuOptions = {}): MenuHandle {
     trigger!.setAttribute('aria-expanded', 'false')
     doc.removeEventListener('pointerdown', onOutside)
     if (returnFocus) trigger!.focus()
+    options.onToggle?.(false)
   }
 
   function onOutside(e: Event) {
@@ -118,6 +123,7 @@ export function menu(wrap: HTMLElement, options: MenuOptions = {}): MenuHandle {
   return {
     open,
     close,
+    toggle: onTriggerClick,
     get isOpen() {
       return isOpen
     },

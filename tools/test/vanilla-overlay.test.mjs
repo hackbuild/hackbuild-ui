@@ -97,3 +97,59 @@ test("drawer: dialog role and label on the panel, dispose closes and unbinds", (
   assert.equal(h.isOpen, false);
   d.close();
 });
+
+test("drawer: side bottom is the sheet, and one sheet is open at a time", () => {
+  const d = dom(`<button id="o">open</button>
+<div class="hb-drawer" id="s1"><div class="hb-drawer-panel"><button id="a">a</button></div></div>
+<div class="hb-drawer" id="s2"><div class="hb-drawer-panel"><button id="b">b</button></div></div>
+<div class="hb-drawer" id="r"><div class="hb-drawer-panel"><button id="c">c</button></div></div>`);
+  const closed = [];
+  const one = drawer(d.$("#s1"), { side: "bottom", label: "rack", onClose: (r) => closed.push("one " + r) });
+  const two = drawer(d.$("#s2"), { side: "bottom" });
+  const side = drawer(d.$("#r"), { side: "right" });
+  assert.equal(d.$("#s1").classList.contains("is-sheet"), true);
+  assert.equal(d.$("#s1").classList.contains("is-left"), false);
+  assert.equal(d.$("#r").classList.contains("is-sheet"), false);
+  assert.equal(d.$("#s1 .hb-drawer-panel").getAttribute("aria-label"), "rack");
+  d.$("#o").focus();
+  one.open();
+  assert.equal(d.document.activeElement, d.$("#a"));
+  two.open();
+  assert.equal(one.isOpen, false, "opening a sheet closes the open one");
+  assert.deepEqual(closed, ["one api"]);
+  assert.equal(two.isOpen, true);
+  assert.equal(d.document.activeElement, d.$("#b"));
+  side.open();
+  assert.equal(two.isOpen, true, "a side drawer does not close a sheet");
+  d.key(d.$("#c"), "Escape");
+  assert.equal(side.isOpen, false);
+  assert.equal(two.isOpen, true);
+  d.key(d.$("#b"), "Escape");
+  assert.equal(two.isOpen, false);
+  assert.equal(d.document.activeElement, d.$("#o"), "focus goes back to the first opener");
+  assert.equal(d.document.body.style.overflow, "");
+  two.dispose();
+  one.open();
+  assert.equal(one.isOpen, true, "a disposed sheet leaves the group");
+  one.dispose();
+  side.dispose();
+  d.close();
+});
+
+test("modal: closeOnEscape false holds Escape over a drawer beneath", () => {
+  const d = dom(HTML);
+  const dr = drawer(d.$("#d"));
+  const m = modal(d.$("#m"), { closeOnEscape: false });
+  dr.open();
+  m.open();
+  const e = d.key(d.$("#m1"), "Escape");
+  assert.equal(e.defaultPrevented, false);
+  assert.equal(m.isOpen, true);
+  assert.equal(dr.isOpen, true, "the key does not fall to the drawer");
+  m.close();
+  d.key(d.$("#d1"), "Escape");
+  assert.equal(dr.isOpen, false);
+  m.dispose();
+  dr.dispose();
+  d.close();
+});

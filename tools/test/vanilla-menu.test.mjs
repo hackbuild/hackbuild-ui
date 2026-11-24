@@ -63,3 +63,18 @@ test("a press outside closes without taking focus; dispose unbinds", () => {
   assert.equal(h.isOpen, false);
   d.close();
 });
+
+test("onToggle reports open and close; toggle flips", () => {
+  const d = dom(HTML);
+  const seen = [];
+  const h = menu(d.$(".hb-menu-wrap"), { onToggle: (o) => seen.push(o) });
+  h.toggle();
+  assert.equal(h.isOpen, true);
+  d.key(d.document.activeElement, "Escape");
+  assert.equal(d.document.activeElement, d.$("#t"), "Escape returns focus to the trigger");
+  h.toggle();
+  h.toggle();
+  assert.deepEqual(seen, [true, false, true, false]);
+  h.dispose();
+  d.close();
+});

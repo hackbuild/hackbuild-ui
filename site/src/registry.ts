@@ -77,6 +77,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbField', blurb: 'label, control, hint or error' },
       { name: 'HbSlider', blurb: 'label, track, live value' },
       { name: 'HbDropdown', blurb: 'action menu under a trigger' },
+      { name: 'HbDropzone', blurb: 'drop, paste or pick files, routed by type' },
     ],
   },
   {

@@ -484,15 +484,17 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-segmeter` | Segmented signal meter. Slime below the threshold, the whole lit run flips pink above it |
 | `.hb-slider` | Label, track, live value. The default control of every panel |
 | `.hb-list` / `.hb-row` | Bookmarks, device lists, capture sessions |
-| `.hb-fold` | Disclosure. Fiddly controls fold away rather than being deleted; easy mode is a fold, not a different app |
-| `.hb-modal` | Centered panel over a scrim. `[hidden]` must beat the display rule explicitly or the close button does nothing |
+| `.hb-fold` | Disclosure. Fiddly controls fold away rather than being deleted; easy mode is a fold, not a different app. `.hb-fold-num` is the bracketed section number, `.hb-fold-done` the ok word |
+| `.hb-tabs.is-num` / `.hb-tab.is-done` / `.hb-tabs-select` | Numbered tabs in the order of work, a done tab's number filled ok green; the select that replaces a strip that would clip |
+| `.hb-empty-hint` | The line a tab or fold shows while it has nothing: what to do first |
+| `.hb-modal` | Centered panel over a scrim. `[hidden]` must beat the display rule explicitly or the close button does nothing. `.hb-modal-hd` is the title row with the close button, `.hb-modal-ft` the right aligned actions |
 | `.hb-toast` | Bottom center, ink plate, pink rule, gone in about a second |
 | `.hb-app` / `.hb-work` / `.hb-main` / `.hb-rail` | Full-height shell: pinned strips, one scrolling work column beside one scrolling rail |
 | `.hb-scope` | Canvas inside a stage. Block and full width, or it leaves a baseline gap and the pink shadow sits wrong |
 | `.hb-switch` | Rectangular toggle, knob slides, pink when on. Keyed off `aria-checked` |
 | `.hb-check` | Checkbox and radio row, native control carrying the pink accent |
 | `.hb-menu-wrap` / `.hb-menu` / `.hb-menu-item` | Dropdown action menu under a trigger |
-| `.hb-drawer` | Full-height panel sliding from an edge. The mobile home of the rail |
+| `.hb-drawer` | Full-height panel sliding from an edge. The mobile home of the rail. `.is-sheet` is the bottom sheet: 74 percent tall, safe area padded, one open at a time. `.hb-drawer-hd` is the title row with the close button |
 | `.hb-avatar` | A square with an ink border. This system does not crop people into circles |
 | `.hb-skeleton` | Paper-edge block that breathes while the real thing loads |
 | `.hb-spinner` | Three meter segments blinking in order. No circles |
@@ -975,16 +977,16 @@ says what is asked before the browser asks.
 over the classes, for pages with no framework. It imports nothing. Each
 function takes markup that already carries the classes and returns a
 handle whose `dispose()` removes every listener it added. The Vue
-composables call the same functions; the Vue components move onto them
-next.
+composables call the same functions, and so do `HbTabs`, `HbDrawer`,
+`HbModal`, `HbDropdown` and `HbDropzone`.
 
 | Function | Markup | Behaviour |
 |---|---|---|
 | `tabs(el)` | `.hb-tabs` of `role="tab"` buttons | one tab in the tab order; arrows select with wrap, Home and End; `aria-controls` panels shown and hidden |
 | `modal(el)` | `.hb-modal > .hb-panel` | focus in, Tab trap, Escape, scrim click, `data-hb-close`, focus back to the opener, scroll lock |
-| `drawer(el, {side})` | `.hb-drawer > .hb-drawer-panel` | the modal rules; `side: 'left'` sets `.is-left` |
-| `menu(wrap)` | `.hb-menu-wrap`, trigger, `.hb-menu` | arrows with wrap, Home, End, a letter jumps, Escape returns focus, a press outside closes |
-| `dropRoutes(target, routes)` | optional `.hb-dropzone.is-cover` overlay | files routed by type, one call per route, the rest rejected; `.is-over`, `.is-reject` and `data-route` while a file hovers |
+| `drawer(el, {side})` | `.hb-drawer > .hb-drawer-panel` | the modal rules; `side: 'left'` sets `.is-left`, `side: 'bottom'` sets `.is-sheet`, and opening a sheet closes any other open sheet |
+| `menu(wrap)` | `.hb-menu-wrap`, trigger, `.hb-menu` | arrows with wrap, Home, End, a letter jumps, Escape returns focus, a press outside closes; `onToggle` reports open and close |
+| `dropRoutes(target, routes)` | optional `.hb-dropzone.is-cover` overlay | files routed by type, one call per route, the rest rejected; a dropped folder is walked; `paste: true` routes pasted files; `.is-over`, `.is-reject` and `data-route` while a file hovers |
 | `hotkeys(table)` | none | scopes, ignores typing in fields, `ctrl` reads cmd on a Mac, `list()` feeds a key map |
 | `persisted(key, initial)` | none | localStorage with a version key, migrate or drop old records, follows other tabs |
 | `confirmInline(btn)` | a `.hb-btn` | first press arms `.hb-btn-danger` with keep beside it, second press runs |
@@ -995,7 +997,9 @@ next.
 
 Escape acts on the newest open overlay only. A widget that takes a key
 with `preventDefault` wins over the overlay, and the overlay wins over a
-hotkey, because hotkeys listen on the window.
+hotkey, because hotkeys listen on the window. A modal that is not
+closable, or has `closeOnEscape` off, still holds Escape while it is the
+newest: the key closes nothing and never falls to the drawer beneath.
 
 The window drop cover is `.hb-dropzone.is-cover.is-window`: fixed over the
 viewport, pink dashes for a type a route takes, ink dashes with

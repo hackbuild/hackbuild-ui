@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
+import { useCollapse } from '../composables/useCollapse'
 import HbSelect from './HbSelect.vue'
 
 export interface HbStepOption {
@@ -40,34 +41,7 @@ const options = computed(() =>
 const strip = ref<HTMLElement | null>(null)
 const host = ref<HTMLElement | null>(null)
 const buttons = ref<HTMLButtonElement[]>([])
-/** Width the strip needed when it collapsed; it expands again past it. */
-const needed = ref(0)
-const collapsed = ref(false)
-let observer: ResizeObserver | undefined
-
-function overflowing(): boolean {
-  const el = strip.value
-  if (!el) return false
-  if (el.scrollWidth > el.clientWidth + 1) return true
-  return buttons.value.some((b) => b.scrollWidth > b.clientWidth + 1)
-}
-
-async function measure() {
-  if (!host.value) return
-  const width = host.value.clientWidth
-  if (collapsed.value) {
-    if (width > needed.value) {
-      collapsed.value = false
-      await nextTick()
-      if (overflowing()) collapsed.value = true
-    }
-    return
-  }
-  if (overflowing()) {
-    needed.value = width
-    collapsed.value = true
-  }
-}
+const { collapsed, measure } = useCollapse(host, strip, buttons)
 
 function select(value: string | number) {
   model.value = value
@@ -86,16 +60,6 @@ function onKey(event: KeyboardEvent, index: number) {
   select(normalized.value[next].value)
   buttons.value[next]?.focus()
 }
-
-onMounted(() => {
-  measure()
-  if (typeof ResizeObserver !== 'undefined' && host.value) {
-    observer = new ResizeObserver(() => { measure() })
-    observer.observe(host.value)
-  }
-})
-
-onBeforeUnmount(() => observer?.disconnect())
 
 watch(() => props.steps, () => nextTick(measure), { deep: true })
 </script>

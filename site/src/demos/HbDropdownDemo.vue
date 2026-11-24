@@ -21,7 +21,7 @@ const code = `<HbDropdown label="export" :items="[
 <template>
   <DemoSection
     title="Action menu"
-    note="A raised panel of actions under a trigger. Closes on outside click and escape."
+    note="A raised panel of actions under a trigger. Arrow keys open it and move with wrap, home and end jump, a letter moves to the next item starting with it, disabled items are skipped. Escape closes and returns focus to the trigger; tab and an outside press close."
     :code="code"
   >
     <div class="demo-row" style="gap: 24px">

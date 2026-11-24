@@ -6,18 +6,23 @@ import PropsTable from '../components/PropsTable.vue'
 
 const right = ref(false)
 const left = ref(false)
+const sheet = ref(false)
+const sheet2 = ref(false)
 
 const code = `<HbDrawer v-model="open">
   <HbPanel heading="Instrument" sunk>...</HbPanel>
 </HbDrawer>
 
-<HbDrawer v-model="open" side="left">...</HbDrawer>`
+<HbDrawer v-model="open" side="left">...</HbDrawer>
+
+<!-- the phone home of a rack: 74 percent tall, one sheet at a time -->
+<HbDrawer v-model="rack" side="bottom" title="rack">...</HbDrawer>`
 </script>
 
 <template>
   <DemoSection
     title="Drawer"
-    note="A full height panel sliding from an edge over a scrim. The mobile home of the rail, and of any nav that will not fit a bar. Escape and the backdrop close it."
+    note="A full height panel sliding from an edge over a scrim. The mobile home of the rail, and of any nav that will not fit a bar. Focus moves in and Tab stays inside; escape and the backdrop close it, and focus goes back to the button."
     :code="code"
   >
     <div class="demo-row">
@@ -37,11 +42,37 @@ const code = `<HbDrawer v-model="open">
     </HbDrawer>
   </DemoSection>
 
+  <DemoSection
+    title="Bottom sheet"
+    note="side bottom: the phone home of a rack, a model manager or settings. 74 percent tall so the stage shows above it, padded past the home bar. One sheet is open at a time: opening one closes the other. Tab stays inside, escape and the scrim close, focus goes back to the button."
+  >
+    <div class="demo-row">
+      <HbButton @click="sheet = true">open the rack</HbButton>
+      <HbButton variant="secondary" @click="sheet2 = true">open settings</HbButton>
+    </div>
+    <HbDrawer v-model="sheet" side="bottom" title="rack">
+      <HbPanel heading="Instrument" sunk>
+        <HbKv label="center" value="101.100" />
+        <HbKv label="floor" value="-97 dBm" />
+      </HbPanel>
+      <div class="demo-row" style="margin-top: 12px">
+        <HbButton variant="secondary" @click="sheet2 = true">open settings instead</HbButton>
+      </div>
+    </HbDrawer>
+    <HbDrawer v-model="sheet2" side="bottom" title="settings">
+      <p style="margin: 0">Opening this sheet closed the rack.</p>
+    </HbDrawer>
+  </DemoSection>
+
   <PropsTable
     :rows="[
       { prop: 'v-model', type: 'boolean' },
-      { prop: 'side', type: `'left' | 'right'`, default: `'right'` },
+      { prop: 'side', type: `'left' | 'right' | 'bottom'`, default: `'right'`, notes: 'bottom is the sheet' },
+      { prop: 'title', type: 'string', notes: 'head with a close button; the accessible name' },
+      { prop: 'label', type: 'string', notes: 'accessible name when there is no title' },
       { prop: 'closeOnBackdrop', type: 'boolean', default: 'true' },
+      { prop: 'closeOnEscape', type: 'boolean', default: 'true' },
+      { prop: '@close', type: 'emit', notes: `'escape' | 'scrim' | 'button' | 'api'` },
     ]"
   />
 </template>

@@ -106,3 +106,56 @@ test("an element router keeps a handled drop from a window router", () => {
   z.dispose();
   d.close();
 });
+
+test("a dropped folder is walked and its files routed", async () => {
+  const d = dom(`<main id="t"></main>`);
+  const got = [];
+  const rejected = [];
+  const fileEntry = (f) => ({ isFile: true, isDirectory: false, file: (ok) => ok(f) });
+  const dirEntry = (children) => {
+    let done = false;
+    return {
+      isFile: false,
+      isDirectory: true,
+      createReader: () => ({ readEntries: (ok) => { ok(done ? [] : children); done = true; } }),
+    };
+  };
+  const tree = dirEntry([fileEntry(file("a.png", "image/png")), dirEntry([fileEntry(file("b.png", "image/png")), fileEntry(file("c.txt", "text/plain"))])]);
+  let finish;
+  const settled = new Promise((r) => (finish = r));
+  const h = dropRoutes(d.window, [{ name: "image", accept: "image/*", on: (fs) => { got.push(...fs.map((f) => f.name)); finish(); } }], {
+    onReject: (fs) => rejected.push(...fs.map((f) => f.name)),
+  });
+  const e = drag(d, d.$("#t"), "drop", [], [{ kind: "file", type: "", webkitGetAsEntry: () => tree }]);
+  assert.equal(e.defaultPrevented, true);
+  await settled;
+  assert.deepEqual(got, ["a.png", "b.png"]);
+  assert.deepEqual(rejected, ["c.txt"]);
+  h.dispose();
+  d.close();
+});
+
+test("paste routes pasted files when asked, and only then", () => {
+  const d = dom(`<main id="t"></main>`);
+  const got = [];
+  const paste = (files) => {
+    const e = new d.window.Event("paste", { bubbles: true, cancelable: true });
+    Object.defineProperty(e, "clipboardData", { value: { files } });
+    d.$("#t").dispatchEvent(e);
+    return e;
+  };
+  const off = dropRoutes(d.window, [{ name: "image", accept: "image/*", on: (fs) => got.push("off") }]);
+  paste([file("a.png", "image/png")]);
+  assert.deepEqual(got, []);
+  off.dispose();
+  const h = dropRoutes(d.window, [{ name: "image", accept: "image/*", on: (fs) => got.push(...fs.map((f) => f.name)) }], { paste: true });
+  const e = paste([file("a.png", "image/png")]);
+  assert.equal(e.defaultPrevented, true);
+  const text = paste([]);
+  assert.equal(text.defaultPrevented, false, "pasting text is left alone");
+  assert.deepEqual(got, ["a.png"]);
+  h.dispose();
+  paste([file("b.png", "image/png")]);
+  assert.deepEqual(got, ["a.png"]);
+  d.close();
+});

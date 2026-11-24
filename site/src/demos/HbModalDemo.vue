@@ -20,7 +20,7 @@ const code = `<HbModal v-model="open" title="Save session">
 <template>
   <DemoSection
     title="Modal"
-    note="Centered panel over a scrim. Focus is trapped, escape closes, body scroll locks, and focus returns to the trigger on close."
+    note="Centered panel over a scrim. Focus is trapped, escape closes, body scroll locks, and focus returns to the trigger on close. Escape acts on the newest overlay only: a modal over a drawer closes first, and a modal with closeOnEscape off holds the key so the drawer beneath stays open."
     :code="code"
   >
     <HbButton @click="open = true">open modal</HbButton>
@@ -44,6 +44,7 @@ const code = `<HbModal v-model="open" title="Save session">
       { prop: 'closeOnBackdrop', type: 'boolean', default: 'true' },
       { prop: 'closeOnEscape', type: 'boolean', default: 'true' },
       { prop: '#footer', type: 'slot', notes: 'right aligned actions' },
+      { prop: '@close', type: 'emit', notes: `'escape' | 'scrim' | 'button' | 'api'` },
     ]"
   />
 </template>

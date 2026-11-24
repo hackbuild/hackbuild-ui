@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onUnmounted, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { menu, type MenuHandle } from '../vanilla/menu'
 
 export interface HbDropdownItem {
   label: string
@@ -27,56 +28,63 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const wrapRef = ref<HTMLElement | null>(null)
+const menuRef = ref<HTMLElement | null>(null)
+let handle: MenuHandle | null = null
 
-function onDocumentClick(event: MouseEvent) {
-  if (wrapRef.value && !wrapRef.value.contains(event.target as Node)) isOpen.value = false
-}
-
-function onKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape') isOpen.value = false
-}
-
-watch(isOpen, (value) => {
-  if (typeof document === 'undefined') return
-  if (value) {
-    document.addEventListener('click', onDocumentClick)
-    document.addEventListener('keydown', onKeydown)
-  } else {
-    document.removeEventListener('click', onDocumentClick)
-    document.removeEventListener('keydown', onKeydown)
-  }
+// Keys, focus and outside press are the vanilla menu's: the trigger opens
+// it on click, ArrowDown or ArrowUp; arrows, Home, End and a first letter
+// move; Escape closes and returns focus to the trigger; Tab closes.
+onMounted(() => {
+  const wrap = wrapRef.value
+  const panel = menuRef.value
+  if (!wrap || !panel) return
+  // The trigger slot renders one button; a slot with no button wires its
+  // first element.
+  const trigger =
+    [...wrap.querySelectorAll<HTMLElement>('button')].find((b) => !panel.contains(b)) ??
+    (wrap.firstElementChild !== panel ? (wrap.firstElementChild as HTMLElement | null) : null)
+  if (!trigger) return
+  handle = menu(wrap, {
+    trigger,
+    menu: panel,
+    onToggle: (open) => { isOpen.value = open },
+    onSelect(_value, item) {
+      const index = item.dataset.index
+      if (index === undefined) return
+      const picked = props.items[Number(index)]
+      if (picked && !picked.disabled) emit('select', picked.value)
+    },
+  })
 })
 
-onUnmounted(() => {
-  if (typeof document === 'undefined') return
-  document.removeEventListener('click', onDocumentClick)
-  document.removeEventListener('keydown', onKeydown)
-})
+onBeforeUnmount(() => handle?.dispose())
 
-function pick(item: HbDropdownItem) {
-  if (item.disabled) return
-  emit('select', item.value)
-  isOpen.value = false
+/** Kept for slots written before the kit wired the trigger: the kit
+    already toggles on the trigger's click, so this does nothing. */
+function toggle() {}
+function close() {
+  handle?.close()
 }
 </script>
 
 <template>
   <div ref="wrapRef" class="hb-menu-wrap">
-    <slot name="trigger" :toggle="() => (isOpen = !isOpen)" :open="isOpen">
-      <button type="button" class="hb-btn hb-btn-2" :aria-expanded="isOpen" aria-haspopup="menu" @click="isOpen = !isOpen">
+    <slot name="trigger" :toggle="toggle" :open="isOpen">
+      <button type="button" class="hb-btn hb-btn-2">
         {{ props.label }}
       </button>
     </slot>
-    <div v-if="isOpen" class="hb-menu" :class="{ 'is-right': props.align === 'right' }" role="menu">
-      <slot :close="() => (isOpen = false)">
+    <div ref="menuRef" class="hb-menu" :class="{ 'is-right': props.align === 'right' }" role="menu" hidden>
+      <slot :close="close">
         <button
-          v-for="item in props.items"
+          v-for="(item, index) in props.items"
           :key="item.value"
           type="button"
           class="hb-menu-item"
           role="menuitem"
+          tabindex="-1"
+          :data-index="index"
           :disabled="item.disabled"
-          @click="pick(item)"
         >
           {{ item.label }}
         </button>

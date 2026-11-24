@@ -10,6 +10,8 @@ const ppm = ref(-1)
 const code = `<HbFold v-model="open" summary="advanced">
   <HbSlider v-model="ppm" label="ppm correction" :min="-20" :max="20" />
 </HbFold>`
+const codeNum = `<HbFold :num="1" summary="source" done persist-key="source">...</HbFold>
+<HbFold :num="2" summary="bones" empty-hint="load a model first." />`
 </script>
 
 <template>
@@ -29,10 +31,25 @@ const code = `<HbFold v-model="open" summary="advanced">
     </p>
   </DemoSection>
 
+  <DemoSection
+    title="Numbered inspector"
+    note="A rack of numbered folds that remembers what you closed. done marks a finished section; an empty section names what to do first."
+    :code="codeNum"
+  >
+    <HbFold :num="1" summary="source" done persist-key="site-demo-source">
+      <HbKv label="file" value="shiba.vrm" />
+    </HbFold>
+    <HbFold :num="2" summary="bones" empty-hint="load a model first." persist-key="site-demo-bones" />
+  </DemoSection>
+
   <PropsTable
     :rows="[
       { prop: 'summary', type: 'string', notes: 'required' },
       { prop: 'v-model', type: 'boolean', notes: 'open state, optional' },
+      { prop: 'num', type: 'number', notes: 'shown as [01]' },
+      { prop: 'done', type: 'boolean', default: 'false' },
+      { prop: 'emptyHint', type: 'string', notes: 'shown instead of the slot while set' },
+      { prop: 'persistKey', type: 'string', notes: 'remember open under hb.fold.<key>' },
     ]"
   />
 </template>

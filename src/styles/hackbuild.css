@@ -649,6 +649,13 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-fold > div{ padding:var(--hb-s3) }
 .hb-fold > summary{ min-height:44px }
 @media(min-width:641px) and (pointer:fine){ .hb-fold > summary{ min-height:0 } }
+/* Numbered and finished folds: [03] in ink before the summary, done in
+   ok green after it. */
+.hb-fold-num{ color:var(--hb-ink-3); letter-spacing:0 }
+.hb-fold-sum{ flex:1; min-width:0 }
+.hb-fold-done{ color:var(--hb-ok) }
+.hb-fold > div > .hb-empty-hint{ padding:0 }
+.hb-tabs-host{ min-width:0 }
 
 /* Modal. The display rule must be beaten by [hidden] explicitly or the close
    button does nothing. This bug shipped once. */
@@ -768,9 +775,29 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   border-left:0; border-right:var(--hb-border-hd) solid var(--hb-ink);
   animation-name:hb-slide-l;
 }
+/* Bottom sheet (side bottom): the phone home of a rack, a manager or
+   settings. 74 percent tall so the stage still shows above it; the panel
+   pads past the home bar. One sheet is open at a time. */
+.hb-drawer.is-sheet > .hb-drawer-panel{
+  top:auto; left:0; right:0; width:auto; height:74%;
+  border-left:0; border-top:var(--hb-border-hd) solid var(--hb-ink);
+  padding:var(--hb-s4) max(var(--hb-s4), env(safe-area-inset-right)) max(var(--hb-s4), env(safe-area-inset-bottom)) max(var(--hb-s4), env(safe-area-inset-left));
+  animation-name:hb-slide-u;
+}
+/* Head of a drawer or modal: the title, then the close button. */
+.hb-drawer-hd,.hb-modal-hd{ display:flex; align-items:center; gap:var(--hb-s2) }
+.hb-drawer-hd{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em;
+  margin:calc(var(--hb-s2) * -1) 0 var(--hb-s3); padding-bottom:var(--hb-s2);
+  border-bottom:var(--hb-border) solid var(--hb-ink);
+}
+.hb-drawer-hd > span,.hb-modal-hd > span{ flex:1; min-width:0 }
+.hb-modal-ft{ display:flex; justify-content:flex-end; flex-wrap:wrap; gap:var(--hb-s2); margin-top:var(--hb-s4) }
 @keyframes hb-fade{ from{opacity:0} }
 @keyframes hb-slide-r{ from{transform:translateX(100%)} }
 @keyframes hb-slide-l{ from{transform:translateX(-100%)} }
+@keyframes hb-slide-u{ from{transform:translateY(100%)} }
 
 /* ==========================================================================
    15. IDENTITY AND STATES
@@ -1282,6 +1309,18 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 }
 .hb-steps > .hb-tab.is-done .n{ background:var(--hb-ok); border-color:var(--hb-ok) }
 .hb-steps-select{ display:block; width:100%; border-left:0; border-right:0 }
+/* Numbered tabs (HbTabs num): the number is the order of work; a done
+   tab fills its number green, as a step does. */
+.hb-tabs.is-num > .hb-tab{ display:inline-flex; align-items:center }
+.hb-tabs.is-num .n{
+  display:inline-block; min-width:18px; height:18px; line-height:16px; flex:0 0 auto;
+  border:1px solid currentColor; text-align:center;
+  margin-right:var(--hb-s2); font-size:11px; letter-spacing:0;
+}
+.hb-tab.is-done .n{ background:var(--hb-ok); border-color:var(--hb-ok); color:var(--hb-paper) }
+.hb-tabs-select{ display:block; width:100%; border-left:0; border-right:0 }
+/* A tab or fold left empty names the next action instead of a blank. */
+.hb-empty-hint{ margin:0; padding:var(--hb-s4) 0; font-family:var(--hb-body); font-size:14px; color:var(--hb-ink-3) }
 @media(min-width:641px){
   .hb-steps > .hb-tab{ letter-spacing:.14em; font-size:12px; padding:var(--hb-s2) var(--hb-s1) }
   .hb-steps .n{ margin-right:var(--hb-s2) }
@@ -1665,7 +1704,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-dropzone input[type=file]::file-selector-button{ min-height:44px }
 @media(min-width:641px) and (pointer:fine){ .hb-dropzone input[type=file]::file-selector-button{ min-height:0 } }
 .hb-dropzone-pick{ position:relative; flex:0 0 auto }
-.hb-dropzone-pick > input[type=file]{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
+.hb-dropzone-pick > input[type=file]{ position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer }
 .hb-dropzone-pick:focus-within{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 .hb-dropzone.is-over{ border-color:var(--hb-pink); border-style:dashed; color:var(--hb-ink) }
 /* Cover form: over a whole viewport, shown only while a file hovers. */
@@ -2168,6 +2207,10 @@ button.hb-spark{ cursor:pointer }
    .is-reject when no route takes the hovering type. */
 .hb-dropzone.is-cover.is-window{ position:fixed; z-index:var(--hb-z-modal) }
 .hb-dropzone.is-cover.is-reject{ border-color:var(--hb-ink-3); color:var(--hb-ink-3) }
+/* HbDropzone: the zone opens the picker on a press; a refused file names
+   itself and the types the zone takes on a line of its own. */
+.hb-dropzone:not(.is-cover){ cursor:pointer }
+.hb-dropzone-err{ flex:1 0 100%; margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-err) }
 /* A button the behaviour hides (keep, while not armed) stays hidden:
    .hb-btn sets display, which outranks the hidden attribute. */
 .hb-btn[hidden]{ display:none }
