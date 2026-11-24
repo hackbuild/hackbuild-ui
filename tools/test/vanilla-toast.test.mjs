@@ -36,3 +36,27 @@ test("errors are held, capped, and leave only on dismiss", () => {
   assert.equal(s.state.held.length, 1);
   assert.ok(seen.length >= 4);
 });
+
+test("default timers call setTimeout unbound, as chrome demands", () => {
+  const real = { set: globalThis.setTimeout, clear: globalThis.clearTimeout };
+  // Chrome throws illegal invocation when setTimeout runs with this bound
+  // to anything but the window. Mimic it.
+  globalThis.setTimeout = function (fn, ms) {
+    if (this !== undefined && this !== globalThis) throw new TypeError("Illegal invocation");
+    return real.set(fn, ms);
+  };
+  globalThis.clearTimeout = function (id) {
+    if (this !== undefined && this !== globalThis) throw new TypeError("Illegal invocation");
+    return real.clear(id);
+  };
+  try {
+    const s = toastStore();
+    s.toast("one");
+    s.toast("two");
+    s.clear();
+    assert.equal(s.state.current, null);
+  } finally {
+    globalThis.setTimeout = real.set;
+    globalThis.clearTimeout = real.clear;
+  }
+});

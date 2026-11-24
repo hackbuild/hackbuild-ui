@@ -42,7 +42,19 @@ export interface ToastStore {
   subscribe(fn: (s: ToastSnapshot) => void): () => void
 }
 
-export function toastStore(maxHeld = 3, timers: { set: typeof setTimeout; clear: typeof clearTimeout } = { set: setTimeout, clear: clearTimeout }): ToastStore {
+export interface ToastTimers {
+  set: (fn: () => void, ms: number) => ReturnType<typeof setTimeout>
+  clear: (id: ReturnType<typeof setTimeout>) => void
+}
+
+// Call the globals bare. Stored as methods, timers.set(...) runs setTimeout
+// with this bound to the object, and Chrome throws illegal invocation.
+const globalTimers: ToastTimers = {
+  set: (fn, ms) => setTimeout(fn, ms),
+  clear: (id) => clearTimeout(id),
+}
+
+export function toastStore(maxHeld = 3, timers: ToastTimers = globalTimers): ToastStore {
   const ev = emitter<ToastSnapshot>()
   let state: ToastSnapshot = { current: null, held: [] }
   let n = 0
