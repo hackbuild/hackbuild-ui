@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import HbIcon from './HbIcon.vue'
+import { thumbKind, thumbSrc } from '../vanilla/media'
 
 export interface HbHistoryItem {
   id: string | number
-  /** Image url: a data url or an object url. */
-  thumb: string
+  /** An image url (data, object or http), svg markup such as a waveform,
+      or a short label such as '0:42'. Empty draws the label's first
+      letters; the thumb slot overrides all of these. */
+  thumb?: string
   /** The prompt, the file name. */
   label?: string
   /** 'sd turbo, seed 12345, 2 steps': `runMeta` builds it. */
@@ -42,6 +45,12 @@ function key(e: KeyboardEvent, i: number) {
   const next = all[i + d]
   if (next) { e.preventDefault(); next.focus() }
 }
+defineSlots<{
+  /** Draws the thumb: a wave canvas, an icon. */
+  thumb?: (p: { item: HbHistoryItem }) => unknown
+}>()
+
+const thumbText = (it: HbHistoryItem) => (thumbKind(it.thumb) === 'label' ? String(it.thumb).trim() : (it.label ?? '').slice(0, 3))
 const cur = () => props.items.find((x) => x.id === props.current)
 </script>
 
@@ -61,7 +70,7 @@ const cur = () => props.items.find((x) => x.id === props.current)
           :aria-current="it.id === props.current ? 'true' : undefined"
           @click="emit('restore', it)"
           @keydown="key($event, i)"
-        ><img :src="it.thumb" alt="" loading="lazy"></button>
+        ><slot name="thumb" :item="it"><img v-if="thumbSrc(it.thumb)" :src="thumbSrc(it.thumb)" alt="" loading="lazy"><span v-else class="hb-hist-tx">{{ thumbText(it) }}</span></slot></button>
         <span v-if="props.grid" class="hb-hist-cap">
           <span class="hb-hist-label">{{ it.label }}</span>
           <span v-if="it.meta" class="hb-hist-meta">{{ it.meta }}</span>

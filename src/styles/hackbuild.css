@@ -3632,7 +3632,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-method-q{ display:inline-flex; gap:3px }
 .hb-method-q > i{ width:9px; height:9px; border:1.5px solid var(--hb-ink) }
 .hb-method-q > i.is-on{ background:var(--hb-ink) }
-@media (max-width:379px){ .hb-method{ flex-wrap:wrap } .hb-method-meta{ flex-direction:row; align-items:center; gap:var(--hb-s2); margin-left:calc(34px + var(--hb-s3)) } }
+@media (max-width:379px){ .hb-method{ flex-wrap:wrap } .hb-method-meta{ flex-direction:row; flex-wrap:wrap; align-items:center; gap:var(--hb-s1) var(--hb-s2); margin-left:calc(34px + var(--hb-s3)); min-width:0; max-width:calc(100% - 34px - var(--hb-s3)); white-space:normal } }
 
 /* Camera tile. The camera booth feed: the picture on the void, a utility
    tag in each corner (timer, record, effect, model), a blinking record
@@ -3682,6 +3682,10 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-hist-item{ position:relative; flex:none }
 .hb-hist-thumb{ display:block; width:var(--hb-hist-size, 56px); height:var(--hb-hist-size, 56px); padding:0; overflow:hidden; cursor:pointer; background:var(--hb-paper-sunk); border:1.5px solid var(--hb-ink) }
 .hb-hist-thumb > img{ width:100%; height:100%; object-fit:cover; display:block }
+/* A thumb with no image: a short label in the readout face, or slot
+   content such as a wave canvas, filling the square. */
+.hb-hist-tx{ display:grid; place-items:center; width:100%; height:100%; padding:2px; font-family:var(--hb-readout); font-size:16px; line-height:1; color:var(--hb-ink); overflow:hidden; overflow-wrap:anywhere; text-transform:lowercase }
+.hb-hist-thumb > svg,.hb-hist-thumb > canvas{ width:100%; height:100%; display:block }
 .hb-hist-thumb:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 .hb-hist-item.is-current .hb-hist-thumb{ border:var(--hb-border-hd) solid var(--hb-ink); box-shadow:3px 3px 0 var(--hb-ink) }
 .hb-hist-x{ position:absolute; top:-6px; right:-6px; width:20px; height:20px; padding:0; display:none; align-items:center; justify-content:center; background:var(--hb-paper-raised); color:var(--hb-ink); border:1.5px solid var(--hb-ink); cursor:pointer }

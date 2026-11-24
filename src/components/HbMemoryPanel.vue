@@ -49,6 +49,8 @@ const emit = defineEmits<{
   add: [entry: { text: string; kind: string }]
   edit: [id: string, text: string]
   forget: [id: string]
+  /** Pin or unpin a row: the next state. */
+  pin: [id: string, pinned: boolean]
   export: []
   import: [file: File]
   wipe: []
@@ -162,7 +164,9 @@ onBeforeUnmount(() => { clearTimeout(timer); clearTimeout(armTimer) })
           :score="m.score"
           :when="m.when"
           :used="usedIds.has(m.id)"
+          :pinned="!!m.pinned"
           :readonly="props.readonly"
+          @pin="emit('pin', m.id, $event)"
           @edit="emit('edit', m.id, $event)"
           @forget="emit('forget', m.id)"
         />

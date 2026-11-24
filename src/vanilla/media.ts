@@ -156,6 +156,27 @@ export interface HistoryLike {
   id: string | number
 }
 
+export type ThumbKind = 'image' | 'svg' | 'label' | 'none'
+
+/** What a history thumb holds: an image url, svg markup (a waveform for
+    an audio run), a short label such as '0:42' or 'wav', or nothing. */
+export function thumbKind(thumb: string | null | undefined): ThumbKind {
+  const t = String(thumb ?? '').trim()
+  if (!t) return 'none'
+  if (/^<svg[\s>]/i.test(t)) return 'svg'
+  if (/^(data:image\/|blob:|https?:\/\/|\/|\.{0,2}\/)/i.test(t) || /\.(png|jpe?g|webp|gif|avif|svg)(\?|#|$)/i.test(t)) return 'image'
+  return 'label'
+}
+
+/** An img src for an image or svg thumb; svg markup becomes a data url, so
+    it renders as an image and runs no script. '' for a label or nothing. */
+export function thumbSrc(thumb: string | null | undefined): string {
+  const k = thumbKind(thumb)
+  if (k === 'image') return String(thumb).trim()
+  if (k === 'svg') return `data:image/svg+xml,${encodeURIComponent(String(thumb).trim())}`
+  return ''
+}
+
 /** Newest first, the same id moved to the front, at most `cap`. */
 export function historyPush<T extends HistoryLike>(items: readonly T[], item: T, cap = 8): T[] {
   return [item, ...items.filter((x) => x.id !== item.id)].slice(0, Math.max(1, cap))

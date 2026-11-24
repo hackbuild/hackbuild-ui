@@ -82,3 +82,18 @@ test("seeds roll in range, parse strictly, hold when locked", () => {
   assert.equal(nextSeed(7, true, () => 0.5), 7);
   assert.equal(nextSeed(7, false, () => 0.5), 2147483647);
 });
+
+test("history thumb: image url, svg markup, short label, nothing", async () => {
+  const { thumbKind, thumbSrc } = await import("../../src/vanilla/media.ts");
+  assert.equal(thumbKind("data:image/png;base64,AAAA"), "image");
+  assert.equal(thumbKind("blob:http://x/1"), "image");
+  assert.equal(thumbKind("./runs/3.webp"), "image");
+  assert.equal(thumbKind('<svg viewBox="0 0 10 10"><path d="M0 5h10"/></svg>'), "svg");
+  assert.equal(thumbKind("0:42"), "label");
+  assert.equal(thumbKind("wav"), "label");
+  assert.equal(thumbKind(""), "none");
+  assert.equal(thumbKind(undefined), "none");
+  assert.ok(thumbSrc("<svg></svg>").startsWith("data:image/svg+xml,%3Csvg"));
+  assert.equal(thumbSrc("0:42"), "");
+  assert.equal(thumbSrc("blob:http://x/1"), "blob:http://x/1");
+});

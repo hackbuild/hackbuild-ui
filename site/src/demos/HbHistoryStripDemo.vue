@@ -21,6 +21,17 @@ function run(): HbHistoryItem {
 }
 const items = ref<HbHistoryItem[]>([])
 for (let i = 0; i < 5; i++) items.value = historyPush(items.value, run())
+// Audio runs: a waveform as svg markup, or a short label. No image faked.
+function wave(i: number) {
+  const pts = Array.from({ length: 24 }, (_, k) => `${k * 2 + 1},${16 - Math.round(Math.abs(Math.sin(k * 0.7 + i)) * (6 + (k % 5) * 2))}`)
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 32"><rect width="48" height="32" fill="#f5f0e6"/>${pts.map((p) => { const [x, y] = p.split(','); return `<rect x="${x}" y="${y}" width="1.2" height="${(16 - Number(y)) * 2}" fill="#1a1a1a"/>` }).join('')}</svg>`
+}
+const takes = ref<HbHistoryItem[]>([
+  { id: 'a1', thumb: wave(1), label: 'take 3', meta: 'kokoro, 0:42' },
+  { id: 'a2', thumb: wave(4), label: 'take 2', meta: 'piper, 0:39' },
+  { id: 'a3', thumb: '0:51', label: 'take 1', meta: 'system voice' },
+])
+const take = ref<string | number | null>('a1')
 const current = ref<string | number | null>(items.value[0].id)
 function add() { const r = run(); items.value = historyPush(items.value, r); current.value = r.id }
 function remove(it: HbHistoryItem) { items.value = items.value.filter((x) => x.id !== it.id); if (current.value === it.id) current.value = items.value[0]?.id ?? null }
@@ -37,12 +48,18 @@ const code = `<HbHistoryStrip :items="runs" :current="shown" @restore="restore" 
       <HbHistoryStrip :items="[]" />
     </div>
   </DemoSection>
+  <DemoSection title="Audio runs" note="thumb takes svg markup, such as a waveform, drawn as an image so it runs no script, or a short label such as a length. The thumb slot draws anything else.">
+    <div class="demo-col" style="max-width: 640px">
+      <HbHistoryStrip :items="takes" :current="take" @restore="take = $event.id" @remove="(it) => (takes = takes.filter((x) => x.id !== it.id))" />
+    </div>
+  </DemoSection>
   <DemoSection title="Grid" note="Tiles with the prompt and the run line, for a gallery or a mask list.">
     <HbHistoryStrip grid :items="items.slice(0, 4)" :current="current" @restore="current = $event.id" @remove="remove" />
   </DemoSection>
   <PropsTable
     :rows="[
-      { prop: 'items', type: '{id, thumb, label?, meta?}[]' },
+      { prop: 'items', type: '{id, thumb?, label?, meta?}[]', notes: 'thumb: image url, svg markup or a short label' },
+      { prop: 'slots', type: 'thumb {item}' },
       { prop: 'current', type: 'string | number | null' },
       { prop: 'grid / empty', type: 'boolean / string' },
       { prop: 'emits', type: 'restore, remove' },

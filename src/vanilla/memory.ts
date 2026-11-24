@@ -14,6 +14,8 @@ export interface MemoryEntry {
   score?: number | null
   /** When it was added, as words: 'nov 3 added', 'chat'. */
   when?: string
+  /** Kept in every prompt, never pruned. */
+  pinned?: boolean
 }
 
 /** 'fact' to 'facts', 'memory' to 'memories', 'gist' stays at one. */
