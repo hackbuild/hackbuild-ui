@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.8.1
+
+- Phone layout for stage plus rack, a fixture demo at `#/demos/phone-rack`.
+- HbAppShell `fit`: the shell is the dynamic viewport at every width and
+  a viewport with aspect `fill` takes the height left over the foot.
+- HbAppShell writes `--hb-kb` (on-screen keyboard inset from
+  visualViewport) and `--hb-foot-h` on the root: the foot lifts over the
+  keyboard, a pinned shell shrinks by it. Vanilla `keyboardInset`,
+  `dockInsets`.
+- HbAppShell rack sheet: HbDrawer side auto at 641 px; with a dock the
+  sheet stops at the foot, the foot stays above the scrim, and the stage
+  keeps one caption line at its top edge while the sheet is open.
+- HbChat `log` and `composer` props, so the composer docks alone while
+  the lines show in a rack tab.
+- The work area pads past the side safe area insets in landscape.
+- Sizes use decimal lowercase units everywhere, as `sizeWord`: `mbText`,
+  HbMethodCard, HbProgress, HbModelManager, load and storage lines divide
+  by 1000 and 1e6, not 1024 (a 2.6 gb download no longer reads 2.5 GB).
+- Disabled ghost buttons: paper edge fill, ink 3 text, dashed border.
+
 ## 0.8.0
 
 - HbPersonaEditor, HbStepCard, HbPromptInspector, HbContextMenu.
