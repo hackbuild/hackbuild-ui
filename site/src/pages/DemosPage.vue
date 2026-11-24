@@ -33,6 +33,11 @@ const demos = [
     text: 'The room on a phone: the stage fills the screen over the docked composer, the seven rack tabs open as a bottom sheet with one caption line kept on the stage, a touch pad on the stage.',
   },
   {
+    to: '#/demos/stage-chat',
+    label: 'stage left, chat right',
+    text: 'A character tool: the stage wide on the left and chat in a column on the right from 1024 px; on a phone the stage comes first at 38dvh with chat under it. Send the last reply to another tool from a list that says why a tool cannot take it.',
+  },
+  {
     to: '#/demos/shell-bench',
     label: 'shell: stepped bench',
     text: 'Numbered steps and the guide sentence in the strips, the stage beside a parameter rail, next pinned in the dock.',

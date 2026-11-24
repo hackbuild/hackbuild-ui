@@ -1320,6 +1320,7 @@ parts by category; the changelog has the detail.
 | 0.8.1 | sizes in decimal lowercase units (`mbText`: 1 gb is 1000 mb); disabled ghost button | 5, 17 |
 | 0.8.1 | HbAppShell `fit`, `.is-sheet-open`, `--hb-kb`, `--hb-foot-h`; HbChat `log`, `composer`; vanilla `keyboardInset`, `dockInsets` | 18, phone stage plus rack |
 | 0.9.0 | refined look tokens, `.hb-zine`, `.hb-instrument`, `.hb-led`, stage looks, `.hb-dotgrid`, `.hb-fixture`, `.hb-viewport-host`, HbMessage `boxed`, HbStatusBar cell `state` | 19 |
+| 0.9.1 | `.hb-toolpage.is-split.is-stage`, `--hb-stage-h-sm`, HbViewport `.hb-ov-top` with a pad, HbSendTo | 18, stage split and send to |
 
 ### Phone stage plus rack
 
@@ -1337,6 +1338,18 @@ Stage ratio by measurement: `fill` gave 492 px of height for a 358 px
 wide stage at 390 by 664 (measured). A fixed `--hb-vp-ratio-sm` of 1/1
 would leave 134 px empty there and 3/4 hits the 62svh cap at 412 px,
 leaving 80 (computed). `fill` in a fit shell leaves no gap at any size.
+
+### Stage split and send to
+
+A character or room tool with chat (`#/demos/stage-chat`), ported from
+FERRULE's stage plus chat body.
+
+| Part | Classes and props | Behaviour |
+|---|---|---|
+| stage split | `.hb-toolpage.is-split.is-stage`, side `.is-side` | from 1024 px the stage takes `minmax(0, 1fr)` on the left and the side column `minmax(340px, 520px)` on the right, held to the window height so the chat log scrolls inside it and the composer stays in view; an `.is-grow` child fills it. Under 1024 px the stage comes first and the side column follows. FERRULE switches at 860 px; the kit keeps its one split breakpoint |
+| phone stage height | `--hb-stage-h-sm` | the height of an `HbViewport` child of `.hb-toolpage.is-stage` under 1024 px, at least 160 px. `38dvh` (the default, FERRULE) for a character: 252 px at 390 by 664 (computed), the log and composer stay in reach. Held sideways under 541 px tall the stage takes `85dvh` and chat scrolls under it. A room in `HbAppShell fit` uses `aspect="fill"` instead, which ignores the token: 492 px at 390 by 664 (measured in 0.8.1). Any length works |
+| pad aware corners | `.hb-ov-top` | an HbViewport with the `pad` slot wraps `tl`, `tr` and `telemetry` in one grid. Telemetry sits under the name hud, and on a coarse pointer in landscape under 541 px tall it moves under the `tr` content, since the stick covers the left of a short stage |
+| send to | `HbSendTo` `targets`, `label`, `align`, `@send`; `.hb-sendto`, `.hb-sendto-reason` | HbDropdown rows with an HbIcon for what the tool takes. A target with a `reason` is disabled and the reason shows beside its name. HbContextMenu is the menu for a pressed thing in the scene and sends sentences; it is not a send to list |
 
 ## 19. The refined look
 

@@ -173,6 +173,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbSettingsForm', blurb: 'sections from a schema, reset, levels' },
       { name: 'HbPresetChips', blurb: 'one press sets every dial' },
       { name: 'HbDropdown', blurb: 'action menu under a trigger' },
+      { name: 'HbSendTo', blurb: 'send a result to another tool, with reasons' },
       { name: 'HbDropzone', blurb: 'drop, paste or pick files, routed by type' },
     ],
   },
