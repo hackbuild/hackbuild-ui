@@ -1,7 +1,7 @@
 // Transcript, level rail and queue strip: rows, search, rail bars, status words.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { clockTime, segTime, transcriptRows, markParts, droppedLine, nowIndex, railBars, railTicks, dbText, stripStatus, stripMeta } from "../../src/vanilla/transcript.ts";
+import { clockTime, segTime, transcriptRows, markParts, droppedLine, nowIndex, railBars, railTicks, dbText, stripStatus, stripMeta, sizeWord } from "../../src/vanilla/transcript.ts";
 
 const segs = [
   { start: 0, end: 1.8, text: "pixel, sit.", speaker: "mo" },
@@ -71,4 +71,12 @@ test("strip status takes the job phase, meta marks a low snr", () => {
     ["", "01:15", ""], ["", "4 mb", ""], ["snr", "6.3 dB", "lo"], ["speech", "41%", ""], ["", "12.4x rt", ""], ["", "1 line", ""],
   ]);
   assert.equal(stripMeta({ snrDb: 24 })[0].tone, "hi");
+});
+
+test("sizeWord never reads 0 mb for a small file", () => {
+  assert.equal(sizeWord(320e3), "320 kb");
+  assert.equal(sizeWord(12), "1 kb");
+  assert.equal(sizeWord(4.2e6), "4 mb");
+  assert.equal(sizeWord(2.31e9), "2.3 gb");
+  assert.equal(stripMeta({ size: 512e3 })[0].value, "512 kb");
 });

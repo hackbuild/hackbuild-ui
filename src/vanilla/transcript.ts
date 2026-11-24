@@ -213,13 +213,20 @@ export interface StripFigure {
   tone?: 'lo' | 'hi'
 }
 
+/** A byte count as kb, mb or gb; never "0 mb" for a small file. */
+export function sizeWord(bytes: number): string {
+  if (bytes >= 1e9) return `${(bytes / 1e9).toFixed(1)} gb`
+  if (bytes >= 1e6) return `${Math.round(bytes / 1e6)} mb`
+  return `${Math.max(1, Math.round(bytes / 1e3))} kb`
+}
+
 /** The meta line, in the earlier tool's order: duration, size, snr (red under 8, good over 20, vendor), lift, speech, speed, lines. */
 export function stripMeta(m: {
   duration?: number; size?: number; snrDb?: number; gainDb?: number; density?: number; rtf?: number; lines?: number
 }): StripFigure[] {
   const out: StripFigure[] = []
   if (m.duration) out.push({ value: clockTime(m.duration) })
-  if (m.size !== undefined) out.push({ value: m.size >= 1e9 ? `${(m.size / 1e9).toFixed(1)} gb` : `${Math.round(m.size / 1e6)} mb` })
+  if (m.size !== undefined) out.push({ value: sizeWord(m.size) })
   if (m.snrDb !== undefined) out.push({ label: 'snr', value: `${m.snrDb.toFixed(1)} dB`, tone: m.snrDb < 8 ? 'lo' : m.snrDb > 20 ? 'hi' : undefined })
   if (m.gainDb !== undefined) out.push({ label: 'lift', value: `${m.gainDb.toFixed(1)} dB` })
   if (m.density !== undefined) out.push({ label: 'speech', value: `${Math.round(m.density * 100)}%` })
