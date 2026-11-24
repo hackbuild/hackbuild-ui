@@ -95,6 +95,15 @@ export const registry: RegistryGroup[] = [
     ],
   },
   {
+    category: 'memory and voice',
+    entries: [
+      { name: 'HbMemoryPanel', blurb: 'add, search, inspect, move and erase in one place' },
+      { name: 'HbMemoryItem', blurb: 'kind, score, entity, edit and forget' },
+      { name: 'HbRecallTrace', blurb: 'why a memory won, and what lost' },
+      { name: 'HbMicButton', blurb: 'mic toggle or push to talk, blocked says what to do' },
+    ],
+  },
+  {
     category: 'surfaces',
     entries: [
       { name: 'HbPanel', blurb: 'raised paper with the block shadow' },

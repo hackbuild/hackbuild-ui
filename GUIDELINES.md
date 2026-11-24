@@ -1155,3 +1155,16 @@ Vanilla: `gateNote`, `wakePills`, `wakeSummary`, `wakeBar`, `wakeError`;
 Vanilla: `splitParts`, `statsText`, `clip`, `argsLine`, `argsBlock`,
 `TOOL_WORDS`, `composerKey`, `coarsePointer`, `autosize`, `pinned`,
 `contextUse`, `relTime`.
+
+### Memory and voice: memory panel, memory item, recall trace, mic button
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbMemoryPanel` | `.hb-mempanel`, `-sec`, `-hd`, `-counts`, `-line`, `-store`, `-row`, `-list`, `-empty`, `-foot`, `-wipe` | one surface: the count line by kind doubles as a legend; the storage line with keep (emits `persist`); a search box that emits `search` 250 ms after typing so the page runs the same ranker the chat uses, with the search mode under it; kind chips filter; last reply used; add a note (ctrl Enter adds); the typed list with edit and forget; export, import a json file, erase all on a second press. `readonly` drops add, edit, forget, import and erase |
+| `HbMemoryItem` | `.hb-mem`, `-body`, `-kind`, `-score`, `-title`, `-text`, `-ent`, `-when`, `-edit`, `-acts`, `-act`, `.is-used`, `.is-armed` | the kind chip carries the recall score (`rule 1.03`); entity chips after the text; edit in place (ctrl Enter saves, Escape backs out, focus returns to edit); forget reads `forget?` for 3 s and acts on the second press |
+| `HbRecallTrace` | `.hb-recall`, `-hd`, `-q`, `-line`, `-weights`, `-list`, `-hit`, `-top`, `-kind`, `-mark`, `-text`, `-bars`, `-k`, `-bar`, `-v`, `.is-used`, `.is-final` | on the void: the query, `n candidates scored, top k used.` and how they were scored; every candidate with a bar per part and the final bar; used hits lit with a slime rule, the rest dimmed. With `weights` the final is the weighted mean and `tunable` adds a slider per weight that redraws the order |
+| `HbMicButton` | `.hb-mic`, `-btn`, `-level`, `-note`, `.is-off`, `.is-asking`, `.is-listening`, `.is-hearing`, `.is-blocked`, `.is-unsupported`, `.is-hold` | a 44 px square: pink while it takes input with the level along its foot, dashed while the browser asks, struck through when blocked or missing with a line that names the way around (`type instead`). `hold` is push to talk on the pointer, Space or Enter. `listen` runs the browser's recognition through `micInput`: interim and final words, a restart 150 ms after the browser ends a session, results dropped while `speaking` and for `tailMs` after |
+
+Vanilla: `memoryCounts`, `kindWord`, `scoreText`, `memoryMatch` (keyword
+stub for demos and stores with no ranker), `recallScore`, `recallRank`,
+`recallLine`; `micInput`, `micLive`, `MIC_WORDS`.
