@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.0
+
+- HbPersonaEditor, HbStepCard, HbPromptInspector, HbContextMenu.
+  Vanilla `persona` (`PERSONA_TEMPLATE`, `parsePersona`, `personaJson`,
+  `tokenEstimate`), `trace` (`stepLabel`, `clipText`, `costRows`),
+  `ctxmenu` (`contextTrigger`, `ctxPanel`, `clampMenu`, `isMenuKey`).
+- HbContextMenu opens by right click, long press on touch, the menu key
+  or Shift+F10; 44 px rows on a coarse pointer.
+- HbImageSlot `ratio` (`1/1`, `4/3`, `16/9`, `w/h`, `auto`).
+- HbArtboard and HbPromptCanvas ship type declarations.
+- HbAppShell with no rail: the main column fills the width from 901 px.
+
 ## 0.7.1
 
 - HbStageCaption, HbNameHud, HbTransport, HbPad. Vanilla `stage`, `pad`,
