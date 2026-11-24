@@ -61,3 +61,5 @@ export { clockTime, segTime, transcriptRows, markParts, droppedLine, nowIndex, r
 export type { TranscriptSeg, TranscriptWord, DroppedSeg, TimeFormat, TranscriptRow, RailBarsInput, RailBars, StripStatus, StripTone, StripFigure } from './transcript'
 export { spokenWords, toSpoken, spokenIndex, wordAtChar, METHOD_WORDS, methodMeta, qualitySquares, cameraFault, openCamera, closeCamera, captureFrame, historyPush, runMeta, SEED_MAX, rollSeed, parseSeed, nextSeed } from './media'
 export type { SpokenWord, MethodState, ImageSource, CameraFault, HistoryLike } from './media'
+export { PROMPT_KEYS, containRect, toImage, toView, normBox, isBox, nudge, promptStep, promptWord, hoverThrottle, INSTANCE_COLOURS, instanceColour, scorePct, clampPair, rangePct, splitKey, splitAt } from './vision'
+export type { SegPrompt, PromptTool, PromptRect } from './vision'

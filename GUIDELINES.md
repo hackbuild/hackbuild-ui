@@ -1221,3 +1221,23 @@ Vanilla: `spokenWords`, `toSpoken`, `spokenIndex`, `wordAtChar`;
 `METHOD_WORDS`, `methodMeta`, `qualitySquares`; `cameraFault`,
 `openCamera`, `closeCamera`, `captureFrame`; `historyPush`, `runMeta`;
 `SEED_MAX`, `rollSeed`, `parseSeed`, `nextSeed`.
+
+### Masks and views: prompt canvas, instance list, dual range, monitor dock, split
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbPromptCanvas` | `.hb-pc`, `-tools`, `-key`, `-well`, `-frame`, `-img`, `-mask`, `-box`, `-h`, `-dot`, `-cursor`, `-help`, `.is-preview`, `.is-band`, `.is-neg`, `.is-corner`, `.is-kb`, `.is-readonly` | prompts for a promptable mask model, every one in image pixels (`toImage` maps a pointer through object-fit contain; the letterbox places nothing). Tools keep, leave out and box, keys p n b; a right press or alt leaves out. Hover emits through `hoverThrottle` at 50 ms and always lands the last point; a press commits. Touch has no hover: a tap places. Handles drag, take arrows (1 percent of the long side, 10 with shift), Enter flips keep and leave out, Delete removes. The focused frame shows a cursor: arrows move it and emit hover, Enter places a point, or a box from two presses. Handles are 24 px on a fine pointer and 44 px on a coarse one; keep is a square, leave out a diamond. Masks are alpha urls tinted in their colour; the preview is dashed. A status line reads each prompt out |
+| `HbInstanceList` | `.hb-inst`, `-list`, `-row`, `-pick`, `-sw`, `-name`, `-score`, `-act`, `-foot`, `-empty`, `.is-on`, `.is-hidden`, `.is-del` | one row per mask in its canvas colour (`instanceColour`, ten cycled), name, score clamped to 100 percent (`scorePct`), show or hide, delete; merge all and clear all under it. Actions appear on hover and focus with a mouse and stay at 44 px on touch. On a row h hides, Delete removes, arrows move |
+| `HbRange2` | `.hb-r2`, `-track`, `-in`, `-names`, `-hint`, `.is-lo`, `.is-hi`, `.is-top`, `.is-disabled` | two native ranges stacked on one track for a window: keep near and keep far. The band between the thumbs is pink. `clampPair` stops the moved thumb at the other and holds `gap`; whichever thumb sits past the middle is on top, so two thumbs at one end still part. 44 px track, thumbs 44 px tall on a coarse pointer. `commit` on release |
+| `HbMonitorDock` | `.hb-mdock`, `.is-overlay` | insets side by side: the raw feed and the model's view. v-model is the list of open tiles, each head folds its own; `modes` per view switch inside a tile. Inline tiles grow to share the row and stack on a phone; `overlay` gives fixed width tiles for `.hb-ov-bl`. Not `.hb-dock`, which is the composer bar |
+| `HbSplit` | `.hb-split`, `-side`, `-tag`, `-bar`, `-grip`, `.is-left`, `.is-right`, `.is-drag` | a compare wipe: two views of one image in one frame, the right one cut at the divider. Press or drag anywhere; the bar is a slider (arrows 5 percent, shift 1, page keys 25, home and end). 44 px bar on a coarse pointer |
+
+`HbSplit` is not `.hb-toolpage.is-split`. The tool page split lays the
+controls column beside the stage, fixed at 260 to 340 px; it is page
+layout and does not resize. `HbSplit` compares two pictures of the same
+size inside one frame; it is content.
+
+Vanilla: `PROMPT_KEYS`, `containRect`, `toImage`, `toView`, `normBox`,
+`isBox`, `nudge`, `promptStep`, `promptWord`, `hoverThrottle`;
+`INSTANCE_COLOURS`, `instanceColour`, `scorePct`; `clampPair`,
+`rangePct`; `splitKey`, `splitAt`.

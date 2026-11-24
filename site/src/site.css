@@ -80,3 +80,5 @@
 .demo-inset-fill{ position:absolute; inset:0; background:var(--hb-ink-inset) }
 .demo-inset-fill.is-depth{ background:var(--hb-lit-dim) }
 .demo-inset-fill.is-mask{ background:var(--hb-plate-teal) }
+.demo-pair{ display:grid; gap:var(--hb-s4); align-items:start; min-width:0 }
+@media(min-width:900px){ .demo-pair{ grid-template-columns:minmax(0, 1fr) 260px } }

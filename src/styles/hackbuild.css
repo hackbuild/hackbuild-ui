@@ -3708,3 +3708,127 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-seed-input{ font-family:var(--hb-readout); font-size:20px; font-variant-numeric:tabular-nums }
 .hb-seed-lock[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-seed-err{ flex:1 1 100%; color:var(--hb-err) }
+
+/* Prompt canvas. The mask tool's image: keep and leave out points and
+   boxes placed in image pixels, committed masks tinted in their colour,
+   the preview under the cursor. The frame keeps the image ratio and
+   never grows past --hb-pc-max-h, so a prompt maps one to one. Handles
+   are 24 px on a fine pointer and 44 px on a coarse one; the dot stays
+   small so it never hides what it marks. Keep is a square, leave out
+   a diamond, so the sign never rests on colour alone. */
+.hb-pc{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-pc-tools{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2) }
+.hb-pc-tools > .hb-iconbtn[disabled]{ opacity:.45; cursor:not-allowed; box-shadow:none }
+.hb-pc-key{ margin-left:var(--hb-s1); font-family:var(--hb-utility); font-size:9px; font-weight:700; opacity:.6 }
+@media (pointer:coarse){ .hb-pc-key{ display:none } }
+.hb-pc-well{ display:flex; justify-content:center; min-width:0; background:var(--hb-void); border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow) }
+.hb-pc-frame{
+  position:relative; width:100%; max-width:calc(var(--hb-pc-max-h, 70vh) * var(--hb-pc-ratio, 1.333));
+  touch-action:none; user-select:none; -webkit-user-select:none; cursor:crosshair; overflow:hidden;
+}
+.hb-pc-frame:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-pc-frame.is-box{ cursor:cell }
+.hb-pc.is-readonly .hb-pc-frame{ cursor:default }
+.hb-pc-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; pointer-events:none }
+.hb-pc-mask{ position:absolute; inset:0; pointer-events:none; mask-image:var(--hb-pc-src); -webkit-mask-image:var(--hb-pc-src); background:var(--hb-pc-c, var(--hb-pink)); opacity:.5; mask-size:100% 100%; -webkit-mask-size:100% 100%; mask-repeat:no-repeat; -webkit-mask-repeat:no-repeat }
+.hb-pc-mask.is-preview{ opacity:.35; outline:1px dashed var(--hb-paper); outline-offset:-1px }
+.hb-pc-box{ position:absolute; pointer-events:none; border:var(--hb-border) solid var(--hb-slime); outline:1px solid var(--hb-void) }
+.hb-pc-box.is-neg{ border-color:var(--hb-lit-err); border-style:dashed }
+.hb-pc-box.is-band{ border-style:dashed; background:color-mix(in srgb, var(--hb-paper) 10%, transparent) }
+.hb-pc-h{
+  position:absolute; width:24px; height:24px; margin:-12px 0 0 -12px; padding:0;
+  display:flex; align-items:center; justify-content:center;
+  background:transparent; border:0; cursor:grab; touch-action:none;
+}
+.hb-pc-dot{ width:12px; height:12px; background:var(--hb-slime); border:2px solid var(--hb-void); outline:2px solid var(--hb-paper) }
+.hb-pc-h.is-neg .hb-pc-dot{ background:var(--hb-lit-err); transform:rotate(45deg) }
+.hb-pc-h.is-corner .hb-pc-dot{ width:10px; height:10px; background:var(--hb-void); border-color:var(--hb-slime) }
+.hb-pc-h.is-corner.is-neg .hb-pc-dot{ border-color:var(--hb-lit-err); transform:none }
+.hb-pc-h:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:0 }
+@media (pointer:coarse){ .hb-pc-h{ width:44px; height:44px; margin:-22px 0 0 -22px } }
+.hb-pc-cursor{ position:absolute; width:22px; height:22px; margin:-11px 0 0 -11px; pointer-events:none; border:2px solid var(--hb-pink); outline:1px solid var(--hb-void) }
+.hb-pc-cursor::before,.hb-pc-cursor::after{ content:''; position:absolute; background:var(--hb-pink) }
+.hb-pc-cursor::before{ left:50%; top:-8px; bottom:-8px; width:2px; margin-left:-1px }
+.hb-pc-cursor::after{ top:50%; left:-8px; right:-8px; height:2px; margin-top:-1px }
+.hb-pc-help{ margin:0; font-family:var(--hb-utility); font-size:11px; line-height:1.5; color:var(--hb-ink-3) }
+@media (pointer:coarse){ .hb-pc-help{ display:none } }
+
+/* Instance list. One row per mask: colour square, name, score clamped to
+   100 percent, show or hide, delete; merge all and clear all under it.
+   The actions show on hover and focus on a fine pointer and stay on
+   screen at 44 px on touch. A hidden mask's row reads struck through. */
+.hb-inst{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-inst-empty{ margin:0; padding:var(--hb-s2) 0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-inst-list{ display:flex; flex-direction:column; gap:var(--hb-s1); margin:0; padding:0; list-style:none; max-height:var(--hb-inst-max-h, 240px); overflow-y:auto }
+.hb-inst-row{ display:flex; align-items:stretch; min-width:0; background:var(--hb-paper-raised); border:1.5px solid var(--hb-ink) }
+.hb-inst-row.is-on{ border-width:var(--hb-border-hd); box-shadow:3px 3px 0 var(--hb-ink) }
+.hb-inst-pick{ flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:var(--hb-s2); padding:var(--hb-s1) var(--hb-s2); min-height:32px; background:transparent; border:0; color:var(--hb-ink); font:inherit; text-align:left; cursor:pointer }
+.hb-inst-pick:focus-visible,.hb-inst-act:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-2px }
+.hb-inst-sw{ flex:none; width:14px; height:14px; background:var(--hb-inst-c, var(--hb-pink)); border:1.5px solid var(--hb-ink) }
+.hb-inst-name{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--hb-body); font-size:13px }
+.hb-inst-score{ flex:none; font-family:var(--hb-readout); font-size:16px; font-variant-numeric:tabular-nums; color:var(--hb-ink-3) }
+.hb-inst-row.is-hidden .hb-inst-name{ text-decoration:line-through; color:var(--hb-ink-3) }
+.hb-inst-row.is-hidden .hb-inst-sw{ opacity:.35 }
+.hb-inst-act{ flex:none; width:32px; display:inline-flex; align-items:center; justify-content:center; padding:0; background:transparent; color:var(--hb-ink-3); border:0; border-left:1px dashed var(--hb-ink-4); cursor:pointer }
+.hb-inst-act[aria-pressed="false"]{ color:var(--hb-ink-4) }
+@media (hover:hover) and (pointer:fine){
+  .hb-inst-act{ visibility:hidden }
+  .hb-inst-row:hover .hb-inst-act,.hb-inst-row:focus-within .hb-inst-act,.hb-inst-act[aria-pressed="false"]{ visibility:visible }
+  .hb-inst-act:hover{ color:var(--hb-ink) }
+  .hb-inst-act.is-del:hover{ color:var(--hb-err) }
+}
+@media (pointer:coarse){ .hb-inst-pick{ min-height:44px } .hb-inst-act{ width:44px } }
+.hb-inst-foot{ margin:0 }
+
+/* Dual range. Two thumbs on one track for a window: keep near and keep
+   far, low and high cut. The band between them is pink; the moved thumb
+   stops at the other. Native inputs stacked, so keys work as on any
+   range; only the thumbs take the pointer. */
+.hb-r2{ display:grid; grid-template-columns:1fr auto; gap:4px var(--hb-s3); align-items:center; margin-bottom:var(--hb-s3); min-width:0 }
+.hb-r2 > .hb-readout{ font-size:17px }
+.hb-r2-track{ grid-column:1 / -1; position:relative; height:44px }
+.hb-r2-track::before{ content:''; position:absolute; left:0; right:0; top:50%; height:4px; margin-top:-2px; background:var(--hb-paper-sunk); border:1px solid var(--hb-ink) }
+.hb-r2-track::after{ content:''; position:absolute; left:var(--hb-r2-a); right:calc(100% - var(--hb-r2-b)); top:50%; height:4px; margin-top:-2px; background:var(--hb-pink); border-block:1px solid var(--hb-ink) }
+.hb-r2-in{ position:absolute; inset:0; width:100%; height:100%; margin:0; padding:0; background:transparent; pointer-events:none; appearance:none; -webkit-appearance:none; z-index:1 }
+.hb-r2-in.is-top{ z-index:2 }
+.hb-r2-in::-webkit-slider-runnable-track{ background:transparent; border:0; height:100% }
+.hb-r2-in::-moz-range-track{ background:transparent; border:0 }
+.hb-r2-in::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; pointer-events:auto; width:18px; height:24px; margin-top:10px; background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); box-shadow:2px 2px 0 var(--hb-ink); cursor:grab }
+.hb-r2-in::-moz-range-thumb{ pointer-events:auto; width:14px; height:20px; border-radius:0; background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); box-shadow:2px 2px 0 var(--hb-ink); cursor:grab }
+.hb-r2-in:focus-visible{ outline:none }
+.hb-r2-in:focus-visible::-webkit-slider-thumb{ background:var(--hb-pink); outline:2px solid var(--hb-ink); outline-offset:2px }
+.hb-r2-in:focus-visible::-moz-range-thumb{ background:var(--hb-pink) }
+@media (pointer:coarse){
+  .hb-r2-in::-webkit-slider-thumb{ width:28px; height:44px; margin-top:0 }
+  .hb-r2-in::-moz-range-thumb{ width:24px; height:40px }
+}
+.hb-r2.is-disabled{ opacity:.5 }
+.hb-r2-names{ grid-column:1 / -1; display:flex; justify-content:space-between; gap:var(--hb-s2); font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-r2-hint{ grid-column:1 / -1; margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-3) }
+
+/* Monitor dock. Insets side by side: the raw feed beside the model's
+   view, each folding to its head. Inline it fills the row and wraps
+   two up when the row fits two; .is-overlay docks fixed width tiles on a
+   viewport corner (.hb-ov-bl) and wraps upward. */
+.hb-mdock{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); align-items:flex-start; min-width:0 }
+.hb-mdock > .hb-inset{ flex:1 1 var(--hb-mdock-w, 176px); width:auto; min-width:0 }
+.hb-mdock.is-overlay{ display:flex; flex-wrap:wrap-reverse; align-items:flex-end; max-width:100% }
+.hb-mdock.is-overlay > .hb-inset{ flex:none; width:min(var(--hb-mdock-w, 176px), 44cqw) }
+
+/* Split. A compare wipe for two views of one image: source and depth,
+   before and after. The right slot is cut at the divider; the tags name
+   each side. Press or drag anywhere; the bar is the keyboard slider.
+   Not the page split: .hb-toolpage.is-split lays out columns. */
+.hb-split{ position:relative; aspect-ratio:var(--hb-split-ratio, 4/3); overflow:hidden; background:var(--hb-void); border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow); touch-action:pan-y; user-select:none; -webkit-user-select:none; cursor:ew-resize }
+.hb-split-side{ position:absolute; inset:0 }
+.hb-split-side > img,.hb-split-side > canvas,.hb-split-side > video{ width:100%; height:100%; object-fit:contain; display:block }
+.hb-split-side.is-right{ clip-path:inset(0 0 0 var(--hb-split-pos, 50%)) }
+.hb-split-tag{ position:absolute; top:var(--hb-s2); padding:1px var(--hb-s2); font-family:var(--hb-readout); font-size:15px; text-transform:uppercase; letter-spacing:.04em; background:var(--hb-ink); color:var(--hb-paper); pointer-events:none; max-width:calc(50% - var(--hb-s3)); overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.hb-split-tag.is-left{ left:var(--hb-s2) }
+.hb-split-tag.is-right{ right:var(--hb-s2) }
+.hb-split-bar{ position:absolute; top:0; bottom:0; left:var(--hb-split-pos, 50%); width:24px; margin-left:-12px; display:flex; align-items:center; justify-content:center; cursor:ew-resize }
+.hb-split-bar::before{ content:''; position:absolute; top:0; bottom:0; left:50%; width:2px; margin-left:-1px; background:var(--hb-paper); outline:1px solid var(--hb-void) }
+.hb-split-grip{ position:relative; width:14px; height:32px; background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink) }
+.hb-split-bar:focus-visible{ outline:none }
+.hb-split-bar:focus-visible .hb-split-grip{ background:var(--hb-pink) }
+@media (pointer:coarse){ .hb-split-bar{ width:44px; margin-left:-22px } .hb-split-grip{ width:20px; height:44px } }

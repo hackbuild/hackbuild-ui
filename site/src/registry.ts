@@ -118,6 +118,11 @@ export const registry: RegistryGroup[] = [
       { name: 'HbCameraTile', blurb: 'the feed with corner tags and a denied state' },
       { name: 'HbHistoryStrip', blurb: 'recent runs, a press restores the settings' },
       { name: 'HbSeed', blurb: 'seed with dice and a lock' },
+      { name: 'HbPromptCanvas', blurb: 'keep and leave out points and boxes on an image, by touch or keys' },
+      { name: 'HbInstanceList', blurb: 'one row per mask: colour, score, hide, delete, merge' },
+      { name: 'HbRange2', blurb: 'two thumbs on one track for a near and far window' },
+      { name: 'HbMonitorDock', blurb: 'raw feed and model views side by side, each folds' },
+      { name: 'HbSplit', blurb: 'a compare wipe between two views of one image' },
     ],
   },
   {
