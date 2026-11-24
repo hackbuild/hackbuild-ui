@@ -4,6 +4,11 @@ The hack.build design system and Vue component library. Warm paper, black
 ink, one hot pink, typewriter type, hard shadows that look slightly
 off-register like a bad photocopy.
 
+Live site: https://hackbuild.github.io/hackbuild-ui/
+
+The living style guide is at `hackbuild-design-system.html` on the site
+and the playground at `playground/`.
+
 Three layers, each usable without the ones above it:
 
 1. `tokens.css`. Every color, face, shadow, spacing step, and z index as

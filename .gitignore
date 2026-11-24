@@ -15,3 +15,4 @@ coverage/
 *.key
 # playground screenshots
 playground/shots/
+_site/

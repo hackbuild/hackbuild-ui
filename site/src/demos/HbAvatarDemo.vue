@@ -3,6 +3,8 @@ import { HbAvatar } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 
+const mark = `${import.meta.env.BASE_URL}favicon.svg`
+
 const seeds = ['virgilvox', 'jonahkaye', 'sarahbuilds', 'bengineer', 'alice', 'bob', 'carol', 'dave']
 
 const code = `<HbAvatar seed="virgilvox" />                    <!-- the little person -->
@@ -44,7 +46,7 @@ const code = `<HbAvatar seed="virgilvox" />                    <!-- the little p
       <HbAvatar size="lg" seed="virgilvox" />
       <HbAvatar size="lg" initials="mz" />
       <HbAvatar size="lg" initials="jk" plate="purple" />
-      <HbAvatar size="lg" src="/favicon.svg" alt="the mark as a stand in" />
+      <HbAvatar size="lg" :src="mark" alt="the mark as a stand in" />
     </div>
   </DemoSection>
 
