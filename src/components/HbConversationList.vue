@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
-import { listMeta } from '../vanilla/chat'
+import { listMeta, listRowKey } from '../vanilla/chat'
 import HbIcon from './HbIcon.vue'
 
 export interface HbConversation {
@@ -104,15 +104,19 @@ function saveRename() {
   if (id && t) emit('rename', id, t)
 }
 
-// Up and Down move between rows; the row buttons stay in the tab order.
+// Up and Down move between rows, F2 renames, Delete arms then deletes.
+// The row buttons stay in the tab order and are always drawn.
 const list = ref<HTMLElement | null>(null)
-function onKey(e: KeyboardEvent) {
-  if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
+function onKey(e: KeyboardEvent, c: HbConversation) {
+  const act = listRowKey(e)
+  if (!act) return
   const opens = [...(list.value?.querySelectorAll<HTMLElement>('.hb-convs-open') ?? [])]
   const at = opens.indexOf(e.target as HTMLElement)
   if (at < 0) return
   e.preventDefault()
-  opens[(at + (e.key === 'ArrowDown' ? 1 : opens.length - 1)) % opens.length]?.focus()
+  if (act === 'rename') void startRename(c)
+  else if (act === 'remove') { if (!(props.busy && c.id === props.current)) onRemove(c.id) }
+  else opens[(at + (act === 'next' ? 1 : opens.length - 1)) % opens.length]?.focus()
 }
 </script>
 
@@ -122,13 +126,13 @@ function onKey(e: KeyboardEvent) {
       <span>{{ head }}</span>
       <button v-if="props.creatable" type="button" class="hb-convs-new" :disabled="props.busy" :aria-label="`new ${props.noun}`" :title="newKey ? `new ${props.noun} (${newKey})` : `new ${props.noun}`" @click="emit('new')"><HbIcon name="plus" :size="14" /></button>
     </div>
-    <ul ref="list" class="hb-convs-list" @keydown="onKey">
+    <ul ref="list" class="hb-convs-list">
       <li v-if="!sorted.length" class="hb-convs-empty">no {{ many }} yet.</li>
-      <li v-for="c in sorted" :key="c.id" class="hb-convs-item" :aria-current="c.id === props.current ? 'true' : undefined">
+      <li v-for="c in sorted" :key="c.id" class="hb-convs-item" :aria-current="c.id === props.current ? 'true' : undefined" @keydown="onKey($event, c)">
         <form v-if="renaming === c.id" class="hb-convs-rename" @submit.prevent="saveRename">
           <input ref="nameBox" v-model="name" class="hb-input" :aria-label="`${props.noun} name`" @keydown.escape.prevent="renaming = null" @blur="saveRename">
         </form>
-        <button v-else type="button" class="hb-convs-open" :disabled="props.busy && c.id !== props.current" @click="emit('open', c.id)">
+        <button v-else type="button" class="hb-convs-open" :disabled="props.busy && c.id !== props.current" aria-keyshortcuts="F2 Delete" @click="emit('open', c.id)">
           <span class="hb-convs-title">{{ c.title }}</span>
           <span class="hb-convs-meta">{{ when(c) }}</span>
         </button>

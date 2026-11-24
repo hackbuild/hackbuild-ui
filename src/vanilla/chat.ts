@@ -139,3 +139,17 @@ export function relTime(t: number | string | Date, now = Date.now()): string {
   if (s < 86400 * 14) return `${Math.floor(s / 86400)} d ago`
   return new Date(ms).toISOString().slice(0, 10)
 }
+
+export type ListRowAction = 'next' | 'prev' | 'rename' | 'remove' | null
+
+/** A key on a saved list row: Up and Down move, F2 renames, Delete (or
+    Backspace with no text field) arms delete; a second press deletes. The
+    row buttons stay in the tab order beside these. */
+export function listRowKey(e: Pick<KeyboardEvent, 'key' | 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'>): ListRowAction {
+  if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return null
+  if (e.key === 'ArrowDown') return 'next'
+  if (e.key === 'ArrowUp') return 'prev'
+  if (e.key === 'F2') return 'rename'
+  if (e.key === 'Delete' || e.key === 'Backspace') return 'remove'
+  return null
+}

@@ -51,7 +51,7 @@ const code = `<HbConversationList :items="sessions" :current="active" @open="ope
 
   <DemoSection
     title="Documents"
-    note="The same rail for any saved thing. noun sets every label: the head, the empty line, the rename box, new. Rows show kind and when; count is left out when the item has none. Click or Enter picks a row and sets current; rename in place, delete on a second press. 44 px rows on a touch screen."
+    note="The same rail for any saved thing. noun sets every label: the head, the empty line, the rename box, new. Rows show kind and when; count is left out when the item has none. Click or Enter picks a row and sets current; rename in place, delete on a second press. Row actions are always drawn, never behind a hover; on a focused row F2 renames and Delete arms delete. 44 px rows on a touch screen."
     :code="docCode"
   >
     <div style="max-width: 360px; height: 300px; display: flex">

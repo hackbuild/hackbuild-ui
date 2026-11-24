@@ -66,3 +66,15 @@ test("listMeta names kind, when and count, leaving out what a row lacks", () => 
   assert.equal(listMeta({ updated: now - 3 * 3600e3, kind: "sketch" }, now), "sketch, 3 h ago");
   assert.equal(listMeta({ updated: now, kind: "", count: 0 }, now), "just now, 0 msg");
 });
+
+test("list row keys: move, rename, delete; modifiers pass through", async () => {
+  const { listRowKey } = await import("../../src/vanilla/chat.ts");
+  const k = (key, m = {}) => listRowKey({ key, altKey: false, ctrlKey: false, metaKey: false, shiftKey: false, ...m });
+  assert.equal(k("ArrowDown"), "next");
+  assert.equal(k("ArrowUp"), "prev");
+  assert.equal(k("F2"), "rename");
+  assert.equal(k("Delete"), "remove");
+  assert.equal(k("Backspace"), "remove");
+  assert.equal(k("Delete", { metaKey: true }), null);
+  assert.equal(k("a"), null);
+});

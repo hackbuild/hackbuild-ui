@@ -3389,6 +3389,10 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-convs-act{ display:inline-flex; align-items:center; justify-content:center; min-width:32px; padding:0 6px; background:transparent; border:0; color:var(--hb-ink-3); cursor:pointer; font-family:var(--hb-utility); font-size:11px }
 .hb-convs-act + .hb-convs-act{ border-left:1px dashed var(--hb-ink-4) }
 .hb-convs-act.is-armed{ background:var(--hb-err); color:var(--hb-paper) }
+/* Row actions never wait for a hover: always drawn, lifted to ink while
+   focus is anywhere in the row, 44 px on a coarse pointer. */
+.hb-convs-item:focus-within{ outline:1.5px solid var(--hb-pink); outline-offset:1px }
+.hb-convs-item:focus-within .hb-convs-act:not(.is-armed){ color:var(--hb-ink) }
 @media (hover:hover) and (pointer:fine){ .hb-convs-act:hover{ color:var(--hb-ink) } .hb-convs-act.is-del:hover{ color:var(--hb-err) } .hb-convs-act.is-armed:hover{ color:var(--hb-paper) } }
 .hb-convs-foot{ flex:none; border-top:var(--hb-border) solid var(--hb-ink); padding:var(--hb-s2); display:flex; flex-direction:column; gap:var(--hb-s1) }
 .hb-convs-foot-acts{ display:flex; gap:var(--hb-s1); flex-wrap:wrap }
