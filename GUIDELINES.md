@@ -528,7 +528,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-cams` / `.hb-legend` / `.hb-hud` | Stage overlays: cams top left, legend top right, hud bottom left (section 9) |
 | `.hb-stagebar` | Ink strip across the top of a paper stage |
 | `.hb-mat` | Materials panel rows: swatch, extruder, material, parts, role |
-| `.hb-prow` | Bench param row: label column, control, paired number, unit, reset mark. `.hb-row` keeps its list meaning |
+| `.hb-prow` | Bench param row: label column, control, paired number, unit, reset mark, then `-tags` and the `-help` sentence. The label takes its own line under 400 px. `.hb-row` keeps its list meaning |
 | `.hb-welcome` | First-run card over the stage centre. `.hb-card` keeps its hover-card meaning |
 | `.hb-viewport` | The stage for a 3D scene, a camera or a canvas sim: canvas fills it, hud slots on top, square under 640 px (section 10) |
 | `.hb-hudstat` / `.hb-hudnote` / `.hb-vp-cover` | Hud figures (fps, frame ms), a hud hint, and the cover that says why the scene cannot show (section 10) |
@@ -1065,3 +1065,22 @@ file name that carries the run (`tool_model_seed_20261124-010344`),
 
 The export button is ink; the chosen format chip is ink. Pink stays with
 the live bar and the `me` tag.
+
+## 16. Settings
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbSettingsForm` | `.hb-setform`, `-sec`, `-head`, `-note`, `-foot`, `-more`, `-end` | sections from a schema `{key, type, label, why, tag, applies, default, level, section}`, one `HbParamRow` per key. Every control has its sentence under it; `tag` and `applies` print beside it. Reset per row (the mark), per section ("reset this section") and for all. Rows above the disclosure level are hidden and counted: "2 more from expert up" |
+| `HbPresetChips` | `.hb-presets`, `-row`, `-hint` | one press sets every value a preset names; the chip whose values all hold is pressed and its hint shows, else the row reads custom |
+| `HbParamRow` | `.hb-prow-tag`, `.hb-prow-tag.is-applies`, `.hb-prow-help` | `help`, `tag`, `applies`, and a `text` type. The range drag previews (`touch`), release, a key or a typed number commits (`commit`) |
+| `HbSlider` | `.hb-slider` | v-model follows the drag; `commit` fires on release or a key |
+| `HbSwitch` | `.hb-switch` | the button is the hit box and the track is drawn inside it: 42 by 22 with a fine pointer, 44 by 44 on a coarse one, same track |
+| `HbField` | `.hb-field-head`, `.hb-field-foot`, `.hb-field-count` | `tag` beside the label; `count` and `max` print a counter that turns err past max |
+
+On a coarse pointer every param row is 44 px tall and its reset mark,
+number box, select and seg buttons are 44 px targets.
+
+Vanilla: `rangeRow(el)` binds a range and its number box (preview on
+input, commit on change, typed numbers clamped to the step);
+`shownAt`, `defaultsOf`, `changedKeys`, `resetValues`, `sectionsOf` and
+`matchPreset` work on the schema for pages with no framework.

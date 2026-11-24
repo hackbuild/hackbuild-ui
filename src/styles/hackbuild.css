@@ -392,24 +392,31 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 }
 .hb-check.is-disabled{ color:var(--hb-ink-4); cursor:not-allowed }
 
-/* Switch. A rectangular toggle, knob slides, pink when on. No radius. */
+/* Switch. A rectangular toggle, knob slides, pink when on. No radius.
+   The button is the hit box and the track is drawn inside it: 42 by 22
+   with a fine pointer, 44 tall on a coarse one with the same track. */
 .hb-switch{
   position:relative; width:42px; height:22px; flex:0 0 auto;
-  background:var(--hb-paper-raised);
+  background:transparent; border:0; cursor:pointer; padding:0;
+}
+.hb-switch::before{
+  content:""; position:absolute; left:0; top:50%; width:42px; height:22px; margin-top:-11px;
+  box-sizing:border-box; background:var(--hb-paper-raised);
   border:var(--hb-border) solid var(--hb-ink);
-  cursor:pointer; padding:0;
-  transition:background var(--hb-t);
+  transition:background var(--hb-t), border-color var(--hb-t);
 }
 .hb-switch::after{
-  content:""; position:absolute; top:2px; left:2px;
+  content:""; position:absolute; top:50%; left:4px; margin-top:-7px;
   width:14px; height:14px; background:var(--hb-ink);
   transition:transform var(--hb-t), background var(--hb-t);
 }
-.hb-switch[aria-checked="true"]{ background:var(--hb-pink-10); border-color:var(--hb-pink) }
+.hb-switch[aria-checked="true"]::before{ background:var(--hb-pink-10); border-color:var(--hb-pink) }
 .hb-switch[aria-checked="true"]::after{ transform:translateX(20px); background:var(--hb-pink) }
 .hb-switch:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
-.hb-switch[disabled]{ border-color:var(--hb-ink-4); cursor:not-allowed }
+.hb-switch[disabled]{ cursor:not-allowed }
+.hb-switch[disabled]::before{ border-color:var(--hb-ink-4) }
 .hb-switch[disabled]::after{ background:var(--hb-ink-4) }
+@media(pointer:coarse){ .hb-switch{ width:44px; height:44px } }
 
 /* Switch row: label left, value readout right. The workhorse of every panel. */
 .hb-kv{
@@ -1485,7 +1492,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-prow-num.hb-input{ box-sizing:border-box; width:64px; flex:0 0 auto; min-width:0; padding:var(--hb-s1) var(--hb-s1) }
 /* Seg and switch inside a param row are toggles: ink when on, never pink. */
 .hb-prow-ctl > .hb-seg > button.is-on{ background:var(--hb-ink); color:var(--hb-paper) }
-.hb-prow-ctl > .hb-switch[aria-checked="true"]{ background:var(--hb-paper-sunk); border-color:var(--hb-ink) }
+.hb-prow-ctl > .hb-switch[aria-checked="true"]::before{ background:var(--hb-paper-sunk); border-color:var(--hb-ink) }
 .hb-prow-ctl > .hb-switch[aria-checked="true"]::after{ background:var(--hb-ink) }
 .hb-prow-unit{ font-family:var(--hb-utility); font-size:10px; color:var(--hb-ink-3); flex:0 0 22px }
 .hb-prow-reset{
@@ -2701,3 +2708,60 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-export-checks .is-warn b{ color:var(--hb-warn) }
 .hb-export-checks .is-err b{ color:var(--hb-err) }
 @media(max-width:360px){ .hb-export-readout{ grid-template-columns:1fr } }
+
+/* ==========================================================================
+   31. SETTINGS FORM, PRESET CHIPS, PARAM ROW HELP
+   HbSettingsForm: sections from a schema, one HbParamRow per key with a
+   sentence under it, a tag, and when it applies; reset per row, per
+   section and for all. Rows above the disclosure level are hidden and
+   counted. HbPresetChips: one press sets every dial a preset names; the
+   chip whose values all hold is on, else the row reads custom. On a
+   coarse pointer every row, reset mark and number box is 44 px.
+   ========================================================================== */
+.hb-prow-ctl > .hb-range{ flex:1 1 auto; min-width:0; width:auto }
+.hb-prow-ctl > .hb-input{ flex:1 1 auto; min-width:0; padding:var(--hb-s1) var(--hb-s2) }
+.hb-prow-name{ min-width:0 }
+.hb-prow-tags{ flex:1 0 100%; display:flex; flex-wrap:wrap; gap:var(--hb-s1) }
+.hb-prow-tag{
+  display:inline-block; font-family:var(--hb-utility); font-size:9px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.1em; line-height:1.5;
+  color:var(--hb-ink-2); border:1px solid var(--hb-ink-3); padding:0 4px;
+}
+.hb-prow-tag.is-applies{ border-style:dashed; color:var(--hb-warn); border-color:var(--hb-warn) }
+.hb-prow-help{ flex:1 0 100%; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-prow.has-help{ padding-bottom:var(--hb-s2); border-bottom:1px dashed rgba(26,26,26,.25) }
+@media(pointer:coarse){
+  .hb-prow{ min-height:44px }
+  .hb-prow-reset{ width:44px; height:44px }
+  .hb-prow-label{ flex-basis:128px }
+  .hb-prow-num.hb-input,.hb-prow-ctl > .hb-input,.hb-prow-ctl > .hb-select{ min-height:44px }
+  .hb-prow-ctl > .hb-seg > button{ min-height:44px; min-width:48px }
+}
+
+.hb-field-head{ display:flex; align-items:center; gap:var(--hb-s2); flex-wrap:wrap }
+.hb-field-foot{ display:flex; align-items:baseline; gap:var(--hb-s2) }
+.hb-field-count{ margin-left:auto; font-family:var(--hb-readout); font-size:15px; color:var(--hb-ink-3); font-variant-numeric:tabular-nums }
+.hb-field-count.is-over{ color:var(--hb-err) }
+
+.hb-setform{ display:flex; flex-direction:column; min-width:0 }
+.hb-setform-sec{ padding:var(--hb-s3) 0; border-bottom:var(--hb-border) solid var(--hb-ink) }
+.hb-setform-sec:first-child{ padding-top:0 }
+.hb-setform > .hb-setform-sec > .hb-setform-head{
+  margin:0 0 var(--hb-s1); font-family:var(--hb-utility); font-size:11px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.12em;
+}
+.hb-setform-note{ margin:0 0 var(--hb-s2); font-family:var(--hb-body); font-size:12.5px; color:var(--hb-ink-3) }
+.hb-setform-foot,.hb-setform-end{ display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:var(--hb-s2); margin-top:var(--hb-s2) }
+.hb-setform-more{ margin-right:auto; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-setform-end{ padding-top:var(--hb-s2) }
+
+.hb-presets{ display:flex; flex-direction:column; gap:var(--hb-s1); margin-bottom:var(--hb-s2) }
+.hb-presets-row{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) }
+.hb-presets-hint{ margin:0; font-family:var(--hb-body); font-size:12.5px; color:var(--hb-ink-2) }
+/* Settings labels run longer than bench labels: a wider column keeps a
+   word and its reset mark on one line. */
+.hb-setform .hb-prow-label{ flex-basis:136px }
+@media(pointer:coarse){ .hb-setform .hb-prow-label{ flex-basis:148px } }
+/* Under 400 px the label takes its own line, its reset mark at the right
+   end, so the control, number and unit keep one line between them. */
+@media(max-width:400px){ .hb-prow-label,.hb-setform .hb-prow-label{ flex-basis:100% } }

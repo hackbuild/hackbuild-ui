@@ -22,6 +22,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const model = defineModel<number>({ default: 0 })
 
+const emit = defineEmits<{
+  /** The value settled: released, or set from the keyboard. v-model
+      follows the drag for a preview; rebuild on this. */
+  commit: [value: number]
+}>()
+
 const readout = computed(() => {
   const text = props.format ? props.format(model.value) : String(model.value)
   return props.unit ? `${text} ${props.unit}` : text
@@ -41,6 +47,7 @@ const readout = computed(() => {
       :step="props.step"
       :aria-label="props.label"
       :disabled="props.disabled"
+      @change="emit('commit', model)"
     />
   </div>
 </template>

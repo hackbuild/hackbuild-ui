@@ -6,6 +6,7 @@ import PropsTable from '../components/PropsTable.vue'
 
 const call = ref('')
 const rate = ref<string | number>('2.048')
+const note = ref('meet at the north gate')
 
 const code = `<HbField label="callsign" for="callsign" hint="optional">
   <HbInput id="callsign" v-model="call" />
@@ -29,6 +30,9 @@ const code = `<HbField label="callsign" for="callsign" hint="optional">
       <HbField label="callsign" for="fd-b" error="letters and digits only">
         <HbInput id="fd-b" model-value="n0!call" invalid />
       </HbField>
+      <HbField label="note" for="fd-d" hint="stamped on the capture" tag="optional" :count="note.length" :max="40">
+        <HbInput id="fd-d" v-model="note" />
+      </HbField>
       <HbField label="sample rate" for="fd-c">
         <HbSelect id="fd-c" v-model="rate" :options="['0.960', '1.024', '2.048']" />
       </HbField>
@@ -41,6 +45,8 @@ const code = `<HbField label="callsign" for="callsign" hint="optional">
       { prop: 'for', type: 'string', notes: 'id of the control in the slot' },
       { prop: 'hint', type: 'string' },
       { prop: 'error', type: 'string', notes: 'replaces the hint when present' },
+      { prop: 'count, max', type: 'number', notes: 'counter at the foot, err past max' },
+      { prop: 'tag', type: 'string', notes: 'a word beside the label' },
     ]"
   />
 </template>

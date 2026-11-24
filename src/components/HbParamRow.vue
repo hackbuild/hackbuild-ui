@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import HbSlider from './HbSlider.vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import HbSelect, { type HbSelectOption } from './HbSelect.vue'
 import HbSwitch from './HbSwitch.vue'
 import HbSeg, { type HbSegOption } from './HbSeg.vue'
 import HbIcon from './HbIcon.vue'
+import { rangeRow, type RangeRowHandle } from '../vanilla/settings'
 
 export type HbParamValue = number | string | boolean
 
 interface Props {
   /** Lowercase label in the 96 px column. */
   label: string
-  /** range: slider plus a paired number. select, switch, seg: one control. */
-  type?: 'range' | 'select' | 'switch' | 'seg'
+  /** range: slider plus a paired number. select, switch, seg, text: one control. */
+  type?: 'range' | 'select' | 'switch' | 'seg' | 'text'
   min?: number
   max?: number
   step?: number
@@ -25,6 +25,12 @@ interface Props {
   disabled?: boolean
   /** Why the row is disabled, shown under it. */
   reason?: string
+  /** One or two sentences under the row: what it does, what it costs. */
+  help?: string
+  /** A word beside the label: 'experimental', 'recommended'. */
+  tag?: string
+  /** When a change takes effect: 'next load'. Live when empty. */
+  applies?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,6 +43,9 @@ const props = withDefaults(defineProps<Props>(), {
   defaultValue: undefined,
   disabled: false,
   reason: '',
+  help: '',
+  tag: '',
+  applies: '',
 })
 
 const model = defineModel<HbParamValue>({ required: true })
@@ -51,47 +60,39 @@ const emit = defineEmits<{
 }>()
 
 const changed = computed(() => props.defaultValue !== undefined && model.value !== props.defaultValue)
-
 const segOptions = computed(() => props.options as Array<HbSegOption | string>)
 const selectOptions = computed(() => props.options as Array<HbSelectOption | string>)
 
-function decimals(step: number): number {
-  const text = String(step)
-  const dot = text.indexOf('.')
-  return dot < 0 ? 0 : text.length - dot - 1
+const row = ref<HTMLElement | null>(null)
+let range: RangeRowHandle | null = null
+function bind() {
+  range?.dispose()
+  range = null
+  if (props.type !== 'range' || !row.value) return
+  range = rangeRow(row.value, {
+    onPreview(v) {
+      model.value = v
+      emit('touch', v)
+    },
+    onCommit(v) {
+      model.value = v
+      emit('commit', v)
+    },
+  })
 }
-
-function clamp(value: number): number {
-  const bounded = Math.min(props.max, Math.max(props.min, value))
-  return Number(bounded.toFixed(decimals(props.step)))
-}
-
-function onTouch(value: number) {
-  model.value = value
-  emit('touch', value)
-}
-
-function onRangeChange() {
-  emit('commit', model.value)
-}
-
-function onNumber(event: Event) {
-  const input = event.target as HTMLInputElement
-  const parsed = Number.parseFloat(input.value)
-  if (Number.isNaN(parsed)) {
-    input.value = String(model.value)
-    return
-  }
-  const value = clamp(parsed)
-  input.value = String(value)
-  model.value = value
-  emit('commit', value)
-}
+onMounted(bind)
+watch(() => props.type, () => queueMicrotask(bind))
+watch(model, (v) => { if (range && range.value !== v) range.set(Number(v)) })
+onBeforeUnmount(() => range?.dispose())
 
 function onDiscrete(value: HbParamValue | undefined) {
   if (value === undefined) return
   model.value = value
   emit('commit', value)
+}
+
+function onText(event: Event) {
+  onDiscrete((event.target as HTMLInputElement).value)
 }
 
 function reset() {
@@ -103,10 +104,11 @@ function reset() {
 </script>
 
 <template>
-  <!-- One parameter: label with its reset mark, control, paired number, unit. -->
-  <div class="hb-prow" :class="{ 'is-disabled': props.disabled }">
+  <!-- One parameter: label with its tag and reset mark, the control, the
+       paired number and unit, then the line that says what it does. -->
+  <div ref="row" class="hb-prow" :class="{ 'is-disabled': props.disabled, 'has-help': props.help }">
     <span class="hb-prow-label">
-      {{ props.label }}
+      <span class="hb-prow-name">{{ props.label }}</span>
       <button
         v-if="props.defaultValue !== undefined"
         type="button"
@@ -121,17 +123,16 @@ function reset() {
       </button>
     </span>
     <div class="hb-prow-ctl">
-      <HbSlider
+      <input
         v-if="props.type === 'range'"
-        :label="props.label"
+        class="hb-range"
+        type="range"
         :min="props.min"
         :max="props.max"
         :step="props.step"
-        :unit="props.unit"
+        :value="Number(model)"
         :disabled="props.disabled"
-        :model-value="Number(model)"
-        @update:model-value="onTouch"
-        @change="onRangeChange"
+        :aria-label="props.label"
       />
       <HbSelect
         v-else-if="props.type === 'select'"
@@ -147,6 +148,15 @@ function reset() {
         :disabled="props.disabled"
         :model-value="Boolean(model)"
         @update:model-value="onDiscrete"
+      />
+      <input
+        v-else-if="props.type === 'text'"
+        class="hb-input"
+        type="text"
+        :value="String(model)"
+        :disabled="props.disabled"
+        :aria-label="props.label"
+        @change="onText"
       />
       <HbSeg
         v-else
@@ -166,9 +176,13 @@ function reset() {
       :value="model"
       :disabled="props.disabled"
       :aria-label="`${props.label} value${props.unit ? `, ${props.unit}` : ''}`"
-      @change="onNumber"
     />
     <span v-if="props.unit" class="hb-prow-unit">{{ props.unit }}</span>
+    <span v-if="props.tag || props.applies" class="hb-prow-tags">
+      <span v-if="props.tag" class="hb-prow-tag">{{ props.tag }}</span>
+      <span v-if="props.applies" class="hb-prow-tag is-applies">{{ props.applies }}</span>
+    </span>
+    <span v-if="props.help" class="hb-prow-help">{{ props.help }}</span>
     <span v-if="props.disabled && props.reason" class="hb-prow-why">{{ props.reason }}</span>
   </div>
 </template>

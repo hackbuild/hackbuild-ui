@@ -15,7 +15,7 @@ const code = `<label class="hb-check">
 <template>
   <DemoSection
     title="Switch"
-    note="A rectangular toggle. The knob slides and goes pink when on. No radius, no glow."
+    note="A rectangular toggle. The knob slides and goes pink when on. No radius, no glow. The button is the hit box: 42 by 22 with a mouse, 44 by 44 on a touch screen around the same track."
     :code="code"
   >
     <div class="demo-row" style="gap: 28px">
