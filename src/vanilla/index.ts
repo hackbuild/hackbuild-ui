@@ -39,7 +39,7 @@ export { LEVELS, shownAt, defaultsOf, changedKeys, resetValues, sectionsOf, matc
 export type { RangeRowHandle, RangeRowOptions, SettingDef, SettingLevel, SettingPreset, SettingValue, SettingValues } from './settings'
 export { mbText, sizeText, vramText, factLine, licenceText, groupRecords, filterRecords, searchText, ctxOptions, sumFiles, loadText, modelList, CENSORSHIP, RESPONSIBILITY, CTX_SIZES, PHASE_WORDS } from './models'
 export type { Censorship, LoadFile, LoadPhase, ModelFilter, ModelFit, ModelGroup, ModelListHandle, ModelListOptions, ModelRecordLike, ModelRowState, ModelRowStatus, SizeSource } from './models'
-export { presetText, presetJobs, rackGate, rackQueue, storageText } from './rack'
+export { presetText, presetJobs, rackGate, rackQueue, slotMissing, storageText } from './rack'
 export type { RackGate, RackPreset, RackQueue, RackSlot, SlotState, StorageLine } from './rack'
 export { gateNote, wakePills, wakeSummary, wakeBar, wakeError } from './wake'
 export type { GateNote, GateNoteInput, WakePill, WakePillState, WakeState, WakeSummary, WakeSystem } from './wake'

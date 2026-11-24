@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import HbModelSlot, { type HbSlotOption } from './HbModelSlot.vue'
-import { presetJobs, presetText, rackGate, rackQueue, type RackPreset, type SlotState } from '../vanilla/rack'
+import { presetJobs, presetText, rackGate, rackQueue, slotMissing, type RackPreset, type SlotState } from '../vanilla/rack'
 
 export type HbRackPreset = RackPreset
 
@@ -38,6 +38,9 @@ const emit = defineEmits<{
   /** Load this record into this slot; report progress back through states. */
   load: [slot: string, id: string]
   preset: [id: string]
+  /** Remove pressed on a slot whose pick has no catalogue record; the
+      rack clears the pick, the app may drop the slot. */
+  remove: [slot: string]
   /** Every required slot is ready, or no longer. */
   ready: [ready: boolean]
 }>()
@@ -46,12 +49,14 @@ const stateOf = (slot: string): SlotState => props.states[slot]?.state ?? 'empty
 const flat = computed(() => Object.fromEntries(props.slots.map((s) => [s.slot, stateOf(s.slot)])) as Record<string, SlotState>)
 const gate = computed(() => rackGate(props.slots, flat.value))
 const pickOf = (s: HbRackSlot) => picks.value[s.slot] ?? s.options[0]?.value ?? ''
+const missingOf = (s: HbRackSlot) => slotMissing(s.options, picks.value[s.slot]) ?? ''
 const waiting = ref<string[]>([])
 
 const queue = rackQueue((slot) => {
   waiting.value = queue.waiting
   const s = props.slots.find((x) => x.slot === slot)
-  if (s) emit('load', slot, pickOf(s))
+  if (s && !missingOf(s)) emit('load', slot, pickOf(s))
+  else queue.settle(slot, 'fault')
 })
 
 watch(flat, (now, before) => {
@@ -69,11 +74,19 @@ function loadOne(slot: string, id: string) {
   waiting.value = queue.waiting
 }
 function runPreset(p: RackPreset) {
-  const jobs = presetJobs(p, props.slots, picks.value, flat.value)
+  const jobs = presetJobs(p, props.slots, picks.value, flat.value).filter((slot) => {
+    const s = props.slots.find((x) => x.slot === slot)
+    return s && !slotMissing(s.options, p.picks[slot])
+  })
   picks.value = { ...picks.value, ...p.picks }
   emit('preset', p.id)
   queue.push(jobs)
   waiting.value = queue.waiting
+}
+function removeSlot(slot: string) {
+  const { [slot]: _gone, ...rest } = picks.value
+  picks.value = rest
+  emit('remove', slot)
 }
 const matches = (p: RackPreset) => Object.entries(p.picks).every(([s, id]) => picks.value[s] === id)
 const labelOf = (slot: string) => props.slots.find((s) => s.slot === slot)?.label ?? slot
@@ -107,6 +120,8 @@ const queueText = computed(() => (waiting.value.length ? `then ${waiting.value.m
         :pct="props.states[s.slot]?.pct ?? null"
         :fault="props.states[s.slot]?.fault ?? ''"
         :shared-with="s.sharedWith"
+        :missing="missingOf(s)"
+        @remove="removeSlot(s.slot)"
         @update:model-value="setPick(s.slot, $event)"
         @load="loadOne(s.slot, $event)"
       />

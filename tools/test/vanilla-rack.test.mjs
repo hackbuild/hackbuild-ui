@@ -48,3 +48,12 @@ test("the storage line says whether the browser may clear it", () => {
   assert.match(storageText({ used: 1.9 * GB, quota: null, persisted: true }), /kept: the browser will not clear it/);
   assert.equal(storageText({ used: null, quota: null }).startsWith("storage use unknown here."), true);
 });
+
+test("a pick with no catalogue record is named, not hidden", async () => {
+  const { slotMissing } = await import("../../src/vanilla/rack.ts");
+  const opts = [{ value: "a" }, { value: "b" }];
+  assert.equal(slotMissing(opts, "b"), null);
+  assert.equal(slotMissing(opts, undefined), null);
+  assert.equal(slotMissing(opts, "gone"), "no record for gone in the catalogue.");
+  assert.equal(slotMissing([], null), "no record in the catalogue does this job.");
+});

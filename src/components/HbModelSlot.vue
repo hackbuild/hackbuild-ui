@@ -30,6 +30,9 @@ interface Props {
   fault?: string
   /** Other parts using the loaded model: 'memory, recall'. */
   sharedWith?: string[]
+  /** Why the pick has no catalogue record. Set, the row names it and
+      offers remove instead of the select. */
+  missing?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -39,15 +42,17 @@ const props = withDefaults(defineProps<Props>(), {
   pct: null,
   fault: '',
   sharedWith: () => [],
+  missing: '',
 })
 
 const value = defineModel<string>({ default: '' })
-const emit = defineEmits<{ load: [id: string] }>()
+const emit = defineEmits<{ load: [id: string]; remove: [] }>()
 
 const uid = makeUid('hb-slot')
 const pick = computed(() => props.options.find((o) => o.value === value.value) ?? props.options[0] ?? null)
 const STATE: Record<SlotState, string> = { empty: 'empty', loading: 'loading', ready: 'ready', fault: 'fault' }
 const status = computed(() => {
+  if (props.missing) return 'missing'
   if (props.state === 'loading') return props.pct === null ? 'loading' : `loading ${Math.floor(props.pct * 100)}%`
   if (props.state === 'fault') return 'fault'
   return STATE[props.state]
@@ -71,13 +76,20 @@ function load() {
 </script>
 
 <template>
-  <div class="hb-slot" :class="[`is-${props.state}`, { 'is-required': props.required }]" role="group" :aria-labelledby="`${uid}-n`">
+  <div class="hb-slot" :class="[props.missing ? 'is-missing' : `is-${props.state}`, { 'is-required': props.required }]" role="group" :aria-labelledby="`${uid}-n`">
     <div class="hb-slot-in">
     <div class="hb-slot-id">
       <span :id="`${uid}-n`" class="hb-slot-name">{{ props.label }}</span>
       <span v-if="props.role" class="hb-slot-role">{{ props.role }}</span>
     </div>
-    <div class="hb-slot-mid">
+    <div v-if="props.missing" class="hb-slot-mid">
+      <div class="hb-slot-row">
+        <p class="hb-slot-fault" role="alert">{{ props.missing }}</p>
+        <button type="button" class="hb-btn hb-btn-2 hb-btn-sm" @click="emit('remove')">remove<span class="hb-sr">, {{ props.label }}</span></button>
+      </div>
+      <span class="hb-slot-meta">{{ props.required ? 'required' : 'optional' }}</span>
+    </div>
+    <div v-else class="hb-slot-mid">
       <div class="hb-slot-row">
         <label class="hb-slot-pick">
           <span class="hb-sr">model for {{ props.label }}</span>

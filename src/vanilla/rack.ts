@@ -57,6 +57,17 @@ export function rackGate(slots: readonly RackSlot[], states: Record<string, Slot
   return { ready: true, missing, note: `ready with ${loaded} of ${slots.length} loaded. more can load later.` }
 }
 
+/**
+ * Why a slot cannot show its pick, or null when it can. A pick that no
+ * catalogue record carries names that id; a slot with no record at all
+ * says so. The rack renders this as a row with remove, never hides it.
+ */
+export function slotMissing(options: readonly { value: string }[], pick?: string | null): string | null {
+  if (pick && !options.some((o) => o.value === pick)) return `no record for ${pick} in the catalogue.`
+  if (!options.length) return 'no record in the catalogue does this job.'
+  return null
+}
+
 export interface RackQueue {
   /** Queue these slots after any already waiting, and start the first. */
   push(slots: readonly string[]): void

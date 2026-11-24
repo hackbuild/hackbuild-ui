@@ -3054,6 +3054,10 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-slot.is-ready{ border-left-color:var(--hb-ok) }
 .hb-slot.is-loading{ border-left-color:var(--hb-ink) }
 .hb-slot.is-fault{ border-left-color:var(--hb-err) }
+/* A pick with no catalogue record: named in a row with remove, never hidden. */
+.hb-slot.is-missing{ border-left-color:var(--hb-err); border-left-style:dashed }
+.hb-slot.is-missing .hb-slot-fault{ flex:1 1 200px; min-width:0 }
+.hb-slot.is-missing .hb-slot-stat{ color:var(--hb-err) }
 .hb-slot-id{ display:flex; flex-direction:column; gap:2px; min-width:0 }
 .hb-slot-name{ font-family:var(--hb-utility); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.1em }
 .hb-slot-role{ font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--hb-ink-3) }
