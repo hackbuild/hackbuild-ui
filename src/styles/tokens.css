@@ -120,6 +120,8 @@
   --hb-modal-md: 640px;         /* modal panel, the default */
   --hb-modal-lg: 880px;         /* modal panel, a form or table */
   --hb-wave-h:  72px;           /* audio strip height */
+  --hb-lrail-h: 110px;          /* level rail height */
+  --hb-qwave-h: 44px;           /* queue strip waveform height */
   --hb-chat-h:  360px;          /* chat log and transcript scroll ceiling */
   --hb-spark-h: 28px;           /* sparkline height in a drive row */
   --hb-spark-big-h: 112px;      /* the larger chart a drive row opens */

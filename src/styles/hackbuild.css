@@ -2013,6 +2013,24 @@ button.hb-tseg{ width:100%; background:none; border-top:0; border-right:0; text-
 .hb-tseg.is-now{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-tseg.is-now .hb-tseg-t{ color:var(--hb-pink) }
 .hb-tseg.is-partial .hb-tseg-text{ color:var(--hb-ink-3) }
+.hb-tseg{ min-height:44px }
+.hb-tseg-body{ min-width:0; font-family:var(--hb-body); font-size:14px; line-height:1.5; overflow-wrap:anywhere }
+.hb-tseg-body > .hb-tseg-text{ display:inline }
+.hb-tseg-who{ display:inline-block; margin-right:6px; padding:0 5px; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; background:var(--hb-ink); color:var(--hb-paper); vertical-align:1px }
+input.hb-tseg-who{ width:9ch; min-height:24px; border:1px solid var(--hb-ink-3); background:var(--hb-paper); color:var(--hb-ink); text-transform:none; letter-spacing:0 }
+.hb-tseg-why{ margin-left:6px; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-tseg-hit{ background:var(--hb-ink); color:var(--hb-paper); padding:0 1px }
+.hb-tseg.is-dropped{ opacity:.55 }
+.hb-tseg.is-dropped .hb-tseg-text{ color:var(--hb-err); text-decoration:line-through }
+.hb-tseg.is-dropped .hb-tseg-why{ color:var(--hb-err) }
+.hb-tseg-note{ padding:var(--hb-s1) var(--hb-s3); border-bottom:1px dashed rgba(26,26,26,.2); font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-transcript{ position:relative }
+.hb-transcript.is-edit .hb-tseg-body > .hb-tseg-text{ display:block; min-height:1.5em; outline:0; border-bottom:1px dashed transparent }
+.hb-transcript.is-edit .hb-tseg-body > .hb-tseg-text:focus{ border-bottom-color:var(--hb-ink); background:var(--hb-paper) }
+button.hb-tseg-t{ background:none; border:0; padding:0; cursor:pointer; text-align:left; align-self:stretch }
+button.hb-tseg-t:focus-visible,.hb-tseg-who:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+@media (hover:hover) and (pointer:fine){ button.hb-tseg-t:hover{ color:var(--hb-ink) } }
+@media(pointer:coarse){ button.hb-tseg-t{ min-width:44px; min-height:44px } input.hb-tseg-who{ min-height:44px } .hb-transcript.is-edit .hb-tseg-body > .hb-tseg-text{ min-height:44px } }
 /* The heard line: the last thing a microphone caught, one line, VT323. */
 .hb-heard{
   font-family:var(--hb-readout); font-size:19px; line-height:1.25; min-height:1.6em;
@@ -3440,3 +3458,63 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-on-ink .hb-mic-note,.hb-stage .hb-mic-note{ color:var(--hb-lit-label) }
 @keyframes hb-mic-pulse{ 0%{ box-shadow:2px 2px 0 var(--hb-ink) } 100%{ box-shadow:4px 4px 0 var(--hb-ink) } }
 @media (prefers-reduced-motion:reduce){ .hb-mic-btn{ animation:none } .hb-mic-level{ transition:none } }
+
+/* Level rail. The level rail of the earlier transcription tool: bars
+   slime where the gate kept speech and grey where silence was cut, the
+   noise floor dashed amber and the gate dotted red in the same scale,
+   kept segments marked under it with the one playing lit, time labels,
+   and a legend that reads the floor and gate as numbers. */
+.hb-lrail{ margin:0; min-width:0; background:var(--hb-void); color:var(--hb-paper); border:var(--hb-border) solid var(--hb-ink) }
+.hb-lrail > .hb-wave{ --hb-wave-h:var(--hb-lrail-h); border:0 }
+.hb-lrail-segs{ position:relative; height:6px; margin:0 0 2px; background:var(--hb-ink-inset) }
+.hb-lrail-segs > i{ position:absolute; top:0; bottom:0; left:var(--hb-x, 0); width:var(--hb-w, 0); min-width:1px; background:var(--hb-lit-dim); border-right:1px solid var(--hb-void) }
+.hb-lrail-segs > i.is-now{ background:var(--hb-paper) }
+.hb-lrail-ticks{ display:flex; padding:0 0 2px; font-family:var(--hb-readout); font-size:14px; line-height:1; color:var(--hb-lit-label); font-variant-numeric:tabular-nums }
+.hb-lrail-ticks > span{ flex:1 1 0; min-width:0; padding-left:3px; overflow:hidden; white-space:nowrap }
+@media (max-width:559px){ .hb-lrail-ticks > span:nth-child(even){ visibility:hidden } }
+.hb-lrail-legend{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) var(--hb-s3); padding:var(--hb-s1) var(--hb-s2); border-top:1px solid var(--hb-ink-border); font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-lit-label) }
+.hb-lrail-legend b{ font-family:var(--hb-readout); font-size:15px; font-weight:400; letter-spacing:0; text-transform:none; color:var(--hb-paper); font-variant-numeric:tabular-nums }
+.hb-lrail-legend i{ display:inline-block; width:10px; height:3px; margin-right:5px; vertical-align:2px }
+.hb-lrail-legend i.is-kept{ background:var(--hb-slime) }
+.hb-lrail-legend i.is-cut{ background:var(--hb-lit-dim) }
+.hb-lrail-legend i.is-floor{ background:var(--hb-lit-warn) }
+.hb-lrail-legend i.is-gate{ background:var(--hb-lit-err) }
+
+/* Queue strip. One file per row as the earlier tool listed them: a
+   large channel number, the name, a status word toned by state, a 44 px
+   waveform, the measured line and the error, a bar while it works. The
+   selected strip takes an ink rule on its left. Remove is its own 44 px
+   target beside the strip. */
+.hb-qstrips{ margin:0; padding:0; list-style:none; min-width:0; background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink) }
+.hb-qstrip{ display:flex; align-items:stretch; min-width:0; border-bottom:1px dashed rgba(26,26,26,.2) }
+.hb-qstrip:last-child{ border-bottom:0 }
+.hb-qstrip-main{
+  flex:1 1 auto; min-width:0; display:grid; grid-template-columns:34px minmax(0,1fr); gap:var(--hb-s3);
+  padding:var(--hb-s2) var(--hb-s3); min-height:44px; background:none; border:0; border-left:4px solid transparent;
+  text-align:left; color:inherit; font:inherit; cursor:pointer;
+}
+.hb-qstrip-main:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+@media (hover:hover) and (pointer:fine){ .hb-qstrip-main:hover{ background:var(--hb-paper-sunk) } }
+.hb-qstrip.is-sel .hb-qstrip-main{ background:var(--hb-paper-sunk); border-left-color:var(--hb-ink) }
+.hb-qstrip-n{ font-family:var(--hb-readout); font-size:24px; line-height:1; text-align:center; color:var(--hb-ink-4); font-variant-numeric:tabular-nums }
+.hb-qstrip.is-sel .hb-qstrip-n,.hb-qstrip.is-done .hb-qstrip-n{ color:var(--hb-ink) }
+.hb-qstrip-body{ display:flex; flex-direction:column; gap:var(--hb-s1); min-width:0 }
+.hb-qstrip-hd{ display:flex; align-items:baseline; justify-content:space-between; gap:var(--hb-s3); min-width:0 }
+.hb-qstrip-name{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--hb-body); font-size:14px }
+.hb-qstrip-stat{ flex:none; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--hb-ink-3) }
+.hb-qstrip.is-ok .hb-qstrip-stat{ color:var(--hb-ok) }
+.hb-qstrip.is-busy .hb-qstrip-stat{ color:var(--hb-warn) }
+.hb-qstrip.is-bad .hb-qstrip-stat{ color:var(--hb-err) }
+.hb-qstrip-wave{ --hb-wave-h:var(--hb-qwave-h); border-width:1px }
+.hb-qstrip-meta{ display:flex; flex-wrap:wrap; gap:2px var(--hb-s3); font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--hb-ink-3) }
+.hb-qstrip-meta b{ font-family:var(--hb-readout); font-size:15px; font-weight:400; letter-spacing:0; text-transform:none; color:var(--hb-ink); font-variant-numeric:tabular-nums }
+.hb-qstrip-meta .is-lo{ color:var(--hb-err) }
+.hb-qstrip-meta b.is-hi{ color:var(--hb-ok) }
+.hb-qstrip-meta > .is-lo{ text-transform:none; letter-spacing:0; font-size:11px }
+.hb-qstrip-bar{ display:block; height:4px; background:var(--hb-paper-sunk); border:1px solid var(--hb-ink) }
+.hb-qstrip-bar > i{ display:block; height:100%; width:calc(var(--hb-v, 0) * 100%); background:var(--hb-ink); transition:width var(--hb-t-fast) linear }
+.hb-qstrip-x{ flex:none; width:44px; display:inline-flex; align-items:center; justify-content:center; background:none; border:0; border-left:1px dashed var(--hb-ink-4); color:var(--hb-ink-3); cursor:pointer }
+.hb-qstrip-x:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+@media (hover:hover) and (pointer:fine){ .hb-qstrip-x:hover{ color:var(--hb-err) } }
+.hb-qstrip-empty{ padding:var(--hb-s4) var(--hb-s3); text-align:center; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+@media (prefers-reduced-motion:reduce){ .hb-qstrip-bar > i{ transition:none } }

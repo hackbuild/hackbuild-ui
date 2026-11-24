@@ -1169,6 +1169,18 @@ Vanilla: `memoryCounts`, `kindWord`, `scoreText`, `memoryMatch` (keyword
 stub for demos and stores with no ranker), `recallScore`, `recallRank`,
 `recallLine`; `micInput`, `micLive`, `MIC_WORDS`.
 
+### Transcription: level rail, queue strip, transcript
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbLevelRail` | `.hb-lrail`, `-segs`, `-ticks`, `-legend`, `-segs > i.is-now` | the level rail of the earlier transcription tool on `HbWave`: bars slime where the gate kept speech and grey where silence was cut, the noise floor dashed amber and the gate dotted red in the bars' own scale (amplitude over the loudest frame), kept segments under it with the one playing lit, time labels (every other one under 560 px), a legend that reads floor and gate in dB. Takes the transcribe rail's `db` and `open`, or kept regions in seconds. Seek by click, drag or arrow keys, in seconds |
+| `HbQueueStrip` | `.hb-qstrips`, `.hb-qstrip`, `-main`, `-n`, `-body`, `-hd`, `-name`, `-stat`, `-wave`, `-meta`, `-bar`, `-x`, `-empty`, `.is-sel`, `.is-done`, `.is-ok`, `.is-busy`, `.is-bad` | one strip per file: channel number, name cut with an ellipsis, a status word toned by state (a running job reads its phase: decoding, transcribing), a 44 px waveform, the measured line (snr red under 8 dB and green over 20 dB, vendor), the error line, a bar while it works. The selected strip takes an ink rule on the left; Up, Down, Home and End move the selection. Remove is a separate 44 px target, hidden while `locked` |
+| `HbTranscript` | `.hb-tseg-body`, `-who`, `-why`, `-hit`, `-note`, `.is-dropped`, `.hb-transcript.is-edit` | rows are 44 px tall at least. `dropped` lines are counted in a note (`3 lines dropped: 2 phantom, 1 outro`); with `showDropped` they sit in time order, struck through in red with the reason in brackets. `query` keeps lines whose text or speaker holds it, the match inked. `editable` puts a speaker field and the text in place (Enter saves, Escape backs out, emits `edit`); the time becomes the seek button. `follow` keeps the marked row in view. `timeFormat` range, clock or seconds. Segment fields follow the transcribe package: `speaker`, `confidence`, `words`, `edited` |
+
+Vanilla: `clockTime`, `segTime`, `transcriptRows`, `markParts`,
+`droppedLine`, `nowIndex`, `railBars`, `railTicks`, `dbText`,
+`stripStatus`, `stripMeta`, `STRIP_WORDS`.
+
 ### Small changes: inset, wave, welcome, tiles, console, bubble, stage, kv, hash, chip
 
 | Part | Classes | Change |
