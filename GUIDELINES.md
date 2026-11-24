@@ -1048,3 +1048,20 @@ Menu items are 44 px tall on a coarse pointer.
 
 Every printed key comes from a `hotkeys` registry, never typed by hand,
 so the hint and the binding cannot drift apart.
+
+## 15. Logs, code and export
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbEventLog` | `.hb-evlog`, `-head`, `-filters`, `-rows`, `-row`, `-tag`, `-t`, `-text`, `-bar` | one timeline for speech, actions, failures, perception and loads. A 38 px tag column in the readout face, one tone per kind (`is-pink`, `is-info`, `is-ok`, `is-warn`, `is-err`, `is-dim`). A live row is replaced in place under its key, with a 90 px bar when the total is known. A chip per kind hides or shows it. Follow keeps the newest row in view; scrolling up turns it off and new rows wait behind a jump button. Capped at 160 rows |
+| `HbCodeBlock` | `.hb-codeblock`, `-head`, `-lang`, `-btn`, `.is-wrap` | code as plain text on ink, no highlighter. Copy says copied or copy failed; wrap folds long lines. The `pre` takes focus so arrow keys scroll it. Buttons are 44 px on a coarse pointer |
+| `HbHow` | `.hb-how`, `-pkgs`, `-install`, `-code`, `-links`, `-note` | the "how this works" fold at the foot of a tool: package names, the npm line, and while nothing is published a second line that says it works today, the minimal code, copy, the package page and source |
+| `HbExportPanel` | `.hb-export`, `-formats`, `-name`, `-ext`, `-btns`, `-readout`, `-checks` | format chips with a note for the chosen one, the file name with its extension shown beside it, export and copy, a two column readout and checks tagged ok, warn, err. Local only files are named and left out unless the row is switched on. `busy` refuses with the reason |
+
+Vanilla: `eventLog(el)` with `push(kind, text, t)`, `live(key, text, fraction)`,
+`hide(kinds)` and `follow(on)`; `codeBlock(el)`; `exportName(parts)` for a
+file name that carries the run (`tool_model_seed_20261124-010344`),
+`withExt(name, ext)` and `saveFile(name, data, type)`.
+
+The export button is ink; the chosen format chip is ink. Pink stays with
+the live bar and the `me` tag.

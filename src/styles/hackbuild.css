@@ -2587,3 +2587,117 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-togrow[disabled] .hb-togrow-why{ color:var(--hb-ink-4) }
 .hb-togrow[disabled] .hb-togrow-sw{ border-color:var(--hb-ink-4) }
 .hb-togrow[disabled] .hb-togrow-sw::after{ background:var(--hb-ink-4) }
+
+/* ==========================================================================
+   30. EVENT LOG, CODE BLOCK, HOW THIS WORKS, EXPORT PANEL
+   HbEventLog: the tagged line log. A 38 px tag column in the readout face,
+   one tone per kind, live rows replaced in place with a 90 px bar, filter
+   chips per kind and a follow toggle. HbCodeBlock: plain text on ink with
+   copy and wrap; no highlighter. HbHow: the fold at the foot of a tool.
+   HbExportPanel: format chips, file name, export and copy, a two column
+   readout and checks tagged ok, warn, err.
+   ========================================================================== */
+.hb-evlog{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); min-width:0 }
+.hb-evlog-head{
+  display:flex; align-items:center; gap:var(--hb-s2); flex-wrap:wrap;
+  padding:var(--hb-s1) var(--hb-s2); border-bottom:var(--hb-border) solid var(--hb-ink);
+}
+.hb-evlog-head > .hb-spacer{ flex:1 }
+.hb-evlog-label{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em }
+.hb-evlog-count{ font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-3) }
+.hb-evlog-head .hb-chip,.hb-evlog-filters .hb-chip{ box-shadow:none }
+.hb-evlog-filters{ display:flex; flex-wrap:wrap; gap:var(--hb-s1); padding:var(--hb-s1) var(--hb-s2); border-bottom:1px dashed rgba(26,26,26,.25) }
+.hb-evlog-filters .hb-chip{ text-transform:uppercase; min-width:44px; justify-content:center }
+@media(min-width:641px) and (pointer:fine){ .hb-evlog-filters .hb-chip{ min-width:0 } }
+.hb-evlog-box{ position:relative }
+.hb-evlog-rows{
+  max-height:var(--hb-log-h); overflow-y:auto; overscroll-behavior:contain;
+  padding:var(--hb-s2); display:flex; flex-direction:column; gap:3px;
+}
+.hb-evlog-rows:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:-2px }
+.hb-evlog-row{ display:flex; align-items:baseline; gap:var(--hb-s2); line-height:1.35; min-width:0 }
+.hb-evlog-row[hidden]{ display:none }
+.hb-evlog-tag{
+  flex:0 0 38px; font-family:var(--hb-readout); font-size:16px; font-weight:400;
+  text-transform:uppercase; color:var(--hb-ink-3);
+}
+.hb-evlog-t{ flex:0 0 auto; font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-4); font-variant-numeric:tabular-nums }
+.hb-evlog-text{ flex:1 1 auto; min-width:0; font-family:var(--hb-utility); font-size:12.5px; overflow-wrap:anywhere }
+.hb-evlog-row.is-pink .hb-evlog-tag{ color:var(--hb-pink) }
+.hb-evlog-row.is-pink .hb-evlog-text{ font-family:var(--hb-body); font-size:14px }
+.hb-evlog-row.is-info .hb-evlog-tag{ color:var(--hb-info) }
+.hb-evlog-row[data-kind="you"]{ margin-top:6px; padding-top:6px; border-top:1px dashed rgba(26,26,26,.25) }
+.hb-evlog-row.is-ok .hb-evlog-text{ color:var(--hb-ok) }
+.hb-evlog-row.is-err .hb-evlog-tag,.hb-evlog-row.is-err .hb-evlog-text{ color:var(--hb-err) }
+.hb-evlog-row.is-warn .hb-evlog-tag{ color:var(--hb-warn) }
+.hb-evlog-row.is-dim .hb-evlog-text{ color:var(--hb-ink-3) }
+.hb-evlog-row.is-live .hb-evlog-text{ color:var(--hb-ink-3) }
+.hb-evlog-bar{ flex:0 0 90px; height:8px; border:1px solid var(--hb-ink); align-self:center }
+.hb-evlog-bar > i{ display:block; height:100%; background:var(--hb-pink) }
+.hb-evlog-empty{ margin:0; font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-4) }
+.hb-evlog-jump{ position:absolute; right:var(--hb-s2); bottom:var(--hb-s2) }
+@media(max-width:480px){ .hb-evlog-bar{ flex-basis:56px } }
+
+.hb-codeblock{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-ink); min-width:0 }
+.hb-codeblock-head{
+  display:flex; align-items:center; gap:var(--hb-s1);
+  padding:0 0 0 var(--hb-s2); border-bottom:1px solid var(--hb-ink-line);
+}
+.hb-codeblock-lang{ flex:1; font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--hb-lit-label) }
+.hb-codeblock-btn{
+  min-height:44px; min-width:44px; padding:0 var(--hb-s2);
+  background:transparent; color:var(--hb-paper); border:0; border-left:1px solid var(--hb-ink-line);
+  font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; cursor:pointer;
+}
+@media(min-width:641px) and (pointer:fine){ .hb-codeblock-btn{ min-height:28px } }
+@media (hover:hover) and (pointer:fine){ .hb-codeblock-btn:hover{ color:var(--hb-pink) } }
+.hb-codeblock-btn:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:-2px }
+.hb-codeblock-btn[aria-pressed="true"]{ background:var(--hb-paper); color:var(--hb-ink) }
+.hb-codeblock-btn.is-done{ color:var(--hb-slime) }
+.hb-codeblock pre,.hb .hb-codeblock pre{
+  margin:0; padding:var(--hb-s3); overflow-x:auto; border:0; box-shadow:none;
+  background:var(--hb-ink); color:var(--hb-paper);
+  font-family:var(--hb-utility); font-size:12.5px; line-height:1.55; white-space:pre; tab-size:2;
+}
+.hb-codeblock pre:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:-2px }
+.hb-codeblock pre code{ font:inherit; background:none; border:0; padding:0; color:inherit }
+.hb-codeblock.is-wrap pre{ white-space:pre-wrap; overflow-wrap:anywhere }
+
+.hb-how > div{ display:flex; flex-direction:column; gap:var(--hb-s3) }
+.hb-how-k{ display:block; font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--hb-ink-3); margin-bottom:var(--hb-s1) }
+.hb-how-pkgs{ display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--hb-s1) }
+.hb-how-pkgs > .hb-how-k{ flex:0 0 100% }
+.hb-how-install{ display:flex; flex-direction:column; gap:var(--hb-s1) }
+.hb-how-note{ margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
+.hb-how-links{ display:flex; flex-wrap:wrap; gap:var(--hb-s3) }
+
+.hb-export{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-export > .hb-export-head{ margin:0; font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em }
+.hb-export-note{ margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3); overflow-wrap:anywhere }
+.hb-export-name{ display:flex; flex-direction:column; gap:var(--hb-s1) }
+.hb-export-namebox{ display:flex; align-items:stretch; min-width:0 }
+.hb-export-namebox > .hb-input{ flex:1 1 auto; min-width:0; min-height:44px }
+.hb-export-ext{
+  display:flex; align-items:center; padding:0 var(--hb-s2);
+  border:var(--hb-border) solid var(--hb-ink); border-left:0; background:var(--hb-paper-sunk);
+  font-family:var(--hb-utility); font-size:14px;
+}
+.hb-export-local.hb-togrow{ border-bottom:0 }
+.hb-export-btns{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) }
+.hb-export-btns > .hb-btn:first-child{ flex:1 1 auto; justify-content:center }
+.hb-export-busy{ margin:0; font-family:var(--hb-utility); font-size:12px; color:var(--hb-warn) }
+.hb-export-readout{
+  margin:0; display:grid; grid-template-columns:1fr 1fr; gap:2px var(--hb-s3);
+  font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-2);
+}
+.hb-export-readout > div{ display:flex; justify-content:space-between; gap:var(--hb-s2); min-width:0 }
+.hb-export-readout dt{ color:var(--hb-ink-3) }
+.hb-export-readout dd{ margin:0; color:var(--hb-ink) }
+.hb-export-checks{ list-style:none; margin:0; padding:0; font-family:var(--hb-utility); font-size:12px }
+.hb-export-checks > li{ display:flex; gap:var(--hb-s2); align-items:baseline; padding:2px 0; border-bottom:1px dashed rgba(26,26,26,.25) }
+.hb-export-checks b{ flex:0 0 34px; font-family:var(--hb-readout); font-size:15px; font-weight:400; text-transform:uppercase }
+.hb-export-checks > li > span{ min-width:0; overflow-wrap:anywhere }
+.hb-export-checks .is-ok b{ color:var(--hb-ok) }
+.hb-export-checks .is-warn b{ color:var(--hb-warn) }
+.hb-export-checks .is-err b{ color:var(--hb-err) }
+@media(max-width:360px){ .hb-export-readout{ grid-template-columns:1fr } }
