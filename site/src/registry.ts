@@ -105,6 +105,8 @@ export const registry: RegistryGroup[] = [
       { name: 'HbMemoryItem', blurb: 'kind, score, entity, edit and forget' },
       { name: 'HbRecallTrace', blurb: 'why a memory won, and what lost' },
       { name: 'HbMicButton', blurb: 'mic toggle or push to talk, blocked says what to do' },
+      { name: 'HbLevelRail', blurb: 'speech kept and cut, floor and gate, seek' },
+      { name: 'HbQueueStrip', blurb: 'one strip per file: status, wave, measured line' },
     ],
   },
   {
@@ -159,7 +161,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbSparkRows', blurb: 'history, threshold and trend per row' },
       { name: 'HbChoiceBars', blurb: 'every option weighed, the chosen one lit' },
       { name: 'HbCausalLog', blurb: 'events with their chain of causes' },
-      { name: 'HbTranscript', blurb: 'timed segments, seek on press' },
+      { name: 'HbTranscript', blurb: 'timed segments: dropped lines, search, edit, seek' },
       { name: 'HbMaterials', blurb: 'print slots: swatch, material, parts' },
       { name: 'HbHash', blurb: 'sha-256 against the known hash, copy mark' },
       { name: 'HbTable', blurb: 'ink head, stripes, pink wash on hover' },
