@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.8
+
+- HbPromptCanvas, HbInstanceList, HbRange2, HbMonitorDock, HbSplit;
+  vanilla `vision`: image space prompt mapping, hover throttle, instance
+  colours, dual range clamp, split keys.
+
 ## 0.6.7
 
 - HbSpokenText, HbMethodCard, HbImageSlot, HbCameraTile, HbHistoryStrip,
