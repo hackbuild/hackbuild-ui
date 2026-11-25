@@ -4687,10 +4687,11 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
    place a gradient is allowed.
    Void: the BAIL stage, black with the pink graph rule. */
 .hb-stage-lit{
-  background:
+  --hb-stage-lit-bg:
     radial-gradient(ellipse at 50% 38%, var(--hb-stage-glow), transparent 58%),
     repeating-linear-gradient(135deg, transparent 0 12px, var(--hb-dot) 12px 13px),
     var(--hb-paper-sunk);
+  background:var(--hb-stage-lit-bg);
   color:var(--hb-ink);
   --hb-state-off:var(--hb-ink-4); --hb-state-load:var(--hb-warn); --hb-state-ok:var(--hb-ok); --hb-state-err:var(--hb-err);
 }
@@ -5172,3 +5173,32 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-note{ margin:0; font-family:var(--hb-note); font-size:13px; line-height:1.4; color:var(--hb-ink-3) }
 /* rack panels stacked with hackle's 16 px between blocks */
 .hb-rack-stack{ display:flex; flex-direction:column; gap:16px; min-width:0 }
+
+/* a lit stage keeps its glow as a layout subject (ferrule's stage): the subject's flat fill gives way */
+.hb-lay-subject.hb-stage-lit{ background:var(--hb-stage-lit-bg) }
+
+/* avatar card: thumbnail, name, licence and size line, rig check line */
+.hb-avcard{ display:flex; align-items:stretch; gap:var(--hb-s2); width:100%; min-width:0; min-height:44px; padding:var(--hb-s2); background:var(--hb-paper-raised); color:var(--hb-ink); border:1.5px solid var(--hb-ink); box-shadow:3px 3px 0 var(--hb-ink); font:inherit; text-align:left; cursor:pointer }
+.hb-avcard:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--hb-ink) }
+.hb-avcard.is-on{ border-width:var(--hb-border-hd); box-shadow:4px 4px 0 var(--hb-pink) }
+.hb-avcard:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-avcard-thumb{ flex:none; width:56px; aspect-ratio:1; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--hb-paper-sunk); border:1px solid var(--hb-ink); font-family:var(--hb-display); font-size:24px }
+.hb-avcard-thumb > img{ width:100%; height:100%; object-fit:cover; display:block }
+.hb-avcard-body{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:2px }
+.hb-avcard-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600 }
+.hb-avcard-meta{ font-size:12px; color:var(--hb-ink-3) }
+.hb-avcard-rig{ font-size:12px }
+.hb-avcard-rig::before{ content:''; display:inline-block; width:8px; height:8px; margin-right:6px; background:var(--hb-ok) }
+.hb-avcard-rig.is-bad{ color:var(--hb-err) }
+.hb-avcard-rig.is-bad::before{ background:var(--hb-err) }
+
+/* clip strip: clips in a row; .is-playing marks the one running, .is-on the picked one */
+.hb-clipstrip{ display:flex; gap:var(--hb-s1); margin:0; padding:0; list-style:none; overflow-x:auto; min-width:0 }
+.hb-clipstrip-item{ flex:none }
+.hb-clipstrip-item > button{ display:flex; flex-direction:column; align-items:flex-start; gap:1px; min-height:44px; padding:var(--hb-s1) var(--hb-s2); background:var(--hb-paper-raised); color:var(--hb-ink); border:1.5px solid var(--hb-ink); font:inherit; font-size:13px; cursor:pointer }
+.hb-clipstrip-item.is-on > button{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-clipstrip-item.is-playing > button{ box-shadow:inset 0 -4px 0 var(--hb-pink) }
+.hb-clipstrip-item.is-playing .hb-clipstrip-name::before{ content:''; display:inline-block; width:0; height:0; margin-right:5px; border-left:7px solid var(--hb-pink); border-top:4px solid transparent; border-bottom:4px solid transparent; vertical-align:1px }
+.hb-clipstrip-item > button:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:1px }
+.hb-clipstrip-len{ font-family:var(--hb-readout); font-size:15px; opacity:.75 }
+@media (prefers-reduced-motion:no-preference){ .hb-avcard{ transition:transform .08s, box-shadow .08s } }

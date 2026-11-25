@@ -2,7 +2,7 @@
 
 ## 0.10.1
 
-Parts from hackle (10).html that views built without:
+Parts from hackle (10).html and ferrule (13).html that views built without:
 
 - `.hb-heat.is-pink`: the association table filled pink by weight, 6 to
   96 percent from `--v` (0 to 1), paper text on `td.is-hi` past .55.
@@ -12,6 +12,11 @@ Parts from hackle (10).html that views built without:
 - `.hb-gauge.is-cur`: the current row's label is pink as well as its bar.
 - `.hb-inset-who`: who an inset sees, switched in its head; HbInset
   `who` with `v-model:sees`.
+- A lit stage keeps its glow as a layout subject: `.hb-lay-subject`
+  painted over `.hb-stage-lit`, so ferrule's pink glow never showed.
+- HbAvatarCard (`.hb-avcard`): thumbnail, name, licence and size line,
+  rig check line.
+- HbClipStrip (`.hb-clipstrip`): clips in a row with `.is-playing`.
 
 ## 0.10.0
 

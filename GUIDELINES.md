@@ -1640,7 +1640,7 @@ cross; an internal word in first view text. The six demo routes
 `#/layouts/<kind>` of the docs site pass it, except that the gate still
 asks the conversation for a rack, which clevis does not have.
 
-### Parts from hackle (0.10.1)
+### Parts from hackle and ferrule (0.10.1)
 
 | Class | Use |
 |---|---|
@@ -1650,6 +1650,12 @@ asks the conversation for a rack, which clevis does not have.
 | `.hb-rack-stack` | rack panels stacked 16 px apart, as hackle's blocks |
 | `.hb-gauge.is-cur` | the current gauge row: pink bar and pink label |
 | `.hb-inset-who` | buttons in an inset head that pick who it sees (`aria-pressed`); HbInset `who` and `v-model:sees` |
+| `.hb-lay-subject.hb-stage-lit` | a lit stage keeps its glow (`--hb-stage-lit-bg`) as a layout subject, as ferrule's stage |
+
+| Part | Classes | Behaviour |
+|---|---|---|
+| `HbAvatarCard` | `.hb-avcard`, `-thumb`, `-body`, `-name`, `-meta`, `-rig`, `.is-on`, `.is-ok`, `.is-bad` | one avatar to pick: thumbnail, name, the licence and size line, the rig check line; a rig that misses bones names them in red |
+| `HbClipStrip` | `.hb-clipstrip`, `-item`, `-name`, `-len`, `.is-playing`, `.is-on` | clips in a row; the playing one has a pink mark and play glyph, the picked one is ink; arrows move |
 
 ### Deprecated in 0.10.0, gone in 0.11.0
 

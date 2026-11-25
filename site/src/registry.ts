@@ -30,6 +30,8 @@ export const registry: RegistryGroup[] = [
       { name: 'HbGuide', blurb: 'step, goal and the bench verbs' },
       { name: 'HbHudStat', blurb: 'small lit figure for a stage corner' },
       { name: 'HbInset', blurb: 'a derived view: collapsible, view modes, one line head' },
+      { name: 'HbAvatarCard', blurb: 'thumbnail, name, licence and size, rig check' },
+      { name: 'HbClipStrip', blurb: 'clips in a row, the playing one marked' },
       { name: 'HbMaterials', blurb: 'print slots: swatch, material, parts' },
       { name: 'HbNameHud', blurb: 'the name and one state word, privacy chips' },
       { name: 'HbPad', blurb: 'touch stick or d-pad and one action, keys too' },

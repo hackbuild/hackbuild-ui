@@ -35,3 +35,20 @@ test("the current gauge label is pink and the inset head has a who switch", () =
 test("every new class has a GUIDELINES row", () => {
   for (const c of [".hb-heat.is-pink", ".hb-marker", ".hb-note", ".hb-rack-stack", ".hb-gauge.is-cur", ".hb-inset-who"]) assert.ok(md.includes("`" + c + "`"), c);
 });
+
+test("a lit stage keeps its glow inside a layout subject", () => {
+  assert.match(rule(".hb-stage-lit"), /--hb-stage-lit-bg:/);
+  assert.match(rule(".hb-lay-subject.hb-stage-lit"), /background:var\(--hb-stage-lit-bg\)/);
+  // the subject rule comes later in the file, so the lit rule must be later still
+  assert.ok(css.lastIndexOf(".hb-lay-subject.hb-stage-lit{") > css.indexOf(".hb-lay-subject{"));
+});
+
+test("avatar card and clip strip have their parts and a play state", () => {
+  for (const c of [".hb-avcard", ".hb-avcard-thumb", ".hb-avcard-meta", ".hb-avcard-rig", ".hb-avcard-rig.is-bad"]) rule(c);
+  assert.match(rule(".hb-clipstrip-item.is-playing > button"), /var\(--hb-pink\)/);
+  const card = readFileSync(new URL("../../src/components/HbAvatarCard.vue", import.meta.url), "utf8");
+  const strip = readFileSync(new URL("../../src/components/HbClipStrip.vue", import.meta.url), "utf8");
+  assert.match(card, /class="hb-avcard-rig" :class="props.rig.ok \? 'is-ok' : 'is-bad'"/);
+  assert.match(strip, /'is-playing': props.playing === c.id/);
+  for (const p of ["HbAvatarCard", "HbClipStrip"]) assert.ok(md.includes("`" + p + "`"), p);
+});
