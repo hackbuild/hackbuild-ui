@@ -166,7 +166,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbTextarea', blurb: 'multiline input' },
       { name: 'HbSelect', blurb: 'native select, system dressed' },
       { name: 'HbCheckbox', blurb: 'native check, pink accent' },
-      { name: 'HbRadio', blurb: 'native radio, pink accent' },
+      { name: 'HbRadio', blurb: 'native radio, or a card with a trade line' },
       { name: 'HbSwitch', blurb: 'rectangular toggle, knob slides' },
       { name: 'HbField', blurb: 'label, control, hint or error' },
       { name: 'HbSlider', blurb: 'label, track, live value' },

@@ -62,6 +62,16 @@
       <p class="hb-status" id="menu-out" role="status">nothing picked</p>
     </section>
 
+    <section class="hb-panel" aria-labelledby="h-who">
+      <h2 class="hb-panel-hd-inst" id="h-who">who decides <span class="hb-hd-aux">radioCards(el, options)</span></h2>
+      <div class="hb-rcards" id="who" aria-labelledby="h-who">
+        <label class="hb-rcard"><input type="radio" value="model"><span class="hb-rcard-body"><span class="hb-rcard-title">the model</span><span class="hb-rcard-desc">it reads the room, picks every action, sees each result and goes again.</span><span class="hb-rcard-trade">one model call per step</span></span></label>
+        <label class="hb-rcard"><input type="radio" value="hints" checked><span class="hb-rcard-body"><span class="hb-rcard-title">the model, with hints</span><span class="hb-rcard-desc">same loop, and every prompt carries a suggested next step.</span><span class="hb-rcard-trade">longer prompts. best for the smallest models</span></span></label>
+        <label class="hb-rcard"><input type="radio" value="reflex"><span class="hb-rcard-body"><span class="hb-rcard-title">reflexes first</span><span class="hb-rcard-desc">plain orders run with no model call. the model gets what the rules cannot parse.</span></span></label>
+      </div>
+      <p class="hb-status" id="who-out" role="status">the model, with hints</p>
+    </section>
+
     <section class="hb-panel" aria-labelledby="h-drop">
       <h2 class="hb-panel-hd-inst" id="h-drop">drop routes <span class="hb-hd-aux">dropRoutes(window, routes)</span></h2>
       <p class="vd-note">drop files anywhere on the page. images, audio, models (.glb, .vrm) and .json go to their own route; anything else is refused by name.</p>

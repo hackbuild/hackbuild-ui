@@ -410,6 +410,28 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   .hb-check input{ width:15px; height:15px }
 }
 .hb-check.is-disabled{ color:var(--hb-ink-4); cursor:not-allowed }
+/* Radio card (0.9.6). The room's "who decides" choice: each option a
+   card with its name, one line of what it means and an optional trade
+   line. The native radio stays, so the group keeps the browser's arrow
+   keys and its screen reader role; the whole card is the target. */
+.hb-rcards{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0; margin:0; padding:0; border:0 }
+.hb-rcard{
+  display:flex; align-items:flex-start; gap:var(--hb-s3); min-width:0; min-height:44px;
+  padding:var(--hb-s2) var(--hb-s3); cursor:pointer; color:var(--hb-ink);
+  background:var(--hb-paper-sunk); border:var(--hb-border) solid var(--hb-ink);
+}
+.hb-rcard > input{ flex:none; width:20px; height:20px; margin:1px 0 0 }
+@media(min-width:641px) and (pointer:fine){ .hb-rcard > input{ width:15px; height:15px; margin-top:2px } }
+@media (hover:hover) and (pointer:fine){ .hb-rcard:not(.is-disabled):not(:has(> input:checked)):hover{ background:var(--hb-paper-raised) } }
+.hb-rcard:has(> input:checked){ background:var(--hb-paper-raised); box-shadow:3px 3px 0 var(--hb-ink) }
+.hb-rcard:has(> input:focus-visible){ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-rcard > input:focus-visible{ outline:none }
+.hb-rcard.is-disabled{ cursor:not-allowed; color:var(--hb-ink-3); border-style:dashed; border-color:var(--hb-ink-4) }
+.hb-rcard-body{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:2px }
+.hb-rcard-title{ font-family:var(--hb-body); font-size:15px; font-weight:700; line-height:1.2 }
+.hb-rcard-desc{ font-family:var(--hb-body); font-size:13px; line-height:1.35; color:var(--hb-ink-2) }
+.hb-rcard-trade{ font-family:var(--hb-utility); font-size:11px; line-height:1.35; color:var(--hb-ink-3) }
+.hb-rcard.is-disabled .hb-rcard-desc{ color:var(--hb-ink-3) }
 
 /* Switch. A rectangular toggle, knob slides, pink when on. No radius.
    The button is the hit box and the track is drawn inside it: 42 by 22
@@ -4149,6 +4171,22 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-ov-low{ display:flex; justify-content:space-between; align-items:flex-end; gap:var(--hb-s2); min-width:0 }
 .hb-ov-low > .hb-ov-br{ margin-left:auto }
 .hb-ov-low > .hb-ov > *{ pointer-events:auto }
+/* Insets stay inside the stage (0.9.6). The viewport is a size container,
+   so an inset on it is held to a share of the stage height at its own
+   ratio (--hb-inset-k, width over height). When the hud, hint and verbs
+   still leave less, the low corners give way after the caption: the
+   media well shrinks and crops, the head stays whole. */
+.hb-viewport{ container-type:size }
+.hb-ov-frame > .hb-ov-foot > .hb-ov-low{ flex:0 1 auto; min-height:0; align-items:stretch }
+.hb-ov-frame > .hb-ov-foot > .hb-ov-cap{ flex-shrink:1000 }
+.hb-ov-frame .hb-ov-low > .hb-ov{ min-height:0; justify-content:flex-end }
+.hb-ov-frame .hb-ov-low .hb-inset{ display:flex; flex-direction:column; min-height:0; max-height:100% }
+.hb-ov-frame .hb-ov-low .hb-mdock{ min-height:0; max-height:100% }
+.hb-ov-frame .hb-ov-low .hb-inset > .hb-inset-hd,.hb-ov-frame .hb-ov-low .hb-inset > .hb-inset-modes{ flex:none }
+.hb-ov-frame .hb-ov-low .hb-inset-media{ flex:0 1 auto; min-height:0; overflow:hidden }
+@container (min-width:561px){
+  .hb-viewport .hb-inset{ max-width:max(168px, calc((var(--hb-inset-hmax) - 40px) * var(--hb-inset-k, 1.333))) }
+}
 .hb-ov-frame:not(.has-pad) > .hb-ov-top > .hb-ov-tele{ justify-self:start; align-items:flex-start }
 .hb-ov-frame:not(.has-pad) > .hb-ov-top:not(:has(> .hb-ov-tl)){ grid-template-areas:"tele tr" }
 /* Under 561 px of viewport the hint gives way to the scene: it names keys

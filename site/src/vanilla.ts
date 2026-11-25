@@ -10,6 +10,7 @@ import {
   dropRoutes,
   hotkeys,
   menu,
+  radioCards,
   modal,
   persisted,
   tabs,
@@ -55,6 +56,11 @@ const about = modal($('demo-modal'), {
   trigger: $('open-modal'),
   label: 'about this page',
   onClose: (why) => say('over-out', `modal closed by ${why}`),
+})
+
+// radio cards
+radioCards($('who'), {
+  onChange: (v) => say('who-out', document.querySelector(`#who input[value="${v}"] + .hb-rcard-body .hb-rcard-title`)?.textContent ?? v),
 })
 
 // menu

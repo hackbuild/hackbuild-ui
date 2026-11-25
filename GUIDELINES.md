@@ -510,6 +510,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-scope` | Canvas inside a stage. Block and full width, or it leaves a baseline gap and the pink shadow sits wrong |
 | `.hb-switch` | Rectangular toggle, knob slides, pink when on. Keyed off `aria-checked` |
 | `.hb-check` | Checkbox and radio row, native control carrying the pink accent |
+| `.hb-rcards` / `.hb-rcard` | Radio cards: name, meaning and trade per option (0.9.6) |
 | `.hb-menu-wrap` / `.hb-menu` / `.hb-menu-item` | Dropdown action menu under a trigger |
 | `.hb-drawer` | Full-height panel sliding from an edge. The mobile home of the rail. `.is-sheet` is the bottom sheet: 74 percent tall, safe area padded, one open at a time. `.hb-drawer-hd` is the title row with the close button. `.is-md` and `.is-lg` set the side drawer to 440 and 560 px from the drawer tokens (default 340); a sheet stays full width |
 | `.hb-avatar` | A square with an ink border. This system does not crop people into circles |
@@ -1399,6 +1400,18 @@ the toolbar on three rows and the telemetry in a column (suite report).
 | organ row | HbModelRack slot `kind: 'organ'`, `source`, `size`, slot `organ { row }`; `.hb-slot.is-organ`, `.hb-slot-src` | a part that is not a model, such as the body: label, role, source and size, no pick, no load, no state square. Presets and the ready gate skip it. `options` is optional for an organ |
 | one row toolbar | HbToolbar `overflow`, `moreLabel`, `v-model:open`, slots `more` and `end`; vanilla `barMore`; `.hb-bar.is-overflow`, `.hb-bar-lbl`, `.hb-bar-more`, `.hb-bar-more-btn`, `.hb-bar-more-panel` | CLEVIS (P-PHONE-5). Under 641 px the row never wraps: `.hb-bar-lbl` labels drop so their buttons show the stroke icon alone, and the `more` slot folds behind a menu button and opens as a sheet under the bar. Wider, `more` lies in the row between the default and `end` slots. The panel holds real controls, so it is a disclosure: focus goes to its first control, Escape returns focus, a press outside closes |
 | compact stage hud | `--hb-inset-w-sm`, `.hb-inset-cycle` | on a stage under 561 px of container width: the inset is ARBOR's 30 percent of the stage (at least 120 px), its mode bar folds into one head button that cycles the modes, its aux drops; hud figures run in one wrapping row across the top, one size down |
+
+### Parts added in 0.9.6
+
+Measured on `#/demos/stage-tool` every 8 px from 320 to 1440 wide at 700
+and 900 tall: 0.9.5 cut the 16:9 eye inset at the stage bottom from 632
+to 1336 px wide, by up to 95 px (193 of 282 sizes); 0.9.6 keeps it
+inside at all 282.
+
+| Part | Classes and props | Behaviour |
+|---|---|---|
+| radio card | HbRadio `title`, `desc`, `trade`; `.hb-rcards`, `.hb-rcard`, `-body`, `-title`, `-desc`, `-trade`, `.is-disabled`; vanilla `radioCards` | ARBOR's "who decides" (P-ROOM-7). Each option a card: the name, one line of what it means, an optional trade line. The native radio stays, so one `name` gives the radiogroup Tab into the checked card and the arrows between cards; the title names the radio and the two lines describe it. The whole card is the target, at least 44 px; the checked card lifts on a hard shadow; disabled is dashed. Wrap the cards in `.hb-rcards` with `role="radiogroup"` and a label |
+| inset inside the stage | `--hb-inset-hmax`, `--hb-inset-k` | the viewport is a size container. From 561 px of stage width an inset is at most as wide as keeps it `--hb-inset-hmax` (36 percent of the stage height) tall at its ratio, never under 168 px; HbInset writes `--hb-inset-k` from `ratio`. When the hud, hint and verbs still leave less room, the low corners give way after the caption: the media well shrinks and crops, the head stays whole |
 
 ## 19. The refined look
 

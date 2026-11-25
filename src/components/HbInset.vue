@@ -24,6 +24,13 @@ const open = defineModel<boolean>('open', { default: true })
 const mode = defineModel<string>('mode', { default: '' })
 
 seq += 1
+/** Width over height from `ratio` ('16 / 9', '4/3', '1.5'), so the stage
+    can hold the inset to a share of its height at this ratio. */
+const k = (() => {
+  const [a, b] = props.ratio.split('/').map((x) => parseFloat(x))
+  const v = b ? a! / b : a!
+  return Number.isFinite(v) && v > 0 ? +v.toFixed(4) : 4 / 3
+})()
 const mediaId = `hb-inset-${seq}`
 
 /** On a stage under 561 px the mode bar folds into one head button that
@@ -39,7 +46,7 @@ const nextOf = () => props.modes[(props.modes.indexOf(current()) + 1) % props.mo
 <template>
   <!-- One line head: title and aux, cut with an ellipsis, never wrapped.
        View modes sit on a bar under it. -->
-  <figure class="hb-inset" :class="{ 'is-closed': props.collapsible && !open }">
+  <figure class="hb-inset" :class="{ 'is-closed': props.collapsible && !open }" :style="{ '--hb-inset-k': k }">
     <div class="hb-inset-hd">
       <button
         v-if="props.collapsible"

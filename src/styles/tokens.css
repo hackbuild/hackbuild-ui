@@ -155,6 +155,7 @@
   --hb-tray:    210px;          /* bench tray under the stage */
   --hb-inset-w: 320px;          /* picture in picture card on a viewport */
   --hb-inset-w-sm: max(30cqw, 120px); /* the same card on a stage under 561 px (ARBOR: 30 percent) */
+  --hb-inset-hmax: 36cqh;       /* tallest inset on a stage, head included, before the well crops */
   --hb-modal-sm: 520px;         /* modal panel, a confirm */
   --hb-modal-md: 640px;         /* modal panel, the default */
   --hb-modal-lg: 880px;         /* modal panel, a form or table */

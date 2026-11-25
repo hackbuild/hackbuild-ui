@@ -255,3 +255,68 @@ export function toggleRow(el: HTMLElement, onChange?: (on: boolean) => void): { 
     },
   }
 }
+
+export interface RadioCardsOptions {
+  /** The value chosen at the start. Default: the radio already checked. */
+  value?: string
+  /** Called with the value after the user picks a card. */
+  onChange?: (value: string) => void
+  /** Group name for radios that carry none. */
+  name?: string
+}
+
+export interface RadioCardsHandle {
+  readonly value: string
+  /** Check the card with this value, without calling onChange. */
+  set(value: string): void
+  dispose(): void
+}
+
+let rcSeq = 0
+
+/**
+ * Radio cards over `.hb-rcards`: `label.hb-rcard` rows, each a native
+ * radio and a `.hb-rcard-title`, `.hb-rcard-desc`, `.hb-rcard-trade`.
+ * The group gets role radiogroup and one name, so the browser gives
+ * Tab into the checked card and arrows between cards; each radio is
+ * named by its title and described by its meaning and trade.
+ */
+export function radioCards(el: HTMLElement, options: RadioCardsOptions = {}): RadioCardsHandle {
+  if (!el.getAttribute('role')) el.setAttribute('role', 'radiogroup')
+  rcSeq += 1
+  const base = `hb-rc-${rcSeq}`
+  const name = options.name ?? base
+  const inputs = () => [...el.querySelectorAll<HTMLInputElement>('input[type=radio]')]
+  inputs().forEach((input, i) => {
+    if (!input.name) input.name = name
+    const card = input.closest('.hb-rcard')
+    if (!card) return
+    const part = (cls: string, tag: string) => {
+      const p = card.querySelector<HTMLElement>(cls)
+      if (p && !p.id) p.id = `${base}-${i}-${tag}`
+      return p?.id
+    }
+    const title = part('.hb-rcard-title', 'n')
+    if (title) input.setAttribute('aria-labelledby', title)
+    const desc = [part('.hb-rcard-desc', 'd'), part('.hb-rcard-trade', 't')].filter(Boolean).join(' ')
+    if (desc) input.setAttribute('aria-describedby', desc)
+    card.classList.toggle('is-disabled', input.disabled)
+  })
+  const current = () => inputs().find((r) => r.checked)?.value ?? ''
+  const set = (v: string) => { for (const r of inputs()) r.checked = r.value === v }
+  if (options.value !== undefined) set(options.value)
+  function onChange(e: Event) {
+    const t = e.target as HTMLInputElement
+    if (t.type === 'radio' && t.checked) options.onChange?.(t.value)
+  }
+  el.addEventListener('change', onChange)
+  return {
+    get value() {
+      return current()
+    },
+    set,
+    dispose() {
+      el.removeEventListener('change', onChange)
+    },
+  }
+}

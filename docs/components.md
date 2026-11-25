@@ -408,6 +408,13 @@ Native controls carrying the pink accent, label as slot.
 | `value` (required) | radio only | the value this radio selects |
 | `name` | radio only | |
 | `disabled` | `boolean` | |
+| `title` | radio only | card form: the option name. Set it to get `.hb-rcard` |
+| `desc` | radio only | card form: one line of what it means |
+| `trade` | radio only | card form: what it costs, a quieter line |
+
+The card form needs `name` and a `.hb-rcards` wrapper with
+`role="radiogroup"` and a label. Vanilla `radioCards(el, { value,
+onChange, name })` wires the same markup.
 
 ### HbSwitch
 
