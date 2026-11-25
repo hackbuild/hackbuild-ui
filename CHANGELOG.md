@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.2
+
+- `.hb-toolpage.is-split` no longer shrinks in a flex column shell. A
+  shrunk grid capped its auto rows at the shell height, so a strip or the
+  transport under the stage sat over the stage from 1024 px.
+- `.hb-toolpage.is-split.is-stage`: the side column is at most 40 percent
+  of the width, so at 1024 px the stage stays the wider part.
+- `.hb-kbd` sets its own ink color: keys read on a dark hud plate.
+- Demo `#/demos/stage-tool`: toolbar, stage, strip and transport beside a
+  rack.
+
 ## 0.9.1
 
 - `.hb-toolpage.is-split.is-stage`: stage wide on the left, a side column
