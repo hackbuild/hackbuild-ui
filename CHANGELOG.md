@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.10.1
+
+Parts from hackle (10).html that views built without:
+
+- `.hb-heat.is-pink`: the association table filled pink by weight, 6 to
+  96 percent from `--v` (0 to 1), paper text on `td.is-hi` past .55.
+- `.hb-marker`: one behaviour or state name, Permanent Marker 28 px.
+- `.hb-note`: a note under a readout, Special Elite 13 px, muted.
+- `.hb-rack-stack`: rack panels stacked 16 px apart.
+- `.hb-gauge.is-cur`: the current row's label is pink as well as its bar.
+- `.hb-inset-who`: who an inset sees, switched in its head; HbInset
+  `who` with `v-model:sees`.
+
 ## 0.10.0
 
 The rebuild foundation: the page template of the rebuild plan, six

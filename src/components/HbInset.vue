@@ -14,14 +14,18 @@ export interface Props {
   collapsible?: boolean
   /** Views of the same data, picked in the head: ['depth', 'mask', 'cutout']. */
   modes?: string[]
+  /** Who the inset sees, switched in the head: ['dog', 'you']. */
+  who?: string[]
 }
 
-const props = withDefaults(defineProps<Props>(), { aux: '', ratio: '4/3', collapsible: false, modes: () => [] })
+const props = withDefaults(defineProps<Props>(), { aux: '', ratio: '4/3', collapsible: false, modes: () => [], who: () => [] })
 
 /** Media shown. Only read with `collapsible`. */
 const open = defineModel<boolean>('open', { default: true })
 /** The view picked from `modes`. */
 const mode = defineModel<string>('mode', { default: '' })
+/** The one picked from `who`. */
+const whoPicked = defineModel<string>('sees', { default: '' })
 
 seq += 1
 /** Width over height from `ratio` ('16 / 9', '4/3', '1.5'), so the stage
@@ -57,6 +61,9 @@ const nextOf = () => props.modes[(props.modes.indexOf(current()) + 1) % props.mo
         @click="open = !open"
       ><span class="hb-inset-caret" aria-hidden="true">{{ open ? '-' : '+' }}</span><span class="hb-inset-title">{{ props.title }}</span></button>
       <span v-else class="hb-inset-title">{{ props.title }}</span>
+      <span v-if="props.who.length > 1" class="hb-inset-who" role="group" :aria-label="`${props.title} sees`">
+        <button v-for="w in props.who" :key="w" type="button" :aria-pressed="(whoPicked || props.who[0]) === w" @click="whoPicked = w">{{ w }}</button>
+      </span>
       <span v-if="props.aux || $slots.head" class="hb-hd-aux"><slot name="head">{{ props.aux }}</slot></span>
       <button
         v-if="props.modes.length > 1 && (!props.collapsible || open)"

@@ -1640,6 +1640,17 @@ cross; an internal word in first view text. The six demo routes
 `#/layouts/<kind>` of the docs site pass it, except that the gate still
 asks the conversation for a rack, which clevis does not have.
 
+### Parts from hackle (0.10.1)
+
+| Class | Use |
+|---|---|
+| `.hb-heat.is-pink` | the association table: each `td` sets `--v` from 0 to 1 and fills pink from 6 to 96 percent; `td.is-hi` past .55 takes paper text |
+| `.hb-marker` | one behaviour or state name in a rack panel, Permanent Marker 28 px; one per screen with the bar's name |
+| `.hb-note` | a note under a readout, Special Elite 13 px in `--hb-ink-3` |
+| `.hb-rack-stack` | rack panels stacked 16 px apart, as hackle's blocks |
+| `.hb-gauge.is-cur` | the current gauge row: pink bar and pink label |
+| `.hb-inset-who` | buttons in an inset head that pick who it sees (`aria-pressed`); HbInset `who` and `v-model:sees` |
+
 ### Deprecated in 0.10.0, gone in 0.11.0
 
 | Part | Use instead |

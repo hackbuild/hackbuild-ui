@@ -1927,7 +1927,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-gauge > .hb-meter{ height:11px; background:var(--hb-paper-sunk) }
 .hb-gauge > .hb-meter > i{ background:var(--hb-ink) }
 .hb-gauge-value{ font-family:var(--hb-readout); font-size:16px; text-align:right; font-variant-numeric:tabular-nums }
-.hb-gauge.is-cur .hb-gauge-label{ font-weight:700 }
+.hb-gauge.is-cur .hb-gauge-label{ font-weight:700; color:var(--hb-pink) }
 .hb-gauge.is-cur > .hb-meter > i{ background:var(--hb-pink) }
 
 /* Instrument head on an h2 or h3. `.hb h3` sets the marker face and a zero
@@ -2041,6 +2041,12 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
   display:flex; align-items:center; gap:var(--hb-s2); white-space:nowrap; min-width:0; overflow:hidden;
 }
 .hb-inset-title{ min-width:0; overflow:hidden; text-overflow:ellipsis }
+/* who the inset sees, switched in its head (hackle's eye card): dim words, the picked one underlined */
+.hb-inset-who{ flex:none; display:flex; gap:2px; margin-left:auto }
+.hb-inset-who > button{ white-space:nowrap; padding:0 6px 0 0; min-height:24px; background:none; border:0; color:inherit; font:inherit; letter-spacing:inherit; text-transform:inherit; opacity:.5; cursor:pointer }
+.hb-inset-who > button[aria-pressed="true"]{ opacity:1; text-decoration:underline; text-underline-offset:3px }
+.hb-inset-who > button:focus-visible{ outline:2px solid var(--hb-pink); outline-offset:1px }
+@media (pointer:coarse){ .hb-inset-who > button{ min-height:44px } }
 .hb-inset-toggle{ display:inline-flex; align-items:center; gap:var(--hb-s1); min-width:0; padding:0; background:transparent; border:0; color:inherit; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer }
 .hb-inset-caret{ flex:none; width:1ch }
 .hb-inset-modes{ display:flex; border-bottom:1px solid var(--hb-ink-border); background:var(--hb-ink) }
@@ -2399,6 +2405,9 @@ button.hb-tseg-t:focus-visible,.hb-tseg-who:focus-visible{ outline:var(--hb-bord
   background:color-mix(in srgb, var(--hb-ink) calc(var(--v, 0) * 100%), var(--hb-paper-raised));
 }
 .hb-heat td.is-hi{ color:var(--hb-paper) }
+/* is-pink: hackle's association table. A pink fill from 6 to 96 percent by --v, paper text past .55 (is-hi). */
+.hb-heat.is-pink td{ background:color-mix(in srgb, var(--hb-pink) calc((.06 + var(--v, 0) * .9) * 100%), var(--hb-paper-raised)) }
+.hb-heat.is-pink td.is-hi{ color:var(--hb-paper) }
 
 @media (prefers-reduced-motion:reduce){
   .hb-status.is-busy::before,.hb-pill.is-busy::before,.hb-verdict.is-run::before,
@@ -5155,3 +5164,11 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-msheet-own .hb-seg{ align-self:flex-start }
 .hb-msheet-foot{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2); padding-top:var(--hb-s2); border-top:var(--hb-border) solid var(--hb-ink) }
 .hb-msheet-foot > .hb-btn-go{ flex:1 1 auto; justify-content:center }
+
+/* hackle type and rack parts (0.10.1) */
+/* one behaviour or state name per panel, as hackle's .big: Permanent Marker at 28 px */
+.hb-marker{ margin:0; font-family:var(--hb-display); font-size:28px; line-height:1.05; color:var(--hb-ink); overflow-wrap:anywhere }
+/* a note under a readout, as hackle's .note: Special Elite, muted */
+.hb-note{ margin:0; font-family:var(--hb-note); font-size:13px; line-height:1.4; color:var(--hb-ink-3) }
+/* rack panels stacked with hackle's 16 px between blocks */
+.hb-rack-stack{ display:flex; flex-direction:column; gap:16px; min-width:0 }
