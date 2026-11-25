@@ -30,16 +30,16 @@ const pct = computed(() => Math.round((use.value.used / use.value.budget) * 100)
 </script>
 
 <template>
-  <span v-if="props.pill" class="hb-ctx-pill" :class="`is-${use.tone}`" :title="use.words">ctx {{ pct }}%</span>
-  <div v-else class="hb-ctx" :class="`is-${use.tone}`">
-    <div class="hb-ctx-hd"><span class="hb-ctx-label">context</span><span class="hb-ctx-words">{{ use.words }}</span></div>
-    <div class="hb-ctx-bar" role="meter" aria-label="context used" aria-valuemin="0" :aria-valuemax="use.budget" :aria-valuenow="use.used" :aria-valuetext="use.words">
-      <i v-for="(r, n) in use.rows" :key="r.key" :class="`hb-ctx-p${n % 6}`" :style="{ width: Math.min(100, r.fraction * 100) + '%' }" />
+  <span v-if="props.pill" class="hb-ctxmeter-pill" :class="`is-${use.tone}`" :title="use.words">ctx {{ pct }}%</span>
+  <div v-else class="hb-ctxmeter" :class="`is-${use.tone}`">
+    <div class="hb-ctxmeter-hd"><span class="hb-ctxmeter-label">context</span><span class="hb-ctxmeter-words">{{ use.words }}</span></div>
+    <div class="hb-ctxmeter-bar" role="meter" aria-label="context used" aria-valuemin="0" :aria-valuemax="use.budget" :aria-valuenow="use.used" :aria-valuetext="use.words">
+      <i v-for="(r, n) in use.rows" :key="r.key" :class="`hb-ctxmeter-p${n % 6}`" :style="{ width: Math.min(100, r.fraction * 100) + '%' }" />
     </div>
-    <ul class="hb-ctx-legend">
-      <li v-for="(r, n) in use.rows" :key="r.key"><i :class="`hb-ctx-p${n % 6}`" aria-hidden="true" />{{ r.label }} <b>{{ r.tokens.toLocaleString('en-US') }}</b></li>
+    <ul class="hb-ctxmeter-legend">
+      <li v-for="(r, n) in use.rows" :key="r.key"><i :class="`hb-ctxmeter-p${n % 6}`" aria-hidden="true" />{{ r.label }} <b>{{ r.tokens.toLocaleString('en-US') }}</b></li>
     </ul>
-    <HbCallout v-if="props.banner && use.tone === 'full'" variant="warn" title="context full" class="hb-ctx-banner">
+    <HbCallout v-if="props.banner && use.tone === 'full'" variant="warn" title="context full" class="hb-ctxmeter-banner">
       <slot name="full">the context is full. start a new chat, or drop the oldest turns.</slot>
       <template #actions>
         <button type="button" class="hb-btn hb-btn-sm" @click="emit('new')">new chat</button>
