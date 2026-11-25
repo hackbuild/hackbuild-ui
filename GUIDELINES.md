@@ -1637,7 +1637,8 @@ under 60 percent of the viewport at 1440 or starting below the upper half
 at 390; a rack not 380 px wide, not the same width on every tab, without
 three to five tabs or over 20 controls; sideways scroll; header items that
 cross; an internal word in first view text. The six demo routes
-`#/layouts/<kind>` of the docs site pass it.
+`#/layouts/<kind>` of the docs site pass it, except that the gate still
+asks the conversation for a rack, which clevis does not have.
 
 ### Deprecated in 0.10.0, gone in 0.11.0
 
