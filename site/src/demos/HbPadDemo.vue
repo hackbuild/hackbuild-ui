@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { HbPad, HbSeg, HbTag, HbViewport, type PadMode, type PadVector } from '@hackbuild/ui'
+import { HbButton, HbPad, HbSeg, HbTag, HbViewport, type PadMode, type PadVector } from '@hackbuild/ui'
 import { dirWord } from '@hackbuild/ui/vanilla'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
@@ -23,6 +23,14 @@ const code = `<HbViewport>
         <template #tl><HbTag>{{ read }}</HbTag><HbTag>act {{ acts }}</HbTag></template>
         <template #pad><HbPad v-model="v" :mode="mode" action="act" always keys @action="acts++" /></template>
       </HbViewport>
+      <p class="hb-hint">a stage under 321 px tall, as on a 320 by 568 phone: the pad takes the small step and lies over the bottom corners, the band between.</p>
+      <div style="max-width: 320px">
+        <HbViewport label="short pad test" aspect="4/3" style="max-height: 216px">
+          <template #tl><HbTag>{{ read }}</HbTag></template>
+          <template #pad><HbPad v-model="v" :mode="mode" action="act" always @action="acts++" /></template>
+          <template #b><HbButton variant="secondary" size="sm">wave</HbButton></template>
+        </HbViewport>
+      </div>
     </div>
   </DemoSection>
   <PropsTable

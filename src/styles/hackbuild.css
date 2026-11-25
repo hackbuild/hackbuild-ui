@@ -4340,7 +4340,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-pad-base[data-dir*="w"] .hb-pad-w{ border-right-color:var(--hb-pink) }
 .hb-pad-base[data-dir*="e"] .hb-pad-e{ border-left-color:var(--hb-pink) }
 .hb-pad-act{
-  min-width:56px; height:56px; padding:0 var(--hb-s2);
+  min-width:var(--hb-pad-act-w, 56px); height:56px; padding:0 var(--hb-s2);
   background:var(--hb-paper); color:var(--hb-ink); border:var(--hb-border) solid var(--hb-ink);
   box-shadow:var(--hb-shadow); cursor:pointer; touch-action:manipulation;
   font-family:var(--hb-utility); font-size:12px; letter-spacing:.1em; text-transform:uppercase;
@@ -4349,6 +4349,33 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-pad-act:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:2px }
 @container (min-width:561px){
   .hb-pad-base{ --hb-pad-r:30px; width:104px; height:104px }
+}
+/* Pad placement (0.9.8). In a viewport frame the pad lies over the
+   bottom corners, stick left and action right, instead of taking a row
+   under the band: the foot keeps those corners clear while a pad shows
+   (on a coarse pointer, or always) and holds the pad's height, so the
+   caption, band and insets sit between the stick and the action and
+   never under either. When the stage is still short, the insets and
+   caption give way first, then the top grid loses its last telemetry
+   row before the stick covers it. Under 321 px of stage height (216 at
+   320 by 568) the base takes the 72 px step and the action 44 px. */
+.hb-ov-foot{ --hb-pad-size:92px }
+@container (min-width:561px){ .hb-ov-foot{ --hb-pad-size:104px } }
+.hb-ov-foot:has(> .hb-ov-pad > .hb-pad.is-always){ --hb-pad-on:1 }
+@media(pointer:coarse){ .hb-ov-foot:has(> .hb-ov-pad > .hb-pad){ --hb-pad-on:1 } }
+.hb-ov-frame > .hb-ov-foot > .hb-ov-pad{ position:absolute; left:0; right:0; bottom:0; pointer-events:none }
+.hb-ov-frame > .hb-ov-foot{
+  min-height:calc(var(--hb-pad-on, 0) * var(--hb-pad-size));
+  padding-left:calc(var(--hb-pad-on, 0) * (var(--hb-pad-size) + var(--hb-s2)));
+  padding-right:calc(var(--hb-pad-on, 0) * (var(--hb-pad-act-w, 56px) + var(--hb-s2)));
+}
+.hb-ov-frame.has-pad > .hb-ov-foot{ flex-shrink:1000 }
+.hb-ov-frame.has-pad > .hb-ov-top{ flex:0 1 auto; min-height:0; overflow:hidden; padding:var(--hb-s1); margin:calc(-1 * var(--hb-s1)) }
+@container (max-height:320px){
+  .hb-ov-foot{ --hb-pad-size:72px }
+  .hb-pad-base{ --hb-pad-r:18px; width:72px; height:72px }
+  .hb-pad-knob{ width:32px; height:32px }
+  .hb-pad-act{ height:44px }
 }
 @media (prefers-reduced-motion:reduce){ .hb-transport{ transition:none } }
 @media(pointer:coarse){ .hb-ov-b .hb-btn{ min-width:44px; min-height:44px } }
