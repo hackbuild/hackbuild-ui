@@ -114,6 +114,12 @@ export const strokeIcons = {
   brush: { d: 'M20 4l-7 7M11 9l4 4-2 2-4-4zM9 13c-3 0-5 2-5 7c5 0 7-2 7-5' },
   eraser: { d: 'M4 16l9-9 7 7-6 6H8zM9 11l7 7M14 20h6' },
   lasso: { d: 'M12 4c5 0 9 2.5 9 5.5s-4 5.5-9 5.5s-9-2.5-9-5.5s4-5.5 9-5.5zM6 14c-1 2 0 4 2 4s2 2 1 3' },
+  // mask-studio rail: rectangle, ellipse and polygon selections, flood fill, pan
+  'select-rect': { d: 'M4 4h3M10 4h4M17 4h3v3M20 10v4M20 17v3h-3M14 20h-4M7 20H4v-3M4 14v-4M4 7V4' },
+  'select-ellipse': { d: 'M12 5h0.5M16.5 6.5l0.4 0.3M19.4 10.5v1M19.4 13.5l-0.2 0.5M16.5 17.5l-0.4 0.3M12.5 19h-1M7.5 17.5l-0.4-0.3M4.6 13.5v-1M4.6 10.5l0.2-0.5M7.5 6.5l0.4-0.3' },
+  polygon: { d: 'M5 9l7-5 7 5-3 10H8zM5 9h0M12 4h0M19 9h0' },
+  bucket: { d: 'M5 11l7-7 7 7-7 7zM5 11h14M20 15c0 1.5-1 3-1 3s-1-1.5-1-3a1 1 0 0 1 2 0z' },
+  hand: { d: 'M8 12V5a1.5 1.5 0 0 1 3 0v6M11 10V3.5a1.5 1.5 0 0 1 3 0V10M14 10V5a1.5 1.5 0 0 1 3 0v7c0 5-3 8-7 8c-3 0-4-2-6-5l-1.5-2.5a1.5 1.5 0 0 1 2.5-1.6L8 14' },
 } as const satisfies Record<string, StrokeIconDef>
 
 export type StrokeIconName = keyof typeof strokeIcons

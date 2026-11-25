@@ -1657,6 +1657,27 @@ asks the conversation for a rack, which clevis does not have.
 | `HbAvatarCard` | `.hb-avcard`, `-thumb`, `-body`, `-name`, `-meta`, `-rig`, `.is-on`, `.is-ok`, `.is-bad` | one avatar to pick: thumbnail, name, the licence and size line, the rig check line; a rig that misses bones names them in red |
 | `HbClipStrip` | `.hb-clipstrip`, `-item`, `-name`, `-len`, `.is-playing`, `.is-on` | clips in a row; the playing one has a pink mark and play glyph, the picked one is ink; arrows move |
 
+### Views pass (0.10.2)
+
+| Class | Use |
+|---|---|
+| `.hb-lay [hidden]` | inside a layout the hidden attribute always hides, also on parts whose class sets display |
+| `.hb-lay-scroll` | a result that scrolls inside a subject that does not, padded (drop first's transcript) |
+| `.hb-mask.is-fill` | the mask editor fills its subject; the view sets `--hb-mask-w` (frame width at fit times zoom) and `--hb-mask-ratio`; `.is-zoomed` lets the well scroll |
+| `.hb-flow` | hackle's flow in a rack block: each child after the first sits 6 px below |
+| `.hb-heat td[aria-current]` | the last rewarded cell, a 2 px ink outline |
+| `.hb-frameview`, `.hb-frameview-cap` | a frame tile with what was found drawn over it, the caption under it |
+
+The mask editor's rail follows the earlier mask studio: wand (w), brush
+(b), eraser (e), lasso (l), polygon (p, press corner by corner, Enter or
+the first corner closes, Backspace drops one), rectangle (m), ellipse
+(o), flood fill (g, always contiguous), pan (h, or hold space). The
+handle adds `floodAt`, `shapeFill`, `expand`, `shrink` and `smooth`; the
+pure `rectFill`, `ellipseFill`, `morphMask` and `smoothMask` sit beside
+`wandSelect` and `polygonFill`. Vanilla `modelSheet` takes `onCustom`
+and draws the "your own" forms as HbModelSheet does, and counts the rows
+the filters hide.
+
 ### Deprecated in 0.10.0, gone in 0.11.0
 
 | Part | Use instead |

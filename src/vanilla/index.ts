@@ -67,7 +67,7 @@ export { spokenWords, toSpoken, spokenIndex, wordAtChar, METHOD_WORDS, methodMet
 export type { SpokenWord, MethodState, ImageSource, CameraFault, HistoryLike, ThumbKind } from './media'
 export { PROMPT_KEYS, containRect, toImage, toView, normBox, isBox, nudge, promptStep, promptWord, hoverThrottle, INSTANCE_COLOURS, instanceColour, scorePct, clampPair, rangePct, splitKey, splitAt } from './vision'
 export type { SegPrompt, PromptTool, PromptRect } from './vision'
-export { MASK_TOOLS, maskHint, colourDistance, wandSelect, pointInPolygon, polygonFill, applySelection, stampDisc, strokeSegment, invertMask, maskCoverage, nextBrushSize, maskRgba, tintRgba, parseRgb, maskEditor } from './mask'
+export { MASK_TOOLS, maskHint, colourDistance, wandSelect, pointInPolygon, polygonFill, rectFill, ellipseFill, morphMask, smoothMask, applySelection, stampDisc, strokeSegment, invertMask, maskCoverage, nextBrushSize, maskRgba, tintRgba, parseRgb, maskEditor } from './mask'
 export type { MaskTool, MaskMode, MaskPt, MaskPixels, MaskToolDef, MaskOutput, MaskSource, MaskEditorState, MaskEditorOptions, MaskEditorHandle } from './mask'
 export { ART_KEYS, ART_FIT, fitScale, boardRect, toBoard, zoomAt, wheelFactor, pinch, toLayer, fromLayer, layerCorners, hitLayer, snapRot, snapTo, zoomWord, addStrokePoint, applyStroke, artViewKey } from './artboard'
 export type { ArtTransform, ArtLayer, ArtView, ArtTool, ArtStroke, ArtRect } from './artboard'

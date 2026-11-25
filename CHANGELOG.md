@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.10.2
+
+- Mask editor: eraser, polygon, rectangle, ellipse, flood fill and pan
+  tools with their keys (e p m o g h, space pans), and expand, shrink and
+  smooth on the handle; `rectFill`, `ellipseFill`, `morphMask`,
+  `smoothMask`. Icons `select-rect`, `select-ellipse`, `polygon`,
+  `bucket`, `hand`.
+- Vanilla `modelSheet`: the "your own" forms with `onCustom`, and the
+  count of rows the filters hide.
+- `.hb-lay [hidden]`, `.hb-lay-scroll`, `.hb-mask.is-fill`, `.hb-flow`,
+  `.hb-heat td[aria-current]`, `.hb-frameview`.
+
 ## 0.10.1
 
 Parts from hackle (10).html and ferrule (13).html that views built without:

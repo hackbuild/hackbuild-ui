@@ -9,7 +9,7 @@ import { isTyping } from './focus'
 import { undoStack } from './undo'
 import { toImage } from './vision'
 
-export type MaskTool = 'wand' | 'brush' | 'lasso'
+export type MaskTool = 'wand' | 'brush' | 'eraser' | 'lasso' | 'polygon' | 'rect' | 'ellipse' | 'flood' | 'pan'
 export type MaskMode = 'add' | 'erase'
 export interface MaskPt { x: number; y: number }
 
@@ -19,7 +19,7 @@ export interface MaskPixels { data: Uint8ClampedArray; width: number; height: nu
 export interface MaskToolDef {
   id: MaskTool
   label: string
-  icon: 'wand' | 'brush' | 'lasso'
+  icon: 'wand' | 'brush' | 'eraser' | 'lasso' | 'polygon' | 'select-rect' | 'select-ellipse' | 'bucket' | 'hand'
   /** One letter, printed on the rail and bound on the editor. */
   key: string
   /** The gesture in add mode; `maskHint` gives it for either mode. */
@@ -30,7 +30,13 @@ export interface MaskToolDef {
 export const MASK_TOOLS: MaskToolDef[] = [
   { id: 'wand', label: 'wand', icon: 'wand', key: 'w', hint: maskHint('wand', 'add') },
   { id: 'brush', label: 'brush', icon: 'brush', key: 'b', hint: maskHint('brush', 'add') },
+  { id: 'eraser', label: 'eraser', icon: 'eraser', key: 'e', hint: maskHint('eraser', 'add') },
   { id: 'lasso', label: 'lasso', icon: 'lasso', key: 'l', hint: maskHint('lasso', 'add') },
+  { id: 'polygon', label: 'polygon', icon: 'polygon', key: 'p', hint: maskHint('polygon', 'add') },
+  { id: 'rect', label: 'rectangle', icon: 'select-rect', key: 'm', hint: maskHint('rect', 'add') },
+  { id: 'ellipse', label: 'ellipse', icon: 'select-ellipse', key: 'o', hint: maskHint('ellipse', 'add') },
+  { id: 'flood', label: 'flood fill', icon: 'bucket', key: 'g', hint: maskHint('flood', 'add') },
+  { id: 'pan', label: 'pan', icon: 'hand', key: 'h', hint: maskHint('pan', 'add') },
 ]
 
 /** The hint pill for a tool in a mode. */
@@ -39,6 +45,11 @@ export function maskHint(tool: MaskTool, mode: MaskMode): string {
   const swap = `x swaps to ${add ? 'erase' : 'add'}`
   if (tool === 'wand') return `tap a colour to ${add ? 'add' : 'cut'} it. shift ${add ? 'cuts' : 'adds'}, ${swap}`
   if (tool === 'brush') return `paint to ${add ? 'add' : 'erase'}. [ and ] size, ${swap}`
+  if (tool === 'eraser') return 'paint to erase. shift adds, [ and ] size'
+  if (tool === 'polygon') return `press corner by corner, enter or the first corner ${add ? 'fills' : 'cuts'}. backspace drops a corner, esc all`
+  if (tool === 'rect' || tool === 'ellipse') return `drag a ${tool === 'rect' ? 'box' : 'ring'} to ${add ? 'add' : 'cut'} it. shift ${add ? 'cuts' : 'adds'}, ${swap}`
+  if (tool === 'flood') return `tap to fill the patch of one colour. shift ${add ? 'cuts' : 'adds'}, ${swap}`
+  if (tool === 'pan') return 'drag to move the picture. space pans from any tool'
   return `drag around a shape, lift to ${add ? 'fill' : 'cut'}. esc drops it, ${swap}`
 }
 
@@ -132,6 +143,80 @@ export function polygonFill(w: number, h: number, pts: MaskPt[]): Uint8Array {
     }
   }
   return sel
+}
+
+/** The pixels inside the box between two corners, in image pixels. */
+export function rectFill(w: number, h: number, a: MaskPt, b: MaskPt): Uint8Array {
+  const out = new Uint8Array(w * h)
+  const x0 = Math.max(0, Math.floor(Math.min(a.x, b.x))), x1 = Math.min(w, Math.ceil(Math.max(a.x, b.x)))
+  const y0 = Math.max(0, Math.floor(Math.min(a.y, b.y))), y1 = Math.min(h, Math.ceil(Math.max(a.y, b.y)))
+  for (let y = y0; y < y1; y++) out.fill(255, y * w + x0, y * w + x1)
+  return out
+}
+
+/** The pixels inside the ellipse that fills the box between two corners. */
+export function ellipseFill(w: number, h: number, a: MaskPt, b: MaskPt): Uint8Array {
+  const out = new Uint8Array(w * h)
+  const cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2
+  const rx = Math.abs(b.x - a.x) / 2, ry = Math.abs(b.y - a.y) / 2
+  if (rx < 0.5 || ry < 0.5) return out
+  const y0 = Math.max(0, Math.floor(cy - ry)), y1 = Math.min(h - 1, Math.ceil(cy + ry))
+  for (let y = y0; y <= y1; y++) {
+    const dy = (y + 0.5 - cy) / ry
+    if (dy * dy > 1) continue
+    const dx = rx * Math.sqrt(1 - dy * dy)
+    const x0 = Math.max(0, Math.round(cx - dx)), x1 = Math.min(w, Math.round(cx + dx))
+    if (x1 > x0) out.fill(255, y * w + x0, y * w + x1)
+  }
+  return out
+}
+
+/** Grow (dilate) or shrink (erode) the kept area by r pixels, a square step at a time, as the original's expand and shrink did. */
+export function morphMask(mask: Uint8Array, w: number, h: number, r: number, grow: boolean): Uint8Array {
+  let cur = mask
+  for (let k = 0; k < Math.max(0, Math.round(r)); k++) {
+    const next = new Uint8Array(cur.length)
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        let hit = !grow
+        for (let dy = -1; dy <= 1 && hit !== grow; dy++) {
+          const yy = y + dy
+          for (let dx = -1; dx <= 1; dx++) {
+            const xx = x + dx
+            const v = xx >= 0 && xx < w && yy >= 0 && yy < h ? cur[yy * w + xx]! > 127 : false
+            if (grow && v) { hit = true; break }
+            if (!grow && !v) { hit = false; break }
+          }
+        }
+        next[y * w + x] = hit ? 255 : 0
+      }
+    }
+    cur = next
+  }
+  return cur
+}
+
+/** Round off jagged edges: a box blur of radius r, then a cut at half, as the original's smooth did. */
+export function smoothMask(mask: Uint8Array, w: number, h: number, r = 2): Uint8Array {
+  const tmp = new Float32Array(mask.length)
+  const out = new Uint8Array(mask.length)
+  for (let y = 0; y < h; y++) {
+    let acc = 0
+    for (let x = -r; x <= r; x++) acc += mask[y * w + Math.min(w - 1, Math.max(0, x))]!
+    for (let x = 0; x < w; x++) {
+      tmp[y * w + x] = acc / (2 * r + 1)
+      acc += mask[y * w + Math.min(w - 1, x + r + 1)]! - mask[y * w + Math.max(0, x - r)]!
+    }
+  }
+  for (let x = 0; x < w; x++) {
+    let acc = 0
+    for (let y = -r; y <= r; y++) acc += tmp[Math.min(h - 1, Math.max(0, y)) * w + x]!
+    for (let y = 0; y < h; y++) {
+      out[y * w + x] = acc / (2 * r + 1) > 127 ? 255 : 0
+      acc += tmp[Math.min(h - 1, y + r + 1) * w + x]! - tmp[Math.max(0, y - r) * w + x]!
+    }
+  }
+  return out
 }
 
 /** Write a selection into the mask: add keeps it, erase drops it.
@@ -301,6 +386,16 @@ export interface MaskEditorHandle {
   wandAt(x: number, y: number, mode?: MaskMode): void
   paint(points: MaskPt[], radius: number, mode?: MaskMode): void
   lassoFill(points: MaskPt[], mode?: MaskMode): void
+  /** The flood tool at a point: the contiguous patch of one colour. */
+  floodAt(x: number, y: number, mode?: MaskMode): void
+  /** A rectangle, or with `ellipse` the ellipse in it, between two corners. */
+  shapeFill(a: MaskPt, b: MaskPt, ellipse?: boolean, mode?: MaskMode): void
+  /** Grow the kept area by px (default 3). */
+  expand(px?: number): void
+  /** Shrink the kept area by px (default 3). */
+  shrink(px?: number): void
+  /** Round off jagged edges (box blur radius, default 2, cut at half). */
+  smooth(r?: number): void
   clear(): void
   invert(): void
   undo(): boolean
@@ -318,6 +413,15 @@ export interface MaskEditorHandle {
 }
 
 type Ctx = CanvasRenderingContext2D
+
+/** The nearest ancestor that scrolls, for the pan tool. */
+function scrollParent(el: HTMLElement): HTMLElement | null {
+  for (let p = el.parentElement; p; p = p.parentElement) {
+    const o = getComputedStyle(p)
+    if (/(auto|scroll)/.test(o.overflow + o.overflowX + o.overflowY)) return p
+  }
+  return null
+}
 
 function isPixels(s: unknown): s is MaskPixels {
   return !!s && typeof s === 'object' && 'data' in s && 'width' in s && 'height' in s && !(typeof HTMLElement !== 'undefined' && s instanceof HTMLElement)
@@ -378,7 +482,12 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
   type Gesture =
     | { kind: 'brush'; id: number; mode: MaskMode; last: MaskPt; before: Uint8Array; n: number }
     | { kind: 'lasso'; id: number; mode: MaskMode; pts: MaskPt[] }
+    | { kind: 'shape'; id: number; mode: MaskMode; a: MaskPt; b: MaskPt; ellipse: boolean }
+    | { kind: 'pan'; id: number; x: number; y: number; el: HTMLElement | null }
   let gesture: Gesture | null = null
+  /** Polygon corners placed so far; they outlive a single pointer gesture. */
+  let poly: { mode: MaskMode; pts: MaskPt[] } | null = null
+  let spaceDown = false
   let hover: MaskPt | null = null
 
   canvas.style.touchAction = 'none'
@@ -437,8 +546,23 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
       ctx.stroke()
       ctx.setLineDash([])
     }
-    if (tool === 'brush' && hover) {
-      const m = g?.kind === 'brush' ? g.mode : mode
+    const ring = (m: MaskMode, path: () => void, closed: boolean) => {
+      ctx.beginPath(); path(); if (closed) ctx.closePath()
+      ctx.setLineDash([]); ctx.lineWidth = 4 * k; ctx.strokeStyle = edge; ctx.stroke()
+      ctx.setLineDash([6 * k, 4 * k]); ctx.lineWidth = 2 * k; ctx.strokeStyle = m === 'add' ? ringAdd : ringErase; ctx.stroke()
+      ctx.setLineDash([])
+    }
+    if (g?.kind === 'shape') {
+      const x = Math.min(g.a.x, g.b.x), y = Math.min(g.a.y, g.b.y), bw = Math.abs(g.b.x - g.a.x), bh = Math.abs(g.b.y - g.a.y)
+      ring(g.mode, () => (g.ellipse ? ctx.ellipse(x + bw / 2, y + bh / 2, bw / 2, bh / 2, 0, 0, Math.PI * 2) : ctx.rect(x, y, bw, bh)), true)
+    }
+    if (poly && poly.pts.length) {
+      const pts = hover ? [...poly.pts, hover] : poly.pts
+      ring(poly.mode, () => { ctx.moveTo(pts[0]!.x, pts[0]!.y); for (const p of pts) ctx.lineTo(p.x, p.y) }, false)
+      for (const p of poly.pts) { ctx.fillStyle = edge; ctx.fillRect(p.x - 3 * k, p.y - 3 * k, 6 * k, 6 * k) }
+    }
+    if ((tool === 'brush' || tool === 'eraser') && hover) {
+      const m = g?.kind === 'brush' ? g.mode : tool === 'eraser' ? 'erase' : mode
       ctx.beginPath()
       ctx.arc(hover.x, hover.y, (size / 2) * k, 0, Math.PI * 2)
       ctx.lineWidth = 3.5 * k
@@ -548,10 +672,29 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
     if (!p) return
     e.preventDefault()
     try { canvas.focus({ preventScroll: true }) } catch { /* focus is a courtesy */ }
-    const m = e.shiftKey ? flip(mode) : mode
+    const base: MaskMode = tool === 'eraser' ? 'erase' : mode
+    const m = e.shiftKey ? flip(base) : base
+    if (tool === 'pan' || spaceDown) {
+      canvas.setPointerCapture?.(e.pointerId)
+      gesture = { kind: 'pan', id: e.pointerId, x: e.clientX, y: e.clientY, el: scrollParent(canvas) }
+      notify()
+      return
+    }
     if (tool === 'wand') { wandAt(p.x, p.y, m); return }
+    if (tool === 'flood') { floodAt(p.x, p.y, m); return }
+    if (tool === 'polygon') {
+      const k = 1 / scale()
+      if (poly && poly.pts.length > 2 && Math.hypot(p.x - poly.pts[0]!.x, p.y - poly.pts[0]!.y) <= 10 * k) { closePolygon(); return }
+      if (!poly) poly = { mode: m, pts: [] }
+      poly.pts.push(p)
+      schedule()
+      notify()
+      return
+    }
     canvas.setPointerCapture?.(e.pointerId)
-    if (tool === 'brush') {
+    if (tool === 'rect' || tool === 'ellipse') {
+      gesture = { kind: 'shape', id: e.pointerId, mode: m, a: p, b: p, ellipse: tool === 'ellipse' }
+    } else if (tool === 'brush' || tool === 'eraser') {
       const before = mask.slice()
       const n = stampDisc(mask, w, h, p.x, p.y, radiusFor(size), m)
       gesture = { kind: 'brush', id: e.pointerId, mode: m, last: p, before, n }
@@ -567,9 +710,16 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
   function onMove(e: PointerEvent) {
     const g = gesture
     if (g && e.pointerId !== g.id) return
+    if (g?.kind === 'pan') {
+      if (g.el) { g.el.scrollLeft -= e.clientX - g.x; g.el.scrollTop -= e.clientY - g.y }
+      g.x = e.clientX
+      g.y = e.clientY
+      return
+    }
     const p = at(e, true)
     if (!p) return
     hover = e.pointerType === 'touch' && !g ? null : p
+    if (g?.kind === 'shape') g.b = p
     if (g?.kind === 'brush') {
       g.n += strokeSegment(mask, w, h, g.last, p, radiusFor(size), g.mode)
       g.last = p
@@ -586,6 +736,14 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
     if (!g || e.pointerId !== g.id) return
     gesture = null
     if (e.pointerType === 'touch') hover = null
+    if (g.kind === 'pan') { notify(); return }
+    if (g.kind === 'shape') {
+      const sel = g.ellipse ? ellipseFill(w, h, g.a, g.b) : rectFill(w, h, g.a, g.b)
+      step(() => applySelection(mask, sel, g.mode))
+      schedule()
+      notify()
+      return
+    }
     if (g.kind === 'brush') {
       if (g.n > 0) { history.push(g.before); edited() } else notify()
     } else {
@@ -600,6 +758,7 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
   }
 
   function cancel() {
+    if (poly) { poly = null; schedule(); notify() }
     const g = gesture
     if (!g) return
     gesture = null
@@ -621,7 +780,10 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
     if (mod && k === 'z') { if (e.shiftKey) redo(); else undo() }
     else if (mod && k === 'y') redo()
     else if (mod) took = false
-    else if (k === 'escape') { if (gesture) cancel(); else took = false }
+    else if (k === 'escape') { if (gesture || poly) cancel(); else took = false }
+    else if (k === 'enter' && poly) closePolygon()
+    else if (k === 'backspace' && poly) { poly.pts.pop(); if (!poly.pts.length) poly = null; schedule(); notify() }
+    else if (k === ' ') { spaceDown = true; canvas.dataset.tool = 'pan' }
     else if (k === 'x') swap()
     else if (k === '[') stepSize(-1)
     else if (k === ']') stepSize(1)
@@ -633,6 +795,8 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
     if (took) e.preventDefault()
   }
 
+  function onKeyUp(e: KeyboardEvent) { if (e.key === ' ' && spaceDown) { spaceDown = false; canvas.dataset.tool = tool } }
+  keyEl?.addEventListener('keyup', onKeyUp)
   canvas.addEventListener('pointerdown', onDown)
   canvas.addEventListener('pointermove', onMove)
   canvas.addEventListener('pointerup', onUp)
@@ -647,7 +811,7 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
     cancel()
     tool = t
     canvas.dataset.tool = t
-    if (t !== 'brush') hover = null
+    if (t !== 'brush' && t !== 'eraser' && t !== 'polygon') hover = null
     schedule()
     notify()
   }
@@ -680,6 +844,30 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
     const s = src
     step(() => applySelection(mask, wandSelect(s, x, y, tolerance, contiguous), m))
   }
+  /** Fill the patch of one colour under a point, always contiguous (the flood tool). */
+  function floodAt(x: number, y: number, m: MaskMode = mode) {
+    if (!src) return
+    const s = src
+    step(() => applySelection(mask, wandSelect(s, x, y, tolerance, true), m))
+  }
+  function closePolygon() {
+    const pg = poly
+    poly = null
+    if (pg && pg.pts.length > 2) step(() => applySelection(mask, polygonFill(w, h, pg.pts), pg.mode))
+    schedule()
+    notify()
+  }
+  function shapeFill(a: MaskPt, b: MaskPt, ellipse = false, m: MaskMode = mode) {
+    step(() => applySelection(mask, ellipse ? ellipseFill(w, h, a, b) : rectFill(w, h, a, b), m))
+  }
+  function replace(next: Uint8Array): number {
+    let n = 0
+    for (let i = 0; i < mask.length; i++) if (mask[i] !== next[i]) { mask[i] = next[i]!; n++ }
+    return n
+  }
+  function expand(px = 3) { step(() => replace(morphMask(mask, w, h, px, true))) }
+  function shrink(px = 3) { step(() => replace(morphMask(mask, w, h, px, false))) }
+  function smooth(r = 2) { step(() => replace(smoothMask(mask, w, h, r))) }
   function paint(points: MaskPt[], radius: number, m: MaskMode = mode) {
     if (!points.length) return
     step(() => {
@@ -735,7 +923,7 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
   return {
     get state() { return state() },
     setImage, setTool, setMode, swap, setSize, stepSize, setTolerance, setContiguous,
-    wandAt, paint, lassoFill, clear, invert, undo, redo, cancel,
+    wandAt, floodAt, paint, lassoFill, shapeFill, expand, shrink, smooth, clear, invert, undo, redo, cancel,
     mask: () => mask.slice(),
     setMask(m) {
       if (m.length !== mask.length) throw new Error(`mask is ${m.length} bytes, the image needs ${mask.length}`)
@@ -752,6 +940,7 @@ export function maskEditor(canvas: HTMLCanvasElement, options: MaskEditorOptions
       canvas.removeEventListener('pointercancel', onCancel)
       canvas.removeEventListener('pointerleave', onLeave)
       keyEl?.removeEventListener('keydown', onKey)
+      keyEl?.removeEventListener('keyup', onKeyUp)
       changed.clear()
       history.dispose()
     },

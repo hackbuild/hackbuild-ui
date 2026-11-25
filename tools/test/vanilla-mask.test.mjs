@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { dom } from "./dom.mjs";
 import {
-  MASK_TOOLS, maskHint, colourDistance, wandSelect, pointInPolygon, polygonFill, applySelection,
+  MASK_TOOLS, maskHint, colourDistance, wandSelect, pointInPolygon, polygonFill, applySelection, rectFill, ellipseFill, morphMask, smoothMask,
   stampDisc, strokeSegment, invertMask, maskCoverage, nextBrushSize, maskRgba, tintRgba, parseRgb, maskEditor,
 } from "../../src/vanilla/mask.ts";
 
@@ -108,7 +108,8 @@ test("outputs: alpha, matte, cutout, tint", () => {
 });
 
 test("one table gives the letters and hints, in both modes", () => {
-  assert.deepEqual(MASK_TOOLS.map((t) => t.key), ["w", "b", "l"]);
+  assert.deepEqual(MASK_TOOLS.map((t) => t.key), ["w", "b", "e", "l", "p", "m", "o", "g", "h"]);
+  assert.equal(new Set(MASK_TOOLS.map((t) => t.key)).size, MASK_TOOLS.length);
   assert.match(maskHint("brush", "add"), /\[ and \]/);
   assert.match(maskHint("brush", "erase"), /x swaps to add/);
   for (const t of MASK_TOOLS) assert.equal(t.hint, maskHint(t.id, "add"));
@@ -169,6 +170,46 @@ test("controller: letters are not taken from a text field", async () => {
   assert.equal(h.state.tool, "wand");
   key(document.getElementById("r"), "l");
   assert.equal(h.state.tool, "lasso");
+  h.dispose();
+  close();
+});
+
+test("rectangle, ellipse, expand, shrink and smooth in image pixels", () => {
+  const r = rectFill(10, 10, { x: 2, y: 3 }, { x: 6, y: 5 });
+  assert.equal(r.reduce((n, v) => n + (v ? 1 : 0), 0), 8);
+  assert.equal(r[3 * 10 + 2], 255);
+  assert.equal(r[5 * 10 + 6], 0);
+  const e = ellipseFill(20, 20, { x: 0, y: 0 }, { x: 20, y: 20 });
+  assert.equal(e[10 * 20 + 10], 255);
+  assert.equal(e[0], 0);
+  const one = new Uint8Array(25); one[12] = 255;
+  const grown = morphMask(one, 5, 5, 1, true);
+  assert.equal(grown.reduce((n, v) => n + (v ? 1 : 0), 0), 9);
+  assert.equal(morphMask(grown, 5, 5, 1, false).reduce((n, v) => n + (v ? 1 : 0), 0), 1);
+  const jag = rectFill(12, 12, { x: 2, y: 2 }, { x: 10, y: 10 }); jag[2 * 12 + 2] = 0; jag[6 * 12 + 11] = 255;
+  const sm = smoothMask(jag, 12, 12, 1);
+  assert.equal(sm[6 * 12 + 11], 0);
+  assert.equal(sm[6 * 12 + 6], 255);
+});
+
+test("controller: the new tools by key, shapes, flood and morphology as undo steps", async () => {
+  const { document, key, close } = dom('<canvas id="c"></canvas>');
+  const c = document.getElementById("c");
+  const h = maskEditor(c);
+  await h.setImage(img());
+  for (const [k, t] of [["e", "eraser"], ["p", "polygon"], ["m", "rect"], ["o", "ellipse"], ["g", "flood"], ["h", "pan"]]) { key(c, k); assert.equal(h.state.tool, t); }
+  h.shapeFill({ x: 0, y: 0 }, { x: 2, y: 2 }, false, "add");
+  assert.equal(count(h.mask()), 4);
+  h.floodAt(1, 1, "add");
+  assert.equal(h.state.coverage, 0.5);
+  h.shrink(1);
+  assert.ok(count(h.mask()) < 16);
+  h.undo();
+  assert.equal(count(h.mask()), 16);
+  h.expand(1);
+  assert.ok(count(h.mask()) > 16);
+  h.smooth(1);
+  assert.equal(h.state.canUndo, true);
   h.dispose();
   close();
 });

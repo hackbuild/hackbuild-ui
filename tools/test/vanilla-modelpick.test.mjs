@@ -94,3 +94,28 @@ test("select: the line opens, the pink load shows only when it can act, go off d
   h.dispose();
   d.close();
 });
+
+test("modelSheet: the your own forms send their kind and values; the hidden rows are counted", () => {
+  const d = dom('<div id="s"></div>');
+  const sent = [];
+  modelSheet(d.$("#s"), { rows: ROWS, onCustom: (k, v) => sent.push([k, v]) });
+  const s = d.$("#s");
+  assert.match(s.querySelector(".hb-msheet-list").textContent, /more do not fit/);
+  const own = s.querySelector(".hb-msheet-own");
+  assert.ok(own);
+  assert.ok(own.querySelector('button[type="submit"]').hidden, "add shows once the form is filled");
+  const type = (key, v) => {
+    const i = own.querySelector(`[data-own="${key}"]`);
+    i.value = v;
+    i.dispatchEvent(new d.window.Event("input", { bubbles: true }));
+  };
+  type("repo", "someone/model-GGUF");
+  type("file", "model.q4_k_m.gguf");
+  assert.equal(own.querySelector('button[type="submit"]').hidden, false);
+  own.querySelector("form").dispatchEvent(new d.window.Event("submit", { bubbles: true, cancelable: true }));
+  assert.deepEqual(sent, [["gguf", { repo: "someone/model-GGUF", file: "model.q4_k_m.gguf" }]]);
+  d.click(own.querySelector('[data-own-kind="endpoint"]'));
+  assert.ok(own.querySelector('[data-own="key"][type="password"]'));
+  assert.equal(modelSheet(d.window.document.createElement("div"), { rows: ROWS }).chosen, "", "no forms without onCustom");
+  d.close?.();
+});

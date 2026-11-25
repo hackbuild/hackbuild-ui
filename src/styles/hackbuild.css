@@ -5202,3 +5202,24 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-clipstrip-item > button:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:1px }
 .hb-clipstrip-len{ font-family:var(--hb-readout); font-size:15px; opacity:.75 }
 @media (prefers-reduced-motion:no-preference){ .hb-avcard{ transition:transform .08s, box-shadow .08s } }
+
+/* views pass (0.10.2) */
+/* inside a layout the hidden attribute always hides, even on parts that set display */
+.hb-lay [hidden]{ display:none !important }
+/* a result that scrolls inside a subject that does not (drop first's transcript) */
+.hb-lay-scroll{ height:100%; overflow:auto; padding:var(--hb-s3) }
+/* a mask editor that fills its subject; --hb-mask-w is the frame width the view computes for fit and zoom */
+.hb-mask.is-fill{ height:100% }
+.hb-mask.is-fill .hb-mask-well{ height:100%; align-items:center; overflow:hidden }
+.hb-mask.is-fill .hb-mask-frame{ flex:none; width:var(--hb-mask-w, 100%); max-width:none; aspect-ratio:var(--hb-mask-ratio, 1.333) }
+.hb-mask.is-fill.is-zoomed .hb-mask-well{ overflow:auto; justify-content:flex-start; align-items:flex-start }
+/* the pan tool and space held */
+.hb-mask-canvas[data-tool="pan"]{ cursor:grab }
+.hb-mask-canvas[data-tool="pan"]:active{ cursor:grabbing }
+/* hackle's flow inside a rack block: a note, trial line or button under bars sits 6 px below */
+.hb-flow > * + *{ margin-top:6px }
+/* the last rewarded cell of an association table */
+.hb-heat td[aria-current]{ outline:2px solid var(--hb-ink); outline-offset:-2px }
+/* a frame view: the tile, then its caption */
+.hb-frameview{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0; height:100%; justify-content:center; padding:var(--hb-s3); overflow:auto }
+.hb-frameview-cap{ margin:0; font-family:var(--hb-note); font-size:14px; color:var(--hb-ink-2); text-align:center }

@@ -117,12 +117,12 @@ defineExpose({
           {{ m }}<span class="hb-mask-key" aria-hidden="true">x</span>
         </button>
       </div>
-      <div v-if="tool === 'brush'" class="hb-mask-size" role="group" aria-label="brush size">
+      <div v-if="tool === 'brush' || tool === 'eraser'" class="hb-mask-size" role="group" aria-label="brush size">
         <button type="button" class="hb-iconbtn" aria-label="smaller brush" aria-keyshortcuts="[" title="smaller brush ([)" @click="handle?.stepSize(-1)"><HbIcon name="minus" :size="14" /></button>
         <span class="hb-mask-val" aria-live="polite">{{ size }}</span>
         <button type="button" class="hb-iconbtn" aria-label="larger brush" aria-keyshortcuts="]" title="larger brush (])" @click="handle?.stepSize(1)"><HbIcon name="plus" :size="14" /></button>
       </div>
-      <label v-else-if="tool === 'wand'" class="hb-mask-tol">
+      <label v-else-if="tool === 'wand' || tool === 'flood'" class="hb-mask-tol">
         <span>reach</span>
         <input class="hb-range" type="range" min="0" max="100" step="1" :value="tol" aria-label="wand tolerance, percent" @input="onTol">
         <span class="hb-mask-val">{{ tol }}</span>

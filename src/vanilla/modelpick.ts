@@ -208,6 +208,10 @@ export interface ModelSheetOptions {
   onCancel?: (id: string) => void
   onRemove?: (id: string) => void
   onOption?: (id: string, key: string, value: string) => void
+  /** Show the "your own" forms, as HbModelSheet does. Default true when onCustom is set. */
+  own?: boolean
+  /** A "your own" form was sent: its kind and the field values. */
+  onCustom?: (kind: OwnKind, values: Record<string, string>) => void
 }
 
 export interface ModelSheetHandle {
@@ -230,11 +234,22 @@ export function modelSheet(host: HTMLElement, o: ModelSheetOptions): ModelSheetH
   const f: ModelFilters = { ...MODEL_FILTERS_DEFAULT, ...o.filters }
   const title = o.title ?? 'pick a model'
   host.classList.add('hb-msheet')
-  host.innerHTML = `<div class="hb-msheet-find"><input class="hb-input" type="search" aria-label="search ${esc(title)}" placeholder="search by name or word"><div class="hb-msheet-filters" role="group" aria-label="filters">${(['fits', 'uncensored', 'nodownload'] as const).map((k) => `<button type="button" class="hb-chip is-toggle" data-filter="${k}">${k === 'fits' ? 'fits this machine' : k === 'nodownload' ? 'no download' : 'uncensored'}</button>`).join('')}</div></div><div class="hb-msheet-list" role="listbox" aria-label="${esc(title)}"></div><div class="hb-msheet-opts"></div><div class="hb-msheet-foot"></div>`
+  host.innerHTML = `<div class="hb-msheet-find"><input class="hb-input" type="search" aria-label="search ${esc(title)}" placeholder="search by name or word"><div class="hb-msheet-filters" role="group" aria-label="filters">${(['fits', 'uncensored', 'nodownload'] as const).map((k) => `<button type="button" class="hb-chip is-toggle" data-filter="${k}">${k === 'fits' ? 'fits this machine' : k === 'nodownload' ? 'no download' : 'uncensored'}</button>`).join('')}</div></div><div class="hb-msheet-list" role="listbox" aria-label="${esc(title)}"></div><div class="hb-msheet-opts"></div>${(o.own ?? !!o.onCustom) ? '<details class="hb-msheet-own"><summary>your own</summary><form></form></details>' : ''}<div class="hb-msheet-foot"></div>`
   const search = host.querySelector<HTMLInputElement>('input[type="search"]')!
   const list = host.querySelector<HTMLElement>('.hb-msheet-list')!
   const opts = host.querySelector<HTMLElement>('.hb-msheet-opts')!
   const foot = host.querySelector<HTMLElement>('.hb-msheet-foot')!
+  const ownForm = host.querySelector<HTMLFormElement>('.hb-msheet-own form')
+  let ownKind: OwnKind = 'gguf'
+  const ownValues: Record<string, string> = {}
+  function drawOwn() {
+    if (!ownForm) return
+    const form = OWN_FORMS.find((x) => x.kind === ownKind)!
+    ownForm.innerHTML = `<div class="hb-seg" role="group" aria-label="kind">${OWN_FORMS.map((k) => `<button type="button" data-own-kind="${k.kind}" class="${k.kind === ownKind ? 'is-on' : ''}" aria-pressed="${k.kind === ownKind}">${esc(k.label)}</button>`).join('')}</div>` +
+      form.fields.map((fd) => `<label class="hb-field"><span class="hb-label">${esc(fd.label)}</span><input class="hb-input" data-own="${fd.key}" type="${fd.secret ? 'password' : 'text'}" placeholder="${esc(fd.placeholder)}" autocomplete="off" spellcheck="false" value="${esc(ownValues[fd.key] ?? '')}"></label>`).join('') +
+      `<button type="submit" class="hb-btn"${ownReady(ownKind, ownValues) ? '' : ' hidden'}>add</button>`
+  }
+  drawOwn()
 
   function draw() {
     for (const b of host.querySelectorAll<HTMLElement>('[data-filter]')) {
@@ -242,7 +257,9 @@ export function modelSheet(host: HTMLElement, o: ModelSheetOptions): ModelSheetH
       b.classList.toggle('is-on', on)
       b.setAttribute('aria-pressed', String(on))
     }
-    list.innerHTML = sheetListHtml(filterModelRows(rows, f), chosen, openDetail)
+    const shown = filterModelRows(rows, f)
+    const hidden = rows.length - shown.length
+    list.innerHTML = sheetListHtml(shown, chosen, openDetail) + (shown.length && hidden > 0 && f.fits ? `<p class="hb-msheet-none">${hidden} more do not fit this machine or the filters.</p>` : '')
     const row = rows.find((r) => r.id === chosen)
     opts.innerHTML = row?.options?.length
       ? row.options.map((op) => `<label class="hb-field"><span class="hb-label">${esc(op.label)}</span><select class="hb-select" data-option="${esc(op.key)}">${op.choices.map((c) => `<option value="${esc(c.value)}"${c.value === op.value ? ' selected' : ''}>${esc(c.label)}</option>`).join('')}</select></label>`).join('')
@@ -255,13 +272,33 @@ export function modelSheet(host: HTMLElement, o: ModelSheetOptions): ModelSheetH
         : row?.state === 'loaded' ? `<span class="hb-msel-state is-loaded">${esc(row.name)}, ready</span>` : '<span class="hb-msel-state">pick a row</span>'
   }
 
-  const onInput = () => { f.query = search.value; draw() }
+  const onInput = (e: Event) => {
+    const own = (e.target as HTMLElement).closest<HTMLInputElement>('[data-own]')
+    if (own) {
+      ownValues[own.dataset.own!] = own.value
+      const add = ownForm?.querySelector<HTMLElement>('button[type="submit"]')
+      if (add) add.hidden = !ownReady(ownKind, ownValues)
+      return
+    }
+    f.query = search.value
+    draw()
+  }
+  const onSubmit = (e: Event) => {
+    if (!(e.target as Element).closest('.hb-msheet-own')) return
+    e.preventDefault()
+    if (!ownReady(ownKind, ownValues)) return
+    o.onCustom?.(ownKind, { ...ownValues })
+    for (const k of Object.keys(ownValues)) delete ownValues[k]
+    drawOwn()
+  }
   const onChange = (e: Event) => {
     const sel = (e.target as Element).closest<HTMLSelectElement>('select[data-option]')
     if (sel && chosen) o.onOption?.(chosen, sel.dataset.option!, sel.value)
   }
   const onClick = (e: Event) => {
     const t = e.target as Element
+    const kind = t.closest<HTMLElement>('[data-own-kind]')
+    if (kind) { ownKind = kind.dataset.ownKind as OwnKind; for (const k of Object.keys(ownValues)) delete ownValues[k]; drawOwn(); return }
     const filter = t.closest<HTMLElement>('[data-filter]')
     if (filter) { const k = filter.dataset.filter as 'fits' | 'uncensored' | 'nodownload'; f[k] = !f[k]; draw(); return }
     const pick = t.closest<HTMLElement>('[data-pick]')
@@ -280,7 +317,8 @@ export function modelSheet(host: HTMLElement, o: ModelSheetOptions): ModelSheetH
     if (t.closest('[data-load]') && chosen) { o.onLoad?.(chosen); return }
     if (t.closest('[data-cancel]') && chosen) o.onCancel?.(chosen)
   }
-  search.addEventListener('input', onInput)
+  host.addEventListener('input', onInput)
+  host.addEventListener('submit', onSubmit)
   host.addEventListener('click', onClick)
   host.addEventListener('change', onChange)
   draw()
@@ -288,7 +326,8 @@ export function modelSheet(host: HTMLElement, o: ModelSheetOptions): ModelSheetH
     update(next, id) { rows = next; if (id !== undefined) chosen = id; draw() },
     get chosen() { return chosen },
     dispose() {
-      search.removeEventListener('input', onInput)
+      host.removeEventListener('input', onInput)
+      host.removeEventListener('submit', onSubmit)
       host.removeEventListener('click', onClick)
       host.removeEventListener('change', onChange)
     },

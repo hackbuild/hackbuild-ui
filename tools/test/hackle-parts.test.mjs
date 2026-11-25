@@ -52,3 +52,13 @@ test("avatar card and clip strip have their parts and a play state", () => {
   assert.match(strip, /'is-playing': props.playing === c.id/);
   for (const p of ["HbAvatarCard", "HbClipStrip"]) assert.ok(md.includes("`" + p + "`"), p);
 });
+
+test("views pass classes", () => {
+  assert.match(rule(".hb-lay [hidden]"), /display:none !important/);
+  assert.match(rule(".hb-lay-scroll"), /overflow:auto/);
+  assert.match(rule(".hb-mask.is-fill .hb-mask-frame"), /width:var\(--hb-mask-w, 100%\)/);
+  assert.match(rule(".hb-flow > * + *"), /margin-top:6px/);
+  assert.match(rule(".hb-heat td[aria-current]"), /outline:2px solid var\(--hb-ink\)/);
+  rule(".hb-frameview");
+  for (const c of [".hb-lay-scroll", ".hb-mask.is-fill", ".hb-flow", ".hb-heat td[aria-current]", ".hb-frameview"]) assert.ok(md.includes(c), c);
+});
