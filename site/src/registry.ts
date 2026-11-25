@@ -96,6 +96,7 @@ export const registry: RegistryGroup[] = [
     category: 'gate',
     entries: [
       { name: 'HbGate', blurb: 'one card, one select, one pink button' },
+      { name: 'HbGateCheck', blurb: 'one part readying: label, bar, note' },
       { name: 'HbModelSelect', blurb: 'one line or a bar chip, one pink load' },
       { name: 'HbModelSheet', blurb: 'search, filters, groups, rows, your own' },
       { name: 'HbApiKey', blurb: 'masked key that is never saved' },

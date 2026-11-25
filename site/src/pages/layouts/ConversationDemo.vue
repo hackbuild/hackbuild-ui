@@ -1,44 +1,51 @@
 <script setup lang="ts">
-// conversation, after clevis: the messages fill, the composer sits under
-// them, chats, persona and memory are rack tabs. With no model loaded the
-// reply is a card that says so.
+// conversation, after clevis: the chat list rail at the left, the
+// conversation fills with its empty state, the composer centred under it.
+// No rack: clevis has none until persona or memory exist. Under 901 px the
+// chat list opens as a drawer from the bar. The reply is scripted.
 import { ref } from 'vue'
-import { HbConversationLayout, HbKv, HbMessage, HbPanel } from '@hackbuild/ui'
+import { HbButton, HbConversationLayout, HbIcon, HbMessage } from '@hackbuild/ui'
 import DemoBar from './DemoBar.vue'
 import { useFakeLoad } from './useFakeLoad'
 import { chatRows } from '../../fixtures/picker'
 
 const { rows, load } = useFakeLoad(chatRows)
 const chosen = ref('steady')
-const tabs = [{ id: 'chats', label: 'chats' }, { id: 'persona', label: 'persona' }, { id: 'memory', label: 'memory' }]
 const draft = ref('')
-const msgs = ref([
-  { id: 1, who: 'user' as const, text: 'what can you do here' },
-  { id: 2, who: 'assistant' as const, text: 'talk, remember what you tell me, and keep it on this machine. pick a model in the bar to start.' },
-])
+const msgs = ref<Array<{ id: number; who: 'user' | 'assistant'; text: string }>>([])
+const chats = ref<string[]>([])
 function send() {
   const text = draft.value.trim()
   if (!text) return
+  if (!msgs.value.length) chats.value = [text.slice(0, 40), ...chats.value]
   msgs.value = [...msgs.value, { id: msgs.value.length + 1, who: 'user', text }, { id: msgs.value.length + 2, who: 'assistant', text: 'this needs a model. press the chip in the bar to pick one.' }]
   draft.value = ''
+}
+function fresh() {
+  msgs.value = []
 }
 </script>
 
 <template>
-  <HbConversationLayout :tabs="tabs" rack-label="chat">
-    <template #bar><DemoBar v-model="chosen" title="chat" :rows="rows" @load="load" /></template>
-    <div style="display:flex;flex-direction:column;gap:12px;padding:16px;max-width:760px;margin:0 auto">
-      <HbMessage v-for="m in msgs" :key="m.id" :who="m.who" :text="m.text" :actions="[]" />
-    </div>
+  <HbConversationLayout :empty="!msgs.length" empty-name="what are we working on?" empty-note="say what you need. the chat stays in this browser and nothing is sent to a server.">
+    <template #bar="{ openList }">
+      <DemoBar v-model="chosen" title="chat" :rows="rows" @load="load">
+        <button type="button" class="hb-iconbtn hb-lay-listbtn" aria-label="chats" @click="openList()"><HbIcon name="menu" :size="16" /></button>
+      </DemoBar>
+    </template>
+    <template #list-head><button type="button" class="hb-iconbtn" aria-label="new chat" @click="fresh"><HbIcon name="plus" :size="14" /></button></template>
+    <template #list>
+      <div style="padding:10px;display:flex;flex-direction:column;gap:8px">
+        <p v-if="!chats.length" class="hb-lay-empty-note" style="margin:6px 2px">no chats yet.</p>
+        <HbButton v-for="(c, i) in chats" :key="i" block>{{ c }}</HbButton>
+      </div>
+    </template>
+    <HbMessage v-for="m in msgs" :key="m.id" :who="m.who" :text="m.text" :actions="[]" />
     <template #composer>
-      <form class="hb-composer" style="border:0;padding:0;background:none" @submit.prevent="send">
-        <textarea v-model="draft" class="hb-textarea" rows="1" aria-label="message" placeholder="say something" @keydown.enter.exact.prevent="send" />
+      <form class="hb-convbox" @submit.prevent="send">
+        <textarea v-model="draft" rows="1" aria-label="message" placeholder="say something" @keydown.enter.exact.prevent="send" />
         <button type="submit" class="hb-btn hb-btn-go">send</button>
       </form>
     </template>
-    <template #tab-chats><HbPanel heading="chats" head="instrument"><HbKv label="today" value="what can you do here" /></HbPanel></template>
-    <template #tab-persona><HbPanel heading="persona" head="instrument"><HbKv label="name" value="helper" /></HbPanel></template>
-    <template #tab-memory><HbPanel heading="memory" head="instrument"><p class="hb-lay-empty-note">nothing kept yet.</p></HbPanel></template>
-    <template #detail><p class="hb-fixture">fixture: the replies are scripted and no model loads here.</p></template>
   </HbConversationLayout>
 </template>

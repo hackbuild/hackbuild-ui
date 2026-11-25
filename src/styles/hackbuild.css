@@ -4983,11 +4983,40 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-lay-drop.is-hot{ border-color:var(--hb-pink); background:var(--hb-pink-10) }
 .hb-lay-drop .hb-lay-empty-name{ font-size:30px }
 
-/* conversation: the chat list rail, the messages, the composer, the rack */
-.hb-lay.is-conversation.has-list .hb-lay-body{ grid-template-columns:var(--hb-list) minmax(0,1fr) var(--hb-rack) }
-.hb-lay-list{ min-width:0; min-height:0; overflow:auto; background:var(--hb-paper-sunk); border-right:var(--hb-border-em) solid var(--hb-ink) }
-.hb-lay.is-conversation .hb-lay-subject{ overflow:auto; background:var(--hb-paper) }
-.hb-lay-composer{ flex:0 0 auto; padding:var(--hb-s2) var(--hb-s3); border-top:var(--hb-border-em) solid var(--hb-ink); background:var(--hb-paper-raised) }
+/* conversation (clevis): the chat list rail, the thread at 760 px, the
+   composer centred under it at the same width; a rack only when the tool
+   has persona or memory */
+.hb-lay.is-conversation .hb-lay-body{ grid-template-columns:minmax(0,1fr) }
+.hb-lay.is-conversation.has-list .hb-lay-body{ grid-template-columns:var(--hb-list) minmax(0,1fr) }
+.hb-lay.is-conversation.has-rack .hb-lay-body{ grid-template-columns:minmax(0,1fr) var(--hb-rack) }
+.hb-lay.is-conversation.has-list.has-rack .hb-lay-body{ grid-template-columns:var(--hb-list) minmax(0,1fr) var(--hb-rack) }
+.hb-lay-list{ display:flex; flex-direction:column; min-width:0; min-height:0; overflow:auto; background:var(--hb-paper-sunk); border-right:var(--hb-border-em) solid var(--hb-ink) }
+.hb-lay-list.is-drawer{ border-right:0; background:transparent }
+.hb-lay-listhd{
+  flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:var(--hb-s2); height:36px; padding:0 6px 0 10px;
+  background:var(--hb-ink); color:var(--hb-paper); font-family:var(--hb-readout); font-size:21px; line-height:1;
+}
+.hb-lay.is-conversation .hb-lay-subject{ overflow:auto; background:var(--hb-paper); padding:22px var(--hb-s4) 30px }
+.hb-lay-thread{ max-width:760px; margin:0 auto; min-width:0 }
+.hb-lay-thread > .hb-msg + .hb-msg{ margin-top:20px }
+.hb-lay-convempty{ padding:9vh 4px 0; max-width:560px }
+.hb .hb-lay-convempty-name,.hb-lay-convempty-name{
+  margin:0 0 14px; font-family:var(--hb-display); font-weight:400; font-size:clamp(34px, 6vw, 54px); line-height:1.05; letter-spacing:.5px;
+  transform:rotate(-1.2deg); transform-origin:left;
+}
+.hb-lay-convempty-note{ margin:0 0 10px; font-family:var(--hb-note); font-size:16px; line-height:1.6; color:var(--hb-ink-2) }
+.hb-lay-composer{ flex:0 0 auto; padding:12px var(--hb-s4) 16px; border-top:var(--hb-border-em) solid var(--hb-ink); background:var(--hb-paper) }
+/* clevis's composer box: the textarea and one send, a pink offset shadow */
+.hb-convbox{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:end; background:var(--hb-paper-raised); border:var(--hb-border-em) solid var(--hb-ink); box-shadow:5px 5px 0 var(--hb-pink) }
+.hb-convbox > textarea{ border:0; background:transparent; resize:none; padding:12px 10px; min-height:50px; max-height:40vh; width:100%; font:16px/1.5 var(--hb-note); color:var(--hb-ink); outline:none }
+.hb-convbox > textarea::placeholder{ color:var(--hb-ink-4) }
+.hb-convbox > .hb-btn{ margin:7px }
+.hb-convbox:focus-within{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-lay-listhd .hb-iconbtn{ width:28px; height:28px; min-height:0; min-width:0; background:transparent; color:var(--hb-paper); border-color:var(--hb-paper); box-shadow:none }
+@media(pointer:coarse){ .hb-lay-listhd .hb-iconbtn{ width:44px; height:36px } }
+/* the chat list button in the bar shows only while the list is a drawer */
+.hb-lay-listbtn{ display:none }
+@media(max-width:900px){ .hb-lay-listbtn{ display:inline-flex } }
 
 /* gate: a centred card over the live subject, no rack */
 .hb-lay.is-gate .hb-lay-body{ grid-template-columns:minmax(0,1fr) }
@@ -5003,6 +5032,15 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-gate-body{ display:flex; flex-direction:column; gap:var(--hb-s3); padding:16px 18px }
 .hb .hb-gate-name,.hb-gate-name{ margin:0; font-family:var(--hb-display); font-size:40px; line-height:1 }
 .hb .hb-gate-note,.hb-gate-note{ margin:0; font-family:var(--hb-note); font-size:15px; line-height:1.5 }
+.hb-gate-checks{ display:flex; flex-direction:column; gap:8px }
+.hb-gatecheck{ display:grid; grid-template-columns:90px minmax(0,1fr) auto; gap:10px; align-items:center; font-size:12px }
+.hb-gatecheck > b{ font-family:var(--hb-readout); font-size:19px; font-weight:400; line-height:1 }
+.hb-gatecheck-bar{ position:relative; height:12px; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-sunk) }
+.hb-gatecheck-bar > i{ position:absolute; inset:0 auto 0 0; background:var(--hb-pink) }
+.hb-gatecheck.is-ok .hb-gatecheck-bar > i{ background:var(--hb-ok) }
+.hb-gatecheck.is-err .hb-gatecheck-bar > i{ background:var(--hb-err) }
+.hb-gatecheck-note{ font-family:var(--hb-note); font-size:12px; color:var(--hb-ink-3); white-space:nowrap }
+.hb-gatecheck.is-err .hb-gatecheck-note{ color:var(--hb-err) }
 .hb-gate-acts{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2) }
 .hb-gate-acts > .hb-btn-go{ flex:1 1 auto; justify-content:center }
 @media(max-width:640px){ .hb .hb-gate-name,.hb-gate-name{ font-size:32px } }
@@ -5014,14 +5052,13 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 
 @media(max-width:900px){
   .hb-lay{ height:auto; min-height:100vh; min-height:100dvh; overflow:visible }
-  .hb-lay-body,.hb-lay.is-conversation.has-list .hb-lay-body,.hb-lay.is-form-frame .hb-lay-body{ grid-template-columns:minmax(0,1fr); align-content:start }
+  .hb-lay-body,.hb-lay.is-conversation .hb-lay-body,.hb-lay.is-conversation.has-rack .hb-lay-body,.hb-lay.is-form-frame .hb-lay-body{ grid-template-columns:minmax(0,1fr); align-content:start }
   .hb-lay-stage{ height:62vh; height:62svh }
   .hb-rack{ border-left:0; border-top:var(--hb-border-em) solid var(--hb-ink) }
   .hb-rack-pane{ overflow:visible }
   .hb-lay.is-canvas-rail .hb-lay-body{ grid-template-columns:48px minmax(0,1fr) }
   .hb-lay.is-canvas-rail .hb-rack{ grid-column:1 / -1 }
   .hb-lay-tools > .hb-iconbtn{ width:44px; height:44px }
-  .hb-lay-list{ display:none }
   .hb-lay.is-conversation .hb-lay-stage{ height:calc(100svh - 52px) }
   .hb-lay.is-gate .hb-lay-stage{ height:calc(100svh - 52px); min-height:480px }
   .hb-lay.is-form-frame .hb-rack{ order:0; border-right:0 }
@@ -5088,6 +5125,9 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-mrow-name{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:600 }
 .hb-mrow-name i{ font-style:normal; font-weight:400; margin-left:6px; padding:0 4px; border:1px solid currentColor; font-size:11px }
 .hb-mrow-sub{ grid-column:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11.5px; color:var(--hb-ink-3) }
+/* an unfit row leads with its reason and may wrap */
+.hb-mrow.is-unfit .hb-mrow-sub{ white-space:normal; overflow:visible }
+.hb-mrow-pick.is-off{ cursor:default }
 .hb-mrow-sub b{ font-weight:400; font-family:var(--hb-note); color:var(--hb-ink-2) }
 .hb-mrow-state{ grid-column:2; grid-row:1 / span 2; font-family:var(--hb-readout); font-size:var(--hb-readout-md); white-space:nowrap }
 .hb-mrow-state.is-loaded{ color:var(--hb-ok) }

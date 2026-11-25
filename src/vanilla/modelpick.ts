@@ -48,7 +48,9 @@ export interface ModelRow {
   state?: ModelPickState
   /** 0 to 1 while loading. */
   progress?: number
-  /** Why this machine cannot run it; the row greys and shows this. */
+  /** Nothing to fetch: a script, or a model the browser has built in. */
+  noDownload?: boolean
+  /** Why this machine cannot run it; the row greys and shows this first. */
   unfit?: string
   /** The chevron detail: licence, source, context, quant, where the size came from. */
   detail?: ReadonlyArray<{ label: string; value: string }>
@@ -61,7 +63,7 @@ export interface ModelFilters {
   /** On by default: rows that do not fit this machine are left out. */
   fits: boolean
   uncensored: boolean
-  /** Only rows with nothing to fetch: no download group or browser built in. */
+  /** Only rows flagged noDownload. */
   nodownload: boolean
 }
 
@@ -93,7 +95,7 @@ export function filterModelRows(rows: ReadonlyArray<ModelRow>, f: Partial<ModelF
   return rows.filter((r) => {
     if ((f.fits ?? true) && r.unfit) return false
     if (f.uncensored && !r.uncensored) return false
-    if (f.nodownload && !(r.group === 'none' || r.backend === 'browser')) return false
+    if (f.nodownload && !r.noDownload) return false
     const h = hay(r)
     return q.every((w) => h.includes(w))
   })
@@ -115,7 +117,7 @@ export function stateWord(row: ModelRow): string {
     case 'stored': return 'stored'
     case 'loading': return pct(row.progress)
     case 'error': return 'failed'
-    default: return row.group === 'none' ? 'built in' : (row.size ?? '')
+    default: return row.noDownload ? 'built in' : (row.size ?? '')
   }
 }
 
@@ -124,7 +126,7 @@ export function loadLabel(row: ModelRow | undefined): string {
   if (!row) return 'load'
   if (row.state === 'loaded') return 'ready'
   if (row.state === 'loading') return `loading, ${pct(row.progress)}`
-  if (row.state === 'stored' || row.group === 'none' || !row.size) return 'load'
+  if (row.state === 'stored' || row.noDownload || !row.size) return 'load'
   return `load, ${row.size}`
 }
 
@@ -140,10 +142,21 @@ export function bytesText(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / 1e6))} mb`
 }
 
-/** One line under the name: backend, speed, memory, then the verdict or the unfit reason. */
-export function rowSub(row: ModelRow): { facts: string; verdict: string } {
+/**
+ * The line under the name. A row that fits: speed and memory, then the
+ * verdict. A row that does not: the reason first (it may wrap), then the
+ * facts; the verdict gives way to it.
+ */
+export function rowSub(row: ModelRow): { lead: string; facts: string; unfit: boolean } {
   const facts = [row.speed, row.memory].filter(Boolean).join(', ')
-  return { facts, verdict: row.unfit ?? row.verdict ?? '' }
+  if (row.unfit) return { lead: row.unfit, facts, unfit: true }
+  return { lead: row.verdict ?? '', facts, unfit: false }
+}
+
+/** The sub line as plain text in drawing order. */
+export function rowSubText(row: ModelRow): string {
+  const s = rowSub(row)
+  return (s.unfit ? [s.lead, s.facts] : [s.facts, s.lead]).filter(Boolean).join(', ')
 }
 
 /** Several jobs: what "load all" fetches and its words. Rows already loaded or stored cost nothing. */
@@ -170,13 +183,18 @@ export function sheetListHtml(rows: ReadonlyArray<ModelRow>, chosen: string, ope
   if (!groups.length) return '<p class="hb-msheet-none">nothing matches. turn a filter off or clear the search.</p>'
   return groups.map((g) => `<div class="hb-msheet-gh" role="presentation">${esc(g.label)}</div><ul class="hb-msheet-group" role="presentation">${g.rows.map((r) => {
     const s = rowSub(r)
+    const sub = s.unfit
+      ? `<b>${esc(s.lead)}</b>${s.facts ? `, ${esc(s.facts)}` : ''}`
+      : `${r.backend ? `<span class="hb-mrow-chip">${esc(r.backend)}</span>` : ''}${esc(s.facts)}${s.facts && s.lead ? ', ' : ''}<b>${esc(s.lead)}</b>`
+    const pickOpen = r.unfit ? `<div class="hb-mrow-pick is-off">` : `<button type="button" class="hb-mrow-pick" data-pick="${esc(r.id)}">`
+    const pickClose = r.unfit ? '</div>' : '</button>'
     const marks = `${r.uncensored ? '<i title="uncensored">u</i>' : ''}${r.noncommercial ? '<i title="not for commercial use">nc</i>' : ''}`
     const more = r.detail?.length || r.state === 'stored'
       ? `<button type="button" class="hb-mrow-more" data-more="${esc(r.id)}" aria-expanded="${openDetail === r.id}" aria-label="about ${esc(r.name)}"></button>` : ''
     const bar = r.state === 'loading' ? `<div class="hb-mrow-bar" aria-hidden="true"><i style="width:${Math.round((r.progress ?? 0) * 100)}%"></i></div>` : ''
     const detail = openDetail === r.id
       ? `<div class="hb-mrow-detail" data-ux="detail">${r.detail?.length ? `<dl>${r.detail.map((d) => `<dt>${esc(d.label)}</dt><dd>${esc(d.value)}</dd>`).join('')}</dl>` : ''}${r.state === 'stored' ? `<button type="button" class="hb-btn hb-btn-sm hb-btn-danger" data-remove="${esc(r.id)}">remove from this machine</button>` : ''}</div>` : ''
-    return `<li class="hb-mrow${r.id === chosen ? ' is-chosen' : ''}${r.unfit ? ' is-unfit' : ''}" role="option" aria-selected="${r.id === chosen}"${r.unfit ? ' aria-disabled="true"' : ''}><div class="hb-mrow-line"><button type="button" class="hb-mrow-pick" data-pick="${esc(r.id)}"${r.unfit ? ' aria-disabled="true"' : ''}><span class="hb-mrow-name">${esc(r.name)}${marks}</span><span class="hb-mrow-sub">${r.backend ? `<span class="hb-mrow-chip">${esc(r.backend)}</span>` : ''}${esc(s.facts)}${s.facts && s.verdict ? ', ' : ''}<b>${esc(s.verdict)}</b></span><span class="hb-mrow-state${r.state ? ` is-${r.state}` : ''}">${esc(stateWord(r))}</span></button>${more}</div>${bar}${detail}</li>`
+    return `<li class="hb-mrow${r.id === chosen ? ' is-chosen' : ''}${r.unfit ? ' is-unfit' : ''}" role="option" aria-selected="${r.id === chosen}"${r.unfit ? ' aria-disabled="true"' : ''}><div class="hb-mrow-line">${pickOpen}<span class="hb-mrow-name">${esc(r.name)}${marks}</span><span class="hb-mrow-sub">${sub}</span><span class="hb-mrow-state${r.state ? ` is-${r.state}` : ''}">${esc(stateWord(r))}</span>${pickClose}${more}</div>${bar}${detail}</li>`
   }).join('')}</ul>`).join('')
 }
 

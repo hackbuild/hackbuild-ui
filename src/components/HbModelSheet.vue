@@ -99,11 +99,12 @@ function sendOwn() {
               :aria-disabled="!!r.unfit || undefined"
             >
               <div class="hb-mrow-line">
-                <button type="button" class="hb-mrow-pick" :aria-disabled="!!r.unfit || undefined" @click="choose(r)">
+                <component :is="r.unfit ? 'div' : 'button'" :type="r.unfit ? undefined : 'button'" class="hb-mrow-pick" :class="{ 'is-off': !!r.unfit }" @click="choose(r)">
                   <span class="hb-mrow-name">{{ r.name }}<i v-if="r.uncensored" title="uncensored">u</i><i v-if="r.noncommercial" title="not for commercial use">nc</i></span>
-                  <span class="hb-mrow-sub"><span v-if="r.backend" class="hb-mrow-chip">{{ r.backend }}</span>{{ sub(r).facts }}<template v-if="sub(r).facts && sub(r).verdict">, </template><b>{{ sub(r).verdict }}</b></span>
+                  <span v-if="sub(r).unfit" class="hb-mrow-sub"><b>{{ sub(r).lead }}</b><template v-if="sub(r).facts">, {{ sub(r).facts }}</template></span>
+                  <span v-else class="hb-mrow-sub"><span v-if="r.backend" class="hb-mrow-chip">{{ r.backend }}</span>{{ sub(r).facts }}<template v-if="sub(r).facts && sub(r).lead">, </template><b>{{ sub(r).lead }}</b></span>
                   <span class="hb-mrow-state" :class="r.state ? `is-${r.state}` : ''">{{ stateWord(r) }}</span>
-                </button>
+                </component>
                 <button
                   v-if="r.detail?.length || r.state === 'stored'"
                   type="button"

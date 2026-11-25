@@ -20,6 +20,7 @@ const code = "<HbDropFirst :tabs=\"tabs\" :empty=\"!result\" drop-title=\"drop a
       { prop: 'multiple', type: 'boolean', default: 'false' },
       { prop: 'pickLabel', type: 'string', default: 'choose a file' },
       { prop: 'sampleLabel', type: 'string', default: 'try a sample' },
+      { prop: 'addLabel', type: 'string', default: 'add files' },
       { prop: '@files', type: 'File[]' },
       { prop: '@sample', type: '' },
       { prop: 'slots', type: 'bar, default, verbs, tab-<id>, detail' },

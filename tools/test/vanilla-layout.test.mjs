@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { dom } from "./dom.mjs";
-import { layout, stageRack, canvasRail, dropFirst, conversation, gate, formFrame } from "../../src/vanilla/layout.ts";
+import { layout, stageRack, canvasRail, dropFirst, conversation, gate, formFrame, gateCheckView } from "../../src/vanilla/layout.ts";
 
 const RACK = `<aside class="hb-rack"><nav class="hb-tabs"><button role="tab" data-value="mind">mind</button><button role="tab" data-value="body">body</button><button role="tab" data-value="log">log</button></nav>
 <section class="hb-rack-pane">m</section><section class="hb-rack-pane">b</section><section class="hb-rack-pane">l</section>
@@ -49,12 +49,13 @@ test("canvas and rail: one tool pressed at a time", () => {
 });
 
 test("drop first: the pick button opens the file input; a drop marks the zone hot then clear", () => {
-  const d = dom(page("drop-first", `<div class="hb-lay-subject"><div class="hb-lay-drop"><button data-pick>choose a file</button><input type="file" hidden></div></div>`));
+  const d = dom(page("drop-first", `<div class="hb-lay-subject"><div class="hb-lay-drop"><button data-pick>choose a file</button></div><input type="file" hidden></div><div class="hb-lay-verbs"><button data-add>add files</button></div>`));
   let picked = 0;
   d.$('input[type="file"]').click = () => { picked++; };
   const h = dropFirst(d.$("#r"), { onFiles: () => {} });
   d.click(d.$("[data-pick]"));
-  assert.equal(picked, 1);
+  d.click(d.$("[data-add]"));
+  assert.equal(picked, 2, "pick and add files both open the input");
   d.$(".hb-lay-subject").dispatchEvent(new d.window.Event("dragover", { bubbles: true, cancelable: true }));
   assert.ok(d.$(".hb-lay-drop").classList.contains("is-hot"));
   d.$(".hb-lay-subject").dispatchEvent(new d.window.Event("dragleave", { bubbles: true }));
@@ -91,4 +92,11 @@ test("gate: the pink button goes, not while busy; a gate has no rack", () => {
   d.click(d.$(".hb-gate-go"));
   assert.equal(n, 1, "dispose removes the listener");
   d.close();
+});
+
+test("gate check: fill and words per state; a note wins", () => {
+  assert.deepEqual(gateCheckView("wait"), { pct: 0, words: "waiting" });
+  assert.deepEqual(gateCheckView("load", 0.42), { pct: 42, words: "42%" });
+  assert.deepEqual(gateCheckView("ok", 0.1), { pct: 100, words: "ready" });
+  assert.deepEqual(gateCheckView("err", 0.3, "no gpu memory"), { pct: 30, words: "no gpu memory" });
 });

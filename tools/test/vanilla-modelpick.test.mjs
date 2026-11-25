@@ -12,19 +12,20 @@ const ROWS = [
   { id: "b", name: "fixture large", group: "better", size: "4.3 gb", bytes: 4.3e9, backend: "gpu", verdict: "slow, sharp", unfit: "needs 6 gb of gpu memory, this machine has about 2" },
   { id: "c", name: "fixture open", group: "uncensored", size: "1.7 gb", bytes: 1.7e9, backend: "gpu", uncensored: true, noncommercial: true,
     options: [{ key: "quant", label: "quant", value: "q4", choices: [{ value: "q4", label: "q4" }, { value: "q8", label: "q8" }] }] },
-  { id: "d", name: "fixture script", group: "none", backend: "browser", verdict: "no download" },
+  { id: "d", name: "fixture script", group: "none", noDownload: true, backend: "browser", verdict: "no download" },
+  { id: "e", name: "fixture browser", group: "small", backend: "browser", verdict: "in the browser" },
 ];
 
 test("filters: fits hides unfit rows, uncensored and no download narrow, search matches words", () => {
-  assert.deepEqual(filterModelRows(ROWS).map((r) => r.id), ["a", "c", "d"]);
-  assert.deepEqual(filterModelRows(ROWS, { fits: false }).map((r) => r.id), ["a", "b", "c", "d"]);
+  assert.deepEqual(filterModelRows(ROWS).map((r) => r.id), ["a", "c", "d", "e"]);
+  assert.deepEqual(filterModelRows(ROWS, { fits: false }).map((r) => r.id), ["a", "b", "c", "d", "e"]);
   assert.deepEqual(filterModelRows(ROWS, { uncensored: true }).map((r) => r.id), ["c"]);
-  assert.deepEqual(filterModelRows(ROWS, { nodownload: true }).map((r) => r.id), ["d"]);
+  assert.deepEqual(filterModelRows(ROWS, { nodownload: true }).map((r) => r.id), ["d"], "the flag decides, not the group or backend");
   assert.deepEqual(filterModelRows(ROWS, { query: "all round" }).map((r) => r.id), ["a"]);
 });
 
 test("groups come in sheet order, empty ones left out", () => {
-  assert.deepEqual(groupModelRows(ROWS).map((g) => g.label), ["start here", "better", "uncensored", "no download"]);
+  assert.deepEqual(groupModelRows(ROWS).map((g) => g.label), ["start here", "small and fast", "better", "uncensored", "no download"]);
 });
 
 test("words: load label, state word, load all total", () => {
@@ -51,12 +52,13 @@ test("sheet: choose a row, its options show, one pink load, detail and remove", 
     onOption: (id, k, v) => seen.push(["option", id, k, v]),
   });
   const s = d.$("#s");
-  assert.equal(s.querySelectorAll(".hb-mrow").length, 3);
+  assert.equal(s.querySelectorAll(".hb-mrow").length, 4);
   assert.equal(s.querySelector('[data-pick="b"]'), null, "unfit row hidden while fits is on");
   d.click(s.querySelector('[data-filter="fits"]'));
-  assert.ok(s.querySelector(".hb-mrow.is-unfit"));
-  d.click(s.querySelector('[data-pick="b"]'));
-  assert.equal(h.chosen, "", "an unfit row cannot be chosen");
+  const unfit = s.querySelector(".hb-mrow.is-unfit");
+  assert.ok(unfit);
+  assert.equal(unfit.querySelector("button.hb-mrow-pick"), null, "an unfit row is not a control");
+  assert.match(unfit.querySelector(".hb-mrow-sub").textContent, /^needs 6 gb/, "the reason comes first");
   d.click(s.querySelector('[data-pick="c"]'));
   assert.equal(h.chosen, "c");
   assert.equal(s.querySelectorAll(".hb-btn-go").length, 1);

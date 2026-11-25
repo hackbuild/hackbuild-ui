@@ -20,6 +20,8 @@ interface Props {
   pickLabel?: string
   /** A sample that works with no model; empty hides the button. */
   sampleLabel?: string
+  /** Once a result exists: the verb that adds more files, as scribe's queue does. Empty hides it. */
+  addLabel?: string
   verbsLabel?: string
 }
 
@@ -32,6 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   multiple: false,
   pickLabel: 'choose a file',
   sampleLabel: 'try a sample',
+  addLabel: 'add files',
   verbsLabel: 'actions',
 })
 
@@ -72,12 +75,15 @@ function onPick(e: Event) {
                 <button type="button" class="hb-btn hb-btn-go" @click="input?.click()">{{ props.pickLabel }}</button>
                 <button v-if="props.sampleLabel" type="button" class="hb-btn" @click="emit('sample')">{{ props.sampleLabel }}</button>
               </div>
-              <input ref="input" type="file" hidden :accept="props.accept || undefined" :multiple="props.multiple" @change="onPick">
             </div>
           </div>
           <slot v-else />
+          <input ref="input" type="file" hidden :accept="props.accept || undefined" :multiple="props.multiple" @change="onPick">
         </div>
-        <div v-if="slots.verbs && !props.empty" class="hb-lay-verbs" data-ux="verbs" role="toolbar" :aria-label="props.verbsLabel"><slot name="verbs" /></div>
+        <div v-if="!props.empty && (props.addLabel || slots.verbs)" class="hb-lay-verbs" data-ux="verbs" role="toolbar" :aria-label="props.verbsLabel">
+          <button v-if="props.addLabel" type="button" class="hb-btn" data-add @click="input?.click()">{{ props.addLabel }}</button>
+          <slot name="verbs" />
+        </div>
       </section>
       <HbRack v-model:tab="tab" :tabs="props.tabs" :label="props.rackLabel">
         <template v-for="t in props.tabs" :key="t.id" #[t.id]><slot :name="`tab-${t.id}`" /></template>

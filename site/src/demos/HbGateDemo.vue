@@ -20,7 +20,7 @@ const code = "<HbGate :open=\"!ready\" name=\"wake the body\" :go-label=\"`wake,
       { prop: 'goLabel', type: 'string', default: 'wake' },
       { prop: 'busy', type: 'boolean', default: 'false' },
       { prop: '@go', type: '' },
-      { prop: 'slots', type: 'bar, default, card, acts, detail, verbs (after the gate)' },
+      { prop: 'slots', type: 'bar, default, checks (HbGateCheck), card, acts, detail, verbs (after the gate)' },
     ]"
   />
 </template>

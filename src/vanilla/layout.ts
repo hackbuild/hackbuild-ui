@@ -56,7 +56,8 @@ function kindOf(root: HTMLElement): LayoutKind {
  * `.hb-lay-verbs` and `.hb-lay-inset`, and `.hb-rack` with a `.hb-tabs`
  * strip of `role="tab"` buttons and `.hb-rack-pane` panels. Sets the
  * data-ux markers, runs the rack tabs, and per kind: the drop zone
- * (`.hb-lay-drop` with a file input), the composer (`form.hb-lay-composer`
+ * (`.hb-lay-drop` and a file input in the subject; `[data-pick]` in the zone and
+ * `[data-add]` in the verb row open it), the composer (`form.hb-lay-composer`
  * with a textarea, Enter sends, Shift Enter adds a line), the gate button
  * (`.hb-gate-go`) and the tool rail (`.hb-lay-tools [data-tool]`, one
  * pressed at a time).
@@ -100,11 +101,11 @@ export function layout(root: HTMLElement, options: LayoutOptions = {}): LayoutHa
     on(subject, 'dragover', (e) => { e.preventDefault(); drop?.classList.add('is-hot') })
     on(subject, 'dragleave', () => drop?.classList.remove('is-hot'))
     on(subject, 'drop', (e) => { e.preventDefault(); drop?.classList.remove('is-hot'); take(e.dataTransfer?.files) })
-    const input = drop?.querySelector<HTMLInputElement>('input[type="file"]')
-    const pick = drop?.querySelector<HTMLElement>('[data-pick]')
+    const input = subject.querySelector<HTMLInputElement>('input[type="file"]')
     if (input) {
       on(input, 'change', () => { take(input.files); input.value = '' })
-      if (pick) on(pick, 'click', () => input.click())
+      // the pick button in the zone, and once a result exists the add files verb
+      for (const b of root.querySelectorAll<HTMLElement>('.hb-lay-drop [data-pick], .hb-lay-verbs [data-add]')) on(b, 'click', () => input.click())
     }
   }
 
@@ -162,3 +163,13 @@ export const dropFirst = (root: HTMLElement, o: Omit<LayoutOptions, 'kind'> = {}
 export const conversation = (root: HTMLElement, o: Omit<LayoutOptions, 'kind'> = {}) => layout(root, { ...o, kind: 'conversation' })
 export const gate = (root: HTMLElement, o: Omit<LayoutOptions, 'kind'> = {}) => layout(root, { ...o, kind: 'gate' })
 export const formFrame = (root: HTMLElement, o: Omit<LayoutOptions, 'kind'> = {}) => layout(root, { ...o, kind: 'form-frame' })
+
+/** A gate check's state: waiting, loading (pink fill), ready, failed. */
+export type GateCheckState = 'wait' | 'load' | 'ok' | 'err'
+
+/** A gate check's fill in percent and its words at the right. */
+export function gateCheckView(state: GateCheckState, value = 0, note = ''): { pct: number; words: string } {
+  const pct = Math.round(Math.min(1, Math.max(0, state === 'ok' ? 1 : value)) * 100)
+  const words = note || (state === 'ok' ? 'ready' : state === 'load' ? `${pct}%` : state === 'err' ? 'failed' : 'waiting')
+  return { pct, words }
+}

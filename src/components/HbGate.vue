@@ -53,6 +53,7 @@ function go() {
             <div class="hb-gate-body">
               <h2 v-if="props.name" class="hb-gate-name">{{ props.name }}</h2>
               <p v-if="props.note" class="hb-gate-note">{{ props.note }}</p>
+              <div v-if="slots.checks" class="hb-gate-checks"><slot name="checks" /></div>
               <slot name="card" />
               <div class="hb-gate-acts">
                 <button ref="goBtn" type="button" class="hb-btn hb-btn-go hb-btn-lg hb-gate-go" :aria-busy="props.busy || undefined" @click="go">{{ props.goLabel }}</button>

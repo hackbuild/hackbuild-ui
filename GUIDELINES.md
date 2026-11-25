@@ -1573,9 +1573,9 @@ thing to do; the few repeated verbs as a row on the subject.
 |---|---|---|---|---|---|
 | stage and rack | hackle, arbor, mortise | `HbStageRack` | `stageRack(root)` | the stage, insets and verbs on it | tabs of live state |
 | canvas and rail | mask-studio-sam | `HbCanvasRail` | `canvasRail(root)` | the canvas; the icon tool rail at its left | found, mask, view |
-| drop first | scribe | `HbDropFirst` | `dropFirst(root)` | a drop zone that becomes the result | engine and export once a result exists |
-| conversation | clevis, chatbot-forge | `HbConversationLayout` | `conversation(root)` | the messages; the composer under them | chats, persona, memory |
-| gate | ferrule, arbor | `HbGate` | `gate(root)` | the live subject behind one card | none |
+| drop first | scribe | `HbDropFirst` | `dropFirst(root)` | a drop zone that becomes the result; then an add files verb | engine and export once a result exists |
+| conversation | clevis | `HbConversationLayout` | `conversation(root)` | the thread at 760 px with its Permanent Marker empty state; the composer (`.hb-convbox`) centred under it; the chat list rail at the left, a drawer from the bar under 901 px | only when persona or memory exist |
+| gate | ferrule, arbor | `HbGate` | `gate(root)` | the live subject behind one card; per part progress in `HbGateCheck` rows (`.hb-gatecheck`) | none |
 | form and frame | grommet | `HbFormFrame` | `formFrame(root)` | the output frame | the form column, at the left |
 
 Classes: `.hb-lay.is-<kind>`, `.hb-lay-bar`, `.hb-lay-body`,
@@ -1602,8 +1602,10 @@ slot, and is the only place internal words may appear.
 Both views are pure: `rows: ModelRow[]` in; `choose`, `load`, `cancel`,
 `remove`, `option` and `custom` out. A ModelRow is display ready: id,
 name, group, size, memory, bytes, backend, speed word, verdict, the
-uncensored and non commercial marks, state, progress, the unfit reason,
-a detail list and options. The kit never formats a catalogue record; a
+uncensored and non commercial marks, `noDownload`, state, progress, the
+unfit reason, a detail list and options. The no download filter reads
+`noDownload` only. An unfit row is not a control: it leads with its
+reason, which may wrap. The kit never formats a catalogue record; a
 view layer builds the rows.
 
 | Part | Behaviour |

@@ -28,16 +28,22 @@ defaults the originals use. Untagged until the consumers re-pin.
 - The chat context meter is `.hb-ctxmeter`; it shared `.hb-ctx` with the
   context menu and was pinned over the logo. A test fails when two parts
   claim one root class.
-- Layouts: HbStageRack, HbCanvasRail, HbDropFirst, HbConversationLayout,
-  HbGate and HbFormFrame over HbRack, with vanilla `layout()` and named
+- Layouts: HbStageRack, HbCanvasRail, HbDropFirst (with an add files
+  verb once a result exists), HbConversationLayout (clevis: the chat list
+  rail, a drawer under 901 px, the empty state, the composer under the
+  thread, a rack only when given tabs), HbGate (with HbGateCheck rows)
+  and HbFormFrame over HbRack, with vanilla `layout()` and named
   forms per kind. Each writes the data-ux markers bar, subject, rack,
   verbs, inset and detail. Demo routes `#/layouts/<kind>` pass the
-  suite's screen gate at 1440 and 390 (measured, 12 of 12 screens).
+  suite's screen gate at 1440 and 390 (measured, 11 of 12 screens; the
+  conversation at 1440 fails only the rack check, which the gate still
+  requires while clevis has no rack).
 - Model picker: HbModelSelect (a line, a bar chip, or one line per job
   with presets and one load all) and HbModelSheet (520 px sheet, search,
   three filters, eight groups, 44 px rows with a chevron detail and
   remove, options of the chosen row, gguf, onnx, mlc and endpoint forms).
-  Pure views over display ready ModelRow; vanilla `modelSelect` and
+  An unfit row leads with its reason; no download reads the row's
+  `noDownload` flag. Pure views over display ready ModelRow; vanilla `modelSelect` and
   `modelSheet`.
 - Deprecated with a console note, removed in 0.11.0: HbActions, HbCard,
   HbCustomModelForm, HbEngineBar, HbHash, HbLoader, HbMethodCard,
