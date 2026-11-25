@@ -580,32 +580,38 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
    the tabs. */
 .hb-bar:empty{ display:none }
 .hb-bar-ink{ background:var(--hb-ink); color:var(--hb-paper); border-bottom-color:var(--hb-pink) }
-/* One row toolbar (CLEVIS, HbToolbar overflow). Wider than 640 px the
-   more slot lies in the row. Under it the row never wraps, `.hb-bar-lbl`
-   labels drop so their buttons show the icon alone (the label stays for
-   readers), and the more slot folds behind a menu button and opens as a
-   sheet under the bar across its width. */
+/* One row toolbar (CLEVIS, HbToolbar overflow), fitted to the bar's own
+   width by barFit, not the window's (0.9.8). Unfolded, the more slot lies
+   in the row. Folded (`.is-folded`: the bar is under 641 px or its row
+   would wrap) the row never wraps, `.hb-bar-lbl` labels drop so their
+   buttons show the icon alone (the label stays for readers), and the more
+   slot folds behind a menu button and opens as a sheet under the bar
+   across its width. Items that still do not fit move into that sheet,
+   where their labels show again. `.is-probe` is the one line trial. */
 .hb-bar-more,.hb-bar-more-panel{ display:contents }
 .hb-bar .hb-bar-more-btn{ display:none }
 .hb-bar .hb-btn > .hb-icon + .hb-bar-lbl{ margin-left:var(--hb-s1) }
-@media(max-width:640px){
-  .hb-bar.is-overflow{ position:relative; flex-wrap:nowrap; gap:var(--hb-s2); padding-left:max(var(--hb-s2), env(safe-area-inset-left)); padding-right:max(var(--hb-s2), env(safe-area-inset-right)) }
-  .hb-bar.is-overflow > *{ flex-shrink:0 }
-  .hb-bar.is-overflow > .hb-spacer{ flex:1 1 0; min-width:0 }
-  .hb-bar.is-overflow .hb-bar-lbl{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
-  .hb-bar.is-overflow .hb-btn:has(> .hb-bar-lbl){ min-width:44px; min-height:44px; padding:0 var(--hb-s2); justify-content:center }
-  .hb-bar.is-overflow .hb-bar-more{ display:block }
-  .hb-bar.is-overflow .hb-bar-more-btn{ display:inline-flex; width:44px; height:44px }
-  .hb-bar.is-overflow .hb-bar-more.is-open > .hb-bar-more-btn{ background:var(--hb-ink); color:var(--hb-paper) }
-  .hb-bar.is-overflow .hb-bar-more-panel{ display:none }
-  .hb-bar.is-overflow .hb-bar-more.is-open > .hb-bar-more-panel{
-    display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2);
-    position:absolute; left:0; right:0; top:100%; z-index:40;
-    padding:var(--hb-s2) max(var(--hb-s2), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s2), env(safe-area-inset-left));
-    background:var(--hb-paper-sunk); color:var(--hb-ink);
-    border-bottom:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
-  }
+.hb-bar.is-probe{ flex-wrap:nowrap }
+.hb-bar.is-probe > *{ flex-shrink:0 }
+.hb-bar.is-overflow.is-folded{ position:relative; flex-wrap:nowrap; gap:var(--hb-s2); padding-left:max(var(--hb-s2), env(safe-area-inset-left)); padding-right:max(var(--hb-s2), env(safe-area-inset-right)) }
+.hb-bar.is-overflow.is-folded > *{ flex-shrink:0 }
+.hb-bar.is-overflow.is-folded > .hb-spacer{ flex:1 1 0; min-width:0 }
+.hb-bar.is-overflow.is-folded .hb-bar-lbl{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
+.hb-bar.is-overflow.is-folded .hb-btn:has(> .hb-bar-lbl){ min-width:44px; min-height:44px; padding:0 var(--hb-s2); justify-content:center }
+.hb-bar.is-overflow.is-folded .hb-bar-more{ display:block }
+.hb-bar.is-overflow.is-folded .hb-bar-more.is-none{ display:none }
+.hb-bar.is-overflow.is-folded .hb-bar-more-btn{ display:inline-flex; width:44px; height:44px }
+.hb-bar.is-overflow.is-folded .hb-bar-more.is-open > .hb-bar-more-btn{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-bar.is-overflow.is-folded .hb-bar-more-panel{ display:none }
+.hb-bar.is-overflow.is-folded .hb-bar-more.is-open > .hb-bar-more-panel{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2);
+  position:absolute; left:0; right:0; top:100%; z-index:40;
+  padding:var(--hb-s2) max(var(--hb-s2), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s2), env(safe-area-inset-left));
+  background:var(--hb-paper-sunk); color:var(--hb-ink);
+  border-bottom:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
 }
+.hb-bar.is-overflow.is-folded .hb-bar-more-panel .hb-bar-lbl{ position:static; width:auto; height:auto; overflow:visible; clip:auto }
+.hb-bar.is-overflow.is-folded .hb-bar-more-panel .hb-btn:has(> .hb-bar-lbl){ padding:0 var(--hb-s3) }
 @media(min-width:641px){ .hb-bar{ padding:var(--hb-s2) max(var(--hb-s5), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s5), env(safe-area-inset-left)) } }
 
 /* Status strip. Thin, VT323, counts and rates only. Its one possible

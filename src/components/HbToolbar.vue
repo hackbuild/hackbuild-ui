@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
+import { onBeforeUnmount, onBeforeUpdate, onMounted, onUpdated, ref, watch } from 'vue'
 import HbIcon from './HbIcon.vue'
 import { barMore, type BarMoreHandle } from '../vanilla/bar'
 
 interface Props {
   /** Ink toolbar for instrument shells. */
   ink?: boolean
-  /** One row on a phone (CLEVIS): under 641 px `.hb-bar-lbl` labels drop
-      so their buttons show the icon alone, and the `more` slot folds
-      behind a menu button and drops under the bar when opened. Wider, the
-      `more` slot sits in the row between the default and `end` slots. */
+  /** One row (CLEVIS), by the bar's own width: when the bar is under
+      641 px or its row would wrap, `.hb-bar-lbl` labels drop so their
+      buttons show the icon alone, and the `more` slot folds behind a menu
+      button and drops under the bar when opened. If the folded row still
+      runs over, items from the end of the default slot move into the
+      more panel; the `end` slot stays in the row. Otherwise the `more`
+      slot sits in the row between the default and `end` slots. */
   overflow?: boolean
   /** Name of the overflow button. */
   moreLabel?: string
@@ -21,10 +24,9 @@ const props = withDefaults(defineProps<Props>(), {
   moreLabel: 'more tools',
 })
 
-/** The overflow panel is open (phone only). */
+/** The overflow panel is open (folded bar only). */
 const open = defineModel<boolean>('open', { default: false })
 
-const slots = useSlots()
 const wrap = ref<HTMLElement | null>(null)
 const id = `hb-bar-more-${Math.random().toString(36).slice(2, 8)}`
 let handle: BarMoreHandle | null = null
@@ -34,6 +36,10 @@ function bind() {
 }
 onMounted(bind)
 watch(wrap, bind)
+// Spilled items go back to their places before the slots are patched, and
+// the bar is measured again after.
+onBeforeUpdate(() => { if (handle?.fit?.spilled) handle.fit.restore() })
+onUpdated(() => handle?.fit?.update())
 watch(open, (on) => {
   if (!handle || handle.isOpen === on) return
   if (on) handle.open()
@@ -47,7 +53,7 @@ onBeforeUnmount(() => handle?.dispose())
        right with a spacer: <span class="hb-spacer" />. -->
   <div class="hb-bar" :class="{ 'hb-bar-ink': props.ink, 'is-overflow': props.overflow }">
     <slot />
-    <div v-if="props.overflow && slots.more" ref="wrap" class="hb-bar-more">
+    <div v-if="props.overflow" ref="wrap" class="hb-bar-more">
       <button type="button" class="hb-iconbtn hb-bar-more-btn" :aria-label="props.moreLabel" :title="props.moreLabel">
         <HbIcon name="menu" :size="16" />
       </button>
