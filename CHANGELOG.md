@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.9.3
+
+- HbHow `what` and `how`: the package prose over the install and code, in
+  the shape of a library's `how.ts`, so `<HbHow v-bind="doc" />` binds it
+  whole. Backtick spans render as code. A `prose` slot replaces both.
+  Type `HbHowDoc`; vanilla `codeSpans`.
+- HbTierCards tier `error`: a failed tier keeps an err border, the err
+  light and a reason line, and stays pickable.
+- `.hb-tunables`: the class layer for the panel `@hackbuild/tunables`
+  draws (its `tn-` classes), moved out of a page stylesheet.
+- HbTree and vanilla `tree`: a rig or scene tree with open and close,
+  arrow keys, a pick, and a height cap (`--hb-tree-h`, 320 px) it scrolls
+  inside.
+- HbViewport puts its overlay slots in one frame, `.hb-ov-frame`: the top
+  grid then the foot, so camera chips, telemetry, caption and band no
+  longer overlap at 320 to 390 px. `bl` and `br` sit in the foot row
+  `.hb-ov-low`. Hand written markup without the frame is unchanged.
+- `.hb-stage-void`: the rule is BAIL's 14 percent pink with a major rule
+  every 128 px. Tokens `--hb-void-rule`, `--hb-void-rule-major`,
+  `--hb-void-line` and `--hb-void-prop` for a scene drawn on the void.
+- Demo `#/demos/stage-tool` carries camera chips, a caption and a band.
+
 ## 0.9.2
 
 - `.hb-toolpage.is-split` no longer shrinks in a flex column shell. A
