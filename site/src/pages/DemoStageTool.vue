@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import {
-  HbAppShell, HbButton, HbHeader, HbHudStat, HbKbd, HbPanel, HbParamRow, HbSeed, HbToolbar,
+  HbAppShell, HbButton, HbChip, HbHeader, HbHudStat, HbKbd, HbPanel, HbParamRow, HbSeed, HbStageCaption, HbToolbar,
   HbTransport, HbViewport, HbWave,
 } from '@hackbuild/ui'
 
@@ -18,6 +18,8 @@ const rate = ref(1)
 const time = ref(1.2)
 const duration = 4
 const samples = Array.from({ length: 96 }, (_, i) => Math.abs(Math.sin(i * 0.37) * Math.cos(i * 0.11)))
+const VIEWS = ['front', 'side', 'back', 'top'] as const
+const view = ref<string>('front')
 const reach = ref(0.6)
 const weight = ref(1)
 
@@ -66,6 +68,11 @@ const seek = (t: number) => { time.value = Math.min(duration, Math.max(0, t)) }
           <rect x="188" y="90" width="24" height="64" fill="var(--hb-paper)" />
           <rect x="191" y="72" width="18" height="16" fill="var(--hb-paper)" />
         </svg>
+        <template #tr>
+          <div class="hb-cams" role="group" aria-label="camera">
+            <HbChip v-for="(v, i) in VIEWS" :key="v" :model-value="view === v" toggle :hotkey="String(i + 1)" :hotkey-label="`view from the ${v}`" hotkey-group="stage" @click="view = v">{{ v }}</HbChip>
+          </div>
+        </template>
         <template #telemetry>
           <HbHudStat label="fps" :value="60" :digits="0" />
           <HbHudStat label="seed" :value="seed" :digits="0" />
@@ -73,6 +80,13 @@ const seek = (t: number) => { time.value = Math.min(duration, Math.max(0, t)) }
         </template>
         <template #hint>
           <span class="hb-hudnote"><HbKbd>space</HbKbd> play, <HbKbd>.</HbKbd> step, <HbKbd>1</HbKbd> to <HbKbd>3</HbKbd> views</span>
+        </template>
+        <template #caption>
+          <HbStageCaption echo="you: walk to the door and stop" line="the left foot plants at 1.2 s and the hips drop to meet it, then the weight rolls forward." who="walker" :max-chars="160" />
+        </template>
+        <template #b>
+          <HbButton variant="secondary">wave</HbButton>
+          <HbButton variant="secondary">sit</HbButton>
         </template>
       </HbViewport>
 

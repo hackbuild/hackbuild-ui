@@ -122,8 +122,19 @@ const classes: [string, string][] = [
       <div>
         <div class="hb-label look-cap">HbViewport look="graph"</div>
         <HbViewport look="graph" label="sample stage" quiet>
-          <div class="hb-viewport-host"><canvas aria-hidden="true" /></div>
-          <template #tl><span class="hb-stage-tag"><b>stage</b><span>3d</span></span></template>
+          <svg class="hb-viewport-media" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <!-- a room from above, drawn with the scene tokens: floor lines and props -->
+            <g stroke="var(--hb-void-line)" stroke-width="1" fill="none">
+              <path d="M40 20 V160 M80 20 V160 M120 20 V160 M160 20 V160 M200 20 V160 M240 20 V160 M280 20 V160 M40 20 H280 M40 60 H280 M40 100 H280 M40 140 H280 M40 160 H280" />
+            </g>
+            <g fill="var(--hb-void-prop)">
+              <rect x="62" y="38" width="36" height="28" />
+              <circle cx="214" cy="118" r="14" />
+              <rect x="150" y="70" width="64" height="8" />
+            </g>
+            <circle cx="120" cy="120" r="7" fill="var(--hb-paper)" />
+          </svg>
+          <template #tl><span class="hb-stage-tag"><b>stage</b><span>top</span></span></template>
         </HbViewport>
       </div>
     </div>

@@ -22,6 +22,9 @@ export interface HbTier {
   disabled?: boolean
   /** Why it is off: 'no webgpu adapter'. */
   reason?: string
+  /** The tier tried and failed; the reason line: 'load failed: out of gpu memory'.
+      The card stays pickable so the user can try again or pick another. */
+  error?: string
 }
 
 interface Props {
@@ -82,14 +85,14 @@ onBeforeUnmount(() => handle?.dispose())
         v-for="t in props.tiers"
         :key="t.key"
         class="hb-tier"
-        :class="{ 'is-on': t.key === model, 'is-off': t.disabled }"
+        :class="{ 'is-on': t.key === model, 'is-off': t.disabled, 'is-err': !!t.error && !t.disabled }"
       >
         <button
           type="button"
           class="hb-tier-pick"
           :data-value="t.key"
           :disabled="t.disabled"
-          :aria-describedby="t.reason ? `${id}-${t.key}` : undefined"
+          :aria-describedby="(t.disabled && t.reason) || t.error ? `${id}-${t.key}` : undefined"
         >
           <span v-if="$slots.icon" class="hb-tier-icon" aria-hidden="true"><slot name="icon" :tier="t" /></span>
           <span class="hb-tier-main">
@@ -105,6 +108,7 @@ onBeforeUnmount(() => handle?.dispose())
             <span v-if="t.note" class="hb-tier-note">{{ t.note }}</span>
             <span v-if="t.bar !== undefined" class="hb-tier-bar" aria-hidden="true"><i :style="{ width: Math.round(t.bar * 100) + '%' }" /></span>
             <span v-if="t.disabled && t.reason" :id="`${id}-${t.key}`" class="hb-tier-why">{{ t.reason }}</span>
+            <span v-else-if="t.error" :id="`${id}-${t.key}`" class="hb-tier-err"><span class="hb-led is-err" aria-hidden="true" />failed: {{ t.error }}</span>
           </span>
         </button>
         <div v-if="t.key === model && hasBody(t)" class="hb-tier-body"><slot name="body" :tier="t" /></div>

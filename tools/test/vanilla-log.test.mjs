@@ -3,7 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { dom } from "./dom.mjs";
 import { eventLog } from "../../src/vanilla/log.ts";
-import { codeBlock } from "../../src/vanilla/code.ts";
+import { codeBlock, codeSpans } from "../../src/vanilla/code.ts";
 import { exportName, withExt } from "../../src/vanilla/save.ts";
 
 test("event log: tags, cap, live rows replaced in place, hide by kind", () => {
@@ -69,4 +69,13 @@ test("export names carry the run and take one extension", () => {
   assert.equal(withExt("take 1.SRT", ".srt"), "take 1.SRT");
   assert.equal(withExt("a/b:c", ".json"), "a-b-c.json");
   assert.equal(withExt("  ", ".txt"), "export.txt");
+});
+
+test("codeSpans splits prose on backticks and keeps an unclosed one", () => {
+  assert.deepEqual(codeSpans("call `reply()` then `stop()`."), [
+    { code: false, text: "call " }, { code: true, text: "reply()" }, { code: false, text: " then " }, { code: true, text: "stop()" }, { code: false, text: "." },
+  ]);
+  assert.deepEqual(codeSpans("no code here"), [{ code: false, text: "no code here" }]);
+  assert.deepEqual(codeSpans("a ` lone tick"), [{ code: false, text: "a ` lone tick" }]);
+  assert.deepEqual(codeSpans("``"), [{ code: false, text: "``" }]);
 });

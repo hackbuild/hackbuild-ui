@@ -13,6 +13,7 @@ import {
   modal,
   persisted,
   tabs,
+  tree,
   undoStack,
   type ActivityTask,
 } from '@hackbuild/ui/vanilla'
@@ -248,3 +249,11 @@ clip.subscribe((s) => {
   $('copy-btn').textContent = s === 'copied' ? 'copied' : s === 'failed' ? 'copy failed, select it' : 'copy'
 })
 $('copy-btn').addEventListener('click', () => void clip.copy($('copy-src').textContent ?? ''))
+
+// tree: keys, twist and pick over plain markup
+tree($('tree'), { onSelect: (id) => say('tree-out', `picked: ${id}`) })
+// tunables fixture: the range shows its value as bindPanel's would
+for (const r of document.querySelectorAll<HTMLInputElement>('.hb-tunables input[type=range]')) {
+  const out = r.parentElement?.querySelector('output')
+  r.addEventListener('input', () => { if (out) out.textContent = r.value })
+}

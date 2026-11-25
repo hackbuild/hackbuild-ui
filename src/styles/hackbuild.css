@@ -935,8 +935,11 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-app.is-sheet-open .hb-viewport > .hb-ov-tl,
 .hb-app.is-sheet-open .hb-viewport > .hb-ov-top,
 .hb-app.is-sheet-open .hb-viewport > .hb-ov-foot > :not(.hb-ov-cap),
+.hb-app.is-sheet-open .hb-ov-frame > .hb-ov-top,
+.hb-app.is-sheet-open .hb-ov-frame > .hb-ov-foot > :not(.hb-ov-cap),
 .hb-app.is-sheet-open .hb-caption-echo{ display:none }
 .hb-app.is-sheet-open .hb-viewport > .hb-ov-foot{ top:var(--hb-s2); bottom:auto }
+.hb-app.is-sheet-open .hb-ov-frame > .hb-ov-foot{ margin-top:0 }
 .hb-app.is-sheet-open .hb-caption-line{ max-height:calc(1.5em + 2 * var(--hb-s1)) }
 .hb-app.is-sheet-open .hb-caption-who{ display:inline; margin-right:var(--hb-s1) }
 
@@ -2910,6 +2913,12 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-how-install{ display:flex; flex-direction:column; gap:var(--hb-s1) }
 .hb-how-note{ margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
 .hb-how-links{ display:flex; flex-wrap:wrap; gap:var(--hb-s3) }
+/* What the package is, then how it works: body prose at the measure, the
+   first line in ink, the rest in ink 2. */
+.hb-how-prose{ max-width:var(--hb-measure); font-family:var(--hb-body); font-size:14px; line-height:1.55; color:var(--hb-ink-2) }
+.hb-how-prose > p{ margin:0 0 var(--hb-s2) }
+.hb-how-prose > p:last-child{ margin-bottom:0 }
+.hb-how-prose > .hb-how-what{ color:var(--hb-ink) }
 
 .hb-export{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
 .hb-export > .hb-export-head{ margin:0; font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em }
@@ -3314,6 +3323,11 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-tier-bar > i{ display:block; height:100%; background:var(--hb-ink) }
 .hb-tier.is-on .hb-tier-bar > i{ background:var(--hb-pink) }
 .hb-tier-why{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-warn-ink) }
+/* Failed: the tier tried and could not run. Err border, the err light and
+   a reason line; it stays pickable so the user can try again. */
+.hb-tier.is-err{ border-color:var(--hb-err) }
+.hb-tier-err{ display:flex; align-items:baseline; gap:var(--hb-s1); font-family:var(--hb-utility); font-size:11px; color:var(--hb-err); overflow-wrap:anywhere }
+.hb-tier-err > .hb-led{ flex:none; align-self:center }
 .hb-tier-body{ border-top:1px dashed var(--hb-ink-4); padding:var(--hb-s2) var(--hb-s3) var(--hb-s3) }
 .hb-tiers-foot{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--hb-s2); border-top:var(--hb-border) solid var(--hb-ink); padding-top:var(--hb-s2) }
 .hb-tiers-echo{ flex:1 1 200px; font-family:var(--hb-utility); font-size:11.5px; color:var(--hb-ink-2) }
@@ -4026,10 +4040,34 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-ov-top > .hb-ov-tele{ grid-area:tele }
 .hb-ov-top > * > *{ pointer-events:auto }
 @media (pointer:coarse) and (orientation:landscape) and (max-height:540px){
-  .hb-ov-top{ grid-template-areas:"tl tr" ". tele" }
+  .hb-ov-top,.hb-ov-frame.has-pad > .hb-ov-top{ grid-template-areas:"tl tr" ". tele" }
   .hb-ov-top > .hb-ov-tele{ justify-self:end; align-items:flex-end }
 }
 @media(min-width:641px){ .hb-ov-foot{ left:var(--hb-s3); right:var(--hb-s3); bottom:var(--hb-s3) } }
+/* The overlay frame (0.9.3): HbViewport puts every slot but the centre
+   and the cover in one column, the top grid then the foot pushed to the
+   bottom edge, so no two slots overlap at any width. The top grid sizes
+   both corners to their content: the camera chips wrap before they reach
+   the telemetry. On a short stage the caption shrinks first and keeps its
+   newest line. Hand written markup without the frame keeps the corners. */
+.hb-ov-frame{
+  position:absolute; inset:var(--hb-s2); z-index:5; display:flex; flex-direction:column;
+  gap:var(--hb-s1); pointer-events:none; min-height:0;
+}
+@media(min-width:641px){ .hb-ov-frame{ inset:var(--hb-s3) } }
+.hb-ov-frame .hb-ov{ position:static; max-width:none }
+.hb-ov-frame > .hb-ov-top{ flex:none; display:grid; grid-template-columns:auto auto; grid-template-areas:"tl tr" "tele tr" }
+.hb-ov-frame > .hb-ov-top > .hb-ov-tr > .hb-cams{ justify-content:flex-end }
+.hb-ov-frame > .hb-ov-foot{ flex:0 1 auto; min-height:0; margin-top:auto }
+.hb-ov-frame .hb-ov-cap{ flex:0 1 auto; min-height:0; overflow:hidden; align-items:flex-end }
+.hb-ov-frame .hb-ov-cap > .hb-caption{ max-height:100%; justify-content:flex-end; min-height:0 }
+.hb-ov-frame .hb-ov-cap .hb-caption-line{ min-height:0; flex:0 1 auto }
+.hb-ov-frame .hb-ov-hint,.hb-ov-frame .hb-ov-b,.hb-ov-frame .hb-ov-pad,.hb-ov-low{ flex:none }
+.hb-ov-low{ display:flex; justify-content:space-between; align-items:flex-end; gap:var(--hb-s2); min-width:0 }
+.hb-ov-low > .hb-ov-br{ margin-left:auto }
+.hb-ov-low > .hb-ov > *{ pointer-events:auto }
+.hb-ov-frame:not(.has-pad) > .hb-ov-top > .hb-ov-tele{ justify-self:start; align-items:flex-start }
+.hb-ov-frame:not(.has-pad) > .hb-ov-top:not(:has(> .hb-ov-tl)){ grid-template-areas:"tele tr" }
 /* Under 561 px of viewport the hint gives way to the scene: it names keys
    and mouse moves a phone does not have. */
 @container (min-width:561px){ .hb-ov-hint{ display:flex } }
@@ -4410,12 +4448,17 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 }
 .hb-stage.hb-stage-lit,.hb-viewport.hb-stage-lit{ box-shadow:none; border-width:var(--hb-border-em) }
 .hb-stage-lit .hb-stage-label{ color:var(--hb-ink-3); opacity:1 }
+/* The rule is BAIL's 14 percent pink at 32 px with a major rule every
+   128 px, so a top down view keeps its scale. A scene on the void reads
+   --hb-void-line and --hb-void-prop for its floor grid and props. */
 .hb-stage-void{
   background-color:var(--hb-void); color:var(--hb-paper);
   background-image:
-    linear-gradient(rgba(254,3,134,.10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(254,3,134,.10) 1px, transparent 1px);
-  background-size:32px 32px;
+    linear-gradient(var(--hb-void-rule-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hb-void-rule-major) 1px, transparent 1px),
+    linear-gradient(var(--hb-void-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hb-void-rule) 1px, transparent 1px);
+  background-size:128px 128px, 128px 128px, 32px 32px, 32px 32px;
 }
 /* Stage tag: the FERRULE corner plate, ink name then pink mode. */
 .hb-stage-tag{ display:inline-flex; gap:6px; align-items:center; font-family:var(--hb-readout); font-size:var(--hb-readout-lg); line-height:1 }
@@ -4515,3 +4558,79 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-viewport-host > canvas{ display:block; width:100% !important; height:100% !important; touch-action:none; outline:none }
 /* A short verb on a thin line still makes a 44 px square for a finger. */
 @media(pointer:coarse){ .hb-btn{ min-width:44px; justify-content:center } }
+
+/* ---- tunables panel ----------------------------------------------------
+   The DOM that @hackbuild/tunables bindPanel draws (its tn- classes, the
+   default prefix) set as folds, param rows and buttons. Put .hb-tunables
+   on the host element. Mobile first: the label takes its own row and every
+   control is 44 px on a coarse pointer. */
+.hb-tunables .tn-group{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); margin-bottom:var(--hb-s3) }
+.hb-tunables .tn-head{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.09em;
+  padding:var(--hb-s2) var(--hb-s3); min-height:44px; display:flex; align-items:center; gap:var(--hb-s2); cursor:pointer; list-style:none;
+}
+.hb-tunables .tn-head::-webkit-details-marker{ display:none }
+.hb-tunables .tn-head::before{ content:"+"; font-weight:700 }
+.hb-tunables .tn-group[open] > .tn-head::before{ content:"-" }
+.hb-tunables .tn-group[open] > .tn-head{ border-bottom:var(--hb-border) solid var(--hb-ink) }
+.hb-tunables .tn-head:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:-3px }
+.hb-tunables .tn-count{ margin-left:auto; font-family:var(--hb-readout); font-size:var(--hb-readout-md); color:var(--hb-ink-3) }
+.hb-tunables .tn-row,.hb-tunables .tn-toggle{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s1) var(--hb-s2);
+  padding:var(--hb-s2) var(--hb-s3); border-bottom:1px dashed var(--hb-ink-4); font-family:var(--hb-utility); font-size:11px;
+}
+.hb-tunables .tn-row:last-child,.hb-tunables .tn-toggle:last-child{ border-bottom:0 }
+.hb-tunables .tn-label{ flex:1 1 100%; font-weight:600; text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink-3) }
+.hb-tunables .tn-toggle .tn-label{ flex:1 1 auto }
+.hb-tunables .tn-toggle input[type=checkbox]{ width:20px; height:20px; margin:12px 0; accent-color:var(--hb-pink) }
+.hb-tunables .tn-row input[type=range]{ flex:1 1 140px; min-width:0; height:44px; margin:0; accent-color:var(--hb-pink) }
+.hb-tunables .tn-value{ font-family:var(--hb-readout); font-size:var(--hb-readout-lg); color:var(--hb-ink); min-width:4ch; text-align:right }
+.hb-tunables .tn-unit,.hb-tunables .tn-source,.hb-tunables .tn-cite{ color:var(--hb-ink-3) }
+.hb-tunables button,.hb-tunables .tn-import-label{
+  font-family:var(--hb-utility); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.09em;
+  background:var(--hb-paper-raised); color:var(--hb-ink); border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow-sm);
+  padding:5px 10px; min-height:44px; cursor:pointer; border-radius:0;
+}
+.hb-tunables button:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:2px }
+@media (hover:hover) and (pointer:fine){
+  .hb-tunables button:hover,.hb-tunables .tn-import-label:hover{ background:var(--hb-pink) }
+}
+.hb-tunables .tn-presets,.hb-tunables .tn-actions{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); align-items:center; margin:0 0 var(--hb-s3); font-family:var(--hb-utility); font-size:11px }
+/* The import file input sits inside its label, drawn as a button; the
+   input is transparent over it and stays focusable. */
+.hb-tunables .tn-import-label{ display:inline-flex; align-items:center; position:relative }
+.hb-tunables .tn-import-label:focus-within{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:2px }
+.hb-tunables .tn-import{ position:absolute; inset:calc(-1 * var(--hb-border)); opacity:0; width:auto; height:auto; cursor:pointer }
+@media(min-width:641px){ .hb-tunables .tn-label{ flex:0 0 160px } }
+@media(min-width:641px) and (pointer:fine){
+  .hb-tunables button,.hb-tunables .tn-import-label,.hb-tunables .tn-head{ min-height:0 }
+  .hb-tunables .tn-row input[type=range]{ height:auto; margin:2px }
+  .hb-tunables .tn-toggle input[type=checkbox]{ margin:2px 0 }
+}
+
+/* ---- tree --------------------------------------------------------------
+   A rig or scene tree: rows in the utility face, a +/- twist on branches,
+   each level indented one step, capped at --hb-tree-h and scrolled inside.
+   The picked row is ink on paper reversed; focus is the pink outline. */
+.hb-tree{
+  list-style:none; margin:0; padding:var(--hb-s1) 0; max-height:var(--hb-tree-h); overflow:auto; overscroll-behavior:contain;
+  border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised);
+  font-family:var(--hb-utility); font-size:12px; line-height:1.3; min-width:0;
+}
+.hb-tree-group{ list-style:none; margin:0; padding:0 0 0 var(--hb-s4) }
+.hb-tree-item{ outline:none }
+.hb-tree-item[aria-expanded="false"] > .hb-tree-group{ display:none }
+.hb-tree-row{ display:flex; align-items:center; gap:var(--hb-s1); min-height:44px; padding:0 var(--hb-s2); cursor:pointer; min-width:0 }
+.hb-tree-twist{ flex:0 0 22px; align-self:stretch; display:inline-flex; align-items:center; justify-content:center; color:var(--hb-ink-3); font-weight:700 }
+.hb-tree-item[aria-expanded="false"] > .hb-tree-row > .hb-tree-twist::before{ content:"+" }
+.hb-tree-item[aria-expanded="true"] > .hb-tree-row > .hb-tree-twist::before{ content:"-" }
+.hb-tree-label{ flex:0 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.hb-tree-sub{ flex:0 1 auto; margin-left:auto; padding-left:var(--hb-s2); color:var(--hb-ink-3); font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.hb-tree-item[aria-selected="true"] > .hb-tree-row{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-tree-item[aria-selected="true"] > .hb-tree-row > .hb-tree-sub,
+.hb-tree-item[aria-selected="true"] > .hb-tree-row > .hb-tree-twist{ color:var(--hb-lit-label) }
+.hb-tree-item:focus-visible > .hb-tree-row{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:-2px }
+@media (hover:hover) and (pointer:fine){
+  .hb-tree-item:not([aria-selected="true"]) > .hb-tree-row:hover{ background:var(--hb-paper-sunk) }
+}
+@media (pointer:fine){ .hb-tree-row{ min-height:26px } }

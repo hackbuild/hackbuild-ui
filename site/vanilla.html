@@ -125,6 +125,44 @@
         <button class="hb-btn hb-btn-2 hb-btn-sm" type="button" id="copy-btn">copy</button>
       </div>
     </section>
+
+    <section class="hb-panel" aria-labelledby="h-tree">
+      <h2 class="hb-panel-hd-inst" id="h-tree">tree <span class="hb-hd-aux">tree(el)</span></h2>
+      <p class="hb-fixture is-strip"><b>fixture</b> sample rig; no file loads.</p>
+      <ul class="hb-tree" id="tree" aria-label="rig" style="--hb-tree-h: 200px">
+        <li role="treeitem" class="hb-tree-item" data-id="hips" aria-expanded="true"><span class="hb-tree-row"><span class="hb-tree-twist" aria-hidden="true"></span><span class="hb-tree-label">Hips</span><span class="hb-tree-sub">root bone</span></span>
+          <ul role="group" class="hb-tree-group">
+            <li role="treeitem" class="hb-tree-item" data-id="spine" aria-expanded="false"><span class="hb-tree-row"><span class="hb-tree-twist" aria-hidden="true"></span><span class="hb-tree-label">Spine</span><span class="hb-tree-sub">bone</span></span>
+              <ul role="group" class="hb-tree-group">
+                <li role="treeitem" class="hb-tree-item" data-id="neck"><span class="hb-tree-row"><span class="hb-tree-twist" aria-hidden="true"></span><span class="hb-tree-label">Neck</span><span class="hb-tree-sub">bone</span></span></li>
+              </ul>
+            </li>
+            <li role="treeitem" class="hb-tree-item" data-id="leftupleg"><span class="hb-tree-row"><span class="hb-tree-twist" aria-hidden="true"></span><span class="hb-tree-label">LeftUpLeg</span><span class="hb-tree-sub">bone</span></span></li>
+            <li role="treeitem" class="hb-tree-item" data-id="rightupleg"><span class="hb-tree-row"><span class="hb-tree-twist" aria-hidden="true"></span><span class="hb-tree-label">RightUpLeg</span><span class="hb-tree-sub">bone</span></span></li>
+          </ul>
+        </li>
+      </ul>
+      <p class="hb-hint" id="tree-out" aria-live="polite">picked: none</p>
+    </section>
+
+    <section class="hb-panel" aria-labelledby="h-tune">
+      <h2 class="hb-panel-hd-inst" id="h-tune">tunables panel <span class="hb-hd-aux">.hb-tunables</span></h2>
+      <p class="hb-fixture is-strip"><b>fixture</b> the markup @hackbuild/tunables bindPanel draws, with made up values.</p>
+      <div class="hb-tunables">
+        <div class="tn-panel">
+          <details class="tn-group" open>
+            <summary class="tn-head"><span class="tn-title">gait</span><span class="tn-count">2</span></summary>
+            <label class="tn-row"><span class="tn-label">stride</span><input type="range" min="0.2" max="1.2" step="0.05" value="0.7"><output class="tn-value">0.70</output><span class="tn-unit">m</span><span class="tn-source">inferred</span><button type="button" class="tn-reset-one">reset</button></label>
+            <label class="tn-row"><span class="tn-label">cadence</span><input type="range" min="60" max="140" step="1" value="104"><output class="tn-value">104</output><span class="tn-unit">steps/min</span><span class="tn-source">measured</span><button type="button" class="tn-reset-one">reset</button></label>
+          </details>
+          <details class="tn-group">
+            <summary class="tn-head"><span class="tn-title">layers</span><span class="tn-count">1</span></summary>
+            <label class="tn-toggle"><input type="checkbox" checked><span class="tn-label">foot lock</span></label>
+          </details>
+          <div class="tn-actions"><button type="button" class="tn-reset">reset all</button><button type="button" class="tn-export">export</button><label class="tn-import-label">import<input type="file" class="tn-import" accept="application/json"></label></div>
+        </div>
+      </div>
+    </section>
   </div>
 </main>
 

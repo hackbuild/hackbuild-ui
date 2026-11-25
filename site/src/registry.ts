@@ -143,6 +143,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbPad', blurb: 'touch stick or d-pad and one action, keys too' },
       { name: 'HbContextMenu', blurb: 'right click, long press or menu key; sends sentences' },
       { name: 'HbInset', blurb: 'a derived view: collapsible, view modes, one line head' },
+      { name: 'HbTree', blurb: 'a rig tree: open, close, pick by key; scrolls past a cap' },
       { name: 'HbWave', blurb: 'waveform or level rail with floor, gate and seek' },
       { name: 'HbBubble', blurb: 'speech over a point, clamped, reading time' },
       { name: 'HbWelcome', blurb: 'steps that tick from live state, three starts' },

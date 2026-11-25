@@ -1321,6 +1321,7 @@ parts by category; the changelog has the detail.
 | 0.8.1 | HbAppShell `fit`, `.is-sheet-open`, `--hb-kb`, `--hb-foot-h`; HbChat `log`, `composer`; vanilla `keyboardInset`, `dockInsets` | 18, phone stage plus rack |
 | 0.9.0 | refined look tokens, `.hb-zine`, `.hb-instrument`, `.hb-led`, stage looks, `.hb-dotgrid`, `.hb-fixture`, `.hb-viewport-host`, HbMessage `boxed`, HbStatusBar cell `state` | 19 |
 | 0.9.1 | `.hb-toolpage.is-split.is-stage`, `--hb-stage-h-sm`, HbViewport `.hb-ov-top` with a pad, HbSendTo | 18, stage split and send to |
+| 0.9.3 | HbHow `what`, `how`, `prose`; HbTierCards `error`; `.hb-tunables`; HbTree, vanilla `tree`; HbViewport `.hb-ov-frame`; void scene tokens | 18, parts added in 0.9.3 |
 
 ### Phone stage plus rack
 
@@ -1350,6 +1351,17 @@ FERRULE's stage plus chat body.
 | phone stage height | `--hb-stage-h-sm` | the height of an `HbViewport` child of `.hb-toolpage.is-stage` under 1024 px, at least 160 px. `38dvh` (the default, FERRULE) for a character: 252 px at 390 by 664 (computed), the log and composer stay in reach. Held sideways under 541 px tall the stage takes `85dvh` and chat scrolls under it. A room in `HbAppShell fit` uses `aspect="fill"` instead, which ignores the token: 492 px at 390 by 664 (measured in 0.8.1). Any length works |
 | pad aware corners | `.hb-ov-top` | an HbViewport with the `pad` slot wraps `tl`, `tr` and `telemetry` in one grid. Telemetry sits under the name hud, and on a coarse pointer in landscape under 541 px tall it moves under the `tr` content, since the stick covers the left of a short stage |
 | send to | `HbSendTo` `targets`, `label`, `align`, `@send`; `.hb-sendto`, `.hb-sendto-reason` | HbDropdown rows with an HbIcon for what the tool takes. A target with a `reason` is disabled and the reason shows beside its name. HbContextMenu is the menu for a pressed thing in the scene and sends sentences; it is not a send to list |
+
+### Parts added in 0.9.3
+
+| Part | Classes and props | Behaviour |
+|---|---|---|
+| how prose | HbHow `what`, `how`, slot `prose`; `.hb-how-prose`, `.hb-how-what`; type `HbHowDoc` | what the package is in ink, then how it works in ink 2, at the measure, over the packages and install. The props follow a library's `how.ts`, so `v-bind="doc"` binds it whole. Backtick spans render as `.hb-code` (vanilla `codeSpans`); the slot replaces both |
+| failed tier | HbTierCards tier `error`; `.hb-tier.is-err`, `.hb-tier-err` | the tier tried and could not run: err border, the err light and `failed: <reason>`. It stays pickable so the user can try again or pick another; `disabled` with `reason` is for a tier this machine cannot run at all |
+| tunables panel | `.hb-tunables` on the host of `@hackbuild/tunables` `bindPanel` | its `tn-` markup as folds, param rows and buttons: label on its own row and 44 px controls on a phone, a 160 px label column from 641 px. A Vue tool builds its drawer from HbPanel and HbParamRow instead |
+| tree | HbTree `nodes`, `v-model`, `v-model:expanded`, `label`, `maxHeight`; vanilla `tree(el)`; `.hb-tree`, `.hb-tree-item`, `.hb-tree-row`, `.hb-tree-twist`, `.hb-tree-label`, `.hb-tree-sub`, `.hb-tree-group`; `--hb-tree-h` | a rig or scene tree. One row in the tab order; up and down walk the open rows, right opens or steps in, left closes or steps out, home and end jump, enter and space pick. The twist opens without picking. The picked row is reversed to ink. Past `--hb-tree-h` (320 px) the tree scrolls inside itself. Rows are 44 px on a coarse pointer, 26 px on a fine one |
+| overlay frame | `.hb-ov-frame`, `.has-pad`, `.hb-ov-low` | HbViewport puts tl, tr, telemetry, hint, caption, band, bl, br and pad in one column: the top grid, then the foot at the bottom edge. The corners size to their content, so camera chips wrap before they reach telemetry, and on a short stage the caption shrinks first and keeps its newest line. Measured on `#/demos/stage-tool`: no slot overlaps at 320 by 568, 360 by 640 and 390 by 664; before, the chips covered the telemetry at 320. `bl` and `br` sit in the foot row `.hb-ov-low` |
+| void scene tokens | `--hb-void-rule`, `--hb-void-rule-major`, `--hb-void-line`, `--hb-void-prop` | `.hb-stage-void` draws BAIL's 14 percent pink rule at 32 px (1.10:1 on void, computed) and a major rule every 128 px (1.63:1). The rules are decoration. A top down scene draws its floor grid in `--hb-void-line` (3.78:1) and unlit props in `--hb-void-prop` (6.37:1), read with `getComputedStyle` |
 
 ## 19. The refined look
 
@@ -1423,7 +1435,7 @@ fifth, static tone for a degraded but working part.
 | `.hb-instrument` | rack density: 12.5 px base, tighter spacing, VT323 values, 26 px status rows on a fine pointer; buttons, selects and fields stay 44 px on a coarse pointer |
 | `.hb-led`, `.is-off`, `.is-load`, `.is-ok`, `.is-err` | the 8 px state light |
 | `.hb-stage-lit` | FERRULE stage: a pink glow in three hard bands over 135 degree hairlines on sunk paper. `HbStage look="lit"`, `HbViewport look="lit"` |
-| `.hb-stage-void` | BAIL stage: the void with the 32 px pink graph rule. `HbViewport look="graph"` |
+| `.hb-stage-void` | BAIL stage: the void with the 32 px pink graph rule and a 128 px major rule. `HbViewport look="graph"`. Scene colours in section 18, parts added in 0.9.3 |
 | `.hb-stage-tag` | the stage corner plate: `<b>` ink name, `<span>` pink mode |
 | `.hb-viewport-host` | the element a 3D renderer appends its canvas to inside `HbViewport`: fills the frame, the canvas follows at 100 percent with no layout shift, touch goes to orbit. Size the renderer without touching the style (three.js `setSize(w, h, false)`) from a ResizeObserver on the host. Use it instead of `.hb-split-side` |
 | `.hb-dotgrid` | dot grid paper on any surface; on `body.hb` it replaces the grain. `.hb-app` carries it and drops the grain by default |

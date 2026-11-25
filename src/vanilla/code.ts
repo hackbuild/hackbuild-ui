@@ -67,3 +67,25 @@ export function codeBlock(el: HTMLElement, options: CodeBlockOptions = {}): Code
     },
   }
 }
+
+export interface CodeSpan {
+  code: boolean
+  text: string
+}
+
+/**
+ * Splits prose on backticks: `a span` comes back with code true. An
+ * unclosed backtick stays in the text as written. Empty spans are dropped.
+ */
+export function codeSpans(text: string): CodeSpan[] {
+  const out: CodeSpan[] = []
+  const re = /`([^`]+)`/g
+  let at = 0
+  for (let m = re.exec(text); m; m = re.exec(text)) {
+    if (m.index > at) out.push({ code: false, text: text.slice(at, m.index) })
+    out.push({ code: true, text: m[1] })
+    at = m.index + m[0].length
+  }
+  if (at < text.length) out.push({ code: false, text: text.slice(at) })
+  return out
+}

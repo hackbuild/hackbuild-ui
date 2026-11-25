@@ -61,6 +61,14 @@
   /* Solid label on the void. --hb-lit-dim is translucent and reads 2.90:1
      on void (computed), which fails AA for small labels that carry meaning. */
   --hb-lit-label:  #9a9184;
+  /* The graph void (.hb-stage-void) and a 3D scene drawn on it. Ratios on
+     --hb-void, computed: rule 1.10, major rule 1.63, floor line 3.78,
+     prop 6.37. The rules are decoration; a floor grid or prop that must be
+     read from above takes the solid line and prop colours. */
+  --hb-void-rule:       rgba(254,3,134,.14);  /* 32 px graph rule, BAIL */
+  --hb-void-rule-major: rgba(254,3,134,.40);  /* every fourth rule, 128 px */
+  --hb-void-line:       #6f6c66;              /* floor grid lines in a scene */
+  --hb-void-prop:       #9a9184;              /* unlit props and blocks in a scene */
 
   /* ---- stage part palette. Data on the void for mechanism and assembly
      views, one color per part role. Never chrome. ------------------------ */
@@ -139,6 +147,7 @@
 
   /* ---- layout ----------------------------------------------------------- */
   --hb-measure: 68ch;           /* prose line length ceiling */
+  --hb-tree-h: 320px;           /* tree height cap; the rows scroll inside */
   --hb-narrow:  860px;          /* docs and article shells */
   --hb-wide:    1180px;         /* app and page shell width */
   --hb-rail:    336px;          /* bench rail beside the stage */

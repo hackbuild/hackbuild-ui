@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HbFold from './HbFold.vue'
 import HbCodeBlock from './HbCodeBlock.vue'
+import { codeSpans } from '../vanilla/code'
 
 export interface HbHowLinks {
   /** The package page. */
@@ -9,9 +10,26 @@ export interface HbHowLinks {
   source?: string
 }
 
+/** The shape of a library's packages/<name>/how.ts: bind it whole with
+    v-bind="doc". */
+export interface HbHowDoc {
+  packages: string[]
+  what: string
+  how: string[]
+  install: string
+  today?: string
+  code: string
+  lang?: string
+  links: HbHowLinks
+}
+
 interface Props {
   /** Package names, '@hackbuild/chat'. */
   packages: string[]
+  /** One or two sentences, lowercase: what the package is. */
+  what?: string
+  /** A few short paragraphs, lowercase: how it works. `code spans` render as code. */
+  how?: string[]
   /** The install line once the packages are on npm. */
   install: string
   /** The line that works today, a tarball in the repo. Shown second. */
@@ -28,6 +46,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  what: '',
+  how: () => [],
   today: undefined,
   published: false,
   lang: 'ts',
@@ -44,6 +64,16 @@ const open = defineModel<boolean>({ default: false })
   <!-- The fold at the foot of every tool: which packages, how to install
        them, the least code that does this, and where to read more. -->
   <HbFold v-model="open" class="hb-how" :summary="props.summary" :num="props.num" :persist-key="props.persistKey">
+    <div v-if="$slots.prose || props.what || props.how.length" class="hb-how-prose">
+      <slot name="prose">
+        <p v-if="props.what" class="hb-how-what">
+          <template v-for="(s, i) in codeSpans(props.what)" :key="i"><code v-if="s.code" class="hb-code">{{ s.text }}</code><template v-else>{{ s.text }}</template></template>
+        </p>
+        <p v-for="(para, n) in props.how" :key="n">
+          <template v-for="(s, i) in codeSpans(para)" :key="i"><code v-if="s.code" class="hb-code">{{ s.text }}</code><template v-else>{{ s.text }}</template></template>
+        </p>
+      </slot>
+    </div>
     <div class="hb-how-pkgs">
       <span class="hb-how-k">packages</span>
       <code v-for="p in props.packages" :key="p" class="hb-code">{{ p }}</code>

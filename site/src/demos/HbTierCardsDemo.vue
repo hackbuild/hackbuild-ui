@@ -8,7 +8,7 @@ const engines: HbTier[] = [
   { key: 'none', label: 'no model', sub: 'scripted replies', size: 'none', cost: 'free, no download', privacy: 'runs anywhere', note: 'answers from a script so you can see the shape.' },
   { key: 'tab', label: 'in this tab', sub: 'hermes 3 llama 3.2 3b', size: '2.2 GB (vendor)', cost: 'free, runs on your gpu', privacy: 'nothing leaves this machine' },
   { key: 'browser', label: 'browser built in', sub: 'gemini nano', size: 'browser managed', cost: 'free', privacy: 'stays in the browser', disabled: true, reason: 'the probe found no prompt api in this browser.' },
-  { key: 'endpoint', label: 'your endpoint', sub: 'any openai style server', size: 'none', cost: 'your server, your cost', privacy: 'words go to the url you set' },
+  { key: 'endpoint', label: 'your endpoint', sub: 'any openai style server', size: 'none', cost: 'your server, your cost', privacy: 'words go to the url you set', error: 'no answer from the url in 10 s.' },
 ]
 const engine = ref('tab')
 
@@ -32,9 +32,10 @@ const code = `<HbTierCards v-model="tier" :tiers="tiers" start :can-start="tier 
 <template>
   <DemoSection
     title="Engine tiers"
-    note="Where the words go and who pays, stated before any model name. A tier this machine cannot run is off with the reason. Arrows move between tiers."
+    note="Where the words go and who pays, stated before any model name. A tier this machine cannot run is off with the reason. A tier that tried and failed keeps an err line with the reason and stays pickable. Arrows move between tiers."
     :code="code"
   >
+    <p class="hb-fixture is-strip"><b>fixture</b> sample tiers: no model loads and the failure is made up.</p>
     <div style="max-width: 560px">
       <HbTierCards v-model="engine" :tiers="engines" label="engine">
         <template #body="{ tier: t }">
@@ -60,8 +61,9 @@ const code = `<HbTierCards v-model="tier" :tiers="tiers" start :can-start="tier 
 
   <PropsTable
     :rows="[
-      { prop: 'tiers', type: '{key, label, sub, size, cost, privacy, note, bar, disabled, reason}[]' },
+      { prop: 'tiers', type: '{key, label, sub, size, cost, privacy, note, bar, disabled, reason, error}[]' },
       { prop: 'v-model', type: 'string', notes: 'the picked key' },
+      { prop: 'tier.error', type: 'string', notes: 'failed: an err line with the reason, still pickable' },
       { prop: 'start / startLabel / canStart', type: 'boolean / string / boolean' },
       { prop: 'foot', type: 'string', notes: 'default echoes the pick' },
       { prop: 'slots', type: 'icon, body, foot (scoped by tier)' },
