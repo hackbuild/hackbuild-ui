@@ -60,3 +60,52 @@ export function costRows(cost: PromptCost, counters: Array<[string, number | str
   for (const [k, v] of counters) rows.push([k, String(v)])
   return rows
 }
+
+/** One tool the model can call, as the prompt carries it. */
+export interface ModelTool {
+  name: string
+  /** One line of what it does. */
+  desc?: string
+  /** Argument names, in order. */
+  args?: string[]
+}
+
+/** 'walk(target)', 'drop()'. */
+export function toolSignature(tool: ModelTool | string): string {
+  if (typeof tool === 'string') return tool
+  return `${tool.name}(${(tool.args ?? []).join(', ')})`
+}
+
+/** The empty line of the tools card. */
+export const NO_TOOLS = 'none in this call: it answers in free text'
+
+/** Fills a `.hb-pinsp-tools` list: one row per tool, signature then its
+    line. An empty list shows `NO_TOOLS`. Returns the count. */
+export function toolList(el: HTMLElement, tools: Array<ModelTool | string>): number {
+  const doc = el.ownerDocument
+  el.replaceChildren()
+  el.classList.toggle('is-empty', !tools.length)
+  if (!tools.length) {
+    const li = doc.createElement('li')
+    li.className = 'hb-pinsp-tool-none'
+    li.textContent = NO_TOOLS
+    el.append(li)
+    return 0
+  }
+  for (const t of tools) {
+    const li = doc.createElement('li')
+    const sig = doc.createElement('code')
+    sig.className = 'hb-pinsp-sig'
+    sig.textContent = toolSignature(t)
+    li.append(sig)
+    const desc = typeof t === 'string' ? '' : t.desc ?? ''
+    if (desc) {
+      const d = doc.createElement('span')
+      d.className = 'hb-pinsp-desc'
+      d.textContent = desc
+      li.append(d)
+    }
+    el.append(li)
+  }
+  return tools.length
+}

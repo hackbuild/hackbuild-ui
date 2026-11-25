@@ -37,6 +37,13 @@ export const PROMPT = [
 ]
 export const REPLY = '{"think": "one step closer, then grab", "say": "stepping closer.", "do": [["walk", "mug"], ["grab", "mug"]], "done": false}'
 export const PLAN = { say: 'stepping closer.', do: [['walk', 'mug'], ['grab', 'mug']] }
+export const TOOLS = [
+  { name: 'walk', args: ['target'], desc: 'walk to a thing or a place in view' },
+  { name: 'look', args: ['dir'], desc: 'turn the head: left, right, up, down' },
+  { name: 'grab', args: ['thing'], desc: 'pick up a thing within 0.55 m of the hand' },
+  { name: 'drop', args: [], desc: 'put down what the hand holds' },
+  { name: 'say', args: ['text'], desc: 'speak one line out loud' },
+]
 export const COST = { in: 812, out: 41, ms: 1930 }
 export const COUNTERS: Array<[string, number]> = [
   ['model calls', 4],

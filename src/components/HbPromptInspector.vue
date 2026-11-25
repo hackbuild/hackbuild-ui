@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useCopy } from '../composables/useCopy'
-import { costRows, planText, promptText, type PromptCost, type PromptMessage } from '../vanilla/trace'
+import { NO_TOOLS, costRows, planText, promptText, toolSignature, type PromptCost, type PromptMessage, type ModelTool } from '../vanilla/trace'
 
 interface Props {
   /** The full context sent: one text, or the messages. */
@@ -14,6 +14,9 @@ interface Props {
   cost?: PromptCost
   /** Session counters after the cost: ['model calls', 4]. */
   counters?: Array<[string, number | string]>
+  /** The tools the model sees, as the prompt carries them. Left out, the
+      card is not drawn; empty, it says the call has none. */
+  tools?: Array<ModelTool | string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -22,12 +25,16 @@ const props = withDefaults(defineProps<Props>(), {
   plan: undefined,
   cost: () => ({}),
   counters: () => [],
+  tools: undefined,
 })
 
 const sent = computed(() => promptText(props.prompt))
 const planLine = computed(() => planText(props.plan))
 const rows = computed(() => costRows(props.cost, props.counters))
 const raw = computed(() => (sent.value ? `${sent.value}\n\n>>> ${props.reply || 'no reply yet'}` : ''))
+const toolRows = computed(() =>
+  (props.tools ?? []).map((t) => ({ sig: toolSignature(t), desc: typeof t === 'string' ? '' : t.desc ?? '' })),
+)
 const { state, copy } = useCopy()
 const copyWord = computed(() => (state.value === 'copied' ? 'copied' : state.value === 'failed' ? 'copy failed' : 'copy'))
 </script>
@@ -41,6 +48,13 @@ const copyWord = computed(() => (state.value === 'copied' ? 'copied' : state.val
         <template v-for="[k, v] in rows" :key="k"><dt>{{ k }}</dt><dd>{{ v }}</dd></template>
       </dl>
       <p v-else class="hb-pinsp-empty">no calls yet</p>
+    </section>
+    <section v-if="props.tools" class="hb-pinsp-card">
+      <h3 class="hb-pinsp-hd">tools it sees <small>{{ toolRows.length }}</small></h3>
+      <ul class="hb-pinsp-tools" :class="{ 'is-empty': !toolRows.length }" aria-label="tools it sees">
+        <li v-for="t in toolRows" :key="t.sig"><code class="hb-pinsp-sig">{{ t.sig }}</code><span v-if="t.desc" class="hb-pinsp-desc">{{ t.desc }}</span></li>
+        <li v-if="!toolRows.length" class="hb-pinsp-tool-none">{{ NO_TOOLS }}</li>
+      </ul>
     </section>
     <section class="hb-pinsp-card">
       <h3 class="hb-pinsp-hd">last plan</h3>

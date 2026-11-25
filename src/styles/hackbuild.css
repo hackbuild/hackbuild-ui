@@ -1224,16 +1224,22 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 }
 @media (hover:hover) and (pointer:fine){ .hb-iconbtn:hover{ background:var(--hb-pink); color:var(--hb-ink) } }
 .hb-iconbtn:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--hb-ink) }
-/* on ink and in footers: ghost squares */
-.hb-on-ink .hb-iconbtn,.hb-footer .hb-iconbtn{
+/* on ink, in the header and in footers: ghost squares. The header is ink
+   on its own, so a bare .hb-header needs no .hb-on-ink for this. */
+.hb-on-ink .hb-iconbtn,.hb-header .hb-iconbtn,.hb-footer .hb-iconbtn{
   background:transparent; color:var(--hb-paper);
   border-color:rgba(245,240,230,.4); box-shadow:none;
 }
-@media (hover:hover) and (pointer:fine){ .hb-on-ink .hb-iconbtn:hover,.hb-footer .hb-iconbtn:hover{
+@media (hover:hover) and (pointer:fine){ .hb-on-ink .hb-iconbtn:hover,.hb-header .hb-iconbtn:hover,.hb-footer .hb-iconbtn:hover{
   border-color:var(--hb-pink); color:var(--hb-pink); background:transparent;
 } }
 /* 44 px touch targets on phones and touch screens. */
 @media(min-width:641px) and (pointer:fine){ .hb-iconbtn{ width:34px; height:34px } }
+/* In the header: never shrinks in the nowrap row, the stroke icon at
+   16 px, and a pink ring on keyboard focus against the ink. */
+.hb-header .hb-iconbtn{ flex:0 0 auto }
+.hb-header .hb-iconbtn > svg:not([width]){ width:16px; height:16px }
+.hb-header .hb-iconbtn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 
 /* ==========================================================================
    18. PAGE SECTIONS
@@ -4405,8 +4411,8 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-step-text b{ font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--hb-ink-3); margin-right:4px }
 @media(min-width:641px){ .hb-step-thumb{ width:74px; height:74px } }
 
-/* Prompt inspector. Three cards: what the last call cost and the session
-   counters, the last plan as one line of JSON, and the full context sent
+/* Prompt inspector. Up to four cards: what the last call cost and the
+   session counters, the tools the model sees, the last plan as one line of JSON, and the full context sent
    with the raw reply after '>>>'. Long text wraps and scrolls inside its
    card; nothing scrolls the page sideways. */
 .hb-pinsp{ display:flex; flex-direction:column; gap:var(--hb-s3); min-width:0 }
@@ -4439,6 +4445,18 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 }
 .hb-pinsp .hb-pinsp-pre.is-empty{ color:var(--hb-ink-3); background:none }
 .hb-pinsp-pre:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+/* The tool list the model sees: signature in the readout face, its one
+   line after it; the list scrolls inside the card like the pre. */
+.hb-pinsp-tools{
+  list-style:none; margin:0; padding:var(--hb-s2) var(--hb-s3);
+  max-height:var(--hb-pinsp-h, 320px); overflow:auto; background:var(--hb-paper-sunk);
+}
+.hb-pinsp-tools.is-empty{ background:none }
+.hb-pinsp-tools li{ padding:2px 0; font-family:var(--hb-utility); font-size:11px; line-height:1.45; overflow-wrap:anywhere }
+.hb-pinsp-tools li + li{ border-top:1px dashed var(--hb-ink-4) }
+.hb-pinsp .hb-pinsp-sig{ font-family:var(--hb-utility); font-size:11px; font-weight:600; color:var(--hb-ink); background:none; padding:0; border:0 }
+.hb-pinsp-desc{ margin-left:var(--hb-s2); color:var(--hb-ink-2) }
+.hb-pinsp-tool-none{ color:var(--hb-ink-3) }
 .hb-pinsp-reply{ display:block; margin-top:var(--hb-s2); padding-top:var(--hb-s2); border-top:1px dashed var(--hb-ink-4); color:var(--hb-ink); font-weight:600 }
 
 /* Persona editor. Name, the prompt with its cost under it, the template

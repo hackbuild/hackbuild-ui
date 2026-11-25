@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { HbHeader, HbPill, HbSeg } from '@hackbuild/ui'
+import { HbHeader, HbIcon, HbPill, HbSeg } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 
@@ -11,6 +11,13 @@ const code = `<HbHeader title="kerf" accent="." tagline="make things. break thin
   <span style="margin-left: auto" />
   <HbSeg v-model="mode" :options="['easy', 'advanced']" />
 </HbHeader>`
+
+const iconCode = `<header class="hb-header">
+  <h1>hackle<span>.</span></h1>
+  <button type="button" class="hb-iconbtn" aria-label="commands">
+    <HbIcon name="search" />
+  </button>
+</header>`
 </script>
 
 <template>
@@ -25,6 +32,20 @@ const code = `<HbHeader title="kerf" accent="." tagline="make things. break thin
         <span style="margin-left: auto" />
         <HbSeg v-model="mode" :options="['easy', 'advanced']" />
       </HbHeader>
+    </div>
+  </DemoSection>
+
+  <DemoSection
+    title="Header icon button"
+    note="A square .hb-iconbtn in a bare .hb-header goes ghost on the ink with no .hb-on-ink on the header: paper stroke, pink on hover and focus. 44 px on a coarse pointer and under 641 px, 34 px with a mouse. It never shrinks in a nowrap row. Always an aria-label."
+    :code="iconCode"
+  >
+    <div style="margin: -16px">
+      <header class="hb-header">
+        <h1>hackle<span>.</span></h1>
+        <span style="margin-left: auto" />
+        <button type="button" class="hb-iconbtn" aria-label="commands" title="commands (ctrl k or /)"><HbIcon name="search" /></button>
+      </header>
     </div>
   </DemoSection>
 
