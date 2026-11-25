@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.7
+
+- HbPromptInspector `tools`: a card for the tool list the model sees,
+  one row per tool as `name(args)` and its one line, with the count in
+  the head. Left out, no card; empty, it says the call answers in free
+  text. Vanilla `toolSignature`, `toolList`, `NO_TOOLS`, type
+  `ModelTool`; classes `.hb-pinsp-tools`, `.hb-pinsp-sig`,
+  `.hb-pinsp-desc`, `.hb-pinsp-tool-none`.
+- `.hb-header .hb-iconbtn`: the icon button goes ghost on a bare header
+  with no `.hb-on-ink`, keeps 44 px on a coarse pointer, never shrinks,
+  draws an svg with no width at 16 px and rings pink on focus.
+- Docs demos for both; GUIDELINES.md "Parts added in 0.9.7".
+
 ## 0.9.6
 
 - HbRadio card form: `title`, `desc` and `trade` make the option a card
