@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.9.6
+
+- HbRadio card form: `title`, `desc` and `trade` make the option a card
+  with its name, one line of what it means and a trade line. Native
+  radios, so a shared `name` keeps the radiogroup keys; the title names
+  the radio, the lines describe it; 44 px on a coarse pointer. Vanilla
+  `radioCards`, classes `.hb-rcards`, `.hb-rcard`.
+- Insets stay inside the stage. The viewport is a size container; an
+  inset is held to `--hb-inset-hmax` of the stage height at its ratio
+  (`--hb-inset-k`, written by HbInset), and the low corners shrink after
+  the caption. The stage tool eye inset was cut by up to 95 px from 632
+  to 1336 px wide; now inside at 282 of 282 sizes (measured).
+- Docs demos for both; GUIDELINES.md "Parts added in 0.9.6".
+
 ## 0.9.5
 
 - HbCausalLog live rows: `live` and `fraction` on an event; the row is
