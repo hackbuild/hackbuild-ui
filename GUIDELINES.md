@@ -1428,6 +1428,25 @@ inside at all 282.
 | toolbar fitted to its column | HbToolbar `overflow`; vanilla `barFit` (`foldBelow`, `overflows`, `onChange`; handle `fit`, `update`, `restore`, `folded`, `spilled`), on by default in `barMore` (`fit`); `.is-folded`, `.is-probe`, `.hb-bar-more.is-none` | the fold follows the bar's width, not the window's: `.is-folded` when the bar is under 641 px or its row tried on one line (`.is-probe`) runs over. A stage tool's toolbar in its 583 px column at 1024 is one row (measured). If the folded row still runs over, items from the end of the default slot move into the start of the more panel, last first, where their labels show again; the end slot never moves, so tune stays in view. `.is-none` hides the button over an empty panel. HbToolbar puts spilled items back before it patches its slots |
 | pad placement | `.hb-pad` in the HbViewport `pad` slot; `--hb-pad-act-w` (56 px), `--hb-pad-size` | the pad lies over the bottom corners of the frame, stick left and action right. While a pad shows (coarse pointer, or `always`) the foot keeps those corners clear and holds the pad's height, so caption, band and insets sit between; on a short stage insets and caption give way first, then the last telemetry row. Under 321 px of stage height (216 at 320 by 568) the base takes the 72 px step and the action 44 px. Inside the stage at 320 by 568 and 390 by 664 (measured) |
 
+### Parts added in 0.9.9
+
+| Part | Classes and props | Behaviour |
+|---|---|---|
+| `HbMaskEditor` | `.hb-mask`, `-bar`, `-hist`, `-key`, `-size`, `-tol`, `-val`, `-well`, `-frame`, `-canvas`, `-hint`, `-empty`, `.is-add`, `.is-erase`; `image`, `v-model:tool`, `v-model:mode`, `v-model:size`, `v-model:tolerance`, `contiguous`, `history`, `label`; emits `edit`, `ready`, `error`; exposes `toImageData`, `toBlob`, `mask`, `setMask`, `undo`, `redo`, `clear`, `invert` | masks by hand, no model (P-SEG-4, P-SEG-7, P-DEPTH-5). The wand floods the colour under a tap through 4 neighbours within `tolerance` percent of the rgb cube (6 by default, as the original), the brush paints a disc every half radius, the lasso fills the polygon it draws (pixel centres, even odd). x swaps add and erase; shift flips it for one gesture. The rail is `HbToolRail` from `MASK_TOOLS`, letters w b l printed and bound on the editor while focus is inside; `[` `]` step the brush 5 px in 1 to 200; ctrl z, ctrl shift z or ctrl y; Esc drops a stroke. The brush is in css px, 24 by default and 44 on a coarse pointer, with a ring: slime for add, lit error for erase, as the lasso path. The mask is one byte a pixel in image pixels, tinted pink at half; undo keeps 50 snapshots. Output: `alpha` (white, mask as alpha), `matte` (white keeps, black drops) or `cutout` (source with the mask as alpha), as ImageData or a png Blob. The canvas has `touch-action: none` |
+| history strip, restore only | HbHistoryStrip `removable` (default true), `label` (default `run history`) | `removable` off drops the corner x, the 44 px remove and Delete, for presets the page owns. `label` names the list |
+| chat note row | HbChat `note` slot; `.hb-chat-note` | one line between the log and the composer, padded to the log's edge, quiet utility type over a dashed rule: the dictation privacy line, a cost note. `above` stays for full width parts such as the context meter |
+| composer above the status strip | `.hb-app > .hb-work .hb-chat > .hb-composer`; HbAppShell writes `--hb-kb` and `--hb-foot-h` with a status strip alone too | under 901 px the shell page scrolls as one and the foot sticks to the bottom. An HbChat in the work column now sticks its composer just above the foot and the keyboard, so mic and send are never under the strip. On the suite chat route at 0.9.8 the mic sat under the strip at 1 of 5 scroll steps where it was on screen at 320 and 1 of 6 at 390; the fixture `#/demos/suite-chat` hits the mic at every step, 20 and 14 (measured, 20 px steps) |
+
+Vanilla: `MASK_TOOLS`, `maskHint`, `maskEditor` (handle: `state`,
+`setImage`, `setTool`, `setMode`, `swap`, `setSize`, `stepSize`,
+`setTolerance`, `setContiguous`, `wandAt`, `paint`, `lassoFill`,
+`clear`, `invert`, `undo`, `redo`, `cancel`, `mask`, `setMask`,
+`toImageData`, `toBlob`, `subscribe`, `dispose`); the pure parts
+`colourDistance`, `wandSelect`, `pointInPolygon`, `polygonFill`,
+`applySelection`, `stampDisc`, `strokeSegment`, `invertMask`,
+`maskCoverage`, `nextBrushSize`, `maskRgba`, `tintRgba`, `parseRgb`.
+Stroke icons `wand`, `brush`, `eraser`, `lasso`.
+
 ## 19. The refined look
 
 FERRULE, ARBOR and BAIL draw a finer line than the zine pages: 1.5 px

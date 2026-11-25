@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.9.9
+
+- HbMaskEditor and vanilla `maskEditor`: masks by hand over a canvas,
+  no model. Wand floods the colour under a tap by tolerance (6 percent
+  by default), brush adds and erases (24 px, 44 px on a coarse pointer,
+  `[` `]` in 5 px steps), lasso fills the polygon it draws. Tool rail
+  with key letters w b l and a hint pill, x swaps add and erase, shift
+  flips it for one gesture, undo and redo of 50 steps, Esc drops a
+  stroke, `touch-action: none`. Output as an alpha, matte or cutout
+  ImageData or png Blob. The flood fill, polygon fill, dabs and outputs
+  are plain functions with unit tests (`wandSelect`, `polygonFill`,
+  `stampDisc`, `strokeSegment`, `maskRgba` and kin).
+- Stroke icons `wand`, `brush`, `eraser`, `lasso`.
+- HbHistoryStrip `removable` (default true) and `label` (default
+  `run history`).
+- HbChat `note` slot: a padded one line row between log and composer.
+- HbAppShell writes `--hb-kb` and `--hb-foot-h` with a status strip and
+  no dock, and an HbChat in the work column sticks its composer above
+  the foot under 901 px. On the suite chat route the mic sat under the
+  status strip at 1 of 5 on screen scroll steps at 320 and 1 of 6 at
+  390 (measured on 0.9.8); the fixture hits it at all 20 and 14. With a
+  status strip alone the strip now lifts over the on-screen keyboard,
+  as a dock did already.
+- Docs: HbMaskEditor demo on the drawn desk scene with three exports,
+  a restore only history strip, `#/demos/suite-chat`; GUIDELINES.md
+  "Parts added in 0.9.9".
+
 ## 0.9.8
 
 - HbAppShell late dock: a `dock` slot that arrives after mount (a
