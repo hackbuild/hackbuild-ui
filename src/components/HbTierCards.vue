@@ -2,6 +2,9 @@
 import { Comment, computed, onBeforeUnmount, onMounted, ref, useSlots, watch, type VNode } from 'vue'
 import { chipGroup, type ChipGroupHandle } from '../vanilla/choice'
 import { uid } from '../utils/uid'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbTierCards', 'HbTierCards is deprecated since 0.10.0 and goes in 0.11.0; use HbModelSelect')
 
 export interface HbTier {
   key: string

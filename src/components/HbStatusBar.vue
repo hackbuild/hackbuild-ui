@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbStatusBar', 'HbStatusBar is deprecated since 0.10.0 and goes in 0.11.0; use bar chips or the rack live tab')
 export interface HbStatusCell {
   key: string
   /** The label before the value, in paper. */

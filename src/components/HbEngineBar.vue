@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { mbText } from '../vanilla/models'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbEngineBar', 'HbEngineBar is merged since 0.10.0 and goes in 0.11.0; use HbModelSelect')
 
 export type HbEngineState = 'none' | 'stored' | 'downloading' | 'loading' | 'loaded' | 'fault'
 

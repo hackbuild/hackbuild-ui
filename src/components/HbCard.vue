@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbCard', 'HbCard is merged since 0.10.0 and goes in 0.11.0; use HbPanel with interactive')
 interface Props {
   /** Lifts on hover. Set when the card is a click target. */
   interactive?: boolean

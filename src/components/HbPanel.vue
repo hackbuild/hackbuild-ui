@@ -7,16 +7,19 @@ interface Props {
   head?: 'editorial' | 'instrument'
   /** Sunk panels sit flush, no shadow. */
   sunk?: boolean
+  /** A card that lifts on hover, for a panel that opens something (was HbCard). */
+  interactive?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   head: 'editorial',
   sunk: false,
+  interactive: false,
 })
 </script>
 
 <template>
-  <section class="hb-panel" :class="{ 'hb-panel-sunk': props.sunk }">
+  <section class="hb-panel" :class="{ 'hb-panel-sunk': props.sunk, 'hb-card': props.interactive }">
     <template v-if="props.heading || $slots.head">
       <div :class="props.head === 'instrument' ? 'hb-panel-hd-inst' : 'hb-panel-hd'">
         <slot name="head">{{ props.heading }}</slot>

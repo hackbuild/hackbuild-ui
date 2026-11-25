@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbReadouts', 'HbReadouts is merged since 0.10.0 and goes in 0.11.0; use HbKv with focal')
 
 export interface HbReadoutRow {
   /** Carry the source in the label: "fps p50 (measured)". */

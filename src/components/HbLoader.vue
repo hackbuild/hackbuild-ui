@@ -6,6 +6,9 @@ import HbLicence from './HbLicence.vue'
 import HbProgress, { type HbProgressState } from './HbProgress.vue'
 
 import { mbText, type SizeSource } from '../vanilla/models'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbLoader', 'HbLoader is merged since 0.10.0 and goes in 0.11.0; use HbModelSheet (your own) and HbDropzone')
 
 export type HbSizeSource = SizeSource
 

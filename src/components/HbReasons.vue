@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { HbCapSpeed } from './HbCapabilities.vue'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbReasons', 'HbReasons is merged since 0.10.0 and goes in 0.11.0; use HbModelSheet row detail')
 
 export interface HbReasonRow {
   /** Key emitted by edit; defaults to the label. */

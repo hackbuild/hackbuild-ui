@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import HbStage from './HbStage.vue'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbStageOverlay', 'HbStageOverlay is merged since 0.10.0 and goes in 0.11.0; use HbViewport overlay slots')
 
 interface Props {
   /** The pink graticule, passed to HbStage. */

@@ -8,6 +8,9 @@ import { useLiveAnnounce } from '../composables/useLiveAnnounce'
 import { uid as makeUid } from '../utils/uid'
 import type { HbSizeSource } from './HbLoader.vue'
 import type { HbIconName as IconName } from '../icons/stroke'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbCapabilities', 'HbCapabilities is deprecated since 0.10.0 and goes in 0.11.0; use the fits this machine filter of HbModelSheet')
 
 export type HbCapState = 'off' | 'loading' | 'on' | 'failed' | 'unavailable'
 export type HbCapNeedKind = 'webgpu' | 'microphone' | 'camera' | 'model' | 'other'

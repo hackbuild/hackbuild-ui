@@ -10,6 +10,9 @@ import {
   type CustomCheck, type CustomMode, type CustomValues,
 } from '../vanilla/custom'
 import { mbText } from '../vanilla/models'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbCustomModelForm', 'HbCustomModelForm is merged since 0.10.0 and goes in 0.11.0; use HbModelSheet (your own)')
 
 export interface HbCustomEntry {
   id: string

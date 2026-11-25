@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import HbVerdict, { type HbVerdictStatus } from './HbVerdict.vue'
 import HbIcon from './HbIcon.vue'
 import { useCopy } from '../composables/useCopy'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbHash', 'HbHash is merged since 0.10.0 and goes in 0.11.0; use HbModelSheet row detail')
 
 export interface Props {
   /** The SHA-256 of the bytes, lowercase hex, or empty before it is known. */

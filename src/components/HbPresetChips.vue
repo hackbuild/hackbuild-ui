@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { matchPreset, type SettingPreset, type SettingValues } from '../vanilla/settings'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbPresetChips', 'HbPresetChips is merged since 0.10.0 and goes in 0.11.0; use HbChipGroup')
 
 interface Props {
   presets: SettingPreset[]

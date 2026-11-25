@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbSegMeter', 'HbSegMeter is merged since 0.10.0 and goes in 0.11.0; use HbMeter with segments')
 
 interface Props {
   /** Zero to one. */

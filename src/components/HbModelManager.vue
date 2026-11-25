@@ -5,6 +5,9 @@ import HbReasons, { type HbReasonRow } from './HbReasons.vue'
 import { mbText } from '../vanilla/models'
 import { storageText, type StorageLine } from '../vanilla/rack'
 import { uid as makeUid } from '../utils/uid'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbModelManager', 'HbModelManager is deprecated since 0.10.0 and goes in 0.11.0; use the on this machine group of HbModelSheet')
 
 export interface HbStoredWeight {
   /** Store key, or the record id for a webllm entry. */

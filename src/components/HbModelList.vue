@@ -23,6 +23,9 @@ import {
   type ModelRowStatus,
 } from '../vanilla/models'
 import { uid as makeUid } from '../utils/uid'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbModelList', 'HbModelList is merged since 0.10.0 and goes in 0.11.0; use HbModelSheet')
 
 export type HbModelRecord = ModelRecordLike
 export type HbModelFit = ModelFit

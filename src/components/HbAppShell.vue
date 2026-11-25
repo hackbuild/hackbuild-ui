@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onBeforeUpdate, onMounted, ref, useSlots, wa
 import { cx } from '../utils/cx'
 import { dockInsets, type DockInsetsHandle } from '../vanilla/insets'
 import HbDrawer from './HbDrawer.vue'
+import { noteOnce } from '../utils/note'
 
 export type HbAppMode = 'stage' | 'split' | 'chat'
 export type HbAppRecipe = 'rack' | 'bench' | 'transcript'
@@ -26,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   railLabel: 'rack',
   fit: false,
 })
+if (props.recipe) noteOnce(`shell-${props.recipe}`, `HbAppShell recipe ${props.recipe} is deprecated since 0.10.0 and goes in 0.11.0; use ${props.recipe === 'transcript' ? 'HbDropFirst' : props.recipe === 'bench' ? 'HbFormFrame' : 'HbStageRack'}`)
 
 /** View mode where a tool has both a stage and a chat or rack: stage
     hides the rail, chat hides the work column, split shows both. */

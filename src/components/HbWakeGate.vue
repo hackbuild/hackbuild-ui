@@ -2,6 +2,9 @@
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { gateNote, wakeBar, wakeSummary, type WakeSystem } from '../vanilla/wake'
 import type { SizeSource } from '../vanilla/models'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbWakeGate', 'HbWakeGate is merged since 0.10.0 and goes in 0.11.0; use HbGate')
 
 interface Props {
   /** One row per subsystem: brain, voice, memory, body. */

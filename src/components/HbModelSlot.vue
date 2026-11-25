@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import { mbText, sizeText, type SizeSource } from '../vanilla/models'
 import type { SlotState } from '../vanilla/rack'
 import { uid as makeUid } from '../utils/uid'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbModelSlot', 'HbModelSlot is merged since 0.10.0 and goes in 0.11.0; use HbModelSelect')
 
 export type HbSlotState = SlotState
 

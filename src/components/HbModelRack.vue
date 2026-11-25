@@ -2,6 +2,9 @@
 import { computed, ref, watch } from 'vue'
 import HbModelSlot, { type HbSlotOption } from './HbModelSlot.vue'
 import { presetJobs, presetText, rackGate, rackQueue, slotMissing, type RackPreset, type SlotState } from '../vanilla/rack'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbModelRack', 'HbModelRack is merged since 0.10.0 and goes in 0.11.0; use HbModelSelect with jobs and presets')
 
 export type HbRackPreset = RackPreset
 

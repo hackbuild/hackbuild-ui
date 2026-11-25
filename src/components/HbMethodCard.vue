@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { METHOD_WORDS, methodMeta, qualitySquares, type MethodState } from '../vanilla/media'
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbMethodCard', 'HbMethodCard is merged since 0.10.0 and goes in 0.11.0; use HbModelSheet')
 
 interface Props {
   label: string

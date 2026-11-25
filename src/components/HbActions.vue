@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { noteOnce } from '../utils/note'
+
+noteOnce('HbActions', 'HbActions is merged since 0.10.0 and goes in 0.11.0; use HbToolbar')
 interface Props {
   /** Push the row to the right edge. */
   end?: boolean
