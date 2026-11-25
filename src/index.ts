@@ -290,3 +290,9 @@ export type { ArtTransform, ArtLayer, ArtView, ArtTool, ArtStroke } from './vani
 export type { HudState, PadVector, PadMode, Chapter } from './vanilla'
 export type { HbContextItem, HbContextRequest } from './components/HbContextMenu.vue'
 export type { CtxAt, CtxVia, PersonaFile, PersonaPreset, StepState, PromptMessage, PromptCost, ModelTool } from './vanilla'
+// 0.10.0: the six layouts and the model picker as pure views.
+export { default as HbModelSelect } from './components/HbModelSelect.vue'
+export { default as HbModelSheet } from './components/HbModelSheet.vue'
+export type { ModelJob, ModelPreset } from './components/HbModelSelect.vue'
+export type { ModelRow, ModelRowGroup, ModelBackend, ModelPickState, ModelOption, ModelFilters, OwnKind } from './vanilla'
+export { noteOnce } from './utils/note'
