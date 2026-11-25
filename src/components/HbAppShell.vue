@@ -50,17 +50,20 @@ function read() {
 // follow the foot element; dockInsets observes its size from then on.
 const foot = ref<HTMLElement | null>(null)
 const hasDock = ref(!!slots.dock)
-onBeforeUpdate(() => { hasDock.value = !!slots.dock })
+// A status strip alone also gets the insets: a chat composer in the work
+// column sticks above it on a phone (`--hb-foot-h`).
+const hasFoot = ref(!!slots.dock || !!slots.statusbar)
+onBeforeUpdate(() => { hasDock.value = !!slots.dock; hasFoot.value = hasDock.value || !!slots.statusbar })
 let insets: DockInsetsHandle | null = null
 let footEl: HTMLElement | null = null
 function bindInsets() {
-  const el = hasDock.value ? foot.value : null
+  const el = hasFoot.value ? foot.value : null
   if (el === footEl) return
   insets?.dispose()
   insets = el ? dockInsets(el) : null
   footEl = el
 }
-watch([foot, hasDock], bindInsets, { flush: 'post' })
+watch([foot, hasFoot], bindInsets, { flush: 'post' })
 onMounted(() => {
   bindInsets()
   if (typeof matchMedia !== 'function') return

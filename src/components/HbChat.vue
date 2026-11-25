@@ -225,6 +225,7 @@ watch(draft, () => nextTick(() => box.value && autosize(box.value)))
       </slot>
     </div>
     <slot name="above" />
+    <div v-if="$slots.note" class="hb-chat-note"><slot name="note" /></div>
     <form v-if="props.composer" class="hb-composer" @submit.prevent="primary">
       <slot name="composer-start" />
       <textarea

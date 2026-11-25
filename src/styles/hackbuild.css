@@ -940,6 +940,13 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-app-foot > .hb-dock:last-child{ padding-bottom:max(var(--hb-s2), env(safe-area-inset-bottom)) }
 @media(min-width:641px){ .hb-dock{ padding-left:max(var(--hb-s5), env(safe-area-inset-left)); padding-right:max(var(--hb-s5), env(safe-area-inset-right)) } }
 @media(min-width:901px){ .hb-app-foot{ position:static } }
+/* An HbChat in the work column of a stacked shell: the page scrolls as
+   one, so its composer sticks just above the foot (and the keyboard)
+   instead of passing under the status strip, where a tap on the mic or
+   send would land on the strip. */
+@media(max-width:900px){
+  .hb-app > .hb-work .hb-chat > .hb-composer{ position:sticky; bottom:calc(var(--hb-kb, 0px) + var(--hb-foot-h, 0px)); z-index:1 }
+}
 
 /* Recipes. rack: stage beside a rack of tabs, 360 px at 1024 and 408 px
    (ARBOR's width) from about 1460; under 901 px the rack is a sheet.
@@ -2219,6 +2226,10 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-composer > .hb-textarea{ flex:1 1 220px; min-height:44px; resize:vertical; font-family:var(--hb-body); font-size:16px }
 @media(min-width:641px) and (pointer:fine){ .hb-composer > .hb-textarea{ font-size:14px } }
 .hb-composer-acts{ display:flex; gap:var(--hb-s2) }
+/* One line under the log, over the composer: a privacy or cost note.
+   Padded to the log's edge, quiet, wraps on a phone. */
+.hb-chat-note{ margin:0; padding:var(--hb-s1) var(--hb-s3); border-top:1px dashed var(--hb-ink-4); font-family:var(--hb-utility); font-size:11px; line-height:1.45; color:var(--hb-ink-3); overflow-wrap:anywhere }
+.hb-chat-note > p{ margin:0 }
 .hb-chat-key{ display:flex; align-items:center; gap:var(--hb-s2); flex-wrap:wrap; padding:var(--hb-s2); border-bottom:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-chat-key > .hb-ctl{ flex:1 1 220px }
 .hb-chat-key .hb-input{ flex:1 1 auto }

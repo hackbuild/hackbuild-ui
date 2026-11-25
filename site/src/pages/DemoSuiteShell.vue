@@ -1,15 +1,23 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import {
-  HbActivity, HbAppShell, HbDrawer, HbHeader, HbPalette, HbPills, HbStatusBar, HbSuiteNav,
-  HbTag, HbViewport, HbWorkspaceMenu,
+  HbActivity, HbAppShell, HbChat, HbDrawer, HbHeader, HbMicButton, HbPalette, HbPills, HbStatusBar, HbSuiteNav,
+  HbTag, HbViewport, HbWorkspaceMenu, type HbChatLine,
 } from '@hackbuild/ui'
-import { activity } from '@hackbuild/ui/vanilla'
+import { useRoute } from 'vue-router'
+import { TALK } from '../fixtures/room'
+import { activity, type MicState } from '@hackbuild/ui/vanilla'
 import { suiteGroups, suiteStatus } from '../fixtures/suite'
 
 // The suite header strips on fixtures: workspace and level, status pills,
 // the local only tag, the activity line, then groups, tools and verbs.
-const route = ref('vision')
+// #/demos/suite-chat opens on the chat tool: a chat in the work column
+// over the status strip, as the suite's chat route lays it out.
+const route = ref(useRoute().path.endsWith('suite-chat') ? 'chat' : 'vision')
+const lines = ref<HbChatLine[]>([...TALK])
+const draft = ref('')
+const mic = ref<MicState>('off')
+function send(text: string) { lines.value = [...lines.value, { id: lines.value.length + 1, role: 'user', text }]; draft.value = '' }
 const level = ref('guided')
 const store = activity()
 store.set('weights', 'loading sample model (fixture)', 0.42, () => {})
@@ -47,7 +55,15 @@ const tool = computed(() => suiteGroups.flatMap((g) => g.tools).find((t) => t.ke
       <HbSuiteNav v-model:route="route" :groups="suiteGroups" keys />
     </template>
     <HbPalette :sections="sections" @run="(k) => (route = k)" />
-    <HbViewport :label="tool?.label ?? 'tool'" cover-title="fixture stage" cover-note="no model runs in this demo." />
+    <div v-if="route === 'chat'" class="hb-toolpage">
+      <HbChat v-model:draft="draft" class="is-grow" :lines="lines" header title="chat" assistant-name="fixture" @send="send">
+        <template #composer-end>
+          <HbMicButton v-model:state="mic" :listen="false" title="dictate (fixture)" />
+        </template>
+        <template #note>dictation uses the browser recognizer. it may send your audio to the browser maker's service.</template>
+      </HbChat>
+    </div>
+    <HbViewport v-else :label="tool?.label ?? 'tool'" cover-title="fixture stage" cover-note="no model runs in this demo." />
     <template #statusbar>
       <HbStatusBar :cells="cells" action="open the event log" @press="logOpen = true" />
     </template>

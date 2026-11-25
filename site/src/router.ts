@@ -25,6 +25,7 @@ export const router = createRouter({
     { path: '/demos/stage-chat', component: () => import('./pages/DemoStageChat.vue'), meta: { bare: true } },
     { path: '/demos/stage-tool', component: () => import('./pages/DemoStageTool.vue'), meta: { bare: true } },
     { path: '/demos/suite-shell', component: () => import('./pages/DemoSuiteShell.vue'), meta: { bare: true } },
+    { path: '/demos/suite-chat', component: () => import('./pages/DemoSuiteShell.vue'), meta: { bare: true } },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
   scrollBehavior(to) {

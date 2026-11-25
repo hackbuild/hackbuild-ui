@@ -23,6 +23,11 @@ const demos = [
     text: 'Workspace and level, status pills, the activity line, then seven groups with their tools. Under 761 px the nav is one group / tool button that opens a sheet with search.',
   },
   {
+    to: '#/demos/suite-chat',
+    label: 'suite chat over the status strip',
+    text: 'A chat in the work column with a mic and a one line note. On a phone the page scrolls as one and the composer sticks above the status strip.',
+  },
+  {
     to: '#/demos/shell-rack',
     label: 'shell: stage and rack',
     text: 'The stage beside a numbered rack of tabs. Under 901 px the rack is a sheet, opened from the dock; stage and split modes.',
