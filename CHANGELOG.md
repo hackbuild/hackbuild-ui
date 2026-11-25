@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.9.4
+
+- The stroke set: app chrome and tool panels draw square cap line icons
+  on a 24 grid, `currentColor`, one width from `--hb-border` (1.5 px,
+  2 px in the zine scope). Sixteen drawings come from FERRULE and ARBOR,
+  the rest are drawn in the same idiom; 78 names (computed). Exports
+  `strokeIcons`, `strokeIcon`, `strokeIconEl`, `strokeIconDef`,
+  `faClassName` and type `HbIconName`, from the main and vanilla entries.
+- HbIcon `set`: `auto` (default) draws the stroke drawing when the set
+  has the name and falls back to the Font Awesome solid glyph; `solid`
+  keeps Font Awesome; `stroke` draws only the line set. `name` also takes
+  a Font Awesome class string. No name was removed.
+- Marketing parts keep Font Awesome solid: HbCover, HbPlaque, HbPlaylist,
+  HbNav, HbVerified.
+- HbMessage speak shows the speaker, FERRULE's speak icon; HbArtboard fit
+  shows the frame corners.
+- `.hb-stage-lit`: the glow is a smooth radial gradient again, FERRULE's
+  own, from `--hb-stage-glow`. Gradients are for stage lighting only.
+- The design law and GUIDELINES.md sections 4, 7 and 19 say so.
+- Docs page `#/icons` lists every icon.
+
 ## 0.9.3
 
 - HbHow `what` and `how`: the package prose over the install and code, in
