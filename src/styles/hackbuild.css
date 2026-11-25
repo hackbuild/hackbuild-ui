@@ -4812,3 +4812,33 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
   .hb-tree-item:not([aria-selected="true"]) > .hb-tree-row:hover{ background:var(--hb-paper-sunk) }
 }
 @media (pointer:fine){ .hb-tree-row{ min-height:26px } }
+
+/* ==========================================================================
+   37. MASK EDITOR
+   HbMaskEditor, vanilla maskEditor. Wand, brush and lasso over one canvas
+   in image pixels. The bar holds the tool rail with its key letters, add
+   and erase, the size or the reach for the tool, undo, redo and clear,
+   and wraps on a phone. The hint pill sits on the stage. The canvas takes
+   no browser gesture, so a drag paints and never scrolls.
+   ========================================================================== */
+.hb-mask{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-mask-bar{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2); min-width:0 }
+.hb-mask-bar > .hb-spacer{ margin-left:auto }
+.hb-mask-hist{ display:inline-flex; gap:var(--hb-s2) }
+.hb-mask-bar .hb-iconbtn[disabled]{ opacity:.45; cursor:not-allowed; box-shadow:none }
+.hb-mask-bar > .hb-seg > button{ min-height:44px }
+.hb-mask-key{ margin-left:var(--hb-s1); font-family:var(--hb-utility); font-size:9px; font-weight:700; opacity:.6 }
+@media (pointer:coarse){ .hb-mask-key{ display:none } }
+.hb-mask-size,.hb-mask-tol{ display:inline-flex; align-items:center; gap:var(--hb-s1); min-width:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-2) }
+.hb-mask-tol .hb-range{ width:112px; min-width:0 }
+.hb-mask-val{ min-width:3ch; text-align:center; font-family:var(--hb-readout); font-size:18px; font-variant-numeric:tabular-nums; color:var(--hb-ink) }
+.hb-mask-well{ display:flex; justify-content:center; min-width:0; background:var(--hb-void); border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow) }
+.hb-mask-frame{ position:relative; width:100%; max-width:calc(var(--hb-mask-max-h, 70vh) * var(--hb-mask-ratio, 1.333)) }
+.hb-mask-canvas{ display:block; width:100%; height:100%; touch-action:none; user-select:none; -webkit-user-select:none; cursor:crosshair }
+@media (pointer:fine){ .hb-mask-canvas[data-tool="brush"]{ cursor:none } }
+.hb-mask-canvas:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-mask-hint{
+  position:absolute; left:var(--hb-s2); bottom:var(--hb-s2); max-width:calc(100% - 2 * var(--hb-s2)); margin:0; padding:3px 9px;
+  background:var(--hb-ink); color:var(--hb-paper); font-family:var(--hb-utility); font-size:11px; line-height:1.4; pointer-events:none;
+}
+.hb-mask-empty{ position:absolute; inset:0; margin:0; padding:var(--hb-s4); display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--hb-utility); font-size:12px; color:var(--hb-lit-label) }

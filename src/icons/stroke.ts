@@ -109,6 +109,11 @@ export const strokeIcons = {
   wind: { d: 'M3 8h11a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h7' },
   'ear-listen': { d: 'M7 9a5 5 0 0 1 10 0c0 3-3 4-3 7a3 3 0 0 1-6 0M10 9a2 2 0 0 1 4 0' },
   'layer-group': { d: 'M12 4l9 5-9 5-9-5zM3 14l9 5 9-5' },
+  // mask tools
+  wand: { d: 'M3 21L14 10M16 3v3M16 12v3M10 9h3M19 9h3M12 5l1.5 1.5M20 5l-1.5 1.5' },
+  brush: { d: 'M20 4l-7 7M11 9l4 4-2 2-4-4zM9 13c-3 0-5 2-5 7c5 0 7-2 7-5' },
+  eraser: { d: 'M4 16l9-9 7 7-6 6H8zM9 11l7 7M14 20h6' },
+  lasso: { d: 'M12 4c5 0 9 2.5 9 5.5s-4 5.5-9 5.5s-9-2.5-9-5.5s4-5.5 9-5.5zM6 14c-1 2 0 4 2 4s2 2 1 3' },
 } as const satisfies Record<string, StrokeIconDef>
 
 export type StrokeIconName = keyof typeof strokeIcons

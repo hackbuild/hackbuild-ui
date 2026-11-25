@@ -123,6 +123,7 @@ export const registry: RegistryGroup[] = [
       { name: 'HbSeed', blurb: 'seed with dice and a lock' },
       { name: 'HbPromptCanvas', blurb: 'keep and leave out points and boxes on an image, by touch or keys' },
       { name: 'HbInstanceList', blurb: 'one row per mask: colour, score, hide, delete, merge' },
+      { name: 'HbMaskEditor', blurb: 'wand, brush and lasso masks by hand, undo, alpha out' },
       { name: 'HbRange2', blurb: 'two thumbs on one track for a near and far window' },
       { name: 'HbMonitorDock', blurb: 'raw feed and model views side by side, each folds' },
       { name: 'HbSplit', blurb: 'a compare wipe between two views of one image' },
