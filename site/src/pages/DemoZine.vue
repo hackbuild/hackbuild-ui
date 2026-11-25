@@ -38,7 +38,7 @@ const principles = [
       exist. Everything documented, everything repeatable, everything a
       little bit pink.
       <template #actions>
-        <HbButton size="lg" variant="danger">
+        <HbButton size="lg" variant="go">
           <template #icon><HbIcon name="rocket" /></template>
           see the projects
         </HbButton>
@@ -123,7 +123,7 @@ const principles = [
     <HbCta title="let's build something">
       Got a weird hardware project? Want to collaborate on tools? Hit me up.
       <template #actions>
-        <HbButton size="lg" variant="danger">
+        <HbButton size="lg" variant="go">
           <template #icon><HbIcon name="envelope" /></template>
           get in touch
         </HbButton>

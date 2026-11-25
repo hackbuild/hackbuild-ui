@@ -103,7 +103,7 @@ onMounted(() => { if (props.overlay) nextTick(() => wakeBtn.value?.focus()) })
         <p v-if="noteText" class="hb-wake-gnote" :class="{ 'is-warn': built.warn }">{{ noteText }}</p>
         <slot name="fallback" />
         <div class="hb-wake-acts">
-          <button ref="wakeBtn" type="button" class="hb-btn hb-btn-lg" :disabled="waiting" @click="emit('wake')">{{ props.wakeLabel }}</button>
+          <button ref="wakeBtn" type="button" class="hb-btn hb-btn-go hb-btn-lg" :disabled="waiting" @click="emit('wake')">{{ props.wakeLabel }}</button>
           <button v-if="props.liteLabel" type="button" class="hb-btn hb-btn-2" :title="props.liteTitle" :disabled="waiting" @click="emit('wake-lite')">{{ props.liteLabel }}</button>
         </div>
         <p v-if="props.error" class="hb-wake-err" role="alert">{{ props.error }}</p>

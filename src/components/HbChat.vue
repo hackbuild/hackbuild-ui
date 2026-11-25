@@ -245,7 +245,7 @@ watch(draft, () => nextTick(() => box.value && autosize(box.value)))
         <button
           type="submit"
           class="hb-btn"
-          :class="{ 'hb-btn-2': props.streaming }"
+          :class="props.streaming ? 'hb-btn-ink' : 'hb-btn-go'"
           :disabled="!props.streaming && (props.disabled || !draft.trim())"
           :aria-keyshortcuts="props.streaming ? 'Escape' : 'Enter'"
         >{{ props.streaming ? 'stop' : 'send' }}</button>

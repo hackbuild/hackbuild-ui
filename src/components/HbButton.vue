@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { cx } from '../utils/cx'
+import { noteOnce } from '../utils/note'
 import HbSpinner from './HbSpinner.vue'
 
 interface Props {
-  /** primary is the ink fill. danger is the pink fill: one per view at most. */
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost'
+  /**
+   * secondary is the light default. go is the one pink action per screen.
+   * ink is a pressed or on state. danger is light with err text.
+   * primary is light since 0.10.0 and logs a note for one minor; use go
+   * for the next action.
+   */
+  variant?: 'secondary' | 'go' | 'ink' | 'danger' | 'ghost' | 'primary'
   size?: 'sm' | 'md' | 'lg'
   /** Full width. */
   block?: boolean
@@ -18,7 +24,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'primary',
+  variant: 'secondary',
   size: 'md',
   block: false,
   disabled: false,
@@ -31,9 +37,12 @@ const emit = defineEmits<{
   click: [event: MouseEvent]
 }>()
 
+if (props.variant === 'primary') noteOnce('btn-primary', 'HbButton variant primary is light since 0.10.0; use variant go for the one pink action')
+
 const classes = computed(() =>
   cx('hb-btn', {
-    'hb-btn-2': props.variant === 'secondary',
+    'hb-btn-go': props.variant === 'go',
+    'hb-btn-ink': props.variant === 'ink',
     'hb-btn-danger': props.variant === 'danger',
     'hb-btn-ghost': props.variant === 'ghost',
     'hb-btn-sm': props.size === 'sm',

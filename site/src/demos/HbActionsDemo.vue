@@ -5,7 +5,7 @@ import PropsTable from '../components/PropsTable.vue'
 
 const { toast } = useToast()
 const code = `<HbActions label="actions for wiring.sketch">
-  <HbButton variant="primary">open</HbButton>
+  <HbButton variant="go">open</HbButton>
   <HbButton variant="secondary">rename</HbButton>
   <HbButton variant="secondary">duplicate</HbButton>
   <HbButton variant="danger">delete</HbButton>
@@ -19,7 +19,7 @@ const code = `<HbActions label="actions for wiring.sketch">
     :code="code"
   >
     <HbActions label="actions for wiring.sketch">
-      <HbButton variant="primary" @click="toast('opened wiring.sketch', { kind: 'ok' })">open</HbButton>
+      <HbButton variant="go" @click="toast('opened wiring.sketch', { kind: 'ok' })">open</HbButton>
       <HbButton variant="secondary">rename</HbButton>
       <HbButton variant="secondary">duplicate</HbButton>
       <HbButton variant="danger">delete</HbButton>
@@ -29,7 +29,7 @@ const code = `<HbActions label="actions for wiring.sketch">
   <DemoSection title="Right aligned and filled" note="is-end for a dialog foot, is-fill when two choices share the width.">
     <HbActions end label="dialog actions">
       <HbButton variant="secondary">cancel</HbButton>
-      <HbButton variant="primary">save</HbButton>
+      <HbButton variant="go">save</HbButton>
     </HbActions>
     <div style="height: 16px" />
     <HbActions fill label="choose one">

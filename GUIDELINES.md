@@ -233,9 +233,10 @@ purely decorative chrome.
 Text on a pink fill is ink, never paper: ink reads 4.62:1 on the pink and
 paper reads 3.32:1 (both computed, WCAG relative luminance), which fails AA
 at the 11 px utility size every chip and button uses. This holds for
-`.hb-chip.is-on`, `.hb-seg > button.is-on`, `.hb-tile.is-on`,
-`.hb-row.is-on`, `.hb-btn-danger` and the pink hovers of `.hb-btn`,
-`.hb-iconbtn` and `.hb-menu-item`.
+`.hb-seg > button.is-on`, `.hb-tile.is-on`, `.hb-row.is-on`, `.hb-btn-go`
+and the pink hovers of `.hb-iconbtn` and `.hb-menu-item`. Since 0.10.0 a
+chip that is on fills ink, and light buttons lift on hover instead of
+turning pink.
 
 The budget is countable. Every pink element in a view falls in one class:
 
@@ -483,7 +484,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-panel` / `.hb-panel-hd` | Raised paper, 1.5 px ink border, hard shadow, VT323 heading over an ink rule |
 | `.hb-card` | Same, but lifts 2 px on hover to a 7 px shadow |
 | `.hb-stage` | The void with a pink offset shadow. Canvases, scopes, waterfalls, 3D views |
-| `.hb-btn` and variants | Ink fill, pink on hover, shadow collapses on press. `-2` secondary, `-danger` pink fill, `-ghost` for inside stages; disabled ghost is a paper edge fill, ink 3 text (4.46:1, computed) and a dashed border, readable on paper and ink |
+| `.hb-btn` and variants | Light by default: raised paper, ink text, 1.5 px ink line, 3 px hard shadow, Plex 13 px sentence case; lifts on hover, shadow collapses on press. `-go` is the one pink action per screen (pink fill, ink text, 2 px line; HbButton `variant="go"`). `-ink` is a pressed or on state. `-danger` is light with err text and line. `-2` is an alias of the default for one minor. HbButton `variant="primary"` renders light since 0.10.0 and logs a note. `-ghost` for inside stages; disabled ghost is a paper edge fill, ink 3 text (4.46:1, computed) and a dashed border, readable on paper and ink |
 | `.hb-chip` | Filter and multi-select toggle, `.is-on` fills pink with ink text; `.is-toggle.is-on` fills ink for toggles inside a bench |
 | `.hb-pill` | Status with a leading dot. `.is-live` pulses pink, `.is-ok`, `.is-err` |
 | `.hb-input`, `.hb-select`, `.hb-textarea`, `.hb-range` | Paper field, ink border, pink focus ring and pink accent-color. Ranges are 44 px tall under 820 px and on touch screens, native thumb kept. `HbSelect label` wraps the select in an `.hb-ctl` label for a toolbar or controls row |

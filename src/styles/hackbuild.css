@@ -279,11 +279,13 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
    5. CONTROLS
    ========================================================================== */
 
+/* The default button is light: raised paper, ink text, a 1.5 px ink line
+   and a hard shadow, as the originals draw .btn. The one pink action per
+   screen is .hb-btn-go. */
 .hb-btn{
-  font-family:var(--hb-utility); font-size:11px; font-weight:600;
-  text-transform:uppercase; letter-spacing:.09em;
-  background:var(--hb-ink); color:var(--hb-paper);
-  border:var(--hb-border-em) solid var(--hb-ink);
+  font-family:var(--hb-utility); font-size:13px; font-weight:500;
+  background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:var(--hb-border) solid var(--hb-ink);
   box-shadow:var(--hb-shadow);
   padding:8px 14px; cursor:pointer;
   display:inline-flex; align-items:center; gap:var(--hb-s2);
@@ -292,17 +294,24 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 }
 /* Text on a pink fill is ink: 4.62:1 against 3.32:1 for paper (computed,
    WCAG relative luminance). Paper on pink fails AA at 11 px. */
-@media (hover:hover) and (pointer:fine){ .hb-btn:hover{ background:var(--hb-pink); border-color:var(--hb-pink); color:var(--hb-ink) } }
+@media (hover:hover) and (pointer:fine){ .hb-btn:hover{ box-shadow:var(--hb-shadow-xl); transform:translate(-1px,-1px) } }
 .hb-btn:active{ transform:translate(3px,3px); box-shadow:0 0 0 var(--hb-ink) }
 .hb-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 .hb-btn[disabled],.hb-btn.is-disabled{
   background:var(--hb-paper-edge); color:var(--hb-ink-4);
-  border-color:var(--hb-ink-4); box-shadow:none; cursor:not-allowed;
+  border-color:var(--hb-ink-4); box-shadow:none; cursor:not-allowed; transform:none;
 }
+/* .hb-btn-2 was the light button before 0.10.0; it is now the default
+   and the class stays as an alias for one minor. */
 .hb-btn-2{ background:var(--hb-paper-raised); color:var(--hb-ink) }
-@media (hover:hover) and (pointer:fine){ .hb-btn-2:hover{ background:var(--hb-pink); color:var(--hb-ink) } }
-.hb-btn-danger{ background:var(--hb-pink); border-color:var(--hb-pink); color:var(--hb-ink) }
-@media (hover:hover) and (pointer:fine){ .hb-btn-danger:hover{ background:var(--hb-pink-deep); border-color:var(--hb-pink-deep) } }
+/* The one pink action: the next thing to do on this screen. */
+.hb-btn-go{ background:var(--hb-pink); color:var(--hb-ink); border:var(--hb-border-em) solid var(--hb-ink); font-weight:600 }
+@media (hover:hover) and (pointer:fine){ .hb-btn-go:hover{ background:var(--hb-pink-deep) } }
+.hb-btn-go[disabled],.hb-btn-go.is-disabled{ background:var(--hb-paper-edge); color:var(--hb-ink-4); border-color:var(--hb-ink-4) }
+/* Ink fill: a pressed or on state, never the next action. */
+.hb-btn-ink{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-btn-danger{ background:var(--hb-paper-raised); border-color:var(--hb-err); color:var(--hb-err) }
+@media (hover:hover) and (pointer:fine){ .hb-btn-danger:hover{ background:var(--hb-err); color:var(--hb-paper) } }
 .hb-btn-ghost{
   background:transparent; color:var(--hb-paper);
   border:1px solid rgba(245,240,230,.35); box-shadow:none;
@@ -315,8 +324,8 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   background:var(--hb-paper-edge); color:var(--hb-ink-3); border:1px dashed var(--hb-ink-3); box-shadow:none;
 }
 @media (hover:hover) and (pointer:fine){ .hb-btn-ghost[disabled]:hover,.hb-btn-ghost.is-disabled:hover{ background:var(--hb-paper-edge); border-color:var(--hb-ink-3); color:var(--hb-ink-3) } }
-.hb-btn-sm{ font-size:10px; padding:5px 10px; border-width:var(--hb-border); box-shadow:var(--hb-shadow-sm) }
-.hb-btn-lg{ font-size:12px; padding:11px 20px }
+.hb-btn-sm{ font-size:12px; padding:5px 10px; border-width:var(--hb-border); box-shadow:var(--hb-shadow-sm) }
+.hb-btn-lg{ font-size:14px; padding:11px 20px }
 .hb-btn-block{ display:flex; width:100%; justify-content:center }
 /* A finger needs 44 px: buttons, chips and tabs start there and compact
    only on a wider screen with a fine pointer. */
@@ -1932,7 +1941,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 /* A narrow viewport stacks the hud figures and shrinks the scene verbs;
    from 561 px of viewport width they sit in a row at full size. */
 .hb-hudstats{ flex-direction:column; align-items:flex-end }
-.hb-ov-b .hb-btn{ font-size:10px; padding:5px 8px; box-shadow:2px 2px 0 var(--hb-ink) }
+.hb-ov-b .hb-btn{ font-size:12px; padding:5px 8px; box-shadow:2px 2px 0 var(--hb-ink) }
 /* Compact hud on a phone stage: the figures wrap in a row at the top
    right, at most half the stage wide, one size down. */
 @container (max-width:560px){
@@ -1942,7 +1951,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 }
 @container (min-width:561px){
   .hb-hudstats{ flex-direction:row; align-items:stretch }
-  .hb-ov-b .hb-btn{ font-size:11px; padding:8px 14px; box-shadow:var(--hb-shadow) }
+  .hb-ov-b .hb-btn{ font-size:13px; padding:8px 14px; box-shadow:var(--hb-shadow) }
 }
 
 /* Hud stat. fps, frame ms, inference ms on a translucent void plate. The
