@@ -146,46 +146,81 @@ body.hb::before{
    3. CHROME
    ========================================================================== */
 
+/* The bar: light, 52 px, a 2 px ink rule under it, one row (hackle's
+   header). The mark, the tool name in Permanent Marker (the switcher), one
+   model chip and a menu. Brand pages and the docs site keep the ink bar
+   with .is-ink (HbHeader ink). */
 .hb-header{
-  background:var(--hb-ink);
-  color:var(--hb-paper);
-  border-bottom:var(--hb-border-hd) solid var(--hb-pink);
-  padding:var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-left));
-  padding-top:max(var(--hb-s2), env(safe-area-inset-top));
-  display:flex; align-items:center; gap:var(--hb-s4); flex-wrap:wrap;
+  background:var(--hb-paper-raised);
+  color:var(--hb-ink);
+  border-bottom:var(--hb-border-em) solid var(--hb-ink);
+  box-sizing:border-box;
+  height:calc(52px + env(safe-area-inset-top));
+  padding:env(safe-area-inset-top) max(var(--hb-s3), env(safe-area-inset-right)) 0 max(var(--hb-s3), env(safe-area-inset-left));
+  display:flex; align-items:center; gap:var(--hb-s3); flex-wrap:nowrap;
+  min-width:0;
 }
+.hb-header > *{ min-width:0 }
 .hb-header .hb-logo{ width:28px; height:28px; flex:0 0 auto }
-/* the title keeps its words whole: the controls beside it wrap to the
-   next row first, and a title wider than the whole row ends in an
-   ellipsis instead of breaking inside a word or pushing the page sideways */
+/* the title keeps its words whole and ends in an ellipsis instead of
+   breaking inside a word or pushing the page sideways */
 .hb-header h1{
-  font-size:20px; color:var(--hb-paper); flex:1 1 auto; min-width:0; max-width:100%;
+  font-size:22px; line-height:1; color:var(--hb-ink); flex:0 1 auto; min-width:0; max-width:100%;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-@media(max-width:359px){ .hb-header h1{ font-size:18px } }
-@media(min-width:641px){ .hb-header h1{ font-size:24px; flex:0 1 auto } }
 .hb-header h1 span{ color:var(--hb-pink) }
-/* Suffix after the pink accent stays paper: PIP<span>.</span>bench. */
-.hb-header h1 span.hb-suffix{ color:var(--hb-paper) }
-.hb-header .hb-tagline{ display:none; margin-left:auto; color:var(--hb-paper); opacity:.55 }
+/* Suffix after the pink accent stays in the bar's text colour: PIP<span>.</span>bench. */
+.hb-header h1 span.hb-suffix{ color:inherit }
+.hb-header .hb-tagline{ display:none; margin-left:auto; color:var(--hb-ink-3); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 /* A tool tagline is Special Elite; Libre Baskerville italic stays for the
    brand line alone. */
 .hb-header .hb-tagline.is-tool{ font-family:var(--hb-note); font-style:normal }
 @media(min-width:901px){ .hb-header .hb-tagline{ display:inline } }
-@media(min-width:641px){ .hb-header{ padding:var(--hb-s3) max(var(--hb-s5), env(safe-area-inset-right)) var(--hb-s3) max(var(--hb-s5), env(safe-area-inset-left)) } }
 
-.hb-tabs{ display:flex; gap:2px; background:var(--hb-ink); overflow-x:auto }
+/* The ink bar: brand pages and the docs site. Pink rule, paper text,
+   and it may wrap. */
+.hb-header.is-ink{
+  background:var(--hb-ink); color:var(--hb-paper);
+  border-bottom:var(--hb-border-hd) solid var(--hb-pink);
+  box-sizing:border-box; height:auto; min-height:52px; flex-wrap:wrap; gap:var(--hb-s4);
+  padding:var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s4), env(safe-area-inset-left));
+  padding-top:max(var(--hb-s2), env(safe-area-inset-top));
+}
+.hb-header.is-ink h1{ font-size:20px; color:var(--hb-paper); flex:1 1 auto }
+@media(max-width:359px){ .hb-header.is-ink h1{ font-size:18px } }
+@media(min-width:641px){
+  .hb-header.is-ink h1{ font-size:24px; flex:0 1 auto }
+  .hb-header.is-ink{ padding:var(--hb-s3) max(var(--hb-s5), env(safe-area-inset-right)) var(--hb-s3) max(var(--hb-s5), env(safe-area-inset-left)) }
+}
+.hb-header.is-ink .hb-tagline{ color:var(--hb-paper); opacity:.55; font-size:inherit }
+
+/* Tabs: VT323 15 px sentence case on a light strip with a 1.5 px ink rule;
+   the selected tab fills ink (hackle's rack tabs). .is-ink keeps the old
+   ink strip with the pink underline for brand pages. */
+.hb-tabs{ display:flex; gap:0; background:var(--hb-paper-raised); border-bottom:var(--hb-border) solid var(--hb-ink); overflow-x:auto }
 .hb-tab{
-  font-family:var(--hb-utility); font-size:11px; font-weight:600;
-  text-transform:uppercase; letter-spacing:.09em;
-  background:transparent; color:var(--hb-paper);
-  border:0; border-bottom:var(--hb-border-hd) solid transparent;
-  padding:9px 14px; cursor:pointer; opacity:.6;
+  font-family:var(--hb-readout); font-size:var(--hb-readout-sm); font-weight:400; line-height:1;
+  letter-spacing:0;
+  background:transparent; color:var(--hb-ink-2);
+  border:0; border-right:var(--hb-border) solid var(--hb-ink);
+  padding:10px 14px; cursor:pointer;
   flex:0 0 auto; white-space:nowrap; text-decoration:none;
 }
-@media (hover:hover) and (pointer:fine){ .hb-tab:hover{ opacity:1 } }
+.hb-tab:last-child{ border-right:0 }
+@media (hover:hover) and (pointer:fine){ .hb-tab:hover{ color:var(--hb-ink); background:var(--hb-paper-sunk) } }
 .hb-tab[aria-selected="true"],.hb-tab.is-active{
-  opacity:1; color:var(--hb-pink); border-bottom-color:var(--hb-pink);
+  background:var(--hb-ink); color:var(--hb-paper);
+}
+.hb-tab:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-tabs.is-ink{ gap:2px; background:var(--hb-ink); border-bottom:0 }
+.hb-tabs.is-ink > .hb-tab{
+  font-family:var(--hb-utility); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.09em;
+  color:var(--hb-paper); opacity:.6; border:0; border-bottom:var(--hb-border-hd) solid transparent; padding:9px 14px;
+}
+@media (hover:hover) and (pointer:fine){ .hb-tabs.is-ink > .hb-tab:hover{ opacity:1; background:transparent } }
+.hb-tabs.is-ink > .hb-tab[aria-selected="true"],.hb-tabs.is-ink > .hb-tab.is-active{
+  opacity:1; background:transparent; color:var(--hb-pink); border-bottom-color:var(--hb-pink);
 }
 
 .hb-rule{ border:0; border-top:var(--hb-border) dashed var(--hb-ink); margin:var(--hb-s6) 0 }
@@ -679,11 +714,11 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-seg.is-toggle > button.is-on{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-seg > button{ min-height:44px }
 @media(min-width:641px) and (pointer:fine){ .hb-seg > button{ min-height:0 } }
-.hb-bar-ink .hb-seg,.hb-header .hb-seg{ box-shadow:none; border-color:var(--hb-paper) }
-.hb-bar-ink .hb-seg > button,.hb-header .hb-seg > button{
+.hb-bar-ink .hb-seg,.hb-header.is-ink .hb-seg{ box-shadow:none; border-color:var(--hb-paper) }
+.hb-bar-ink .hb-seg > button,.hb-header.is-ink .hb-seg > button{
   background:transparent; color:var(--hb-paper); border-right-color:var(--hb-paper);
 }
-.hb-bar-ink .hb-seg > button.is-on,.hb-header .hb-seg > button.is-on{
+.hb-bar-ink .hb-seg > button.is-on,.hb-header.is-ink .hb-seg > button.is-on{
   background:var(--hb-pink); color:var(--hb-ink);
 }
 
@@ -967,19 +1002,19 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   .hb-app > .hb-work .hb-chat > .hb-composer{ position:sticky; bottom:calc(var(--hb-kb, 0px) + var(--hb-foot-h, 0px)); z-index:1 }
 }
 
-/* Recipes. rack: stage beside a rack of tabs, 360 px at 1024 and 408 px
-   (ARBOR's width) from about 1460; under 901 px the rack is a sheet.
+/* Recipes. rack: stage beside a rack of three to five tabs, a fixed 380 px
+   (hackle's instrument column, --hb-rack); under 901 px the rack is a sheet.
    bench: numbered steps and the guide in the strips, the parameter rail
    beside the work. transcript: the stage stays short (38dvh) over the
    transcript on a phone, and the transcript column is the wide one. */
 .hb-app.is-rack .hb-rail,.hb-app.is-bench .hb-rail{ gap:var(--hb-s3) }
-/* The rack's tabs share its width equally and tighten, so seven fit the
-   408 px rack; HbTabs still swaps them for a select before one clips. */
+/* The rack's tabs share its width equally; HbTabs swaps them for a select
+   before one clips. */
 .hb-app.is-rack .hb-rail > .hb-tabs-host > .hb-tabs{ gap:0 }
-.hb-app.is-rack .hb-rail > .hb-tabs-host > .hb-tabs > .hb-tab{ flex:1 1 auto; padding-left:var(--hb-s2); padding-right:var(--hb-s2); letter-spacing:.04em }
+.hb-app.is-rack .hb-rail > .hb-tabs-host > .hb-tabs > .hb-tab{ flex:1 1 auto; padding-left:var(--hb-s2); padding-right:var(--hb-s2); min-height:44px }
 .hb-app.is-transcript .hb-viewport{ max-height:38vh; max-height:38dvh }
 @media(min-width:901px){
-  .hb-app.is-rack.has-rail > .hb-work{ grid-template-columns:minmax(0,1fr) clamp(360px, 28vw, 408px) }
+  .hb-app.is-rack.has-rail > .hb-work{ grid-template-columns:minmax(0,1fr) var(--hb-rack) }
   .hb-app.is-bench.has-rail > .hb-work{ grid-template-columns:minmax(0,1fr) 360px }
   .hb-app.is-transcript.has-rail > .hb-work{ grid-template-columns:minmax(0,2fr) minmax(360px,3fr) }
   .hb-app.is-transcript .hb-viewport{ max-height:none }
@@ -1256,20 +1291,19 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 }
 @media (hover:hover) and (pointer:fine){ .hb-iconbtn:hover{ background:var(--hb-pink); color:var(--hb-ink) } }
 .hb-iconbtn:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--hb-ink) }
-/* on ink, in the header and in footers: ghost squares. The header is ink
-   on its own, so a bare .hb-header needs no .hb-on-ink for this. */
-.hb-on-ink .hb-iconbtn,.hb-header .hb-iconbtn,.hb-footer .hb-iconbtn{
+/* on ink, in the ink header and in footers: ghost squares. */
+.hb-on-ink .hb-iconbtn,.hb-header.is-ink .hb-iconbtn,.hb-footer .hb-iconbtn{
   background:transparent; color:var(--hb-paper);
   border-color:rgba(245,240,230,.4); box-shadow:none;
 }
-@media (hover:hover) and (pointer:fine){ .hb-on-ink .hb-iconbtn:hover,.hb-header .hb-iconbtn:hover,.hb-footer .hb-iconbtn:hover{
+@media (hover:hover) and (pointer:fine){ .hb-on-ink .hb-iconbtn:hover,.hb-header.is-ink .hb-iconbtn:hover,.hb-footer .hb-iconbtn:hover{
   border-color:var(--hb-pink); color:var(--hb-pink); background:transparent;
 } }
 /* 44 px touch targets on phones and touch screens. */
 @media(min-width:641px) and (pointer:fine){ .hb-iconbtn{ width:34px; height:34px } }
 /* In the header: never shrinks in the nowrap row, the stroke icon at
    16 px, and a pink ring on keyboard focus against the ink. */
-.hb-header .hb-iconbtn{ flex:0 0 auto }
+.hb-header .hb-iconbtn{ flex:0 0 auto; box-shadow:none }
 .hb-header .hb-iconbtn > svg:not([width]){ width:16px; height:16px }
 .hb-header .hb-iconbtn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 
@@ -2646,7 +2680,7 @@ button.hb-spark{ cursor:pointer }
    ========================================================================== */
 .hb-suitenav{ display:block; container:hb-suitenav / inline-size; min-width:0 }
 .hb-suitenav-wide{ display:none }
-.hb-suitenav-phone{ display:block; background:var(--hb-ink) }
+.hb-suitenav-phone{ display:block; background:var(--hb-paper-raised) }
 .hb-suitenav-tools{ display:none }
 @container hb-suitenav (min-width:761px){
   .hb-suitenav:not(.is-sheet) .hb-suitenav-wide{ display:block }
@@ -2669,10 +2703,9 @@ button.hb-spark{ cursor:pointer }
 .hb-suitenav.is-strip .hb-suitenav-bar:has(> .hb-suitenav-tools){ display:flex }
 .hb-suitenav-btn{
   display:flex; align-items:center; gap:var(--hb-s2); width:100%; min-height:44px;
-  font-family:var(--hb-utility); font-size:11px; font-weight:600;
-  text-transform:uppercase; letter-spacing:.09em;
-  background:transparent; color:var(--hb-paper); border:0;
-  border-bottom:var(--hb-border-hd) solid var(--hb-pink);
+  font-family:var(--hb-readout); font-size:var(--hb-readout-md); font-weight:400;
+  background:transparent; color:var(--hb-ink); border:0;
+  border-bottom:var(--hb-border) solid var(--hb-ink);
   padding:0 max(var(--hb-s4), env(safe-area-inset-right)) 0 max(var(--hb-s4), env(safe-area-inset-left));
   cursor:pointer; text-align:left;
 }
@@ -2720,14 +2753,15 @@ button.hb-spark{ cursor:pointer }
 }
 .hb-wsmenu-btn{
   display:inline-flex; align-items:center; gap:var(--hb-s2); min-height:44px; max-width:16rem;
-  font-family:var(--hb-utility); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.09em;
-  background:transparent; color:inherit; border:1px solid rgba(245,240,230,.4); padding:0 var(--hb-s3); cursor:pointer;
+  font-family:var(--hb-utility); font-size:13px; font-weight:500;
+  background:transparent; color:inherit; border:var(--hb-border) solid currentColor; padding:0 var(--hb-s3); cursor:pointer;
 }
+.hb-header.is-ink .hb-wsmenu-btn{ border:1px solid rgba(245,240,230,.4) }
 .hb-wsmenu-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0 }
 @media(pointer:fine){ .hb-wsmenu-btn{ min-height:32px } }
 /* The level is a view switch, not the focal value: paper when on, so the
    one pink stays with the group tab. */
-.hb-header .hb-seg.is-toggle > button.is-on{ background:var(--hb-paper); color:var(--hb-ink) }
+.hb-header.is-ink .hb-seg.is-toggle > button.is-on{ background:var(--hb-paper); color:var(--hb-ink) }
 @media (hover:hover) and (pointer:fine){ .hb-wsmenu-btn:hover{ border-color:var(--hb-pink); color:var(--hb-pink) } }
 .hb-wsmenu-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 .hb-wsmenu-menu{ min-width:15rem }
@@ -2767,23 +2801,23 @@ button.hb-spark{ cursor:pointer }
   .hb-pills.is-compact > .hb-pills-dots{ display:none }
 }
 /* On ink the pills drop the paper plate and keep the state colours. */
-.hb-header .hb-pill,.hb-on-ink .hb-pill{ background:transparent; color:var(--hb-paper); border-color:rgba(245,240,230,.55) }
-.hb-header .hb-pill.is-ok::before,.hb-on-ink .hb-pill.is-ok::before{ background:var(--hb-slime) }
-.hb-header .hb-pill.is-warn,.hb-on-ink .hb-pill.is-warn{ color:var(--hb-lit-warn); border-color:var(--hb-lit-warn) }
-.hb-header .hb-pill.is-warn::before,.hb-on-ink .hb-pill.is-warn::before{ background:var(--hb-lit-warn) }
-.hb-header .hb-pill.is-err,.hb-on-ink .hb-pill.is-err{ color:var(--hb-lit-err); border-color:var(--hb-lit-err) }
-.hb-header .hb-pill.is-err::before,.hb-on-ink .hb-pill.is-err::before{ background:var(--hb-lit-err) }
-.hb-header .hb-pill.is-busy::before,.hb-on-ink .hb-pill.is-busy::before{ background:var(--hb-paper) }
+.hb-header.is-ink .hb-pill,.hb-on-ink .hb-pill{ background:transparent; color:var(--hb-paper); border-color:rgba(245,240,230,.55) }
+.hb-header.is-ink .hb-pill.is-ok::before,.hb-on-ink .hb-pill.is-ok::before{ background:var(--hb-slime) }
+.hb-header.is-ink .hb-pill.is-warn,.hb-on-ink .hb-pill.is-warn{ color:var(--hb-lit-warn); border-color:var(--hb-lit-warn) }
+.hb-header.is-ink .hb-pill.is-warn::before,.hb-on-ink .hb-pill.is-warn::before{ background:var(--hb-lit-warn) }
+.hb-header.is-ink .hb-pill.is-err,.hb-on-ink .hb-pill.is-err{ color:var(--hb-lit-err); border-color:var(--hb-lit-err) }
+.hb-header.is-ink .hb-pill.is-err::before,.hb-on-ink .hb-pill.is-err::before{ background:var(--hb-lit-err) }
+.hb-header.is-ink .hb-pill.is-busy::before,.hb-on-ink .hb-pill.is-busy::before{ background:var(--hb-paper) }
 /* The status dot: round, one of the radius exceptions (the pill dot). */
 .hb-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--hb-ink-4); flex:0 0 auto }
 .hb-dot.is-ok,.is-ok > * > .hb-dot{ background:var(--hb-ok) }
 .hb-dot.is-warn,.is-warn > * > .hb-dot{ background:var(--hb-warn) }
 .hb-dot.is-err,.is-err > * > .hb-dot{ background:var(--hb-err) }
 .hb-dot.is-load,.is-load > * > .hb-dot{ background:var(--hb-ink); animation:hb-blink 1s infinite }
-.hb-header .hb-dot.is-ok,.hb-on-ink .hb-dot.is-ok{ background:var(--hb-slime) }
-.hb-header .hb-dot.is-warn,.hb-on-ink .hb-dot.is-warn{ background:var(--hb-lit-warn) }
-.hb-header .hb-dot.is-err,.hb-on-ink .hb-dot.is-err{ background:var(--hb-lit-err) }
-.hb-header .hb-dot.is-load,.hb-on-ink .hb-dot.is-load{ background:var(--hb-paper) }
+.hb-header.is-ink .hb-dot.is-ok,.hb-on-ink .hb-dot.is-ok{ background:var(--hb-slime) }
+.hb-header.is-ink .hb-dot.is-warn,.hb-on-ink .hb-dot.is-warn{ background:var(--hb-lit-warn) }
+.hb-header.is-ink .hb-dot.is-err,.hb-on-ink .hb-dot.is-err{ background:var(--hb-lit-err) }
+.hb-header.is-ink .hb-dot.is-load,.hb-on-ink .hb-dot.is-load{ background:var(--hb-paper) }
 .hb-pills-dots.is-err{ border-color:var(--hb-lit-err) }
 .hb-statuslist{ list-style:none; margin:0; padding:0; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised); color:var(--hb-ink) }
 .hb-statuslist > li{ border-bottom:1px dashed rgba(26,26,26,.25) }
@@ -4588,7 +4622,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 /* ---- four state vocabulary --------------------------------------------
    off dimmed, load amber blinking in two steps, ok green (slime on ink),
    err red. The tokens resolve to the lit set on ink and on the void. */
-.hb-on-ink,.hb-header,.hb-stage,.hb-viewport,.hb-statusbar,.hb-console{
+.hb-on-ink,.hb-header.is-ink,.hb-stage,.hb-viewport,.hb-statusbar,.hb-console{
   --hb-state-off:var(--hb-lit-label);
   --hb-state-load:var(--hb-lit-warn);
   --hb-state-ok:var(--hb-slime);
@@ -4602,9 +4636,9 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 /* Every load indicator in the kit: pills, dots, status lines, verdicts,
    slot squares, engine dots and the light. */
 .hb-led.is-load,
-.hb-dot.is-load,.is-load > * > .hb-dot,.hb-header .hb-dot.is-load,.hb-on-ink .hb-dot.is-load,
+.hb-dot.is-load,.is-load > * > .hb-dot,.hb-header.is-ink .hb-dot.is-load,.hb-on-ink .hb-dot.is-load,
 .hb-pill.is-busy::before,.hb-pill.is-load::before,
-.hb-header .hb-pill.is-busy::before,.hb-on-ink .hb-pill.is-busy::before,
+.hb-header.is-ink .hb-pill.is-busy::before,.hb-on-ink .hb-pill.is-busy::before,
 .hb-status.is-busy::before,.hb-verdict.is-run::before,
 .hb-slot.is-loading .hb-slot-sq,
 .hb-engine.is-downloading .hb-engine-dot,.hb-engine.is-loading .hb-engine-dot{
@@ -4615,7 +4649,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 /* Off is dimmed by colour, not opacity, so the words keep 4.5:1: ink 3
    on paper 5.15:1, lit label on ink 5.60:1 (computed). */
 .hb-pill.is-off{ opacity:1; color:var(--hb-ink-3); border-color:var(--hb-ink-4) }
-.hb-header .hb-pill.is-off,.hb-on-ink .hb-pill.is-off{ color:var(--hb-lit-label); border-color:var(--hb-ink-border) }
+.hb-header.is-ink .hb-pill.is-off,.hb-on-ink .hb-pill.is-off{ color:var(--hb-lit-label); border-color:var(--hb-ink-border) }
 .hb-slot.is-loading .hb-slot-stat,.hb-tool.is-running .hb-tool-state{ color:var(--hb-warn-ink) }
 .hb-stage .hb-tool.is-running .hb-tool-state,.hb-on-ink .hb-tool.is-running .hb-tool-state{ color:var(--hb-lit-warn) }
 .hb-statuslist .is-load > .hb-statuslist-row .hb-statuslist-state{ color:var(--hb-warn-ink) }
@@ -4624,9 +4658,9 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 /* Reduced motion: load is a hollow square, so it never reads as warn. */
 @media (prefers-reduced-motion:reduce){
   .hb-led.is-load,
-  .hb-dot.is-load,.is-load > * > .hb-dot,.hb-header .hb-dot.is-load,.hb-on-ink .hb-dot.is-load,
+  .hb-dot.is-load,.is-load > * > .hb-dot,.hb-header.is-ink .hb-dot.is-load,.hb-on-ink .hb-dot.is-load,
   .hb-pill.is-busy::before,.hb-pill.is-load::before,
-  .hb-header .hb-pill.is-busy::before,.hb-on-ink .hb-pill.is-busy::before,
+  .hb-header.is-ink .hb-pill.is-busy::before,.hb-on-ink .hb-pill.is-busy::before,
   .hb-status.is-busy::before,.hb-verdict.is-run::before,
   .hb-slot.is-loading .hb-slot-sq,
   .hb-engine.is-downloading .hb-engine-dot,.hb-engine.is-loading .hb-engine-dot{
@@ -4717,7 +4751,7 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
   font-family:var(--hb-utility); font-size:12px; line-height:1.45;
 }
 .hb-fixture > b{ font-family:var(--hb-readout); font-size:var(--hb-readout-md); font-weight:400; line-height:1; background:var(--hb-ink); color:var(--hb-paper); padding:2px 6px 1px }
-.hb-header .hb-fixture,.hb-on-ink .hb-fixture{ background:transparent; color:var(--hb-paper); border-color:var(--hb-lit-label) }
+.hb-header.is-ink .hb-fixture,.hb-on-ink .hb-fixture{ background:transparent; color:var(--hb-paper); border-color:var(--hb-lit-label) }
 
 /* ---- instrument density ------------------------------------------------
    .hb-instrument on any container: the ARBOR rack. 12.5 px base, tighter

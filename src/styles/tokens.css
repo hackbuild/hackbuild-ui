@@ -97,6 +97,7 @@
   /* The refined look (0.9.0): app chrome and tool panels draw a 1.5 px
      line and shadows tuned to it, as FERRULE and ARBOR do. Marketing
      blocks, docs prose and .hb-zine restore the 2 px zine values. */
+  --hb-rack:      380px;        /* the rack column beside a stage, fixed (hackle) */
   --hb-border:    1.5px;        /* panels, fields, controls, chips, pills */
   --hb-border-em: 2px;          /* emphasis: primary button, modal, drawer, stage */
   --hb-border-hd: 3px;          /* header rule, active tab, focus rings */

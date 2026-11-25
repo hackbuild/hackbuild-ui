@@ -16,6 +16,9 @@ interface Props {
   taglineKind?: 'brand' | 'tool'
   /** Hide the built in mark when slotting a custom logo. */
   mark?: boolean
+  /** The ink bar with the pink rule, for brand pages and docs. Tools take
+      the light 52 px bar (the default since 0.10.0). */
+  ink?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -24,14 +27,15 @@ const props = withDefaults(defineProps<Props>(), {
   tagline: '',
   taglineKind: 'brand',
   mark: true,
+  ink: false,
 })
 </script>
 
 <template>
   <!-- Identity and state. No verbs in here: those live in the toolbar. -->
-  <header class="hb-header hb-on-ink">
+  <header class="hb-header" :class="{ 'is-ink': props.ink, 'hb-on-ink': props.ink }" data-ux="bar">
     <slot name="logo">
-      <HbMark v-if="props.mark" class="hb-logo" reversed :size="28" />
+      <HbMark v-if="props.mark" class="hb-logo" :reversed="props.ink" :size="28" />
     </slot>
     <h1 v-if="props.title">{{ props.title }}<span v-if="props.accent">{{ props.accent }}</span><span v-if="props.suffix" class="hb-suffix">{{ props.suffix }}</span></h1>
     <slot />

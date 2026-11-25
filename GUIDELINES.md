@@ -411,8 +411,8 @@ a verb in the header or branding in the toolbar.
 
 | Strip | Job | Surface | Height | Holds |
 |---|---|---|---|---|
-| header | identity and state | ink, 3 px pink bottom rule | 52 to 60 px | mark, title, status pill, mode switch, tagline |
-| tabs | destinations | ink, pink underline on active | 36 px | 3 to 8 tab buttons, nothing else |
+| header | identity and state | raised paper `#fffdf7`, 2 px ink bottom rule, one row | 52 px with the rule, plus the top safe area | mark, tool name (the switcher), one model chip, a menu, tagline from 901 px |
+| tabs | destinations | raised paper, 1.5 px ink rule under it; VT323 15 px sentence case, the selected tab filled ink | 44 px | 3 to 5 tab buttons, nothing else |
 | toolbar | verbs and global settings | sunk paper, 2 px ink bottom | 46 px, none when empty | connect, mode segments, chips, a readout pushed right |
 | status strip | counts and rates | ink, 3 px pink top rule, pinned bottom | 28 px, 44 px as a button on a coarse pointer | VT323 figures; cells with `data-priority` 2 show from 481 px of strip width and 3 from 761 px, so a phone keeps two. At most one control: the whole strip as `.hb-statusbar-btn`, opening the log behind the figures |
 
@@ -420,15 +420,20 @@ a verb in the header or branding in the toolbar.
 
 Left to right, always in this order:
 
-1. The mark at 26 to 28 px. It appears here and nowhere else in the app.
-2. The tool name in Permanent Marker, trailing dot or suffix in pink. The title
-   is the tool name, not hack.build; the mark is what carries the brand. It
-   never breaks inside a word: the parts beside it wrap first, and a title
-   wider than the row ends in an ellipsis.
-3. The connection status pill. One pill, showing the connection, not the task.
-4. Everything else pushed right with `margin-left:auto`, usually the mode
-   switch.
-5. The tagline last, at reduced opacity, dropped entirely below about 900 px.
+1. The mark at 28 px. It appears here and nowhere else in the app.
+2. The tool name in Permanent Marker 22 px ink, trailing dot or suffix in
+   pink. The title is the tool name, not hack.build; pressing it switches
+   tool. It never breaks inside a word and ends in an ellipsis when the row
+   is short; the bar never wraps.
+3. One model chip. Rates and counts live in the rack or a detail fold, not
+   in the bar.
+4. The menu, pushed right with `margin-left:auto`.
+5. The tagline in Special Elite 13 px ink 3, from 901 px only.
+
+Since 0.10.0 the bar is light (hackle's header). `HbHeader ink` and
+`.hb-header.is-ink` keep the ink bar with the 3 px pink rule for brand pages
+and the docs site; ink only rules (pills, dots, seg, icon buttons on the bar)
+are scoped to `.is-ink`. `.hb-tabs.is-ink` keeps the ink tab strip.
 
 Header, tabs and status strip are pinned. Only the work area scrolls. Classes:
 `.hb-header`, `.hb-tabs`, `.hb-bar`, `.hb-statusbar`, `.hb-seg`, `.hb-spacer`.

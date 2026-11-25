@@ -29,10 +29,10 @@ function isHere(to: string) {
     <router-view />
   </template>
   <template v-else>
-    <HbHeader title="hack" accent=".build" tagline="make things. break things. repeat.">
+    <HbHeader ink title="hack" accent=".build" tagline="make things. break things. repeat.">
       <HbPill status="live">v1.2</HbPill>
     </HbHeader>
-    <nav class="hb-tabs">
+    <nav class="hb-tabs is-ink">
       <router-link
         v-for="item in nav"
         :key="item.to"
