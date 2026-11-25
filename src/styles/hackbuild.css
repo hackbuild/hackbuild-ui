@@ -716,7 +716,9 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-toolpage > .is-grow{ flex:1 1 auto; min-height:0 }
 /* split: a side column (rack, queue, list) beside the main part from 1024 px */
 @media (min-width:1024px){
-  .hb-toolpage.is-split{ display:grid; grid-template-columns:minmax(260px, 340px) minmax(0, 1fr); align-items:start }
+  /* No flex shrink: in a flex column shell a shrunk grid caps its auto
+     rows at the shell height and the parts overlap. */
+  .hb-toolpage.is-split{ display:grid; grid-template-columns:minmax(260px, 340px) minmax(0, 1fr); align-items:start; flex-shrink:0 }
   .hb-toolpage.is-split > .is-full{ grid-column:1 / -1 }
   .hb-toolpage.is-split > .is-side{ position:sticky; top:var(--hb-s3) }
 }
@@ -726,11 +728,12 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
   .hb-toolpage.is-split:not(.is-source-order) > .is-side{ order:1 }
 }
 /* stage split (FERRULE): the stage wide on the left, chat in a side column
-   of 340 to 520 px on the right, from 1024 px. The side column is held to
+   of 340 to 520 px on the right, from 1024 px, never over 40 percent of
+   the width, so the stage stays the wider part. The side column is held to
    the window height so its log scrolls and its composer stays in view.
    Under 1024 px the stage comes first at --hb-stage-h-sm and chat follows. */
 @media (min-width:1024px){
-  .hb-toolpage.is-split.is-stage{ grid-template-columns:minmax(0, 1fr) minmax(340px, 520px) }
+  .hb-toolpage.is-split.is-stage{ grid-template-columns:minmax(0, 1fr) minmax(340px, min(520px, 40%)) }
   .hb-toolpage.is-split.is-stage > :not(.is-side):not(.is-full){ grid-column:1 }
   .hb-toolpage.is-split.is-stage > .is-side{
     grid-column:2; grid-row:1 / span 8; display:flex; flex-direction:column; min-height:0;
@@ -830,7 +833,7 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 /* Keyboard hint. */
 .hb-kbd{
   font-family:var(--hb-utility); font-size:10px; font-weight:700;
-  background:var(--hb-paper-raised); border:1px solid var(--hb-ink);
+  background:var(--hb-paper-raised); color:var(--hb-ink); border:1px solid var(--hb-ink);
   box-shadow:1px 1px 0 var(--hb-ink); padding:1px 5px;
 }
 

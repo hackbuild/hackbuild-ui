@@ -38,6 +38,11 @@ const demos = [
     text: 'A character tool: the stage wide on the left and chat in a column on the right from 1024 px; on a phone the stage comes first at 38dvh with chat under it. Send the last reply to another tool from a list that says why a tool cannot take it.',
   },
   {
+    to: '#/demos/stage-tool',
+    label: 'stage tool',
+    text: 'A motion tool: the toolbar, the stage, a strip and the transport in the main column, the rack on the right from 1024 px. Each part keeps its own row; the hint keys read on the dark plate.',
+  },
+  {
     to: '#/demos/shell-bench',
     label: 'shell: stepped bench',
     text: 'Numbered steps and the guide sentence in the strips, the stage beside a parameter rail, next pinned in the dock.',
