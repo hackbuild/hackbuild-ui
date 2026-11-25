@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.9.8
+
+- HbAppShell late dock: a `dock` slot that arrives after mount (a
+  composer teleported in later) now gets its height. The shell reads the
+  slot on every render and starts `dockInsets` on the foot when it
+  appears, so `--hb-foot-h` stays current and a sheet over
+  `.hb-rail.is-above-dock` stops at the dock instead of covering it.
+- HbToolbar `overflow` folds by the bar's own width, not the window's:
+  `.is-folded` when the bar is under 641 px or its row would wrap. The
+  stage tool toolbar in its 583 px column at 1024 is one row of 61 px
+  (measured; the suite room measured 4 rows, 193 px, on 0.9.5). Vanilla
+  `barFit`, on by default in `barMore` (`fit`); classes `.is-folded`,
+  `.is-probe`, `.hb-bar-more.is-none`. The `max-width:640px` media
+  query is gone: a hand written `.hb-bar.is-overflow` needs `barMore`
+  or `barFit` to fold.
+- HbToolbar spill: items that still do not fit the folded row move from
+  the end of the default slot into the more panel, where their labels
+  show; the `end` slot stays in the row. Two of five verbs spill at 320
+  and one at 390 in the fixture, tune in view at both (measured). The
+  more wrap now renders whenever `overflow` is on; an empty panel hides
+  its button.
+- HbPad placement in HbViewport: the pad lies over the bottom corners
+  of the frame, stick left and action right, and the foot keeps those
+  corners clear and holds the pad's height, so caption, band and insets
+  sit between and never under it. Under 321 px of stage height the base
+  takes a 72 px step and the action 44 px. Inside the 216 px stage at
+  320 by 568 and the 252 px stage at 390 by 664 (measured; it fell 105
+  px below the stage at 320 before), and clear of the eye inset at 1024
+  where the 328 px stage stacked them. Token `--hb-pad-act-w`.
+- Docs: the stage tool demo carries the room's verbs, a pad and a late
+  dock; toolbar, pad and shell demos for each; GUIDELINES.md "Parts
+  added in 0.9.8".
+
 ## 0.9.7
 
 - HbPromptInspector `tools`: a card for the tool list the model sees,
