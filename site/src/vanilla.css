@@ -1,16 +1,16 @@
 /* Layout glue for the vanilla page. Looks come from hackbuild.css. */
 .vd-main{ padding:var(--hb-s4) var(--hb-s4) var(--hb-s8); max-width:1280px; margin:0 auto }
-.vd-lede{ font-family:var(--hb-body); font-size:14px; max-width:68ch; margin:0 0 var(--hb-s4) }
+.vd-lede{ font-family:var(--hb-note); font-size:14px; max-width:68ch; margin:0 0 var(--hb-s4) }
 .vd-grid{ display:grid; grid-template-columns:minmax(0,1fr); gap:var(--hb-s4) }
 .vd-grid > .hb-panel{ min-width:0 }
 @media(min-width:769px){ .vd-grid{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
 @media(min-width:1201px){ .vd-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) } .vd-main{ padding:var(--hb-s5) var(--hb-s5) var(--hb-s8) } }
 .vd-row{ display:flex; flex-wrap:wrap; gap:var(--hb-s2); align-items:center; margin:var(--hb-s2) 0 }
 .vd-end{ justify-content:flex-end }
-.vd-note{ font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-2); margin:0 0 var(--hb-s2) }
-.vd-tabpanel{ font-family:var(--hb-body); font-size:13px; padding:var(--hb-s3) 0 0 }
+.vd-note{ font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-2); margin:0 0 var(--hb-s2) }
+.vd-tabpanel{ font-family:var(--hb-note); font-size:13px; padding:var(--hb-s3) 0 0 }
 .vd-routes,.vd-tasks,.vd-notes{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:var(--hb-s2) }
-.vd-notes{ list-style:decimal inside; font-family:var(--hb-body); font-size:13px }
+.vd-notes{ list-style:decimal inside; font-family:var(--hb-note); font-size:13px }
 .vd-routes .hb-status{ margin:0; overflow-wrap:anywhere }
 .vd-task{ border-top:1px dashed var(--hb-ink-4); padding-top:var(--hb-s2) }
 .vd-task .hb-btn{ align-self:flex-start }
@@ -18,7 +18,7 @@
 .vd-keyhead{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3); margin:var(--hb-s2) 0 var(--hb-s1) }
 .vd-keys{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--hb-s1) var(--hb-s3); margin:0; align-items:center }
 .vd-keys dt{ display:flex; flex-wrap:wrap; gap:4px }
-.vd-keys dd{ margin:0; font-family:var(--hb-body); font-size:13px }
+.vd-keys dd{ margin:0; font-family:var(--hb-note); font-size:13px }
 .vd-code{ font-family:var(--hb-utility); font-size:12px; overflow-wrap:anywhere; min-width:0 }
 .vd-back{ overflow-x:auto }
 .hb-menu-wrap + .hb-status{ margin-top:var(--hb-s3) }

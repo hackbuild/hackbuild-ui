@@ -28,9 +28,9 @@ html,body{ margin:0; padding:0 }
 body.hb{
   background:var(--hb-paper);
   color:var(--hb-ink);
-  font-family:var(--hb-body);
+  font-family:var(--hb-utility);
   font-size:14px;
-  line-height:1.6;
+  line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
 
@@ -69,26 +69,38 @@ body.hb::before{
    Four faces, four jobs. Setting everything in one face kills the system.
    ========================================================================== */
 
-.hb h1,.hb h2,.hb h3,.hb-display{
+.hb h1,.hb-display{
   font-family:var(--hb-display);
   font-weight:400;
   letter-spacing:.5px;
   margin:0;
 }
+/* Permanent Marker names one thing per screen (h1, .hb-display). h2 and h3
+   are block heads in VT323, sentence case. The zine scope keeps marker
+   heads for marketing and prose. */
+.hb h2,.hb h3{ font-family:var(--hb-readout); font-weight:400; letter-spacing:0; margin:0 }
 .hb h1{ font-size:32px; line-height:1.05 }
-.hb h2{ font-size:23px; line-height:1.15 }
-.hb h3{ font-size:20px; line-height:1.2 }
-@media(min-width:641px){ .hb h1{ font-size:44px } .hb h2{ font-size:28px } }
+.hb h2{ font-size:26px; line-height:1.1 }
+.hb h3{ font-size:21px; line-height:1.1 }
+@media(min-width:641px){ .hb h1{ font-size:44px } .hb h2{ font-size:30px } }
+.hb-zine h2,.hb-zine h3,.hb-prose h2,.hb-prose h3,.hb-hero h2,.hb-cta h2,.hb-cover h2,.hb-sechead h2{ font-family:var(--hb-display); letter-spacing:.5px }
 
 .hb p{ margin:0 0 var(--hb-s4) }
 
 /* Utility text: every label, button, tab, chip, table header, form label. */
 .hb-label{
   font-family:var(--hb-utility);
+  font-size:12px; font-weight:600;
+  color:var(--hb-ink-3);
+}
+/* Small readout labels only: 11 px uppercase tracked. */
+.hb-readout-label{
+  font-family:var(--hb-utility);
   font-size:11px; font-weight:600;
   text-transform:uppercase; letter-spacing:.09em;
   color:var(--hb-ink-3);
 }
+.hb-zine .hb-label{ font-size:11px; text-transform:uppercase; letter-spacing:.09em }
 
 /* Readouts: any live number, timer, coordinate, console line, counter. */
 .hb-readout{
@@ -158,7 +170,7 @@ body.hb::before{
 .hb-header .hb-tagline{ display:none; margin-left:auto; color:var(--hb-paper); opacity:.55 }
 /* A tool tagline is Special Elite; Libre Baskerville italic stays for the
    brand line alone. */
-.hb-header .hb-tagline.is-tool{ font-family:var(--hb-body); font-style:normal }
+.hb-header .hb-tagline.is-tool{ font-family:var(--hb-note); font-style:normal }
 @media(min-width:901px){ .hb-header .hb-tagline{ display:inline } }
 @media(min-width:641px){ .hb-header{ padding:var(--hb-s3) max(var(--hb-s5), env(safe-area-inset-right)) var(--hb-s3) max(var(--hb-s5), env(safe-area-inset-left)) } }
 
@@ -195,15 +207,14 @@ body.hb::before{
 }
 .hb-panel-sunk{ background:var(--hb-paper-sunk); box-shadow:none }
 .hb-panel-hd{
-  font-family:var(--hb-display); font-size:18px;
+  font-family:var(--hb-readout); font-size:var(--hb-readout-lg); line-height:1.1;
   margin:0 0 var(--hb-s3); padding-bottom:var(--hb-s2);
   border-bottom:var(--hb-border) solid var(--hb-ink);
 }
 /* Instrument head: VT323 caps on a full-bleed ink bar. One head style per
    artifact, editorial or instrument, never both. */
 .hb-panel-hd-inst{
-  font-family:var(--hb-readout); font-size:17px; letter-spacing:.06em;
-  text-transform:uppercase;
+  font-family:var(--hb-readout); font-size:var(--hb-readout-lg); letter-spacing:0;
   background:var(--hb-ink); color:var(--hb-paper);
   margin:calc(-1 * var(--hb-s4)) calc(-1 * var(--hb-s5)) var(--hb-s3);
   padding:7px var(--hb-s5);
@@ -314,15 +325,14 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 
 /* Chips: filters and multi-select toggles. */
 .hb-chip{
-  font-family:var(--hb-utility); font-size:11px; font-weight:600;
-  text-transform:uppercase; letter-spacing:.08em;
+  font-family:var(--hb-utility); font-size:13px; font-weight:500;
   background:var(--hb-paper-raised); color:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink);
   box-shadow:2px 2px 0 var(--hb-ink);
   padding:5px 10px; cursor:pointer; user-select:none;
   display:inline-flex; align-items:center; gap:6px;
 }
-.hb-chip.is-on{ background:var(--hb-pink); color:var(--hb-ink) }
+.hb-chip.is-on{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-chip:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 /* Toggle chip inside a bench. Ink fill when on, so the one pink stays free
    for the primary selection of a step. */
@@ -428,8 +438,8 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 .hb-rcard > input:focus-visible{ outline:none }
 .hb-rcard.is-disabled{ cursor:not-allowed; color:var(--hb-ink-3); border-style:dashed; border-color:var(--hb-ink-4) }
 .hb-rcard-body{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:2px }
-.hb-rcard-title{ font-family:var(--hb-body); font-size:15px; font-weight:700; line-height:1.2 }
-.hb-rcard-desc{ font-family:var(--hb-body); font-size:13px; line-height:1.35; color:var(--hb-ink-2) }
+.hb-rcard-title{ font-family:var(--hb-utility); font-size:15px; font-weight:700; line-height:1.2 }
+.hb-rcard-desc{ font-family:var(--hb-note); font-size:13px; line-height:1.35; color:var(--hb-ink-2) }
 .hb-rcard-trade{ font-family:var(--hb-utility); font-size:11px; line-height:1.35; color:var(--hb-ink-3) }
 .hb-rcard.is-disabled .hb-rcard-desc{ color:var(--hb-ink-3) }
 
@@ -1053,7 +1063,7 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
    take this now, why. The reason stays readable on a disabled row. */
 .hb-sendto .hb-menu{ min-width:15rem; max-width:min(22rem, calc(100vw - 2 * var(--hb-s3))) }
 .hb-sendto-name{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
-.hb-sendto-reason{ margin-left:auto; font-family:var(--hb-body); font-size:11px; font-weight:400; color:var(--hb-ink-3); text-transform:none; letter-spacing:0; text-align:right }
+.hb-sendto-reason{ margin-left:auto; font-family:var(--hb-note); font-size:11px; font-weight:400; color:var(--hb-ink-3); text-transform:none; letter-spacing:0; text-align:right }
 
 /* Drawer. A full-height panel that slides in from an edge. The mobile home
    of the rail, and of any nav that will not fit a bar. */
@@ -1628,7 +1638,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-tab.is-done .n{ background:var(--hb-ok); border-color:var(--hb-ok); color:var(--hb-paper) }
 .hb-tabs-select{ display:block; width:100%; border-left:0; border-right:0 }
 /* A tab or fold left empty names the next action instead of a blank. */
-.hb-empty-hint{ margin:0; padding:var(--hb-s4) 0; font-family:var(--hb-body); font-size:14px; color:var(--hb-ink-3) }
+.hb-empty-hint{ margin:0; padding:var(--hb-s4) 0; font-family:var(--hb-note); font-size:14px; color:var(--hb-ink-3) }
 @media(min-width:641px){
   .hb-steps > .hb-tab{ letter-spacing:.14em; font-size:12px; padding:var(--hb-s2) var(--hb-s1) }
   .hb-steps .n{ margin-right:var(--hb-s2) }
@@ -1638,7 +1648,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
    Special Elite, the verbs at the right end (undo, redo, open, save,
    guide). Never a second bar. */
 .hb-bar.hb-guide{
-  font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-2);
+  font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-2);
   flex-wrap:nowrap; gap:var(--hb-s2);
 }
 .hb-guide-step{
@@ -1758,7 +1768,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 @media (hover:hover) and (pointer:fine){ .hb-prow-reset:hover{ color:var(--hb-ink) } }
 .hb-prow-reset:focus-visible{ outline:var(--hb-border) solid var(--hb-pink); outline-offset:1px }
 .hb-prow-reset[hidden]{ display:none }
-.hb-prow-why{ flex:1 0 100%; font-family:var(--hb-body); font-size:12px; color:var(--hb-ink-3) }
+.hb-prow-why{ flex:1 0 100%; font-family:var(--hb-note); font-size:12px; color:var(--hb-ink-3) }
 .hb-prow.is-disabled .hb-prow-label{ color:var(--hb-ink-4) }
 /* 44 px on phones and touch screens; the 22 px mark only with a fine pointer on a wide screen */
 .hb-prow-reset{ width:44px; height:44px }
@@ -1775,7 +1785,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
   position:relative;
   background:var(--hb-paper); color:var(--hb-ink);
   border:var(--hb-border-hd) solid var(--hb-ink); box-shadow:var(--hb-shadow-pink);
-  font-family:var(--hb-body); font-size:14px;
+  font-family:var(--hb-note); font-size:14px;
   padding:var(--hb-s4) var(--hb-s5);
   max-width:min(640px, calc(100% - var(--hb-s4) - var(--hb-s1)));
   max-height:calc(100% - var(--hb-s4) - var(--hb-s1)); overflow:auto;
@@ -1814,7 +1824,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
    doing or what failed. Special Elite, a square marker by kind. */
 .hb-status{
   display:flex; align-items:baseline; gap:var(--hb-s2);
-  font-family:var(--hb-body); font-size:13px; line-height:1.5;
+  font-family:var(--hb-note); font-size:13px; line-height:1.5;
   color:var(--hb-ink-2); min-height:1.5em; margin:var(--hb-s2) 0;
 }
 .hb-status::before{
@@ -1953,7 +1963,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-hudstat b{ font-weight:400 }
 /* A plain note in a hud corner: hints, the orbit keys. */
 .hb-hudnote{
-  font-family:var(--hb-body); font-size:12px; line-height:1.4; max-width:280px;
+  font-family:var(--hb-note); font-size:12px; line-height:1.4; max-width:280px;
   background:color-mix(in srgb, var(--hb-void) 80%, transparent); color:var(--hb-paper);
   border:1px solid var(--hb-ink-border); padding:var(--hb-s1) var(--hb-s2);
   display:none;
@@ -1970,7 +1980,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 }
 .hb-vp-cover[hidden]{ display:none }
 .hb-vp-cover-title{ font-family:var(--hb-display); font-size:26px; line-height:1.1 }
-.hb-vp-cover-note{ font-family:var(--hb-body); font-size:13px; color:var(--hb-lit-label); max-width:46ch }
+.hb-vp-cover-note{ font-family:var(--hb-note); font-size:13px; color:var(--hb-lit-label); max-width:46ch }
 .hb-vp-cover.is-err .hb-vp-cover-note{ color:var(--hb-lit-err) }
 .hb-vp-cover > .hb-progress{ width:min(360px, 100%) }
 
@@ -2024,7 +2034,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
   transform:translate(-50%, calc(-100% - 10px));
   background:var(--hb-paper-raised); color:var(--hb-ink);
   border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
-  font-family:var(--hb-body); font-size:14px; line-height:1.35;
+  font-family:var(--hb-note); font-size:14px; line-height:1.35;
   padding:var(--hb-s1) var(--hb-s2); max-width:280px; width:max-content;
 }
 .hb-bubble::after{
@@ -2048,7 +2058,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-dropzone{
   display:flex; align-items:center; flex-wrap:wrap; gap:var(--hb-s2) var(--hb-s3);
   border:var(--hb-border) dashed var(--hb-ink-4); background:var(--hb-paper-sunk);
-  padding:var(--hb-s3); font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-3);
+  padding:var(--hb-s3); font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-3);
 }
 .hb-dropzone input[type=file]{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-2); max-width:100% }
 .hb-dropzone input[type=file]::file-selector-button{
@@ -2152,7 +2162,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-model[aria-selected="true"]{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-model-name{ font-family:var(--hb-utility); font-size:12.5px; font-weight:700 }
 .hb-model-meta,.hb-model-lic{ grid-column:1; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
-.hb-model-why{ grid-column:1 / -1; font-family:var(--hb-body); font-size:12.5px; color:var(--hb-warn-ink) }
+.hb-model-why{ grid-column:1 / -1; font-family:var(--hb-note); font-size:12.5px; color:var(--hb-warn-ink) }
 .hb-model > .hb-btn{ grid-column:2; grid-row:1 / span 2 }
 .hb-model[aria-disabled="true"] .hb-model-name{ color:var(--hb-ink-4) }
 
@@ -2168,7 +2178,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-perm-ic{ grid-column:1; grid-row:1 / span 2; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; color:var(--hb-ink) }
 .hb-perm-hd{ grid-column:2; display:flex; align-items:center; gap:var(--hb-s2); flex-wrap:wrap; min-width:0 }
 .hb-perm-name{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em }
-.hb-perm-why{ grid-column:2 / -1; font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
+.hb-perm-why{ grid-column:2 / -1; font-family:var(--hb-note); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
 .hb-perm-act,.hb-perm-acts{ grid-column:3; grid-row:1 }
 .hb-perm-acts{ display:flex; flex-wrap:wrap; justify-content:flex-end; gap:var(--hb-s1) }
 .hb-perm-still{ grid-column:2 / -1; display:flex; flex-wrap:wrap; align-items:baseline; gap:2px var(--hb-s2); font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-2) }
@@ -2197,7 +2207,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-msg{ display:flex; flex-direction:column; gap:2px; max-width:100%; align-self:flex-start }
 .hb-msg-who{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
 .hb-msg-text{
-  font-family:var(--hb-body); font-size:14px; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere;
+  font-family:var(--hb-note); font-size:14px; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere;
   border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper); padding:var(--hb-s2) var(--hb-s3);
 }
 .hb-msg.is-user{ align-self:flex-end; align-items:flex-end }
@@ -2223,7 +2233,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
   display:flex; align-items:flex-end; gap:var(--hb-s2); flex-wrap:wrap;
   border-top:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-sunk); padding:var(--hb-s2);
 }
-.hb-composer > .hb-textarea{ flex:1 1 220px; min-height:44px; resize:vertical; font-family:var(--hb-body); font-size:16px }
+.hb-composer > .hb-textarea{ flex:1 1 220px; min-height:44px; resize:vertical; font-family:var(--hb-utility); font-size:16px }
 @media(min-width:641px) and (pointer:fine){ .hb-composer > .hb-textarea{ font-size:14px } }
 .hb-composer-acts{ display:flex; gap:var(--hb-s2) }
 /* One line under the log, over the composer: a privacy or cost note.
@@ -2250,14 +2260,14 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 }
 .hb-tseg:last-child{ border-bottom:0 }
 .hb-tseg-t{ font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-3); white-space:nowrap; font-variant-numeric:tabular-nums }
-.hb-tseg-text{ font-family:var(--hb-body); font-size:14px; line-height:1.5; overflow-wrap:anywhere }
+.hb-tseg-text{ font-family:var(--hb-note); font-size:14px; line-height:1.5; overflow-wrap:anywhere }
 button.hb-tseg{ width:100%; background:none; border-top:0; border-right:0; text-align:left; cursor:pointer; color:inherit; font:inherit }
 @media (hover:hover) and (pointer:fine){ button.hb-tseg:hover{ background:var(--hb-paper-sunk) } }
 .hb-tseg.is-now{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-tseg.is-now .hb-tseg-t{ color:var(--hb-pink) }
 .hb-tseg.is-partial .hb-tseg-text{ color:var(--hb-ink-3) }
 .hb-tseg{ min-height:44px }
-.hb-tseg-body{ min-width:0; font-family:var(--hb-body); font-size:14px; line-height:1.5; overflow-wrap:anywhere }
+.hb-tseg-body{ min-width:0; font-family:var(--hb-note); font-size:14px; line-height:1.5; overflow-wrap:anywhere }
 .hb-tseg-body > .hb-tseg-text{ display:inline }
 .hb-tseg-who{ display:inline-block; margin-right:6px; padding:0 5px; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; background:var(--hb-ink); color:var(--hb-paper); vertical-align:1px }
 input.hb-tseg-who{ width:9ch; min-height:24px; border:1px solid var(--hb-ink-3); background:var(--hb-paper); color:var(--hb-ink); text-transform:none; letter-spacing:0 }
@@ -2409,7 +2419,7 @@ button.hb-spark{ cursor:pointer }
 .hb-spark-big[hidden]{ display:none }
 .hb-spark-big > svg{ display:block; width:100%; height:var(--hb-spark-big-h); background:var(--hb-paper-sunk); border:1px solid var(--hb-paper-edge) }
 .hb-spark-axis{ display:flex; justify-content:space-between; gap:var(--hb-s2); font-family:var(--hb-readout); font-size:14px; color:var(--hb-ink-3) }
-.hb-spark-note{ font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
+.hb-spark-note{ font-family:var(--hb-note); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
 @media(min-width:641px){
   .hb-spark{ grid-template-columns:96px minmax(0,1fr) 48px 84px; gap:0 var(--hb-s3); padding-block:0 }
   .hb-spark-label,.hb-spark:has(> .hb-spark-chip:not(:empty)) > .hb-spark-label,.hb-spark-line,.hb-spark-value{ grid-row:1; align-self:center }
@@ -2457,7 +2467,7 @@ button.hb-spark{ cursor:pointer }
 .hb-choice.is-quiet .hb-opt.is-chosen .hb-opt-base{ background:var(--hb-ink) }
 .hb-opt.is-zero{ color:var(--hb-ink-4) }
 .hb-opt.is-zero .hb-opt-score{ color:var(--hb-ink-4) }
-.hb-choice-why{ margin:0; font-family:var(--hb-body); font-size:13.5px; line-height:1.5; color:var(--hb-ink) }
+.hb-choice-why{ margin:0; font-family:var(--hb-note); font-size:13.5px; line-height:1.5; color:var(--hb-ink) }
 .hb-choice-meta{ margin:0; font-family:var(--hb-utility); font-size:11px; line-height:1.5; color:var(--hb-ink-3); overflow-wrap:anywhere }
 .hb-choice-key{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) var(--hb-s3); margin:0; font-family:var(--hb-utility); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink-3) }
 .hb-choice-key > span{ display:inline-flex; align-items:center; gap:var(--hb-s1) }
@@ -2489,7 +2499,7 @@ button.hb-spark{ cursor:pointer }
   font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
   background:var(--hb-ink); color:var(--hb-paper); padding:2px var(--hb-s3);
 }
-.hb-causal-empty{ padding:var(--hb-s3); font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-3) }
+.hb-causal-empty{ padding:var(--hb-s3); font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-3) }
 .hb-cev{
   position:relative; display:grid; grid-template-columns:minmax(0,1fr) 44px; gap:2px var(--hb-s2); align-items:start;
   padding:var(--hb-s2) var(--hb-s1) var(--hb-s2) var(--hb-s3);
@@ -2504,7 +2514,7 @@ button.hb-spark{ cursor:pointer }
 }
 .hb-cev-agent{ color:var(--hb-ink) }
 .hb-cev-kind{ color:var(--hb-ink-3) }
-.hb-cev-text{ grid-column:1; margin:0; font-family:var(--hb-body); font-size:13.5px; line-height:1.45; overflow-wrap:anywhere }
+.hb-cev-text{ grid-column:1; margin:0; font-family:var(--hb-note); font-size:13.5px; line-height:1.45; overflow-wrap:anywhere }
 .hb-cev-pin{
   grid-column:2; grid-row:1 / span 2; justify-self:end;
   width:44px; height:44px; display:inline-flex; align-items:center; justify-content:center;
@@ -2575,7 +2585,7 @@ button.hb-spark{ cursor:pointer }
   background:var(--hb-paper-sunk); border:1px solid var(--hb-paper-edge); padding:0 6px;
 }
 .hb-cap-need.is-missing{ color:var(--hb-warn-ink); border-color:currentColor; background:transparent; text-decoration:line-through }
-.hb-cap-why,.hb-cap-dep,.hb-cap-ask{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
+.hb-cap-why,.hb-cap-dep,.hb-cap-ask{ margin:0; font-family:var(--hb-note); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
 .hb-cap-why{ color:var(--hb-warn-ink) }
 .hb-cap-dep{ color:var(--hb-ink) }
 .hb-cap > .hb-licence{ padding:var(--hb-s1) var(--hb-s2) }
@@ -2779,7 +2789,7 @@ button.hb-statuslist-row{ cursor:pointer }
 button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
 .hb-statuslist-name{ font-weight:700; text-transform:uppercase; letter-spacing:.09em }
 .hb-statuslist-state{ font-family:var(--hb-readout); font-size:16px; line-height:1 }
-.hb-statuslist-note{ grid-column:2 / -1; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-statuslist-note{ grid-column:2 / -1; font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
 .is-warn > .hb-statuslist-row .hb-statuslist-state{ color:var(--hb-warn-ink) }
 .is-err > .hb-statuslist-row .hb-statuslist-state,.is-err > .hb-statuslist-row .hb-statuslist-note{ color:var(--hb-err) }
 .is-off > .hb-statuslist-row{ color:var(--hb-ink-3) }
@@ -2932,7 +2942,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-togrow:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
 .hb-togrow-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px }
 .hb-togrow-label{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em }
-.hb-togrow-why{ font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-togrow-why{ font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
 .hb-togrow-sw{
   position:relative; width:42px; height:22px; flex:0 0 auto;
   background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink);
@@ -2985,7 +2995,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-evlog-t{ flex:0 0 auto; font-family:var(--hb-readout); font-size:16px; color:var(--hb-ink-3); font-variant-numeric:tabular-nums }
 .hb-evlog-text{ flex:1 1 auto; min-width:0; font-family:var(--hb-utility); font-size:12.5px; overflow-wrap:anywhere }
 .hb-evlog-row.is-pink .hb-evlog-tag{ color:var(--hb-pink) }
-.hb-evlog-row.is-pink .hb-evlog-text{ font-family:var(--hb-body); font-size:14px }
+.hb-evlog-row.is-pink .hb-evlog-text{ font-family:var(--hb-note); font-size:14px }
 .hb-evlog-row.is-info .hb-evlog-tag{ color:var(--hb-info) }
 .hb-evlog-row[data-kind="you"]{ margin-top:6px; padding-top:6px; border-top:1px dashed rgba(26,26,26,.25) }
 .hb-evlog-row.is-ok .hb-evlog-text{ color:var(--hb-ok-ink) }
@@ -3033,7 +3043,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-how-links{ display:flex; flex-wrap:wrap; gap:var(--hb-s3) }
 /* What the package is, then how it works: body prose at the measure, the
    first line in ink, the rest in ink 2. */
-.hb-how-prose{ max-width:var(--hb-measure); font-family:var(--hb-body); font-size:14px; line-height:1.55; color:var(--hb-ink-2) }
+.hb-how-prose{ max-width:var(--hb-measure); font-family:var(--hb-note); font-size:14px; line-height:1.55; color:var(--hb-ink-2) }
 .hb-how-prose > p{ margin:0 0 var(--hb-s2) }
 .hb-how-prose > p:last-child{ margin-bottom:0 }
 .hb-how-prose > .hb-how-what{ color:var(--hb-ink) }
@@ -3088,7 +3098,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
   color:var(--hb-ink-2); border:1px solid var(--hb-ink-3); padding:0 4px;
 }
 .hb-prow-tag.is-applies{ border-style:dashed; color:var(--hb-warn-ink); border-color:var(--hb-warn) }
-.hb-prow-help{ flex:1 0 100%; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-prow-help{ flex:1 0 100%; font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
 .hb-prow.has-help{ padding-bottom:var(--hb-s2); border-bottom:1px dashed rgba(26,26,26,.25) }
 @media(pointer:coarse){
   .hb-prow{ min-height:44px }
@@ -3110,14 +3120,14 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
   margin:0 0 var(--hb-s1); font-family:var(--hb-utility); font-size:11px; font-weight:700;
   text-transform:uppercase; letter-spacing:.12em;
 }
-.hb-setform-note{ margin:0 0 var(--hb-s2); font-family:var(--hb-body); font-size:12.5px; color:var(--hb-ink-3) }
+.hb-setform-note{ margin:0 0 var(--hb-s2); font-family:var(--hb-note); font-size:12.5px; color:var(--hb-ink-3) }
 .hb-setform-foot,.hb-setform-end{ display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:var(--hb-s2); margin-top:var(--hb-s2) }
 .hb-setform-more{ margin-right:auto; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
 .hb-setform-end{ padding-top:var(--hb-s2) }
 
 .hb-presets{ display:flex; flex-direction:column; gap:var(--hb-s1); margin-bottom:var(--hb-s2) }
 .hb-presets-row{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) }
-.hb-presets-hint{ margin:0; font-family:var(--hb-body); font-size:12.5px; color:var(--hb-ink-2) }
+.hb-presets-hint{ margin:0; font-family:var(--hb-note); font-size:12.5px; color:var(--hb-ink-2) }
 /* Settings labels run longer than bench labels: a wider column keeps a
    word and its reset mark on one line. */
 .hb-setform .hb-prow-label{ flex-basis:136px }
@@ -3141,7 +3151,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-modellist-search > .hb-input{ width:100%; box-sizing:border-box; min-height:44px }
 @media(min-width:641px) and (pointer:fine){ .hb-modellist-search > .hb-input{ min-height:0 } }
 .hb-modellist-tools > .hb-togrow{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
-.hb .hb-model-legend,.hb-model-legend{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
+.hb .hb-model-legend,.hb-model-legend{ margin:0; font-family:var(--hb-note); font-size:12.5px; line-height:1.45; color:var(--hb-ink-2) }
 .hb-model-legend b{ font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.09em; color:var(--hb-ink) }
 .hb-modellist > .hb-models{ max-height:var(--hb-models-h, none); overflow:auto }
 .hb-model-group{ margin:0 }
@@ -3168,7 +3178,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-model-pick .hb-model-name{ overflow-wrap:anywhere }
 .hb-model-badge{ font-family:var(--hb-readout); font-size:15px; line-height:1; color:var(--hb-ink-2) }
 .hb-model-def{ font-family:var(--hb-utility); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; background:var(--hb-ink); color:var(--hb-paper); padding:1px 5px }
-.hb-model-defwhy,.hb-model-note{ font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-model-defwhy,.hb-model-note{ font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
 .hb-model-defwhy{ color:var(--hb-ink) }
 .hb-model-pick .hb-model-meta{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
 .hb-model-tags{ display:flex; flex-wrap:wrap; gap:var(--hb-s1) }
@@ -3192,12 +3202,12 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-model-why.is-fault{ color:var(--hb-err) }
 .hb-model-detail{ display:flex; flex-direction:column; gap:var(--hb-s1); padding-top:var(--hb-s1); border-top:1px dashed rgba(26,26,26,.25) }
 .hb .hb-model-facts,.hb-model-facts{ margin:0; font-family:var(--hb-utility); font-size:11.5px; color:var(--hb-ink) }
-.hb-model-notes{ margin:0; padding-left:var(--hb-s3); font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-model-notes{ margin:0; padding-left:var(--hb-s3); font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
 .hb-model-ctx{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s1) var(--hb-s2) }
 .hb-model-ctxlabel{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
-.hb-model-ctxnote{ flex:1 0 100%; font-family:var(--hb-body); font-size:12px; color:var(--hb-ink-3) }
+.hb-model-ctxnote{ flex:1 0 100%; font-family:var(--hb-note); font-size:12px; color:var(--hb-ink-3) }
 .hb-model-ctx .hb-chip[disabled]{ border-style:dashed; color:var(--hb-ink-4); box-shadow:none; cursor:not-allowed }
-.hb .hb-model-empty,.hb-model-empty{ margin:0; padding:var(--hb-s3); font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-3) }
+.hb .hb-model-empty,.hb-model-empty{ margin:0; padding:var(--hb-s3); font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-3) }
 .hb .hb-model-echo,.hb-model-echo{ margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
 /* From 480 px of list width the action sits beside the row. */
 @container (min-width:480px){
@@ -3236,7 +3246,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-cap-mark.is-stored{ background:transparent; color:var(--hb-ink); border:1px dashed var(--hb-ink) }
 .hb-cap-act2{ justify-self:start }
 .hb .hb-caps-machine,.hb-caps-machine{ margin:0; font-family:var(--hb-utility); font-size:11.5px; color:var(--hb-ink) }
-.hb .hb-cap-without,.hb-cap-without{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.45; color:var(--hb-ink-3) }
+.hb .hb-cap-without,.hb-cap-without{ margin:0; font-family:var(--hb-note); font-size:12.5px; line-height:1.45; color:var(--hb-ink-3) }
 @container (min-width:420px){
   .hb-cap > .hb-cap-act2{ grid-column:2; justify-self:end }
 }
@@ -3252,7 +3262,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-reason-label{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
 .hb-reason-body{ margin:0; display:flex; flex-wrap:wrap; align-items:baseline; gap:2px var(--hb-s2); min-width:0 }
 .hb-reason-value{ font-family:var(--hb-utility); font-size:12.5px; font-weight:700; color:var(--hb-ink); overflow-wrap:anywhere }
-.hb-reason-why{ flex:1 0 100%; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-reason-why{ flex:1 0 100%; font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
 .hb-reason.is-changed .hb-reason-why{ color:var(--hb-ink) }
 .hb-reason-edit{ margin:0 }
 @media(max-width:400px){
@@ -3285,7 +3295,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 /* Organ row: a part that is not a model, such as the body. Label,
    source and size; no pick, no load, no state square. */
 .hb-slot.is-organ{ border-left-style:dotted; border-left-color:var(--hb-ink-3) }
-.hb-slot-src{ flex:1 1 160px; min-width:0; font-family:var(--hb-body); font-size:13px; line-height:1.4; overflow-wrap:anywhere }
+.hb-slot-src{ flex:1 1 160px; min-width:0; font-family:var(--hb-note); font-size:13px; line-height:1.4; overflow-wrap:anywhere }
 .hb-slot.is-missing{ border-left-color:var(--hb-err); border-left-style:dashed }
 .hb-slot.is-missing .hb-slot-fault{ flex:1 1 200px; min-width:0 }
 .hb-slot.is-missing .hb-slot-stat{ color:var(--hb-err) }
@@ -3301,7 +3311,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-slot-bar,.hb-engine-bar{ display:block; height:6px; background:var(--hb-ink); border:1px solid var(--hb-ink); position:relative; overflow:hidden }
 .hb-slot-bar > i,.hb-engine-bar > i{ display:block; height:100%; background:var(--hb-pink) }
 .hb-slot-bar.is-busy > i,.hb-engine-bar.is-busy > i{ animation:hb-sweep 1.4s steps(14) infinite }
-.hb .hb-slot-fault,.hb-slot-fault{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-err) }
+.hb .hb-slot-fault,.hb-slot-fault{ margin:0; font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-err) }
 .hb-slot-stat{
   grid-column:2; grid-row:1; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
   font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3);
@@ -3324,7 +3334,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-rack-presets{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2) }
 .hb-rack-presets > .hb-btn[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-rack-plabel{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
-.hb-rack-pnote{ flex:1 0 100%; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-rack-pnote{ flex:1 0 100%; font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
 .hb-rack-slots{ display:flex; flex-direction:column; gap:var(--hb-s2) }
 .hb .hb-rack-gate,.hb-rack-gate{ margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-2) }
 .hb-rack-gate.is-ready{ color:var(--hb-ok-ink) }
@@ -3358,8 +3368,8 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-mm-n{ font-family:var(--hb-readout); font-size:16px; font-weight:400; letter-spacing:0; background:var(--hb-ink); color:var(--hb-paper); padding:0 6px; line-height:1.3 }
 .hb .hb-mm-sub,.hb-mm-sub{ margin:var(--hb-s1) 0 0; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
 .hb-mm-storage{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2) }
-.hb .hb-mm-line,.hb-mm-line{ flex:1 1 220px; margin:0; font-family:var(--hb-body); font-size:13px; line-height:1.45; color:var(--hb-ink) }
-.hb .hb-mm-policy,.hb-mm-policy,.hb .hb-mm-empty,.hb-mm-empty{ margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-3) }
+.hb .hb-mm-line,.hb-mm-line{ flex:1 1 220px; margin:0; font-family:var(--hb-note); font-size:13px; line-height:1.45; color:var(--hb-ink) }
+.hb .hb-mm-policy,.hb-mm-policy,.hb .hb-mm-empty,.hb-mm-empty{ margin:0; font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-3) }
 .hb-mm-list{ list-style:none; margin:0; padding:0; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
 .hb-mm-item{
   display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px var(--hb-s2); align-items:center;
@@ -3398,7 +3408,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-wake-body{ display:flex; flex-direction:column; gap:var(--hb-s3); padding:var(--hb-s3) var(--hb-s4) var(--hb-s4) }
 .hb .hb-wake-title,.hb-wake-title{ margin:0; font-family:var(--hb-display); font-size:34px; line-height:1 }
 @media(min-width:641px){ .hb .hb-wake-title,.hb-wake-title{ font-size:44px } }
-.hb .hb-wake-lede,.hb-wake-lede{ margin:0; font-family:var(--hb-body); font-size:15px; line-height:1.55 }
+.hb .hb-wake-lede,.hb-wake-lede{ margin:0; font-family:var(--hb-note); font-size:15px; line-height:1.55 }
 .hb-wake-rows{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:var(--hb-s2) }
 .hb-wake-row{ display:grid; grid-template-columns:76px minmax(0,1fr); gap:2px var(--hb-s2); align-items:center; min-width:0 }
 .hb-wake-label{ font-family:var(--hb-readout); font-size:19px; font-weight:400; line-height:1 }
@@ -3418,7 +3428,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb .hb-wake-gnote,.hb-wake-gnote{ margin:0; font-family:var(--hb-utility); font-size:11.5px; line-height:1.5; color:var(--hb-ink-2) }
 .hb-wake-gnote.is-warn{ color:var(--hb-warn-ink) }
 .hb-wake-acts{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) }
-.hb .hb-wake-err,.hb-wake-err{ margin:0; font-family:var(--hb-body); font-size:13px; line-height:1.45; color:var(--hb-err); border-left:4px solid var(--hb-err); padding-left:var(--hb-s2) }
+.hb .hb-wake-err,.hb-wake-err{ margin:0; font-family:var(--hb-note); font-size:13px; line-height:1.45; color:var(--hb-err); border-left:4px solid var(--hb-err); padding-left:var(--hb-s2) }
 @media (prefers-reduced-motion:reduce){ .hb-wake-bar.is-busy > i{ animation:none } }
 
 .hb-tiers{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
@@ -3440,7 +3450,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-tier-size{ font-family:var(--hb-readout); font-size:16px; line-height:1.1; border:1px solid currentColor; padding:0 6px }
 .hb-tier-sub{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-2) }
 .hb-tier-terms{ display:flex; flex-wrap:wrap; gap:0 var(--hb-s3); font-family:var(--hb-utility); font-size:11px; font-weight:700; color:var(--hb-ink) }
-.hb-tier-note{ font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
+.hb-tier-note{ font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-2) }
 .hb-tier-bar{ display:block; height:6px; border:1px solid var(--hb-ink); background:var(--hb-paper-sunk); margin-top:2px }
 .hb-tier-bar > i{ display:block; height:100%; background:var(--hb-ink) }
 .hb-tier.is-on .hb-tier-bar > i{ background:var(--hb-pink) }
@@ -3513,7 +3523,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-msg-pending::after{ content:""; display:inline-block; width:.55em; height:1em; margin-left:4px; vertical-align:-2px; background:var(--hb-pink); animation:hb-blink 1s infinite }
 .hb-msg-tools{ display:flex; flex-direction:column; gap:var(--hb-s1); min-width:0 }
 .hb .hb-msg-err,.hb-msg-err{
-  margin:0; font-family:var(--hb-body); font-size:13px; line-height:1.45; color:var(--hb-err);
+  margin:0; font-family:var(--hb-note); font-size:13px; line-height:1.45; color:var(--hb-err);
   border:var(--hb-border) solid var(--hb-err); border-left-width:6px; background:var(--hb-paper); padding:var(--hb-s2) var(--hb-s3);
 }
 .hb-msg-seen{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3); overflow-wrap:anywhere }
@@ -3539,7 +3549,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-msg-act.is-on{ background:var(--hb-paper-sunk) }
 .hb-msg-act.is-armed{ background:var(--hb-pink); border-color:var(--hb-pink) }
 .hb-msg-edit{ display:flex; flex-direction:column; gap:var(--hb-s1); width:100%; min-width:0 }
-.hb-msg-edit > .hb-textarea{ width:100%; box-sizing:border-box; resize:none; font-family:var(--hb-body); font-size:16px }
+.hb-msg-edit > .hb-textarea{ width:100%; box-sizing:border-box; resize:none; font-family:var(--hb-utility); font-size:16px }
 .hb-msg-edit-acts{ display:flex; gap:var(--hb-s1); justify-content:flex-end }
 @media(pointer:coarse){
   .hb-msg-act{ min-height:44px; min-width:44px; padding:2px 10px }
@@ -3622,7 +3632,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-convs-item[aria-current="true"]{ box-shadow:3px 3px 0 var(--hb-pink) }
 .hb-convs-open{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:1px; padding:var(--hb-s2) var(--hb-s2) var(--hb-s2) var(--hb-s3); background:transparent; border:0; color:inherit; text-align:left; cursor:pointer; font:inherit }
 .hb-convs-open:focus-visible,.hb-convs-act:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
-.hb-convs-title{ font-family:var(--hb-body); font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.hb-convs-title{ font-family:var(--hb-utility); font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 .hb-convs-meta{ font-family:var(--hb-utility); font-size:10.5px; color:var(--hb-ink-3) }
 .hb-convs-rename{ flex:1 1 auto; min-width:0; display:flex; padding:var(--hb-s1) }
 .hb-convs-rename > .hb-input{ flex:1 1 auto; min-width:0 }
@@ -3645,7 +3655,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-chat-hd-acts{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s1) }
 .hb-chat-key > .hb-apikey{ flex:1 1 100% }
 .hb-chat-empty{ display:flex; flex-direction:column; gap:var(--hb-s2); border:1px dashed var(--hb-ink-4); padding:var(--hb-s3) }
-.hb .hb-chat-empty-text,.hb-chat-empty-text{ margin:0; font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-3) }
+.hb .hb-chat-empty-text,.hb-chat-empty-text{ margin:0; font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-3) }
 .hb-chat-examples{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) }
 .hb-chat-examples > .hb-chip{ text-transform:none; letter-spacing:0; text-align:left }
 .hb-composer > .hb-textarea{ resize:none; overflow-y:hidden }
@@ -3659,7 +3669,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb .hb-mempanel-hd,.hb-mempanel-hd{ margin:0; font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em }
 .hb .hb-mempanel-counts,.hb-mempanel-counts{ margin:0; font-family:var(--hb-readout); font-size:19px; line-height:1.15 }
 .hb .hb-mempanel-line,.hb-mempanel-line{ margin:0; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
-.hb .hb-mempanel-empty,.hb-mempanel-empty{ margin:0; font-family:var(--hb-body); font-size:13px; color:var(--hb-ink-3) }
+.hb .hb-mempanel-empty,.hb-mempanel-empty{ margin:0; font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-3) }
 .hb-mempanel-store{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2) }
 .hb-mempanel-row{ display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:var(--hb-s2) }
 .hb-mempanel-row > .hb-select{ flex:1 1 120px; min-width:0 }
@@ -3676,7 +3686,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-mem.is-pinned{ border-left:4px solid var(--hb-ink) }
 .hb-mem-pin{ display:inline-flex; align-items:center; gap:3px; margin-right:6px; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--hb-ink); vertical-align:1px }
 .hb-mem-act.is-on{ color:var(--hb-ink); background:var(--hb-paper-sunk) }
-.hb-mem-body{ flex:1 1 auto; min-width:0; padding:var(--hb-s2) var(--hb-s3); font-family:var(--hb-body); font-size:13.5px; line-height:1.4; overflow-wrap:anywhere }
+.hb-mem-body{ flex:1 1 auto; min-width:0; padding:var(--hb-s2) var(--hb-s3); font-family:var(--hb-note); font-size:13.5px; line-height:1.4; overflow-wrap:anywhere }
 .hb-mem-kind,.hb-mem-ent{ display:inline-flex; align-items:baseline; gap:4px; margin-right:6px; padding:0 5px; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; vertical-align:1px }
 .hb-mem-kind{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-mem-score{ font-family:var(--hb-readout); font-size:14px; font-weight:400; letter-spacing:0; line-height:1 }
@@ -3702,7 +3712,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
    part and the final bar. Used ones stay lit; the rest dim. */
 .hb-recall{ min-width:0; background:var(--hb-void); color:var(--hb-paper); border:var(--hb-border) solid var(--hb-ink) }
 .hb-recall-hd{ display:flex; align-items:center; gap:var(--hb-s2); background:var(--hb-ink); padding:2px var(--hb-s3); font-family:var(--hb-readout); font-size:17px; text-transform:uppercase; letter-spacing:.04em }
-.hb .hb-recall-q,.hb-recall-q{ margin:var(--hb-s2) var(--hb-s3) 0; font-family:var(--hb-body); font-size:13.5px; overflow-wrap:anywhere }
+.hb .hb-recall-q,.hb-recall-q{ margin:var(--hb-s2) var(--hb-s3) 0; font-family:var(--hb-note); font-size:13.5px; overflow-wrap:anywhere }
 .hb-recall-q > .hb-label{ color:var(--hb-lit-label); margin-right:var(--hb-s1) }
 .hb .hb-recall-line,.hb-recall-line,.hb .hb-recall-empty,.hb-recall-empty{ margin:var(--hb-s1) var(--hb-s3) var(--hb-s2); font-family:var(--hb-utility); font-size:11px; color:var(--hb-lit-label) }
 .hb-recall-weights{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:0 var(--hb-s3); padding:0 var(--hb-s3) var(--hb-s2) }
@@ -3714,7 +3724,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-recall-kind{ border:1px solid var(--hb-ink-border); padding:0 5px; font-weight:700 }
 .hb-recall-mark{ margin-left:auto; color:var(--hb-lit-label) }
 .hb-recall-hit.is-used .hb-recall-mark{ color:var(--hb-slime) }
-.hb .hb-recall-text,.hb-recall-text{ margin:var(--hb-s1) 0 var(--hb-s2); font-family:var(--hb-body); font-size:13px; line-height:1.4; overflow-wrap:anywhere }
+.hb .hb-recall-text,.hb-recall-text{ margin:var(--hb-s1) 0 var(--hb-s2); font-family:var(--hb-note); font-size:13px; line-height:1.4; overflow-wrap:anywhere }
 .hb-recall-bars{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:2px var(--hb-s2); font-family:var(--hb-readout); font-size:14px; line-height:1 }
 .hb-recall-k{ color:var(--hb-lit-label); text-transform:uppercase; min-width:3.5ch }
 .hb-recall-v{ font-variant-numeric:tabular-nums; text-align:right; min-width:4ch }
@@ -3791,7 +3801,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-qstrip.is-sel .hb-qstrip-n,.hb-qstrip.is-done .hb-qstrip-n{ color:var(--hb-ink) }
 .hb-qstrip-body{ display:flex; flex-direction:column; gap:var(--hb-s1); min-width:0 }
 .hb-qstrip-hd{ display:flex; align-items:baseline; justify-content:space-between; gap:var(--hb-s3); min-width:0 }
-.hb-qstrip-name{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--hb-body); font-size:14px }
+.hb-qstrip-name{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--hb-utility); font-size:14px }
 .hb-qstrip-stat{ flex:none; font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--hb-ink-3) }
 .hb-qstrip.is-ok .hb-qstrip-stat{ color:var(--hb-ok-ink) }
 .hb-qstrip.is-busy .hb-qstrip-stat{ color:var(--hb-warn-ink) }
@@ -3815,7 +3825,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
    name above. Pink marks only the word in the mouth. */
 .hb-spoken{ margin:0; min-width:0; padding:var(--hb-s3) var(--hb-s4); background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink) }
 .hb-spoken-who{ margin-bottom:var(--hb-s1); font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--hb-ink-3) }
-.hb-spoken-line{ margin:0; font-family:var(--hb-body); font-size:clamp(16px, 3.6vw, 22px); line-height:1.6; overflow-wrap:anywhere }
+.hb-spoken-line{ margin:0; font-family:var(--hb-note); font-size:clamp(16px, 3.6vw, 22px); line-height:1.6; overflow-wrap:anywhere }
 .hb-spoken-w{ color:var(--hb-ink-3); transition:color var(--hb-t-fast), background var(--hb-t-fast) }
 .hb-spoken-w.is-done{ color:var(--hb-ink) }
 .hb-spoken-w.is-on{ color:var(--hb-ink); background:var(--hb-pink); box-shadow:0 0 0 2px var(--hb-pink) }
@@ -3844,7 +3854,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-method.is-active .hb-method-badge{ background:var(--hb-pink); color:var(--hb-ink) }
 .hb-method:disabled .hb-method-badge{ background:var(--hb-ink-4) }
 .hb-method-body{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:2px }
-.hb-method-label{ font-family:var(--hb-body); font-size:15px; font-weight:700; line-height:1.15 }
+.hb-method-label{ font-family:var(--hb-utility); font-size:15px; font-weight:700; line-height:1.15 }
 .hb-method-state{ margin-left:var(--hb-s2); font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
 .hb-method.is-failed .hb-method-state{ color:var(--hb-err) }
 .hb-method.is-loading .hb-method-state{ color:var(--hb-warn-ink) }
@@ -3924,7 +3934,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-hist.is-grid .hb-hist-item.is-current{ box-shadow:3px 3px 0 var(--hb-ink) }
 .hb-hist.is-grid .hb-hist-thumb{ width:100%; height:auto; aspect-ratio:1 / 1; border:0; border-bottom:1.5px solid var(--hb-ink); box-shadow:none }
 .hb-hist-cap{ display:flex; flex-direction:column; gap:2px; padding:var(--hb-s1) var(--hb-s2); padding-right:44px; min-width:0 }
-.hb-hist-label{ font-family:var(--hb-body); font-size:12.5px; line-height:1.3; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical }
+.hb-hist-label{ font-family:var(--hb-utility); font-size:12.5px; line-height:1.3; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical }
 .hb-hist-meta{ font-family:var(--hb-utility); font-size:10px; color:var(--hb-ink-3); overflow-wrap:anywhere }
 .hb-hist.is-grid .hb-hist-x{ display:inline-flex; top:auto; bottom:0; right:0; width:44px; height:44px; border:0; border-left:1px dashed var(--hb-ink-4); background:transparent; color:var(--hb-ink-3) }
 
@@ -3992,7 +4002,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-inst-pick{ flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:var(--hb-s2); padding:var(--hb-s1) var(--hb-s2); min-height:32px; background:transparent; border:0; color:var(--hb-ink); font:inherit; text-align:left; cursor:pointer }
 .hb-inst-pick:focus-visible,.hb-inst-act:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-2px }
 .hb-inst-sw{ flex:none; width:14px; height:14px; background:var(--hb-inst-c, var(--hb-pink)); border:1.5px solid var(--hb-ink) }
-.hb-inst-name{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--hb-body); font-size:13px }
+.hb-inst-name{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--hb-utility); font-size:13px }
 .hb-inst-score{ flex:none; font-family:var(--hb-readout); font-size:16px; font-variant-numeric:tabular-nums; color:var(--hb-ink-3) }
 .hb-inst-row.is-hidden .hb-inst-name{ text-decoration:line-through; color:var(--hb-ink-3) }
 .hb-inst-row.is-hidden .hb-inst-sw{ opacity:.35 }
@@ -4031,7 +4041,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 }
 .hb-r2.is-disabled{ opacity:.5 }
 .hb-r2-names{ grid-column:1 / -1; display:flex; justify-content:space-between; gap:var(--hb-s2); font-family:var(--hb-utility); font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
-.hb-r2-hint{ grid-column:1 / -1; margin:0; font-family:var(--hb-body); font-size:12.5px; line-height:1.4; color:var(--hb-ink-3) }
+.hb-r2-hint{ grid-column:1 / -1; margin:0; font-family:var(--hb-note); font-size:12.5px; line-height:1.4; color:var(--hb-ink-3) }
 
 /* Monitor dock. Insets side by side: the raw feed beside the model's
    view, each folding to its head. Inline it fills the row and wraps
@@ -4141,7 +4151,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-ov-foot > .hb-ov-b > *,.hb-ov-foot > .hb-ov-pad > *{ pointer-events:auto }
 .hb-ov-hint{ display:none; justify-content:center }
 .hb-ov-hint > *{
-  font-family:var(--hb-body); font-size:12px; line-height:1.4; max-width:100%;
+  font-family:var(--hb-note); font-size:12px; line-height:1.4; max-width:100%;
   background:color-mix(in srgb, var(--hb-void) 80%, transparent); color:var(--hb-paper);
   border:1px solid var(--hb-ink-border); padding:var(--hb-s1) var(--hb-s2);
 }
@@ -4233,7 +4243,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-caption-line{
   display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden;
   max-height:calc(2 * 1.5em + 2 * var(--hb-s1));
-  font-family:var(--hb-body); font-size:14px; line-height:1.5; color:var(--hb-paper);
+  font-family:var(--hb-note); font-size:14px; line-height:1.5; color:var(--hb-paper);
   background:color-mix(in srgb, var(--hb-void) 86%, transparent);
   border:1px solid var(--hb-ink-border); border-left:var(--hb-border-hd) solid var(--hb-paper);
   padding:var(--hb-s1) var(--hb-s2); overflow-wrap:anywhere;
@@ -4547,6 +4557,7 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
   --hb-shadow-lg:5px 5px 0 var(--hb-ink);
   --hb-shadow-xl:7px 7px 0 var(--hb-ink);
 }
+.hb-zine,.hb-prose,.hb-hero,.hb-cta,.hb-cover{ font-family:var(--hb-note); line-height:1.6 }
 .hb-zine .hb-pill{
   font-family:var(--hb-utility); font-size:10px; font-weight:700;
   text-transform:uppercase; letter-spacing:.1em; line-height:inherit; padding:3px 9px;
@@ -4706,12 +4717,12 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-instrument{
   --hb-s2:6px; --hb-s3:8px; --hb-s4:10px; --hb-s5:12px;
   --hb-shadow-lg:3px 3px 0 var(--hb-ink);
-  font-size:12.5px; line-height:1.4;
+  font-size:13px; line-height:1.4;
 }
 .hb-instrument .hb-panel{ box-shadow:var(--hb-shadow) }
 .hb-instrument .hb-panel-hd{ font-size:16px; margin-bottom:var(--hb-s2); padding-bottom:4px }
 .hb-instrument .hb-panel-hd-inst,.hb .hb-instrument h2.hb-panel-hd-inst,.hb .hb-instrument h3.hb-panel-hd-inst{ font-size:var(--hb-readout-md); padding-top:4px; padding-bottom:3px; margin-bottom:var(--hb-s2) }
-.hb-instrument .hb-label{ font-size:10px }
+.hb-instrument .hb-label{ font-size:11.5px }
 .hb-instrument .hb-kv{ padding:2px 0; font-family:var(--hb-utility); font-size:11.5px; line-height:1.35 }
 .hb-instrument .hb-kv .hb-readout,.hb-instrument .hb-readouts .hb-readout{ font-size:var(--hb-readout-md); line-height:1 }
 .hb-instrument .hb-readout{ font-size:var(--hb-readout-lg) }

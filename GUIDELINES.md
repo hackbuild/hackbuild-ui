@@ -260,10 +260,10 @@ everywhere collapses it into noise. Pick the face by the job the text is doing.
 
 | Face | Job | Never |
 |---|---|---|
-| Permanent Marker | h1, h2, h3, panel headings, brand lockup | body, buttons, numbers |
-| Special Elite | prose, advisory notes, seal band text, hero subtitles | labels, readouts |
-| IBM Plex Mono | every label, button, tab, chip, table header, form field, code, and the wordmark at 700 | headlines |
-| VT323 | live numbers, coordinates, counters, timers, console lines | prose |
+| Permanent Marker | one name per screen (h1, `.hb-display`), brand lockup; h2 and h3 in the zine scope | body, buttons, numbers, block heads in a tool |
+| Special Elite (`--hb-note`) | notes, hints, message prose, seal band text, hero subtitles | labels, readouts, the interface |
+| IBM Plex Mono (`--hb-utility`) | the interface: body text, every label, button, chip, table header, form field, code, and the wordmark at 700 | headlines |
+| VT323 | live numbers, coordinates, counters, timers, console lines, tabs, pills, block heads (h2, h3, panel heads) | prose |
 | Libre Baskerville Italic | the tagline "make things. break things. repeat." and nothing else | anything else |
 
 ```html
@@ -274,19 +274,24 @@ everywhere collapses it into noise. Pick the face by the job the text is doing.
 
 | Role | Face | Size | Notes |
 |---|---|---|---|
-| h1 | Permanent Marker | 44 px, 32 mobile | line-height 1.05 |
-| h2 | Permanent Marker | 28 px | section headings |
-| h3, panel heading | Permanent Marker | 18 to 20 px | ink rule underneath |
-| body | Special Elite | 14 to 16 px | line-height 1.6 to 1.8, max 68ch |
-| label, button, tab | IBM Plex Mono 600 | 11 px | uppercase, letter-spacing 0.09em |
+| h1 | Permanent Marker | 44 px, 32 mobile | line-height 1.05, one per screen |
+| h2 | VT323 | 30 px, 26 mobile | block heads, sentence case; Permanent Marker 28 px in the zine scope |
+| h3, panel heading | VT323 | 19 to 21 px | ink rule underneath |
+| interface | IBM Plex Mono 400 | 14 px, 13 in `.hb-instrument` | line-height 1.45, sentence case |
+| note | Special Elite | 13 to 16 px | line-height 1.5 to 1.6, max 68ch; the zine scope sets prose in it |
+| label | IBM Plex Mono 600 | 12 px | sentence case |
+| button, chip | IBM Plex Mono 500 | 13 px (12 small, 14 large) | sentence case, no tracking |
+| tab, pill | VT323 | 15 px tab, 17 px pill | sentence case |
+| small readout label | IBM Plex Mono 600 | 11 px | `.hb-readout-label`, uppercase, letter-spacing 0.09em; the only uppercase in a tool |
 | table cell, code | IBM Plex Mono 400 | 12.5 px | tabular numerals on figures |
 | readout | VT323 | 18 to 32 px | pink on paper, pink or green on ink |
 | tagline | Libre Baskerville Italic | 15 to 20 px | one per artifact |
 
 ### Two panel heads
 
-Permanent Marker on a rule is the editorial head: pages, docs, marketing, and
-the calmer half of a tool. VT323 uppercase on a full-bleed ink bar is the
+VT323 on a rule (`.hb-panel-hd`) is the plain head of a tool block. Permanent
+Marker heads belong to pages, docs and marketing (the zine scope). VT323
+sentence case on a full-bleed ink bar is the
 instrument head: dense panels, anything sitting next to a scope. KERF and the
 laser rigs use the instrument head throughout. Pick one per artifact and use it
 for every panel in that artifact; mixing them inside one view is the fastest way
@@ -475,7 +480,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 |---|---|
 | `.hb-header` | Ink bar, 3 px pink bottom rule, mark at ~26 px, marker title with pink span, tagline pushed right at reduced opacity |
 | `.hb-tabs` / `.hb-tab` | Transparent buttons on ink, pink underline on the active one |
-| `.hb-panel` / `.hb-panel-hd` | Raised paper, 2 px ink border, 5 px shadow, marker heading over an ink rule |
+| `.hb-panel` / `.hb-panel-hd` | Raised paper, 1.5 px ink border, hard shadow, VT323 heading over an ink rule |
 | `.hb-card` | Same, but lifts 2 px on hover to a 7 px shadow |
 | `.hb-stage` | The void with a pink offset shadow. Canvases, scopes, waterfalls, 3D views |
 | `.hb-btn` and variants | Ink fill, pink on hover, shadow collapses on press. `-2` secondary, `-danger` pink fill, `-ghost` for inside stages; disabled ghost is a paper edge fill, ink 3 text (4.46:1, computed) and a dashed border, readable on paper and ink |
@@ -518,7 +523,7 @@ All of these ship in `hackbuild.css` with `hb-` prefixed classes.
 | `.hb-spinner` | Three meter segments blinking in order. No circles |
 | `.hb-empty` | Dashed well that says what is missing and what to do |
 | `.hb-pages` / `.hb-page` | Pagination chips, current page pink |
-| `.hb-panel-hd-inst` | The instrument panel head: VT323 caps on a full-bleed ink bar |
+| `.hb-panel-hd-inst` | The instrument panel head: VT323 sentence case on a full-bleed ink bar |
 | `.hb-tilt-l` / `.hb-tilt-l2` / `.hb-tilt-r` / `.hb-tilt-r2` | Sparing rotation. One or two tilted things per view |
 | `.hb-icon` / `.hb-iconbtn` | The shipped stroke icon set and the square icon-only action button, 34 px, 44 px under 640 px and on touch screens |
 | `.hb-nav` / `.hb-nav-link` / `.hb-nav-cta` | Page navigation. Links collapse into a drawer below 760 px |
@@ -751,7 +756,7 @@ wraps HbStage and offers the four corners and the centre, nothing else.
 |---|---|
 | step tile | transparent on ink, equal flex, 3 px bottom border that goes pink on the current step, Plex 12 px .14em, 18 px numbered badge, ok fill when done |
 | guide | sunk, 2 px ink bottom, Special Elite 13 px, step name VT323 17 px pink |
-| instrument head | `.hb-panel-hd-inst`: VT323 17 px uppercase on a full-bleed ink bar |
+| instrument head | `.hb-panel-hd-inst`: VT323 19 px sentence case on a full-bleed ink bar |
 | param row | flex, 96 px label column at 10 px uppercase .12em in ink 3 with the reset mark at its end once the value leaves its default, control fills the rest, 64 px paired number, 22 px unit; wraps on narrow screens |
 | chip | 2 px ink border, raised; toggles fill ink when on (`.is-toggle`); pink fill only for the one primary selection of a step |
 | materials row | 18 px swatch with a 2 px ink border, extruder in VT323 15 px, material, parts, role |

@@ -87,7 +87,8 @@
 
   /* ---- type. Four faces, four jobs. ------------------------------------- */
   --hb-display:  'Permanent Marker', cursive;                 /* headlines only */
-  --hb-body:     'Special Elite', 'Courier New', monospace;   /* prose */
+  --hb-note:     'Special Elite', 'Courier New', monospace;   /* notes, hints and message prose only */
+  --hb-body:     var(--hb-note);                              /* alias of --hb-note, kept one minor */
   --hb-utility:  'IBM Plex Mono', ui-monospace, monospace;    /* labels, UI, wordmark */
   --hb-readout:  'VT323', ui-monospace, monospace;            /* numbers, console */
   --hb-tagline:  'Libre Baskerville', Georgia, serif;         /* the tagline only */

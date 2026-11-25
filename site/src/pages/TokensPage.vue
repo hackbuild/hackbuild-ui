@@ -40,7 +40,7 @@ const lits = [
 
 const faces = [
   { face: 'Permanent Marker', token: '--hb-display', job: 'h1, h2, h3, panel headings, stickers', sample: 'make things. break things.', style: 'font-family:var(--hb-display);font-size:26px' },
-  { face: 'Special Elite', token: '--hb-body', job: 'prose, advisory notes, hero subtitles', sample: 'The quick brown fox jumps over the lazy dog.', style: 'font-family:var(--hb-body);font-size:15px' },
+  { face: 'Special Elite', token: '--hb-note', job: 'notes, hints, message prose, hero subtitles', sample: 'The quick brown fox jumps over the lazy dog.', style: 'font-family:var(--hb-note);font-size:15px' },
   { face: 'IBM Plex Mono', token: '--hb-utility', job: 'labels, buttons, tabs, tables, code, wordmark', sample: 'CENTER FREQUENCY 433.920', style: "font-family:var(--hb-utility);font-size:13px;font-weight:600;letter-spacing:.09em" },
   { face: 'VT323', token: '--hb-readout', job: 'live numbers, counters, console lines', sample: '2402.500 MHz  -55 dBm', style: 'font-family:var(--hb-readout);font-size:26px;color:var(--hb-pink)' },
   { face: 'Libre Baskerville italic', token: '--hb-tagline', job: 'the tagline and nothing else', sample: 'make things. break things. repeat.', style: 'font-family:var(--hb-tagline);font-style:italic;font-size:16px;color:var(--hb-ink-3)' },
