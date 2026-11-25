@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import {
-  HbAppShell, HbButton, HbChip, HbHeader, HbHudStat, HbIcon, HbInset, HbKbd, HbPanel, HbParamRow, HbSeed, HbStageCaption, HbToolbar,
-  HbTransport, HbViewport, HbWave,
+  HbAppShell, HbButton, HbChat, HbChip, HbDrawer, HbHeader, HbHudStat, HbIcon, HbInset, HbKbd, HbPad, HbPanel, HbParamRow, HbPill,
+  HbSeed, HbSeg, HbStageCaption, HbToolbar, HbTransport, HbViewport, HbWave, type PadVector,
 } from '@hackbuild/ui'
 
 // A stage tool (motion tools): the toolbar, the stage, a strip under it
@@ -10,6 +10,11 @@ import {
 // right from 1024 px. The main column has more parts than the side has
 // height for; each part keeps its own row and none sits under the stage.
 // The hint keys are HbKbd on the dark hud plate. Fixture data only.
+// The toolbar carries as many verbs as the room tool: it fits to its own
+// column, and what still does not fit moves into the more menu, tune
+// always in view. The pad stays inside the stage at every phone height.
+// The dock arrives after mount, as a tool's teleported composer does, and
+// the tune sheet stops at its top edge.
 const seed = ref(7)
 const locked = ref(true)
 const playing = ref(false)
@@ -25,6 +30,11 @@ const weight = ref(1)
 const EYES = ['what it sees', 'depth', 'detector']
 const eye = ref('what it sees')
 const eyeOpen = ref(true)
+const move = ref<PadVector>({ x: 0, y: 0 })
+const run = ref<string | number>('prompted')
+const tune = ref(false)
+const dock = ref(false)
+let late = 0
 
 let raf = 0
 let last = 0
@@ -39,8 +49,12 @@ function tick(t: number) {
   last = t
   raf = requestAnimationFrame(tick)
 }
-onMounted(() => { last = performance.now(); raf = requestAnimationFrame(tick) })
-onBeforeUnmount(() => cancelAnimationFrame(raf))
+onMounted(() => {
+  last = performance.now()
+  raf = requestAnimationFrame(tick)
+  late = window.setTimeout(() => { dock.value = true }, 300)
+})
+onBeforeUnmount(() => { cancelAnimationFrame(raf); clearTimeout(late) })
 const seek = (t: number) => { time.value = Math.min(duration, Math.max(0, t)) }
 </script>
 
@@ -54,18 +68,26 @@ const seek = (t: number) => { time.value = Math.min(duration, Math.max(0, t)) }
     </template>
 
     <div class="hb-toolpage is-split is-stage">
-      <!-- overflow: one row on a phone. Labels drop to icons, seed and the
-           tool verbs fold behind the more button. -->
+      <!-- overflow: one row by the bar's own width. Labels drop to icons,
+           seed and the tool verbs fold behind the more button, and verbs
+           that still do not fit move in after them. tune stays. -->
       <HbToolbar overflow>
         <HbButton variant="secondary"><HbIcon name="refresh" :size="14" /><span class="hb-bar-lbl">restart</span></HbButton>
         <HbButton variant="secondary"><HbIcon name="upload" :size="14" /><span class="hb-bar-lbl">body</span></HbButton>
+        <HbButton variant="secondary"><HbIcon name="layer-group" :size="14" /><span class="hb-bar-lbl">panels</span></HbButton>
+        <HbButton variant="secondary"><HbIcon name="record" :size="14" /><span class="hb-bar-lbl">record</span></HbButton>
+        <HbButton variant="secondary"><HbIcon name="camera" :size="14" /><span class="hb-bar-lbl">snap</span></HbButton>
         <template #more>
           <HbSeed v-model="seed" v-model:locked="locked" />
-          <HbButton variant="secondary">record</HbButton>
+          <HbButton variant="ghost" size="sm" title="who decides: in tab"><HbPill status="ok">brain in tab</HbPill></HbButton>
+          <HbPill status="none">idle</HbPill>
+          <HbSeg v-model="run" :options="['prompted', 'free run']" label="who starts" />
+          <HbButton variant="secondary">stop</HbButton>
+          <HbButton variant="secondary"><HbIcon name="circle-nodes" :size="14" /><span class="hb-bar-lbl">open rack</span></HbButton>
         </template>
         <template #end>
           <span class="hb-spacer" />
-          <HbButton variant="secondary"><HbIcon name="sliders" :size="14" /><span class="hb-bar-lbl">tune</span></HbButton>
+          <HbButton variant="secondary" :aria-expanded="tune" @click="tune = true"><HbIcon name="sliders" :size="14" /><span class="hb-bar-lbl">tune</span></HbButton>
         </template>
       </HbToolbar>
 
@@ -104,6 +126,7 @@ const seek = (t: number) => { time.value = Math.min(duration, Math.max(0, t)) }
             </svg>
           </HbInset>
         </template>
+        <template #pad><HbPad v-model="move" action="act" always keys /></template>
         <template #b>
           <HbButton variant="secondary">wave</HbButton>
           <HbButton variant="secondary">sit</HbButton>
@@ -139,5 +162,15 @@ const seek = (t: number) => { time.value = Math.min(duration, Math.max(0, t)) }
         </HbPanel>
       </div>
     </div>
+    <template v-if="dock" #dock>
+      <HbChat :lines="[]" :log="false" placeholder="tell the walker what to do" label="talk to the walker" />
+    </template>
   </HbAppShell>
+  <HbDrawer v-model="tune" side="auto" title="tune the walker">
+    <div class="hb-rail is-above-dock">
+      <HbPanel heading="gait" sunk class="hb-instrument">
+        <HbParamRow v-model="reach" label="reach" :min="0" :max="1" :step="0.05" unit="m" :default-value="0.6" />
+      </HbPanel>
+    </div>
+  </HbDrawer>
 </template>
