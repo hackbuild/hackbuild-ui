@@ -165,7 +165,7 @@ body.hb::before{
 /* the title keeps its words whole and ends in an ellipsis instead of
    breaking inside a word or pushing the page sideways */
 .hb-header h1{
-  font-size:22px; line-height:1; color:var(--hb-ink); flex:0 1 auto; min-width:0; max-width:100%;
+  font-size:22px; line-height:1; color:var(--hb-ink); flex:0 0 auto; min-width:0; max-width:60%;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .hb-header h1 span{ color:var(--hb-pink) }
@@ -176,6 +176,8 @@ body.hb::before{
    brand line alone. */
 .hb-header .hb-tagline.is-tool{ font-family:var(--hb-note); font-style:normal }
 @media(min-width:901px){ .hb-header .hb-tagline{ display:inline } }
+/* The menu and anything after it sit at the right end of the bar. */
+.hb-header .hb-header-end{ margin-left:auto; display:flex; align-items:center; gap:var(--hb-s2); flex:0 1 auto; min-width:0 }
 
 /* The ink bar: brand pages and the docs site. Pink rule, paper text,
    and it may wrap. */
@@ -1143,8 +1145,7 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
 /* Head of a drawer or modal: the title, then the close button. */
 .hb-drawer-hd,.hb-modal-hd{ display:flex; align-items:center; gap:var(--hb-s2) }
 .hb-drawer-hd{
-  font-family:var(--hb-utility); font-size:11px; font-weight:600;
-  text-transform:uppercase; letter-spacing:.09em;
+  font-family:var(--hb-readout); font-size:var(--hb-readout-lg); font-weight:400;
   margin:calc(var(--hb-s2) * -1) 0 var(--hb-s3); padding-bottom:var(--hb-s2);
   border-bottom:var(--hb-border) solid var(--hb-ink);
 }
@@ -1912,7 +1913,7 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-readouts > .hb-kv{ font-family:var(--hb-utility); font-size:12px; color:var(--hb-ink-3) }
 .hb-readouts > .hb-kv:last-child{ border-bottom:1px dashed rgba(26,26,26,.25) }
 .hb-readouts .hb-readout{ color:var(--hb-ink); font-size:18px; text-align:right; overflow-wrap:anywhere }
-.hb-readouts .is-focal .hb-readout,.hb-readouts .hb-readout.is-focal{ color:var(--hb-pink) }
+.hb-readouts .is-focal .hb-readout,.hb-readouts .hb-readout.is-focal,.hb-kv.is-focal > .hb-readout{ color:var(--hb-pink) }
 @media(min-width:641px){ .hb-readouts{ grid-template-columns:repeat(auto-fill,minmax(220px,1fr)) } }
 
 /* Gauge rows. Label, a bar, the value: drives, utilities, scores. Ink
@@ -4907,3 +4908,210 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
   background:var(--hb-ink); color:var(--hb-paper); font-family:var(--hb-utility); font-size:11px; line-height:1.4; pointer-events:none;
 }
 .hb-mask-empty{ position:absolute; inset:0; margin:0; padding:var(--hb-s4); display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--hb-utility); font-size:12px; color:var(--hb-lit-label) }
+
+
+/* ==========================================================================
+   38. LAYOUTS
+   The six page layouts of the rebuild plan (section 2), one per original
+   family: stage and rack (hackle), canvas and rail (mask-studio-sam), drop
+   first (scribe), conversation (clevis), gate (ferrule, arbor), form and
+   frame (grommet). One 52 px bar, one subject that fills, one 380 px rack
+   of three to five tabs, verbs on the subject. Under 901 px the subject
+   takes the top of the screen and the rack follows it. Every part carries
+   a data-ux marker (bar, subject, rack, verbs, inset, detail) that the
+   screen gate reads. Vue: HbStageRack, HbCanvasRail, HbDropFirst,
+   HbConversation, HbGate, HbFormFrame, HbRack. Vanilla: layout().
+   ========================================================================== */
+.hb-lay{
+  display:grid; grid-template-rows:auto minmax(0,1fr);
+  height:100vh; height:100dvh; overflow:hidden; min-width:0;
+  background:var(--hb-paper); color:var(--hb-ink);
+}
+.hb-lay-bar{ min-width:0 }
+.hb-lay-body{ display:grid; grid-template-columns:minmax(0,1fr) var(--hb-rack); min-height:0; min-width:0 }
+.hb-lay-stage{ position:relative; display:flex; flex-direction:column; min-width:0; min-height:0; overflow:hidden }
+.hb-lay-subject{ position:relative; flex:1 1 auto; min-width:0; min-height:0; overflow:hidden; background:var(--hb-paper-sunk) }
+/* the verb row sits on the subject, bottom left, as hackle's throw, treat
+   and good dog do; the stage still takes the pointer between the verbs */
+.hb-lay-verbs{
+  position:absolute; left:var(--hb-s3); right:var(--hb-s3); bottom:var(--hb-s3); z-index:2;
+  display:flex; flex-wrap:wrap; align-items:flex-end; gap:6px; pointer-events:none;
+}
+.hb-lay-verbs > *{ pointer-events:auto }
+/* a card on the subject: an eye view, a minimap */
+.hb-lay-inset{
+  position:absolute; left:var(--hb-s3); top:var(--hb-s3); z-index:2; width:min(320px, 46%);
+  background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); box-shadow:4px 4px 0 var(--hb-ink);
+}
+.hb-lay-empty{
+  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:var(--hb-s3); padding:var(--hb-s5); text-align:center;
+}
+.hb-lay-empty-name{ font-family:var(--hb-display); font-size:34px; line-height:1.05 }
+.hb-lay-empty-note{ margin:0; max-width:46ch; font-family:var(--hb-note); font-size:13px; line-height:1.45; color:var(--hb-ink-3) }
+.hb-lay-empty-acts{ display:flex; flex-wrap:wrap; justify-content:center; gap:var(--hb-s2) }
+
+/* The rack: tabs on a light strip, the selected tab ink, one pane. */
+.hb-rack{
+  display:flex; flex-direction:column; min-width:0; min-height:0;
+  background:var(--hb-paper); border-left:var(--hb-border-em) solid var(--hb-ink);
+}
+.hb-rack > .hb-tabs{ flex:0 0 auto; overflow:hidden; border-bottom:var(--hb-border-em) solid var(--hb-ink) }
+.hb-rack > .hb-tabs > .hb-tab{ flex:1 1 0; min-width:0; min-height:44px; padding:10px 4px; overflow:hidden; text-overflow:ellipsis; text-align:center }
+.hb-rack-pane{ flex:1 1 auto; min-height:0; overflow:auto; padding:var(--hb-s3) }
+.hb-rack-pane[hidden]{ display:none }
+.hb-rack-detail{ flex:0 0 auto; border-top:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb-rack-detail > summary{ cursor:pointer; padding:var(--hb-s2) var(--hb-s3); font-family:var(--hb-readout); font-size:var(--hb-readout-md); list-style:none }
+.hb-rack-detail > summary::-webkit-details-marker{ display:none }
+.hb-rack-detail > summary::before{ content:"+ " }
+.hb-rack-detail[open] > summary::before{ content:"- " }
+.hb-rack-detail > div{ padding:0 var(--hb-s3) var(--hb-s3); max-height:40vh; overflow:auto; font-size:12.5px }
+@media(pointer:coarse){ .hb-rack-detail > summary{ min-height:44px; display:flex; align-items:center } }
+
+/* canvas and rail: the icon tool rail, the canvas, the rack */
+.hb-lay.is-canvas-rail .hb-lay-body{ grid-template-columns:var(--hb-tools) minmax(0,1fr) var(--hb-rack) }
+.hb-lay-tools{
+  display:flex; flex-direction:column; align-items:center; gap:2px; padding:var(--hb-s2) 0;
+  min-height:0; overflow:auto; background:var(--hb-paper-raised); border-right:var(--hb-border-em) solid var(--hb-ink);
+}
+.hb-lay-tools > .hb-iconbtn{ box-shadow:none; border-color:transparent; background:transparent }
+.hb-lay-tools > .hb-iconbtn[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper); border-color:var(--hb-ink) }
+.hb-lay-tools > hr{ width:60%; border:0; border-top:var(--hb-border) solid var(--hb-paper-edge); margin:var(--hb-s1) 0 }
+
+/* drop first: the subject is a drop zone until a result exists */
+.hb-lay-drop{ position:absolute; inset:var(--hb-s3); border:var(--hb-border-em) dashed var(--hb-ink-4); background:var(--hb-paper) }
+.hb-lay-drop.is-hot{ border-color:var(--hb-pink); background:var(--hb-pink-10) }
+.hb-lay-drop .hb-lay-empty-name{ font-size:30px }
+
+/* conversation: the chat list rail, the messages, the composer, the rack */
+.hb-lay.is-conversation.has-list .hb-lay-body{ grid-template-columns:var(--hb-list) minmax(0,1fr) var(--hb-rack) }
+.hb-lay-list{ min-width:0; min-height:0; overflow:auto; background:var(--hb-paper-sunk); border-right:var(--hb-border-em) solid var(--hb-ink) }
+.hb-lay.is-conversation .hb-lay-subject{ overflow:auto; background:var(--hb-paper) }
+.hb-lay-composer{ flex:0 0 auto; padding:var(--hb-s2) var(--hb-s3); border-top:var(--hb-border-em) solid var(--hb-ink); background:var(--hb-paper-raised) }
+
+/* gate: a centred card over the live subject, no rack */
+.hb-lay.is-gate .hb-lay-body{ grid-template-columns:minmax(0,1fr) }
+.hb-gate-wrap{ position:absolute; inset:0; z-index:3; display:grid; place-items:center; padding:var(--hb-s4); pointer-events:none; overflow:auto }
+.hb-gate-card{
+  pointer-events:auto; width:min(520px, 100%);
+  background:var(--hb-paper-raised); border:var(--hb-border-em) solid var(--hb-ink); box-shadow:8px 8px 0 var(--hb-pink);
+}
+.hb-gate-head{
+  display:flex; justify-content:space-between; gap:var(--hb-s2); padding:8px 14px;
+  background:var(--hb-ink); color:var(--hb-paper); font-family:var(--hb-readout); font-size:22px; line-height:1;
+}
+.hb-gate-body{ display:flex; flex-direction:column; gap:var(--hb-s3); padding:16px 18px }
+.hb .hb-gate-name,.hb-gate-name{ margin:0; font-family:var(--hb-display); font-size:40px; line-height:1 }
+.hb .hb-gate-note,.hb-gate-note{ margin:0; font-family:var(--hb-note); font-size:15px; line-height:1.5 }
+.hb-gate-acts{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2) }
+.hb-gate-acts > .hb-btn-go{ flex:1 1 auto; justify-content:center }
+@media(max-width:640px){ .hb .hb-gate-name,.hb-gate-name{ font-size:32px } }
+
+/* form and frame: the form column (the rack, left) beside the frame */
+.hb-lay.is-form-frame .hb-lay-body{ grid-template-columns:var(--hb-rack) minmax(0,1fr) }
+.hb-lay.is-form-frame .hb-rack{ border-left:0; border-right:var(--hb-border-em) solid var(--hb-ink); order:-1 }
+.hb-lay.is-form-frame .hb-lay-subject{ display:flex; align-items:center; justify-content:center; background:var(--hb-void) }
+
+@media(max-width:900px){
+  .hb-lay{ height:auto; min-height:100vh; min-height:100dvh; overflow:visible }
+  .hb-lay-body,.hb-lay.is-conversation.has-list .hb-lay-body,.hb-lay.is-form-frame .hb-lay-body{ grid-template-columns:minmax(0,1fr); align-content:start }
+  .hb-lay-stage{ height:62vh; height:62svh }
+  .hb-rack{ border-left:0; border-top:var(--hb-border-em) solid var(--hb-ink) }
+  .hb-rack-pane{ overflow:visible }
+  .hb-lay.is-canvas-rail .hb-lay-body{ grid-template-columns:48px minmax(0,1fr) }
+  .hb-lay.is-canvas-rail .hb-rack{ grid-column:1 / -1 }
+  .hb-lay-tools > .hb-iconbtn{ width:44px; height:44px }
+  .hb-lay-list{ display:none }
+  .hb-lay.is-conversation .hb-lay-stage{ height:calc(100svh - 52px) }
+  .hb-lay.is-gate .hb-lay-stage{ height:calc(100svh - 52px); min-height:480px }
+  .hb-lay.is-form-frame .hb-rack{ order:0; border-right:0 }
+  .hb-lay.is-form-frame .hb-lay-stage{ height:48vh; height:48svh }
+  .hb-lay-inset{ width:56% }
+}
+
+/* ==========================================================================
+   39. MODEL PICKER
+   HbModelSelect (closed) and HbModelSheet (open), pure views over display
+   ready rows (ModelRow): the kit never formats a catalogue record. Closed:
+   one line naming the choice and its state, one pink "load, <size>". In the
+   bar: one chip. Open: a 520 px sheet (full height on a phone), a search
+   field, three filters, eight groups in order, 44 px rows with a chevron
+   detail, the options of the chosen row, and the "your own" forms.
+   ========================================================================== */
+.hb-msel-host{ display:contents }
+.hb-msel{ display:flex; align-items:center; gap:var(--hb-s2); min-width:0; flex-wrap:wrap }
+.hb-msel-line{
+  flex:1 1 220px; min-width:0; min-height:44px; display:flex; align-items:center; gap:var(--hb-s2);
+  padding:0 var(--hb-s3); background:var(--hb-paper-raised); color:var(--hb-ink);
+  border:var(--hb-border) solid var(--hb-ink); cursor:pointer; text-align:left; font:inherit; font-size:13px;
+}
+.hb-msel-line:focus-visible,.hb-msel-chip:focus-visible,.hb-mrow-pick:focus-visible,.hb-mrow-more:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+.hb-msel-name{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600 }
+.hb-msel-meta{ flex:0 0 auto; font-family:var(--hb-readout); font-size:var(--hb-readout-md); color:var(--hb-ink-3) }
+.hb-msel-line::after{ content:""; flex:0 0 auto; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translate(-2px,-2px) }
+.hb-msel-state{ font-family:var(--hb-readout); font-size:var(--hb-readout-md) }
+.hb-msel-state.is-loaded{ color:var(--hb-ok) }
+.hb-msel-jobs{ display:flex; flex-direction:column; gap:var(--hb-s2); min-width:0 }
+.hb-msel-job{ display:grid; grid-template-columns:minmax(70px, auto) minmax(0,1fr); align-items:center; gap:var(--hb-s2) }
+.hb-msel-joblabel{ font-size:12px; font-weight:600; color:var(--hb-ink-2) }
+.hb-msel-joblabel b{ font-weight:400; color:var(--hb-ink-3) }
+.hb-msel-presets{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) }
+.hb-msel-chip{
+  display:inline-flex; align-items:center; gap:6px; max-width:min(240px, 46vw); min-height:32px; padding:4px 8px;
+  font-family:var(--hb-readout); font-size:var(--hb-readout-md); line-height:1; white-space:nowrap;
+  background:var(--hb-paper); color:var(--hb-ink); border:var(--hb-border) solid var(--hb-ink); cursor:pointer;
+}
+.hb-msel-chip > span{ overflow:hidden; text-overflow:ellipsis }
+/* In the bar the chip gives way before the tool name does. */
+.hb-header .hb-msel-chip{ flex:0 1 auto; min-width:48px }
+.hb-msel-chip::before{ content:""; flex:0 0 auto; width:7px; height:7px; border-radius:50%; background:var(--hb-ink-4) }
+.hb-msel-chip.is-loaded::before{ background:var(--hb-ok) }
+.hb-msel-chip.is-loading::before{ background:var(--hb-warn) }
+@media(pointer:coarse){ .hb-msel-chip{ min-height:44px } }
+
+.hb-drawer:has(.hb-msheet):not(.is-sheet) > .hb-drawer-panel{ width:min(var(--hb-sheet), 100vw) }
+.hb-drawer.is-sheet:has(.hb-msheet) > .hb-drawer-panel{ height:100%; border-top:0 }
+.hb-drawer-panel:has(> .hb-msheet){ display:flex; flex-direction:column }
+.hb-msheet{ display:flex; flex-direction:column; gap:var(--hb-s3); min-height:0; flex:1 1 auto }
+.hb-msheet-find{ display:flex; flex-direction:column; gap:var(--hb-s2) }
+.hb-msheet-filters{ display:flex; flex-wrap:wrap; gap:var(--hb-s2) }
+.hb-msheet-list{ flex:1 1 auto; min-height:0; overflow:auto; border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb-msheet-group{ margin:0; padding:0; list-style:none }
+.hb-msheet-gh{ position:sticky; top:0; z-index:1; padding:5px var(--hb-s3) 3px; background:var(--hb-paper-sunk); border-bottom:1px solid var(--hb-paper-edge); font-family:var(--hb-readout); font-size:var(--hb-readout-md) }
+.hb-msheet-none{ margin:0; padding:var(--hb-s4) var(--hb-s3); font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-3) }
+.hb-mrow{ border-bottom:1px solid var(--hb-paper-edge) }
+.hb-mrow-line{ display:flex; align-items:stretch; min-height:44px }
+.hb-mrow-pick{
+  flex:1 1 auto; min-width:0; display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-rows:auto auto; column-gap:var(--hb-s2);
+  align-items:center; padding:4px var(--hb-s3); background:transparent; border:0; color:inherit; font:inherit; text-align:left; cursor:pointer;
+}
+.hb-mrow-name{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:600 }
+.hb-mrow-name i{ font-style:normal; font-weight:400; margin-left:6px; padding:0 4px; border:1px solid currentColor; font-size:11px }
+.hb-mrow-sub{ grid-column:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11.5px; color:var(--hb-ink-3) }
+.hb-mrow-sub b{ font-weight:400; font-family:var(--hb-note); color:var(--hb-ink-2) }
+.hb-mrow-state{ grid-column:2; grid-row:1 / span 2; font-family:var(--hb-readout); font-size:var(--hb-readout-md); white-space:nowrap }
+.hb-mrow-state.is-loaded{ color:var(--hb-ok) }
+.hb-mrow-state.is-loading{ color:var(--hb-warn-ink) }
+.hb-mrow-state.is-error{ color:var(--hb-err) }
+.hb-mrow-chip{ display:inline-block; margin-right:6px; padding:0 4px; border:1px solid var(--hb-ink-3); font-family:var(--hb-readout); font-size:14px; line-height:1.2; color:var(--hb-ink-2) }
+.hb-mrow-more{ flex:0 0 44px; background:transparent; border:0; border-left:1px solid var(--hb-paper-edge); cursor:pointer; color:var(--hb-ink-2) }
+.hb-mrow-more::before{ content:""; display:inline-block; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(-45deg) }
+.hb-mrow-more[aria-expanded="true"]::before{ transform:rotate(45deg) }
+.hb-mrow.is-chosen{ box-shadow:inset 4px 0 0 var(--hb-ink); background:var(--hb-paper) }
+.hb-mrow.is-unfit .hb-mrow-pick{ color:var(--hb-ink-4); cursor:not-allowed }
+.hb-mrow.is-unfit .hb-mrow-sub b{ color:var(--hb-warn-ink) }
+@media (hover:hover) and (pointer:fine){ .hb-mrow:not(.is-unfit) .hb-mrow-pick:hover{ background:var(--hb-paper-sunk) } }
+.hb-mrow-bar{ height:3px; background:var(--hb-paper-edge) }
+.hb-mrow-bar > i{ display:block; height:100%; background:var(--hb-ink) }
+.hb-mrow-detail{ padding:var(--hb-s2) var(--hb-s3) var(--hb-s3); background:var(--hb-paper); border-top:1px dashed var(--hb-paper-edge) }
+.hb-mrow-detail dl{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:2px var(--hb-s3); margin:0; font-size:12px }
+.hb-mrow-detail dt{ color:var(--hb-ink-3) }
+.hb-mrow-detail dd{ margin:0; overflow-wrap:anywhere }
+.hb-mrow-detail .hb-btn{ margin-top:var(--hb-s2) }
+.hb-msheet-opts{ display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:var(--hb-s2) }
+.hb-msheet-own{ border:var(--hb-border) solid var(--hb-ink); background:var(--hb-paper-raised) }
+.hb-msheet-own > summary{ cursor:pointer; padding:var(--hb-s2) var(--hb-s3); font-family:var(--hb-readout); font-size:var(--hb-readout-md); min-height:44px; display:flex; align-items:center }
+.hb-msheet-own form{ display:flex; flex-direction:column; gap:var(--hb-s2); padding:0 var(--hb-s3) var(--hb-s3) }
+.hb-msheet-own .hb-seg{ align-self:flex-start }
+.hb-msheet-foot{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2); padding-top:var(--hb-s2); border-top:var(--hb-border) solid var(--hb-ink) }
+.hb-msheet-foot > .hb-btn-go{ flex:1 1 auto; justify-content:center }

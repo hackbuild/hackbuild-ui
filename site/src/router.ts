@@ -26,6 +26,12 @@ export const router = createRouter({
     { path: '/demos/stage-tool', component: () => import('./pages/DemoStageTool.vue'), meta: { bare: true } },
     { path: '/demos/suite-shell', component: () => import('./pages/DemoSuiteShell.vue'), meta: { bare: true } },
     { path: '/demos/suite-chat', component: () => import('./pages/DemoSuiteShell.vue'), meta: { bare: true } },
+    { path: '/layouts/stage-rack', component: () => import('./pages/layouts/StageRackDemo.vue'), meta: { bare: true } },
+    { path: '/layouts/canvas-rail', component: () => import('./pages/layouts/CanvasRailDemo.vue'), meta: { bare: true } },
+    { path: '/layouts/drop-first', component: () => import('./pages/layouts/DropFirstDemo.vue'), meta: { bare: true } },
+    { path: '/layouts/conversation', component: () => import('./pages/layouts/ConversationDemo.vue'), meta: { bare: true } },
+    { path: '/layouts/gate', component: () => import('./pages/layouts/GateDemo.vue'), meta: { bare: true } },
+    { path: '/layouts/form-frame', component: () => import('./pages/layouts/FormFrameDemo.vue'), meta: { bare: true } },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
   scrollBehavior(to) {

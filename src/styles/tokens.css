@@ -98,6 +98,9 @@
      line and shadows tuned to it, as FERRULE and ARBOR do. Marketing
      blocks, docs prose and .hb-zine restore the 2 px zine values. */
   --hb-rack:      380px;        /* the rack column beside a stage, fixed (hackle) */
+  --hb-tools:     56px;         /* the icon tool rail left of a canvas (mask-studio-sam) */
+  --hb-list:      268px;        /* the chat list rail (clevis) */
+  --hb-sheet:     520px;        /* the open model picker on a desktop */
   --hb-border:    1.5px;        /* panels, fields, controls, chips, pills */
   --hb-border-em: 2px;          /* emphasis: primary button, modal, drawer, stage */
   --hb-border-hd: 3px;          /* header rule, active tab, focus rings */
