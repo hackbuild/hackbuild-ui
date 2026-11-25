@@ -10,7 +10,7 @@
 - Vanilla `modelSheet`: the "your own" forms with `onCustom`, and the
   count of rows the filters hide.
 - `.hb-lay [hidden]`, `.hb-lay-scroll`, `.hb-mask.is-fill`, `.hb-flow`,
-  `.hb-heat td[aria-current]`, `.hb-frameview`.
+  `.hb-heat td[aria-current]`, `.hb-frameview`, `.hb-view`.
 
 ## 0.10.1
 

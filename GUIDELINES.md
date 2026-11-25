@@ -1666,6 +1666,7 @@ asks the conversation for a rack, which clevis does not have.
 | `.hb-mask.is-fill` | the mask editor fills its subject; the view sets `--hb-mask-w` (frame width at fit times zoom) and `--hb-mask-ratio`; `.is-zoomed` lets the well scroll |
 | `.hb-flow` | hackle's flow in a rack block: each child after the first sits 6 px below |
 | `.hb-heat td[aria-current]` | the last rewarded cell, a 2 px ink outline |
+| `.hb-view` | a view's host element (custom element or Vue host) shows as display contents, so its parts sit in the layout region |
 | `.hb-frameview`, `.hb-frameview-cap` | a frame tile with what was found drawn over it, the caption under it |
 
 The mask editor's rail follows the earlier mask studio: wand (w), brush

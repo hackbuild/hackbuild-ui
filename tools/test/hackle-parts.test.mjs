@@ -60,5 +60,6 @@ test("views pass classes", () => {
   assert.match(rule(".hb-flow > * + *"), /margin-top:6px/);
   assert.match(rule(".hb-heat td[aria-current]"), /outline:2px solid var\(--hb-ink\)/);
   rule(".hb-frameview");
+  assert.match(rule(".hb-view"), /display:contents/);
   for (const c of [".hb-lay-scroll", ".hb-mask.is-fill", ".hb-flow", ".hb-heat td[aria-current]", ".hb-frameview"]) assert.ok(md.includes(c), c);
 });
