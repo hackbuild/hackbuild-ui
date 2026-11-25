@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.9.5
+
+- HbCausalLog live rows: `live` and `fraction` on an event; the row is
+  replaced in place under its id, sits on top, has no pin and is not
+  announced. Vanilla `replaceRow` swaps a row in an array.
+- HbCausalLog tones for the line log kinds you, me, act, fail, eye,
+  note, think and load, from the same defaults as HbEventLog; `tones`
+  overrides them. `EVENT_KINDS` gains `eye`.
+- HbBubble `clamp` and `pad`: the bubble stays inside its stage host,
+  slides sideways with the tail on the anchor, then hangs under the
+  point. Vanilla `clampBubble`, `measureBubble`, `placeBubble`.
+- HbModelRack organ rows: `kind: 'organ'` with `source` and `size`, no
+  download state, skipped by presets and the gate; slot `organ`.
+- HbToolbar `overflow`: one row under 641 px, `.hb-bar-lbl` labels drop
+  to icons, the `more` slot folds behind a menu button; slots `more` and
+  `end`, `v-model:open`. Vanilla `barMore`.
+- Compact stage hud under 561 px of stage width: the inset at 30 percent
+  (`--hb-inset-w-sm`) with one cycling mode button, telemetry in one row.
+- The stroke icon table drops out of a vanilla bundle that uses no icon:
+  an esbuild bundle of `modelList` alone went from 2,878 to 1,013 B gzip
+  (measured).
+- Docs demos for each; GUIDELINES.md "Parts added in 0.9.5".
+
 ## 0.9.4
 
 - The stroke set: app chrome and tool panels draw square cap line icons
