@@ -53,6 +53,11 @@ const code = `<HbHistoryStrip :items="runs" :current="shown" @restore="restore" 
       <HbHistoryStrip :items="takes" :current="take" @restore="take = $event.id" @remove="(it) => (takes = takes.filter((x) => x.id !== it.id))" />
     </div>
   </DemoSection>
+  <DemoSection title="Restore only" note="removable off drops the corner x, the trash button and Delete: a strip of presets the page owns. label names the list for screen readers.">
+    <div class="demo-col" style="max-width: 640px">
+      <HbHistoryStrip :items="items.slice(0, 4)" :current="current" :removable="false" label="saved looks" @restore="current = $event.id" />
+    </div>
+  </DemoSection>
   <DemoSection title="Grid" note="Tiles with the prompt and the run line, for a gallery or a mask list.">
     <HbHistoryStrip grid :items="items.slice(0, 4)" :current="current" @restore="current = $event.id" @remove="remove" />
   </DemoSection>
@@ -62,6 +67,7 @@ const code = `<HbHistoryStrip :items="runs" :current="shown" @restore="restore" 
       { prop: 'slots', type: 'thumb {item}' },
       { prop: 'current', type: 'string | number | null' },
       { prop: 'grid / empty', type: 'boolean / string' },
+      { prop: 'removable / label', type: 'boolean / string', default: 'true / run history', notes: 'off: no remove buttons, Delete does nothing' },
       { prop: 'emits', type: 'restore, remove' },
     ]"
   />
