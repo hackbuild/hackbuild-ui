@@ -45,6 +45,7 @@ const code = `<HbAppShell>
       <HbButton variant="secondary" as="a" href="#/demos/shell-rack">stage and rack</HbButton>
       <HbButton variant="secondary" as="a" href="#/demos/shell-bench">stepped bench</HbButton>
       <HbButton variant="secondary" as="a" href="#/demos/shell-transcript">transcript</HbButton>
+      <HbButton variant="secondary" as="a" href="#/demos/stage-tool">late dock</HbButton>
     </div>
   </DemoSection>
 
@@ -56,7 +57,7 @@ const code = `<HbAppShell>
       { prop: 'toolbar', type: 'slot', notes: 'HbToolbar' },
       { prop: 'default', type: 'slot', notes: 'the scrolling work column' },
       { prop: 'rail', type: 'slot', notes: 'panels beside the work column' },
-      { prop: 'dock', type: 'slot', notes: 'composer or primary action, pinned above the status strip; props sheet, openRail' },
+      { prop: 'dock', type: 'slot', notes: 'composer or primary action, pinned above the status strip; props sheet, openRail. may arrive after mount; its height stays current in --hb-foot-h' },
       { prop: 'statusbar', type: 'slot', notes: 'HbStatusBar' },
     ]"
   />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useSlots } from 'vue'
+import { computed, onBeforeUnmount, onBeforeUpdate, onMounted, ref, useSlots, watch } from 'vue'
 import { cx } from '../utils/cx'
 import { dockInsets, type DockInsetsHandle } from '../vanilla/insets'
 import HbDrawer from './HbDrawer.vue'
@@ -45,11 +45,24 @@ function read() {
 }
 // With a dock, the keyboard inset and the foot height go on the root as
 // --hb-kb and --hb-foot-h: the foot lifts over the on-screen keyboard and
-// the rack sheet stops at the dock's top edge.
+// the rack sheet stops at the dock's top edge. A dock can arrive after mount (a tool that teleports its composer in
+// later), so whether there is one is read on every render and the insets
+// follow the foot element; dockInsets observes its size from then on.
 const foot = ref<HTMLElement | null>(null)
+const hasDock = ref(!!slots.dock)
+onBeforeUpdate(() => { hasDock.value = !!slots.dock })
 let insets: DockInsetsHandle | null = null
+let footEl: HTMLElement | null = null
+function bindInsets() {
+  const el = hasDock.value ? foot.value : null
+  if (el === footEl) return
+  insets?.dispose()
+  insets = el ? dockInsets(el) : null
+  footEl = el
+}
+watch([foot, hasDock], bindInsets, { flush: 'post' })
 onMounted(() => {
-  if (slots.dock && foot.value) insets = dockInsets(foot.value)
+  bindInsets()
   if (typeof matchMedia !== 'function') return
   query = matchMedia('(min-width: 901px)')
   query.addEventListener('change', read)
@@ -58,12 +71,13 @@ onMounted(() => {
 onBeforeUnmount(() => {
   query?.removeEventListener('change', read)
   insets?.dispose()
+  insets = null
 })
 
 const sheet = computed(() => props.recipe === 'rack' && !wide.value && !!slots.rail)
 const classes = computed(() =>
   cx('hb-app hb', props.recipe && `is-${props.recipe}`, mode.value && `is-${mode.value}`, {
-    'has-dock': !!slots.dock,
+    'has-dock': hasDock.value,
     'has-rail': !!slots.rail && !sheet.value,
     'is-fit': props.fit,
     'is-sheet-open': sheet.value && railOpen.value,
@@ -92,14 +106,14 @@ function openRail() {
         <slot name="rail" />
       </aside>
     </div>
-    <div v-if="slots.dock || slots.statusbar" ref="foot" class="hb-app-foot">
-      <div v-if="slots.dock" class="hb-dock">
+    <div v-if="hasDock || slots.statusbar" ref="foot" class="hb-app-foot">
+      <div v-if="hasDock" class="hb-dock">
         <slot name="dock" :sheet="sheet" :open-rail="openRail" />
       </div>
       <slot name="statusbar" />
     </div>
     <HbDrawer v-if="sheet" v-model="railOpen" side="auto" :breakpoint="641" :title="props.railLabel">
-      <div class="hb-rail" :class="{ 'is-above-dock': !!slots.dock }">
+      <div class="hb-rail" :class="{ 'is-above-dock': hasDock }">
         <slot name="rail" />
       </div>
     </HbDrawer>
