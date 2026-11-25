@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.10.0
+
+The rebuild foundation: the page template of the rebuild plan, six
+layouts, the model picker as a pure view, and the type and button
+defaults the originals use. Untagged until the consumers re-pin.
+
+- Type: the interface is IBM Plex Mono 14 px, line height 1.45 (13 px in
+  `.hb-instrument`); Special Elite is `--hb-note`, for notes, hints and
+  message prose (`--hb-body` stays as an alias). h2, h3 and panel heads
+  are VT323; Permanent Marker names one thing per screen. Labels are
+  12 px sentence case; `.hb-readout-label` keeps 11 px uppercase for
+  small readout labels. Chips are 13 px and fill ink when on. The zine
+  scope keeps the old faces.
+- Buttons: light by default (raised paper, 1.5 px ink line, 3 px hard
+  shadow, 13 px sentence case), lifting on hover. `.hb-btn-go` (HbButton
+  `variant="go"`) is the one pink action; `.hb-btn-ink` a pressed state;
+  danger is light with err text. HbButton defaults to secondary and
+  `variant="primary"` renders light with a console note. Chat send and
+  the wake button are go.
+- Bar: light, 52 px with a 2 px ink rule, one row, the tool name in
+  Permanent Marker 22 px; HbHeader `ink` and `.hb-header.is-ink` keep the
+  ink bar for brand pages and the docs site, and every ink only header
+  rule is scoped to it. Tabs are VT323 15 px on a light strip with the
+  selected tab ink; `.hb-tabs.is-ink` keeps the old strip. The rack is a
+  fixed 380 px (`--hb-rack`).
+- The chat context meter is `.hb-ctxmeter`; it shared `.hb-ctx` with the
+  context menu and was pinned over the logo. A test fails when two parts
+  claim one root class.
+- Layouts: HbStageRack, HbCanvasRail, HbDropFirst, HbConversationLayout,
+  HbGate and HbFormFrame over HbRack, with vanilla `layout()` and named
+  forms per kind. Each writes the data-ux markers bar, subject, rack,
+  verbs, inset and detail. Demo routes `#/layouts/<kind>` pass the
+  suite's screen gate at 1440 and 390 (measured, 12 of 12 screens).
+- Model picker: HbModelSelect (a line, a bar chip, or one line per job
+  with presets and one load all) and HbModelSheet (520 px sheet, search,
+  three filters, eight groups, 44 px rows with a chevron detail and
+  remove, options of the chosen row, gguf, onnx, mlc and endpoint forms).
+  Pure views over display ready ModelRow; vanilla `modelSelect` and
+  `modelSheet`.
+- Deprecated with a console note, removed in 0.11.0: HbActions, HbCard,
+  HbCustomModelForm, HbEngineBar, HbHash, HbLoader, HbMethodCard,
+  HbModelList, HbModelRack, HbModelSlot, HbPresetChips, HbReadouts,
+  HbReasons, HbSegMeter, HbStageOverlay, HbWakeGate, HbCapabilities,
+  HbModelManager, HbNum, HbStatusBar, HbTierCards, and the HbAppShell
+  recipes. HbPanel gains `interactive`, HbKv `focal`, HbMeter
+  `segments` and `threshold` to take them over.
+- Docs: the catalogue groups parts by the layout that uses them;
+  GUIDELINES.md section 20 for the layouts, the picker, copy rules and
+  the screen gate.
+
 ## 0.9.9
 
 - HbMaskEditor and vanilla `maskEditor`: masks by hand over a canvas,
