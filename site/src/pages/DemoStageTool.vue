@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import {
-  HbAppShell, HbButton, HbChip, HbHeader, HbHudStat, HbKbd, HbPanel, HbParamRow, HbSeed, HbStageCaption, HbToolbar,
+  HbAppShell, HbButton, HbChip, HbHeader, HbHudStat, HbIcon, HbInset, HbKbd, HbPanel, HbParamRow, HbSeed, HbStageCaption, HbToolbar,
   HbTransport, HbViewport, HbWave,
 } from '@hackbuild/ui'
 
@@ -22,6 +22,9 @@ const VIEWS = ['front', 'side', 'back', 'top'] as const
 const view = ref<string>('front')
 const reach = ref(0.6)
 const weight = ref(1)
+const EYES = ['what it sees', 'depth', 'detector']
+const eye = ref('what it sees')
+const eyeOpen = ref(true)
 
 let raf = 0
 let last = 0
@@ -51,12 +54,19 @@ const seek = (t: number) => { time.value = Math.min(duration, Math.max(0, t)) }
     </template>
 
     <div class="hb-toolpage is-split is-stage">
-      <HbToolbar>
-        <HbSeed v-model="seed" v-model:locked="locked" />
-        <HbButton variant="secondary">restart</HbButton>
-        <HbButton variant="secondary">body</HbButton>
-        <span class="hb-spacer" />
-        <HbButton variant="secondary">tune</HbButton>
+      <!-- overflow: one row on a phone. Labels drop to icons, seed and the
+           tool verbs fold behind the more button. -->
+      <HbToolbar overflow>
+        <HbButton variant="secondary"><HbIcon name="refresh" :size="14" /><span class="hb-bar-lbl">restart</span></HbButton>
+        <HbButton variant="secondary"><HbIcon name="upload" :size="14" /><span class="hb-bar-lbl">body</span></HbButton>
+        <template #more>
+          <HbSeed v-model="seed" v-model:locked="locked" />
+          <HbButton variant="secondary">record</HbButton>
+        </template>
+        <template #end>
+          <span class="hb-spacer" />
+          <HbButton variant="secondary"><HbIcon name="sliders" :size="14" /><span class="hb-bar-lbl">tune</span></HbButton>
+        </template>
       </HbToolbar>
 
       <HbViewport look="lit" aspect="16/9" label="the stage">
@@ -77,12 +87,22 @@ const seek = (t: number) => { time.value = Math.min(duration, Math.max(0, t)) }
           <HbHudStat label="fps" :value="60" :digits="0" />
           <HbHudStat label="seed" :value="seed" :digits="0" />
           <HbHudStat label="t" :value="time" :digits="2" unit="s" />
+          <HbHudStat label="goal" value="bring the mug" />
         </template>
         <template #hint>
           <span class="hb-hudnote"><HbKbd>space</HbKbd> play, <HbKbd>.</HbKbd> step, <HbKbd>1</HbKbd> to <HbKbd>3</HbKbd> views</span>
         </template>
         <template #caption>
           <HbStageCaption echo="you: walk to the door and stop" line="the left foot plants at 1.2 s and the hips drop to meet it, then the weight rolls forward." who="walker" :max-chars="160" />
+        </template>
+        <template #bl>
+          <HbInset v-model:mode="eye" v-model:open="eyeOpen" :modes="EYES" :title="eye === 'what it sees' ? 'eye' : eye" ratio="16 / 9" collapsible>
+            <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="160" height="90" :fill="eye === 'depth' ? 'var(--hb-ink-2)' : 'var(--hb-void)'" />
+              <rect x="70" y="30" width="20" height="40" fill="var(--hb-lit-dim)" />
+              <rect v-if="eye === 'detector'" x="66" y="26" width="28" height="48" fill="none" stroke="var(--hb-pink)" stroke-width="2" />
+            </svg>
+          </HbInset>
         </template>
         <template #b>
           <HbButton variant="secondary">wave</HbButton>

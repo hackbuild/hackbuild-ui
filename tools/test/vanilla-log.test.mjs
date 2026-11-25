@@ -79,3 +79,14 @@ test("codeSpans splits prose on backticks and keeps an unclosed one", () => {
   assert.deepEqual(codeSpans("a ` lone tick"), [{ code: false, text: "a ` lone tick" }]);
   assert.deepEqual(codeSpans("``"), [{ code: false, text: "``" }]);
 });
+
+test("replaceRow swaps a live row in place, adds a new one at the end, removes on null", async () => {
+  const { replaceRow, EVENT_KINDS } = await import("../../src/vanilla/log.ts");
+  const rows = [{ id: 1, text: "a" }, { id: "dl", text: "10" }, { id: 2, text: "b" }];
+  assert.deepEqual(replaceRow(rows, "dl", { id: "dl", text: "50" }).map((r) => r.text), ["a", "50", "b"]);
+  assert.deepEqual(replaceRow(rows, 3, { id: 3, text: "c" }).map((r) => r.id), [1, "dl", 2, 3]);
+  assert.deepEqual(replaceRow(rows, "dl", null).map((r) => r.id), [1, 2]);
+  assert.equal(rows.length, 3);
+  for (const k of ["you", "me", "act", "fail", "eye", "note", "think"]) assert.ok(EVENT_KINDS[k], k);
+  assert.equal(EVENT_KINDS.eye.tag, "eye");
+});

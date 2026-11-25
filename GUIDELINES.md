@@ -1384,6 +1384,22 @@ FERRULE's stage plus chat body.
 | overlay frame | `.hb-ov-frame`, `.has-pad`, `.hb-ov-low` | HbViewport puts tl, tr, telemetry, hint, caption, band, bl, br and pad in one column: the top grid, then the foot at the bottom edge. The corners size to their content, so camera chips wrap before they reach telemetry, and on a short stage the caption shrinks first and keeps its newest line. Measured on `#/demos/stage-tool`: no slot overlaps at 320 by 568, 360 by 640 and 390 by 664; before, the chips covered the telemetry at 320. `bl` and `br` sit in the foot row `.hb-ov-low` |
 | void scene tokens | `--hb-void-rule`, `--hb-void-rule-major`, `--hb-void-line`, `--hb-void-prop` | `.hb-stage-void` draws BAIL's 14 percent pink rule at 32 px (1.10:1 on void, computed) and a major rule every 128 px (1.63:1). The rules are decoration. A top down scene draws its floor grid in `--hb-void-line` (3.78:1) and unlit props in `--hb-void-prop` (6.37:1), read with `getComputedStyle` |
 
+### Parts added in 0.9.5
+
+Gaps the room tool found. Measured on `#/demos/stage-tool` at 390 by 844
+on a coarse pointer: the toolbar is one row of 61 px, the telemetry one
+row of 24 px, the eye inset 120 by 114 px on a 321 px stage. 0.9.4 put
+the toolbar on three rows and the telemetry in a column (suite report).
+
+| Part | Classes and props | Behaviour |
+|---|---|---|
+| live causal row | HbCausalLog event `live`, `fraction`; `.hb-cev.is-live`, `.hb-cev-bar`; vanilla `replaceRow` | a row replaced in place under its id while it runs (a download, a thinking line). Live rows sit above the rest, outside `limit`, with no pin, and are never announced; drop `live` when done. `fraction` from 0 to 1 draws the bar |
+| line log tones | HbCausalLog `tones`; `.hb-cev.is-pink`, `is-info`, `is-ok`, `is-err`, `is-warn`, `is-dim`, `is-load` | ARBOR's seven kinds on the cause timeline: you info with a rule above, me pink, act ok text, fail err, eye and note dim, think and load warn. The same defaults as HbEventLog (`EVENT_KINDS`, which gains `eye`); `tones` overrides tag and tone per kind. The causal kinds keep their words |
+| clamped bubble | HbBubble `clamp`, `pad`; vanilla `clampBubble`, `measureBubble`, `placeBubble`; `.hb-bubble.is-in-host`, `.is-below`, `--hb-tail` | the bubble stays inside its positioned parent, `pad` px in. It slides sideways first and the tail keeps pointing at the anchor, then hangs under the point when the top has no room. Never wider than the host less its pad. ARBOR's bubble can leave the stage; P-STAGE-15 asks for the clamp |
+| organ row | HbModelRack slot `kind: 'organ'`, `source`, `size`, slot `organ { row }`; `.hb-slot.is-organ`, `.hb-slot-src` | a part that is not a model, such as the body: label, role, source and size, no pick, no load, no state square. Presets and the ready gate skip it. `options` is optional for an organ |
+| one row toolbar | HbToolbar `overflow`, `moreLabel`, `v-model:open`, slots `more` and `end`; vanilla `barMore`; `.hb-bar.is-overflow`, `.hb-bar-lbl`, `.hb-bar-more`, `.hb-bar-more-btn`, `.hb-bar-more-panel` | CLEVIS (P-PHONE-5). Under 641 px the row never wraps: `.hb-bar-lbl` labels drop so their buttons show the stroke icon alone, and the `more` slot folds behind a menu button and opens as a sheet under the bar. Wider, `more` lies in the row between the default and `end` slots. The panel holds real controls, so it is a disclosure: focus goes to its first control, Escape returns focus, a press outside closes |
+| compact stage hud | `--hb-inset-w-sm`, `.hb-inset-cycle` | on a stage under 561 px of container width: the inset is ARBOR's 30 percent of the stage (at least 120 px), its mode bar folds into one head button that cycles the modes, its aux drops; hud figures run in one wrapping row across the top, one size down |
+
 ## 19. The refined look
 
 FERRULE, ARBOR and BAIL draw a finer line than the zine pages: 1.5 px

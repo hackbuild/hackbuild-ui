@@ -25,6 +25,15 @@ const mode = defineModel<string>('mode', { default: '' })
 
 seq += 1
 const mediaId = `hb-inset-${seq}`
+
+/** On a stage under 561 px the mode bar folds into one head button that
+    cycles the modes (CLEVIS), so the inset keeps its height down. */
+const current = () => mode.value || props.modes[0] || ''
+function cycle() {
+  const i = props.modes.indexOf(current())
+  mode.value = props.modes[(i + 1) % props.modes.length] ?? ''
+}
+const nextOf = () => props.modes[(props.modes.indexOf(current()) + 1) % props.modes.length] ?? ''
 </script>
 
 <template>
@@ -42,6 +51,13 @@ const mediaId = `hb-inset-${seq}`
       ><span class="hb-inset-caret" aria-hidden="true">{{ open ? '-' : '+' }}</span><span class="hb-inset-title">{{ props.title }}</span></button>
       <span v-else class="hb-inset-title">{{ props.title }}</span>
       <span v-if="props.aux || $slots.head" class="hb-hd-aux"><slot name="head">{{ props.aux }}</slot></span>
+      <button
+        v-if="props.modes.length > 1 && (!props.collapsible || open)"
+        type="button"
+        class="hb-inset-cycle"
+        :aria-label="`${props.title} view ${current()}, press for ${nextOf()}`"
+        @click="cycle"
+      >{{ current() }}</button>
     </div>
     <div v-if="props.modes.length && (!props.collapsible || open)" class="hb-inset-modes" role="group" :aria-label="`${props.title} view`">
       <button

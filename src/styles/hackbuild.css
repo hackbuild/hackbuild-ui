@@ -558,6 +558,32 @@ a.hb-card{ display:block; color:inherit; text-decoration:none }
    the tabs. */
 .hb-bar:empty{ display:none }
 .hb-bar-ink{ background:var(--hb-ink); color:var(--hb-paper); border-bottom-color:var(--hb-pink) }
+/* One row toolbar (CLEVIS, HbToolbar overflow). Wider than 640 px the
+   more slot lies in the row. Under it the row never wraps, `.hb-bar-lbl`
+   labels drop so their buttons show the icon alone (the label stays for
+   readers), and the more slot folds behind a menu button and opens as a
+   sheet under the bar across its width. */
+.hb-bar-more,.hb-bar-more-panel{ display:contents }
+.hb-bar .hb-bar-more-btn{ display:none }
+.hb-bar .hb-btn > .hb-icon + .hb-bar-lbl{ margin-left:var(--hb-s1) }
+@media(max-width:640px){
+  .hb-bar.is-overflow{ position:relative; flex-wrap:nowrap; gap:var(--hb-s2); padding-left:max(var(--hb-s2), env(safe-area-inset-left)); padding-right:max(var(--hb-s2), env(safe-area-inset-right)) }
+  .hb-bar.is-overflow > *{ flex-shrink:0 }
+  .hb-bar.is-overflow > .hb-spacer{ flex:1 1 0; min-width:0 }
+  .hb-bar.is-overflow .hb-bar-lbl{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
+  .hb-bar.is-overflow .hb-btn:has(> .hb-bar-lbl){ min-width:44px; min-height:44px; padding:0 var(--hb-s2); justify-content:center }
+  .hb-bar.is-overflow .hb-bar-more{ display:block }
+  .hb-bar.is-overflow .hb-bar-more-btn{ display:inline-flex; width:44px; height:44px }
+  .hb-bar.is-overflow .hb-bar-more.is-open > .hb-bar-more-btn{ background:var(--hb-ink); color:var(--hb-paper) }
+  .hb-bar.is-overflow .hb-bar-more-panel{ display:none }
+  .hb-bar.is-overflow .hb-bar-more.is-open > .hb-bar-more-panel{
+    display:flex; flex-wrap:wrap; align-items:center; gap:var(--hb-s2);
+    position:absolute; left:0; right:0; top:100%; z-index:40;
+    padding:var(--hb-s2) max(var(--hb-s2), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s2), env(safe-area-inset-left));
+    background:var(--hb-paper-sunk); color:var(--hb-ink);
+    border-bottom:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow);
+  }
+}
 @media(min-width:641px){ .hb-bar{ padding:var(--hb-s2) max(var(--hb-s5), env(safe-area-inset-right)) var(--hb-s2) max(var(--hb-s5), env(safe-area-inset-left)) } }
 
 /* Status strip. Thin, VT323, counts and rates only. Its one possible
@@ -1856,6 +1882,13 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
    from 561 px of viewport width they sit in a row at full size. */
 .hb-hudstats{ flex-direction:column; align-items:flex-end }
 .hb-ov-b .hb-btn{ font-size:10px; padding:5px 8px; box-shadow:2px 2px 0 var(--hb-ink) }
+/* Compact hud on a phone stage: the figures wrap in a row at the top
+   right, at most half the stage wide, one size down. */
+@container (max-width:560px){
+  .hb-hudstats{ flex-direction:row; flex-wrap:wrap; justify-content:flex-end; max-width:50cqw }
+  .hb-hudstat{ font-size:14px; padding:0 var(--hb-s1) }
+  .hb-hudstat .u{ font-size:12px }
+}
 @container (min-width:561px){
   .hb-hudstats{ flex-direction:row; align-items:stretch }
   .hb-ov-b .hb-btn{ font-size:11px; padding:8px 14px; box-shadow:var(--hb-shadow) }
@@ -1923,8 +1956,25 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-inset.is-closed{ box-shadow:none }
 @media(pointer:coarse){ .hb-inset-toggle,.hb-inset-mode{ min-height:44px } .hb-inset-toggle{ min-width:44px; flex:1 1 auto } .hb-inset-mode{ min-width:44px } }
 .hb-inset-media{ position:relative; aspect-ratio:var(--hb-inset-ratio, 4/3) }
-.hb-inset-media > canvas,.hb-inset-media > video,.hb-inset-media > img{ position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover }
+.hb-inset-media > canvas,.hb-inset-media > video,.hb-inset-media > img,.hb-inset-media > svg{ position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover }
 @container (min-width:561px){ .hb-inset{ width:min(var(--hb-inset-w), 46cqw) } }
+/* Compact inset on a phone stage: ARBOR's 30 percent of the stage width,
+   and the mode bar folds into one head button that cycles the modes. */
+.hb-inset-cycle{
+  display:none; flex:none; margin-left:auto; padding:0 var(--hb-s1); max-width:50%;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  background:var(--hb-paper); color:var(--hb-ink); border:0;
+  font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer;
+}
+.hb-inset-cycle:focus-visible{ outline:2px solid var(--hb-pink); outline-offset:1px }
+@container (max-width:560px){
+  .hb-inset{ width:var(--hb-inset-w-sm) }
+  .hb-inset-hd{ font-size:14px; padding:1px var(--hb-s1) }
+  .hb-inset-modes{ display:none }
+  .hb-inset-cycle{ display:inline-block }
+  .hb-inset-hd > .hb-hd-aux{ display:none }
+}
+@media(pointer:coarse){ .hb-inset-cycle{ min-height:44px; min-width:44px } }
 
 /* Bubble. A speech or thought bubble pinned over a point in the scene.
    The page sets left and top in px; the bubble sits above the point. */
@@ -1944,6 +1994,13 @@ a.hb-media-card{ color:var(--hb-ink); text-decoration:none }
 .hb-bubble.is-ink{ background:var(--hb-ink); color:var(--hb-paper) }
 .hb-bubble[hidden]{ display:none }
 .hb-bubble.is-clamped > .hb-bubble-text{ display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:var(--hb-lines, 3); line-clamp:var(--hb-lines, 3); overflow:hidden }
+/* In a stage host (clamp prop, vanilla placeBubble): never wider than the
+   host less its pad; the tail follows --hb-tail when the bubble slides,
+   and flips up when the bubble hangs under the point. */
+.hb-bubble.is-in-host{ max-width:min(280px, calc(100% - 2 * var(--hb-s2))) }
+.hb-bubble.is-in-host::after{ left:calc(50% + var(--hb-tail, 0px)) }
+.hb-bubble.is-below{ transform:translate(-50%, 10px) }
+.hb-bubble.is-below::after{ bottom:auto; top:-7px; transform:translateX(-50%) rotate(225deg) }
 
 /* Drop zone. Drop a file or pick one. The file input lives inside. While
    a file hovers, the dashes go pink: structural, like the focus ring. */
@@ -2412,6 +2469,22 @@ button.hb-spark{ cursor:pointer }
 .hb-cev-pin[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper); border-color:var(--hb-ink) }
 .hb-cev.is-pinned{ border-left-color:var(--hb-ink); background:var(--hb-paper-sunk) }
 .hb-cev.is-new .hb-cev-t{ color:var(--hb-ink) }
+/* Tones of the line log kinds (ARBOR): me pink in the reading face, you
+   info with a rule above, act ok, fail err, eye and note dim, think and
+   load warn. A live row is replaced in place: dim text, a blinking square
+   on the left rule, the bar when the total is known. */
+.hb-cev.is-pink .hb-cev-kind{ color:var(--hb-pink) }
+.hb-cev.is-info .hb-cev-kind{ color:var(--hb-info) }
+.hb-cev.is-ok .hb-cev-text{ color:var(--hb-ok-ink) }
+.hb-cev.is-err .hb-cev-kind,.hb-cev.is-err .hb-cev-text{ color:var(--hb-err) }
+.hb-cev.is-warn .hb-cev-kind,.hb-cev.is-load .hb-cev-kind{ color:var(--hb-warn-ink) }
+.hb-cev.is-dim .hb-cev-text{ color:var(--hb-ink-3) }
+.hb-cev[data-kind="you"]{ border-top:1px dashed var(--hb-ink-4) }
+.hb-cev.is-live{ border-left-color:var(--hb-ink-4); border-left-style:dashed }
+.hb-cev.is-live .hb-cev-text{ color:var(--hb-ink-3) }
+.hb-cev.is-live .hb-cev-t::after{ content:""; display:inline-block; width:8px; height:8px; margin-left:var(--hb-s1); background:var(--hb-ink-3); animation:hb-blink 1s infinite }
+.hb-cev-bar{ grid-column:1; display:block; width:min(160px, 100%); height:8px; border:1px solid var(--hb-ink) }
+.hb-cev-bar > i{ display:block; height:100%; background:var(--hb-pink) }
 /* The chain: what led here, oldest first, one line each, indented on a
    dashed rule. */
 .hb-cev-chain{
@@ -3164,6 +3237,10 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 .hb-slot.is-loading{ border-left-color:var(--hb-ink) }
 .hb-slot.is-fault{ border-left-color:var(--hb-err) }
 /* A pick with no catalogue record: named in a row with remove, never hidden. */
+/* Organ row: a part that is not a model, such as the body. Label,
+   source and size; no pick, no load, no state square. */
+.hb-slot.is-organ{ border-left-style:dotted; border-left-color:var(--hb-ink-3) }
+.hb-slot-src{ flex:1 1 160px; min-width:0; font-family:var(--hb-body); font-size:13px; line-height:1.4; overflow-wrap:anywhere }
 .hb-slot.is-missing{ border-left-color:var(--hb-err); border-left-style:dashed }
 .hb-slot.is-missing .hb-slot-fault{ flex:1 1 200px; min-width:0 }
 .hb-slot.is-missing .hb-slot-stat{ color:var(--hb-err) }
@@ -4042,6 +4119,12 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 @media (pointer:coarse) and (orientation:landscape) and (max-height:540px){
   .hb-ov-top,.hb-ov-frame.has-pad > .hb-ov-top{ grid-template-areas:"tl tr" ". tele" }
   .hb-ov-top > .hb-ov-tele{ justify-self:end; align-items:flex-end }
+}
+/* Compact telemetry on a phone stage: the figures run in one wrapping
+   row across the top instead of a column down the left. */
+@container (max-width:560px){
+  .hb-ov-tele{ flex-direction:row; flex-wrap:wrap }
+  .hb-ov-top > .hb-ov-tele{ grid-area:auto; grid-column:1 / -1 }
 }
 @media(min-width:641px){ .hb-ov-foot{ left:var(--hb-s3); right:var(--hb-s3); bottom:var(--hb-s3) } }
 /* The overlay frame (0.9.3): HbViewport puts every slot but the centre

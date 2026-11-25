@@ -13,8 +13,8 @@ const emb = ref('all-minilm-l6-v2')
 const voice = ref('kokoro-82m')
 /** The slot key is rack data, not a slot prop. */
 const sl = (i: number) => {
-  const { slot: _key, ...rest } = rackSlots[i]!
-  return rest
+  const { slot: _key, kind: _kind, source: _src, size: _size, ...rest } = rackSlots[i]!
+  return { ...rest, options: rest.options ?? [] }
 }
 const code = `<HbModelSlot v-model="pick" label="brain" role="replies and plans" required :options="options" :state="state" :pct="pct" @load="hub.load" />`
 </script>

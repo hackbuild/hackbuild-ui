@@ -46,9 +46,20 @@ export const EVENT_KINDS: Record<string, EventKind> = {
   fail: { tag: 'fail', tone: 'err' },
   warn: { tag: 'warn', tone: 'warn' },
   sense: { tag: 'eye', tone: 'dim' },
+  eye: { tag: 'eye', tone: 'dim' },
   note: { tag: 'note', tone: 'dim' },
   think: { tag: 'think', tone: 'warn' },
   load: { tag: 'load', tone: 'load' },
+}
+
+/** The rows with the one under `id` replaced in place, or added at the
+    end when it is new; null removes it. For a live row in a Vue log:
+    `rows = replaceRow(rows, 'dl', { id: 'dl', kind: 'load', text, live: true })`. */
+export function replaceRow<T extends { id: string | number }>(rows: readonly T[], id: T['id'], row: T | null): T[] {
+  const i = rows.findIndex((r) => r.id === id)
+  if (row === null) return i < 0 ? [...rows] : [...rows.slice(0, i), ...rows.slice(i + 1)]
+  if (i < 0) return [...rows, row]
+  return [...rows.slice(0, i), row, ...rows.slice(i + 1)]
 }
 
 export function kindOf(kinds: Record<string, EventKind>, kind: string): Required<EventKind> {

@@ -57,3 +57,11 @@ test("a pick with no catalogue record is named, not hidden", async () => {
   assert.equal(slotMissing(opts, "gone"), "no record for gone in the catalogue.");
   assert.equal(slotMissing([], null), "no record in the catalogue does this job.");
 });
+
+test("an organ row is not a model: the gate and presets skip it", () => {
+  const slots = [{ slot: "body", label: "body", required: true, kind: "organ" }, { slot: "brain", label: "brain", required: true }];
+  assert.equal(rackGate(slots, { brain: "ready" }).note, "ready with 1 of 1 loaded. more can load later.");
+  assert.deepEqual(rackGate(slots, {}).missing, ["brain"]);
+  const p = { id: "x", label: "x", picks: { body: "b", brain: "m" }, totalMB: 1, totalSource: "measured" };
+  assert.deepEqual(presetJobs(p, slots, {}, {}), ["brain"]);
+});

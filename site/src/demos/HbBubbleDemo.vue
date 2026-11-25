@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { HbBubble, HbStage } from '@hackbuild/ui'
+import { HbBubble, HbSlider, HbStage } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 
@@ -9,6 +9,9 @@ const i = ref(0)
 const show = ref(true)
 const speaking = ref(false)
 function say() { i.value = (i.value + 1) % lines.length; show.value = true }
+const ax = ref(8)
+const ay = ref(20)
+const clampCode = `<HbBubble clamp :pad="8" :x="headX" :y="headY" :text="reply" />  // vanilla: placeBubble(el, x, y, { pad: 8 })`
 const code = `<HbBubble :x="headX" :y="headY" :text="reply" v-model:show="shown" ttl="auto" :hold="speaking" :lines="3" />`
 </script>
 
@@ -24,6 +27,16 @@ const code = `<HbBubble :x="headX" :y="headY" :text="reply" v-model:show="shown"
       <span class="hb-label">{{ show ? 'shown' : 'expired' }}</span>
     </div>
   </DemoSection>
+  <DemoSection title="Clamped to the stage" note="clamp keeps the whole bubble inside its stage host: it slides sideways first and the tail keeps pointing at the head, then hangs under the point when the top has no room. Move the anchor to the edges." :code="clampCode">
+    <HbStage label="room" style="position: relative; height: 200px; overflow: hidden">
+      <HbBubble clamp :x="ax" :y="ay" text="the mug is on the shelf, by the window. i will bring it." />
+      <span aria-hidden="true" :style="{ position: 'absolute', left: ax - 3 + 'px', top: ay - 3 + 'px', width: '6px', height: '6px', background: 'var(--hb-pink)' }" />
+    </HbStage>
+    <div style="margin-top: 12px; max-width: 420px">
+      <HbSlider v-model="ax" label="anchor x" :min="0" :max="360" :step="1" unit="px" />
+      <HbSlider v-model="ay" label="anchor y" :min="0" :max="200" :step="1" unit="px" />
+    </div>
+  </DemoSection>
   <PropsTable
     :rows="[
       { prop: 'x / y', type: 'number', notes: 'anchor in px; the bubble sits above' },
@@ -32,6 +45,7 @@ const code = `<HbBubble :x="headX" :y="headY" :text="reply" v-model:show="shown"
       { prop: 'lines', type: 'number', default: '3', notes: '0 shows all' },
       { prop: 'ttl', type: `number | 'auto'`, default: '0', notes: 'emits expire' },
       { prop: 'hold', type: 'boolean' },
+      { prop: 'clamp / pad', type: 'boolean / number', default: 'false / 8', notes: 'stay inside the positioned parent' },
     ]"
   />
 </template>

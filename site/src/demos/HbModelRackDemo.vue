@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
-import { HbModelRack, type HbRackSlotState } from '@hackbuild/ui'
+import { HbButton, HbModelRack, type HbRackSlot, type HbRackSlotState } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 import { rackPresets, rackSlots } from '../fixtures/models'
@@ -26,6 +26,15 @@ function load(slot: string, id: string) {
   }, 180)
 }
 onBeforeUnmount(() => clearInterval(t))
+
+// The body is an organ but not a model: a source and a size, no download.
+const body = ref<HbRackSlot>({ slot: 'body', label: 'body', role: 'moves and holds', kind: 'organ', source: 'stand-in capsule, built in', size: '0 mb (computed)' })
+const organSlots = [body.value, rackSlots[0]!]
+function dropBody() {
+  body.value.source = 'robot.glb, dropped'
+  body.value.size = '2.1 mb (measured)'
+}
+const organCode = `{ slot: 'body', label: 'body', role: 'moves and holds', kind: 'organ', source: 'robot.glb, dropped', size: '2.1 mb (measured)' }`
 const code = `<HbModelRack v-model="picks" :slots="slots" :states="states" :presets="presets" @load="(slot, id) => hub.load(slot, id)" @remove="(slot) => hub.forget(slot)" @ready="wake.disabled = !$event" />`
 </script>
 
@@ -44,9 +53,24 @@ const code = `<HbModelRack v-model="picks" :slots="slots" :states="states" :pres
     </div>
   </DemoSection>
 
+  <DemoSection
+    title="An organ that is not a model"
+    note="kind organ: label, role, source and size. No pick, no load button, no state square; presets and the ready gate skip it. The organ slot holds the row's own action. Fixture data."
+    :code="organCode"
+  >
+    <div style="max-width: 760px">
+      <HbModelRack :slots="[body, ...organSlots.slice(1)]" label="organs">
+        <template #organ="{ row }">
+          <HbButton v-if="row.slot === 'body'" variant="secondary" size="sm" @click="dropBody">pick a glb</HbButton>
+        </template>
+      </HbModelRack>
+    </div>
+  </DemoSection>
+
   <PropsTable
     :rows="[
-      { prop: 'slots', type: '{slot, label, role, required, options, sharedWith}[]' },
+      { prop: 'slots', type: '{slot, label, role, required, options, sharedWith, kind, source, size}[]', notes: `kind 'organ': source and size, no download` },
+      { prop: '#organ', type: 'slot { row }', notes: 'the action on an organ row' },
       { prop: 'states', type: 'Record<slot, {state, pct, fault}>' },
       { prop: 'presets', type: '{id, label, picks, totalMB, totalSource, unknown}[]', notes: 'totals from presetTotal' },
       { prop: 'v-model', type: 'Record<slot, id>' },

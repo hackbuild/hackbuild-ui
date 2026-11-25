@@ -3,8 +3,11 @@ import { computed, reactive, watch } from 'vue'
 import HbIcon from './HbIcon.vue'
 import { useLiveAnnounce } from '../composables/useLiveAnnounce'
 import type { HbIconName as IconName } from '../icons/stroke'
+import { EVENT_KINDS, kindOf, type EventKind } from '../vanilla/log'
 
-export type HbCausalKind = 'sense' | 'choice' | 'act' | 'model' | 'reward' | 'cue'
+export type HbCausalKind =
+  | 'sense' | 'choice' | 'act' | 'model' | 'reward' | 'cue'
+  | 'you' | 'me' | 'fail' | 'eye' | 'note' | 'think' | 'load'
 type Id = string | number
 
 export interface HbCausalEvent {
@@ -20,6 +23,12 @@ export interface HbCausalEvent {
   cause?: Id
   /** Replaces the kind icon: 'wind' for a scent, 'ear-listen' for a sound. */
   icon?: IconName
+  /** A row replaced in place while it runs: a download, a thinking line.
+      Keep the id and swap the event; live rows sit above the rest, are
+      never announced or pinned, and drop the flag when done. */
+  live?: boolean
+  /** 0 to 1 draws the bar on a live row; leave it out when the total is unknown. */
+  fraction?: number
 }
 
 interface Props {
@@ -40,6 +49,9 @@ interface Props {
   /** Announce the newest shown event in a polite live region. */
   announce?: boolean
   announceGap?: number
+  /** Tag and tone per kind, over the defaults: you, me, act, fail, eye,
+      note, think and load carry the tones of the line log. */
+  tones?: Record<string, EventKind>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -49,15 +61,24 @@ const props = withDefaults(defineProps<Props>(), {
   label: 'cause timeline',
   announce: true,
   announceGap: 8000,
+  tones: () => ({}),
 })
 
 /** Ids kept at the top. */
 const pinned = defineModel<Id[]>('pinned', { default: () => [] })
 
-const KIND_ORDER = ['sense', 'choice', 'act', 'model', 'reward', 'cue']
+const KIND_ORDER = ['you', 'me', 'sense', 'eye', 'choice', 'act', 'fail', 'model', 'think', 'reward', 'cue', 'note', 'load']
 const KIND_ICON: Record<string, IconName> = {
   sense: 'eye', choice: 'code-branch', act: 'paw', model: 'brain', reward: 'heart', cue: 'comment',
+  you: 'arrow-right', me: 'comment', fail: 'warning', eye: 'eye', note: 'pen', think: 'circle-nodes', load: 'download',
 }
+/** The causal kinds keep their own words; the line log kinds bring tag and tone. */
+const CAUSAL_KINDS: Record<string, EventKind> = {
+  sense: { tag: 'sense', tone: 'dim' }, choice: { tag: 'choice' }, model: { tag: 'model' }, reward: { tag: 'reward' }, cue: { tag: 'cue' },
+}
+const kindMap = computed(() => ({ ...EVENT_KINDS, ...CAUSAL_KINDS, ...props.tones }))
+const look = (k: string) => kindOf(kindMap.value, k)
+const pct = (f: number) => `${Math.round(Math.max(0, Math.min(1, f)) * 100)}%`
 const iconOf = (e: HbCausalEvent): IconName => e.icon ?? KIND_ICON[e.kind] ?? 'circle-nodes'
 
 function stamp(t: number) {
@@ -98,12 +119,12 @@ function chain(e: HbCausalEvent) {
 }
 
 const sorted = computed(() => [...props.events].sort((a, b) => b.t - a.t))
-const shown = computed(() =>
-  sorted.value
-    .filter((e) => !pinSet.value.has(e.id) && !hidden.agents.has(e.agent) && !hidden.kinds.has(String(e.kind)))
-    .slice(0, props.limit),
-)
-const pins = computed(() => sorted.value.filter((e) => pinSet.value.has(e.id)))
+const visible = (e: HbCausalEvent) => !hidden.agents.has(e.agent) && !hidden.kinds.has(String(e.kind))
+const shown = computed(() => [
+  ...sorted.value.filter((e) => e.live && visible(e)),
+  ...sorted.value.filter((e) => !e.live && !pinSet.value.has(e.id) && visible(e)).slice(0, props.limit),
+])
+const pins = computed(() => sorted.value.filter((e) => !e.live && pinSet.value.has(e.id)))
 const groups = computed(() => {
   const out: Array<{ key: string; title: string; items: HbCausalEvent[] }> = []
   if (pins.value.length) out.push({ key: '#pinned', title: `pinned, ${pins.value.length}`, items: pins.value })
@@ -125,14 +146,16 @@ function togglePin(id: Id) {
 function words(e: HbCausalEvent) {
   const c = chain(e)
   const why = c.length ? `, after ${c.map((p) => p.text).join(', then ')}` : ''
-  return `${stamp(e.t)}, ${e.agent}, ${e.kind}: ${e.text}${why}`
+  const run = e.live ? (e.fraction !== undefined ? `, running, ${pct(e.fraction)}` : ', running') : ''
+  return `${stamp(e.t)}, ${e.agent}, ${look(String(e.kind)).tag}: ${e.text}${run}${why}`
 }
 
 const live = useLiveAnnounce(props.announceGap)
-watch(() => shown.value[0]?.id, (id, before) => {
+const newest = computed(() => shown.value.find((e) => !e.live))
+watch(() => newest.value?.id, (id, before) => {
   if (!props.announce || id === undefined || before === undefined) return
-  const e = shown.value[0]!
-  live.say(`${e.agent} ${e.kind}: ${e.text}`)
+  const e = newest.value!
+  live.say(`${e.agent} ${look(String(e.kind)).tag}: ${e.text}`)
 })
 </script>
 
@@ -160,7 +183,7 @@ watch(() => shown.value[0]?.id, (id, before) => {
         :class="{ 'is-on': !hidden.kinds.has(k) }"
         :aria-pressed="!hidden.kinds.has(k)"
         @click="flip(hidden.kinds, k)"
-      ><HbIcon :name="KIND_ICON[k] ?? 'circle-nodes'" :size="12" />{{ k }}</button>
+      ><HbIcon :name="KIND_ICON[k] ?? 'circle-nodes'" :size="12" />{{ look(k).tag }}</button>
     </div>
     <div class="hb-causal-list" role="region" :aria-label="props.label" tabindex="0">
       <template v-for="g in groups" :key="g.key">
@@ -170,15 +193,17 @@ watch(() => shown.value[0]?.id, (id, before) => {
             v-for="e in g.items"
             :key="e.id"
             class="hb-cev"
-            :class="{ 'is-pinned': pinSet.has(e.id) }"
+            :class="[look(String(e.kind)).tone ? `is-${look(String(e.kind)).tone}` : '', { 'is-pinned': pinSet.has(e.id), 'is-live': e.live }]"
+            :data-kind="e.kind"
           >
             <span class="hb-sr">{{ words(e) }}</span>
             <div class="hb-cev-hd" aria-hidden="true">
               <span class="hb-cev-t">{{ stamp(e.t) }}</span>
               <span class="hb-cev-agent">{{ e.agent }}</span>
-              <span class="hb-cev-kind"><HbIcon :name="iconOf(e)" :size="12" />{{ e.kind }}</span>
+              <span class="hb-cev-kind"><HbIcon :name="iconOf(e)" :size="12" />{{ look(String(e.kind)).tag }}</span>
             </div>
             <p class="hb-cev-text" aria-hidden="true">{{ e.text }}</p>
+            <span v-if="e.live && e.fraction !== undefined" class="hb-cev-bar" aria-hidden="true"><i :style="{ width: pct(e.fraction) }" /></span>
             <ol v-if="e.cause !== undefined && chain(e).length" class="hb-cev-chain" aria-hidden="true">
               <li v-for="p in chain(e)" :key="p.id">
                 <HbIcon :name="iconOf(p)" :size="11" />
@@ -187,6 +212,7 @@ watch(() => shown.value[0]?.id, (id, before) => {
               </li>
             </ol>
             <button
+              v-if="!e.live"
               type="button"
               class="hb-cev-pin"
               :aria-pressed="pinSet.has(e.id)"

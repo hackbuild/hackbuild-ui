@@ -11,7 +11,12 @@ export interface RackSlot {
   slot: string
   label: string
   required?: boolean
+  /** 'organ' is a part that is not a model, such as the body: it has a
+      source and a size but no download, so presets and the gate skip it. */
+  kind?: 'model' | 'organ'
 }
+
+const isModel = (s: RackSlot) => s.kind !== 'organ'
 
 export interface RackPreset {
   id: string
@@ -35,6 +40,7 @@ export function presetText(p: RackPreset): string {
 /** Slots a preset still has to load: picked and neither ready nor loading with the same pick. */
 export function presetJobs(p: RackPreset, slots: readonly RackSlot[], picks: Record<string, string>, states: Record<string, SlotState | undefined>): string[] {
   return slots
+    .filter(isModel)
     .map((s) => s.slot)
     .filter((s) => p.picks[s] && !((states[s] === 'ready' || states[s] === 'loading') && picks[s] === p.picks[s]))
 }
@@ -47,7 +53,8 @@ export interface RackGate {
 }
 
 /** Ready when every required slot is ready; the note names what is missing. */
-export function rackGate(slots: readonly RackSlot[], states: Record<string, SlotState | undefined>): RackGate {
+export function rackGate(all: readonly RackSlot[], states: Record<string, SlotState | undefined>): RackGate {
+  const slots = all.filter(isModel)
   const missing = slots.filter((s) => s.required && states[s.slot] !== 'ready').map((s) => s.label)
   if (missing.length) {
     const names = missing.length > 1 ? `${missing.slice(0, -1).join(', ')} and ${missing[missing.length - 1]}` : missing[0]
