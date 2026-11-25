@@ -1129,6 +1129,12 @@ input, commit on change, typed numbers clamped to the step);
 
 ## 17. Models
 
+Since 0.10.0 the parts in this section are on their way out: HbModelSelect
+and HbModelSheet (section 20) replace HbModelList, HbModelManager,
+HbModelRack, HbModelSlot, HbEngineBar, HbTierCards, HbCapabilities,
+HbCustomModelForm, HbMethodCard, HbLoader, HbHash and HbReasons. Each logs
+a note naming its replacement and goes in 0.11.0.
+
 The parts take plain records shaped like a model library record (label,
 badge, group, note, `sizeMB` with `sizeSource`, params, quant, `vramMB`
 with its source, censorship, tags, tier, licence, commercial, notes, ctx)
@@ -1330,6 +1336,11 @@ Vanilla: `PERSONA_TEMPLATE`, `tokenEstimate`, `costLine`,
 
 ## 18. Parts added in 0.6.0 to 0.8.0
 
+Since 0.10.0 the docs site groups parts by the layout that uses them
+(section 20), not by category. HbWakeGate, HbStatusBar, HbStageOverlay,
+HbReadouts, HbSegMeter, HbPresetChips, HbActions, HbCard and HbNum are
+deprecated; the catalogue lists them last with their replacement.
+
 Where to find each part added since 0.6.0. The docs site groups the same
 parts by category; the changelog has the detail.
 
@@ -1460,6 +1471,10 @@ Stroke icons `wand`, `brush`, `eraser`, `lasso`.
 
 ## 19. The refined look
 
+Section 20 supersedes the shell recipes and the black bar described here:
+the bar is light, tools use one of the six layouts, and the type defaults
+of section 3 apply.
+
 FERRULE, ARBOR and BAIL draw a finer line than the zine pages: 1.5 px
 panels and controls, shadows tuned to it, VT323 on every tag and status
 word, the work area as a lit stage inside a paper page, and one four
@@ -1543,4 +1558,100 @@ fifth, static tone for a degraded but working part.
 Icons: from 0.9.4 app chrome and tool panels draw the square cap stroke
 set (section 7), FERRULE's and ARBOR's line icons. The marketing blocks
 above keep Font Awesome solid (`set="solid"`).
+
+---
+
+## 20. Layouts and the model picker (0.10.0)
+
+Every tool screen is one of six layouts, each taken from an original. The
+shape: one light 52 px bar; one subject that fills (60 percent of the
+viewport at 1440, the top of the screen on a phone); one 380 px rack of
+three to five tabs, the first the live result; one pink action, the next
+thing to do; the few repeated verbs as a row on the subject.
+
+| Layout | Original | Vue | Vanilla | Subject | Rack |
+|---|---|---|---|---|---|
+| stage and rack | hackle, arbor, mortise | `HbStageRack` | `stageRack(root)` | the stage, insets and verbs on it | tabs of live state |
+| canvas and rail | mask-studio-sam | `HbCanvasRail` | `canvasRail(root)` | the canvas; the icon tool rail at its left | found, mask, view |
+| drop first | scribe | `HbDropFirst` | `dropFirst(root)` | a drop zone that becomes the result | engine and export once a result exists |
+| conversation | clevis, chatbot-forge | `HbConversationLayout` | `conversation(root)` | the messages; the composer under them | chats, persona, memory |
+| gate | ferrule, arbor | `HbGate` | `gate(root)` | the live subject behind one card | none |
+| form and frame | grommet | `HbFormFrame` | `formFrame(root)` | the output frame | the form column, at the left |
+
+Classes: `.hb-lay.is-<kind>`, `.hb-lay-bar`, `.hb-lay-body`,
+`.hb-lay-stage`, `.hb-lay-subject`, `.hb-lay-verbs`, `.hb-lay-inset`,
+`.hb-lay-tools`, `.hb-lay-list`, `.hb-lay-composer`, `.hb-lay-drop`,
+`.hb-lay-empty`, `.hb-gate-wrap`, `.hb-gate-card`, `.hb-rack`,
+`.hb-rack-pane`, `.hb-rack-detail`. Tokens: `--hb-rack` 380 px,
+`--hb-tools` 56 px, `--hb-list` 268 px, `--hb-sheet` 520 px. Under
+901 px the subject takes the top of the screen (62 percent, the frame 48)
+and the rack follows it; the conversation keeps the composer on the
+first screen. Vanilla `layout(root, options)` sets the markers, runs the
+rack tabs, the drop zone, the composer, the gate button and the tool rail.
+
+### Markers
+
+Every layout writes `data-ux` on its parts and the screen gate reads them:
+`bar`, `subject`, `rack`, `verbs`, `inset`, `detail`. A subject holds at
+most three controls; verbs and insets sit beside it, over it. `detail` is
+the rack's foot fold, a model row's chevron detail, or the gate's detail
+slot, and is the only place internal words may appear.
+
+### The model picker
+
+Both views are pure: `rows: ModelRow[]` in; `choose`, `load`, `cancel`,
+`remove`, `option` and `custom` out. A ModelRow is display ready: id,
+name, group, size, memory, bytes, backend, speed word, verdict, the
+uncensored and non commercial marks, state, progress, the unfit reason,
+a detail list and options. The kit never formats a catalogue record; a
+view layer builds the rows.
+
+| Part | Behaviour |
+|---|---|
+| `HbModelSelect` | closed: one line with the name, size and state, and one pink "load, <size>" that goes once the model is ready. `variant="chip"` is the one model chip in the bar. `go` off on a gate, so the gate's button is the one pink. `jobs` draws one line per job, presets with totals and one pink "load all, <total>"; job lines never carry their own pink |
+| `HbModelSheet` | open: a 520 px sheet, full height on a phone. A search field and three filters (fits this machine on, uncensored, no download); groups in order: on this machine, start here, small and fast, better, uncensored, reasoning, no download, your own; 44 px rows with a backend chip, speed, memory, verdict, marks and the state at the right edge; a row that does not fit is greyed with the reason; the chevron opens licence, source, context, quant and where the size came from, and remove for a stored model. Options show under the list only when the chosen row has them. "your own" has four forms: gguf repo and file, onnx hub repo, mlc weights by url, endpoint and key. One pink load at the foot |
+
+Vanilla: `modelSelect(host, options)` and `modelSheet(host, options)` over
+the same classes, and the helpers `filterModelRows`, `groupModelRows`,
+`loadLabel`, `stateWord`, `loadAll`.
+
+### Copy
+
+Lowercase, terse, a word a stranger knows. No emoji, no dashes, no
+exclamation marks. Internal terms (organ, tier, provider, rung, phase,
+measured, computed, inferred, unverified) never appear in first view;
+they live in a detail fold. Model facts show at the point of choice:
+size and licence in the picker and on the load button, never as page
+text. A control appears when it can act: no disabled export before there
+is output, no undo before there is a change.
+
+### The screen gate
+
+`tools/ux-gate.mjs` in the suite opens each route at 1440 by 900 and 390
+by 844 and fails a screen on any of: more than one bar or a bar over
+52 px; more than 15 enabled controls in first view outside the rack; a
+disabled control in first view; not exactly one pink action; a subject
+under 60 percent of the viewport at 1440 or starting below the upper half
+at 390; a rack not 380 px wide, not the same width on every tab, without
+three to five tabs or over 20 controls; sideways scroll; header items that
+cross; an internal word in first view text. The six demo routes
+`#/layouts/<kind>` of the docs site pass it.
+
+### Deprecated in 0.10.0, gone in 0.11.0
+
+| Part | Use instead |
+|---|---|
+| HbActions | HbToolbar |
+| HbCard | HbPanel `interactive` |
+| HbReadouts | HbKv `focal` |
+| HbSegMeter | HbMeter `segments` |
+| HbPresetChips | HbChipGroup |
+| HbStageOverlay | HbViewport overlay slots |
+| HbWakeGate | HbGate |
+| HbEngineBar, HbModelSlot, HbModelRack, HbTierCards | HbModelSelect |
+| HbModelList, HbModelManager, HbCustomModelForm, HbMethodCard, HbLoader, HbHash, HbReasons, HbCapabilities | HbModelSheet |
+| HbStatusBar | a bar chip or the rack's live tab |
+| HbNum | the `.hb-num` class |
+| HbAppShell recipes rack, bench, transcript | HbStageRack, HbFormFrame, HbDropFirst |
+| HbButton `variant="primary"` | light now; `variant="go"` for the one pink action |
 
