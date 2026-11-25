@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { cx } from '../utils/cx'
 import HbIcon from './HbIcon.vue'
 import HbVerdict, { type HbVerdictStatus } from './HbVerdict.vue'
-import type { IconName } from '../icons'
+import type { HbIconName as IconName } from '../icons/stroke'
 
 export type HbPermissionState = 'checking' | 'ask' | 'ok' | 'denied' | 'missing'
 

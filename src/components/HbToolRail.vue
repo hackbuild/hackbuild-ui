@@ -2,7 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { toolRail, type ToolRailHandle } from '../vanilla/choice'
 import { sharedHotkeys } from '../composables/useHotkeys'
-import type { IconName } from '../icons'
+import type { HbIconName as IconName } from '../icons/stroke'
 import HbIcon from './HbIcon.vue'
 
 export interface HbRailTool {

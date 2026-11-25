@@ -2,7 +2,7 @@
 import { computed, reactive, watch } from 'vue'
 import HbIcon from './HbIcon.vue'
 import { useLiveAnnounce } from '../composables/useLiveAnnounce'
-import type { IconName } from '../icons'
+import type { HbIconName as IconName } from '../icons/stroke'
 
 export type HbCausalKind = 'sense' | 'choice' | 'act' | 'model' | 'reward' | 'cue'
 type Id = string | number

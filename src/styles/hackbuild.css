@@ -4436,11 +4436,12 @@ button.hb-statuslist-row:focus-visible{ outline:var(--hb-border-hd) solid var(--
 /* ---- stages ------------------------------------------------------------
    Lit: the FERRULE stage, a pink glow over diagonal hairlines on sunk
    paper, the work area read as an instrument in a paper page. The glow
-   is drawn in three hard stepped bands, not a soft gradient.
+   is a smooth radial gradient, FERRULE's own: stage lighting is the one
+   place a gradient is allowed.
    Void: the BAIL stage, black with the pink graph rule. */
 .hb-stage-lit{
   background:
-    radial-gradient(ellipse at 50% 38%, rgba(254,3,134,.14) 0 22%, rgba(254,3,134,.09) 22% 40%, rgba(254,3,134,.04) 40% 58%, transparent 58%),
+    radial-gradient(ellipse at 50% 38%, var(--hb-stage-glow), transparent 58%),
     repeating-linear-gradient(135deg, transparent 0 12px, var(--hb-dot) 12px 13px),
     var(--hb-paper-sunk);
   color:var(--hb-ink);
@@ -4495,8 +4496,13 @@ body.hb.hb-dotgrid::before,body.hb:has(.hb-app)::before{ content:none }
 
 /* ---- stroke icons ------------------------------------------------------
    Inline SVG drawn as lines: 2 px, square caps, mitre joins, as in the
-   FERRULE and ARBOR bars. The baked set is Font Awesome solid (fills). */
+   FERRULE and ARBOR bars, for a hand drawn figure the stroke set lacks. */
 svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:square; stroke-linejoin:miter }
+/* The stroke set (HbIcon, vanilla strokeIcon): app chrome and tool panels.
+   One width everywhere, the border token in screen px, so a 12 px and a
+   20 px icon draw the same line as the panel around them. */
+.hb-icon.is-stroke{ fill:none; stroke:currentColor; stroke-width:var(--hb-border); stroke-linecap:square; stroke-linejoin:miter }
+.hb-icon.is-stroke path{ vector-effect:non-scaling-stroke }
 
 /* ---- fixture banner ----------------------------------------------------
    Every demo that shows sample state says so at its top, in words. */

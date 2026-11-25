@@ -7,7 +7,7 @@ import HbLicence from './HbLicence.vue'
 import { useLiveAnnounce } from '../composables/useLiveAnnounce'
 import { uid as makeUid } from '../utils/uid'
 import type { HbSizeSource } from './HbLoader.vue'
-import type { IconName } from '../icons'
+import type { HbIconName as IconName } from '../icons/stroke'
 
 export type HbCapState = 'off' | 'loading' | 'on' | 'failed' | 'unavailable'
 export type HbCapNeedKind = 'webgpu' | 'microphone' | 'camera' | 'model' | 'other'

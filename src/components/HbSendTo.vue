@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import HbDropdown from './HbDropdown.vue'
 import HbIcon from './HbIcon.vue'
-import type { IconName } from '../icons'
+import type { HbIconName as IconName } from '../icons/stroke'
 
 export interface HbSendTarget {
   /** Emitted on send: a tool id or route. */

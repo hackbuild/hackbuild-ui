@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HbToolbar from './HbToolbar.vue'
 import HbIcon from './HbIcon.vue'
-import type { IconName } from '../icons'
+import type { HbIconName as IconName } from '../icons/stroke'
 
 export interface HbGuideVerb {
   /** Emitted with the verb event. */

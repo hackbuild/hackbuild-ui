@@ -52,7 +52,7 @@ const open = ref(false)
       </slot>
     </div>
     <button class="hb-iconbtn hb-nav-toggle" type="button" aria-label="open navigation" @click="open = true">
-      <HbIcon name="menu" :size="18" />
+      <HbIcon set="solid" name="menu" :size="18" />
     </button>
   </nav>
   <HbDrawer v-model="open">

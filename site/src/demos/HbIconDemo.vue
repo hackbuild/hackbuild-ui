@@ -3,7 +3,10 @@ import { brandIconNames, HbButton, HbCallout, HbIcon, iconNames } from '@hackbui
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
 
-const code = `<HbIcon name="wrench" />
+const code = `<HbIcon name="trash" />          <!-- stroke set, app chrome -->
+<HbIcon name="trophy" set="solid" />  <!-- Font Awesome solid, marketing -->
+<HbIcon name="fa-solid fa-house" />   <!-- a Font Awesome class still renders -->
+<HbIcon name="wrench" />
 <HbIcon name="bolt" :size="24" />
 <HbIcon name="github" />                <!-- brands ship too -->
 <HbIcon name="record" label="recording" />  <!-- labeled, not decorative -->
@@ -14,7 +17,7 @@ const code = `<HbIcon name="wrench" />
 <template>
   <DemoSection
     title="The set"
-    note="Font Awesome 6 solid, the icon language every hack.build page already speaks, baked in as path data: no CDN, no runtime dependency, currentColor fills. Never emoji, and never an icon where a two-word label is clearer."
+    note="App chrome and tool panels draw the stroke set (every name on the icons page). This grid is the Font Awesome 6 solid set, baked in as path data for marketing and prose surfaces and as the fallback: no CDN, no runtime dependency, currentColor fills. Never emoji, and never an icon where a two-word label is clearer."
     :code="code"
   >
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px">
@@ -23,7 +26,7 @@ const code = `<HbIcon name="wrench" />
         :key="name"
         style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; background: var(--hb-paper-raised); border: 1px solid var(--hb-ink)"
       >
-        <HbIcon :name="name" :size="20" />
+        <HbIcon :name="name" set="solid" :size="20" />
         <span style="font-family: var(--hb-utility); font-size: 9.5px; color: var(--hb-ink-3)">{{ name }}</span>
       </div>
     </div>
@@ -64,7 +67,8 @@ const code = `<HbIcon name="wrench" />
 
   <PropsTable
     :rows="[
-      { prop: 'name', type: 'IconName', notes: 'required, solid or brand name' },
+      { prop: 'name', type: 'HbIconName | string', notes: 'required: a stroke name, a solid or brand name, or a Font Awesome class string' },
+      { prop: 'set', type: `'auto' | 'stroke' | 'solid'`, default: `'auto'`, notes: 'auto draws the stroke set and falls back to solid; solid keeps Font Awesome' },
       { prop: 'size', type: 'number | string', default: '16', notes: 'height; width follows the glyph aspect' },
       { prop: 'label', type: 'string', notes: 'accessible name; without it the icon is decorative' },
     ]"

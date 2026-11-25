@@ -305,7 +305,12 @@ On an ink header, `hack` flips to paper and `.build` stays pink.
 ### Shadows
 
 Hard offset, no blur, no spread. They read as a print registration error, which
-is the point. Pressing a control collapses its shadow and moves it by the same
+is the point.
+
+Gradients for stage lighting only: the `.hb-stage-lit` glow is a smooth radial
+gradient (`--hb-stage-glow`, FERRULE's 16 percent pink). Nowhere else: no
+gradient fills, shadows, buttons or panels. Patterns drawn as 1 px rules (the
+dot grid, the graph rule, hairlines) are rules, not gradients. Pressing a control collapses its shadow and moves it by the same
 offset, so the thing physically goes down.
 
 ```css
@@ -624,11 +629,27 @@ Never: em dashes or en dashes anywhere including code and UI strings; emoji
 anywhere including log output; marketing adjectives; exclamation marks; bold and
 italic scattered through prose; filler openers.
 
-Icons are Font Awesome 6 solid or hand-written inline SVG at 1.5 to 2.4 stroke
-width, `currentColor`, no fills. Never emoji, and never an icon where a two-word
-label is clearer.
+App chrome and tool panels use the square cap stroke set: inline SVG on a 24
+grid, `stroke: currentColor`, `stroke-linecap: square`, `stroke-linejoin:
+miter`, no fills, and one stroke width, `--hb-border` in screen px (1.5 px, 2 px
+in the zine scope). `HbIcon` draws it; vanilla pages call `strokeIcon(name)` or
+`strokeIconEl(name)`. Sixteen drawings are FERRULE's and ARBOR's own; the rest
+are drawn in the same idiom. Marketing and prose surfaces (section 19 lists
+them) may keep Font Awesome 6 solid with `set="solid"`. Never emoji, and never
+an icon where a two-word label is clearer. Every icon is on the docs page
+`#/icons`.
 
-Version 1.2 bakes the real Font Awesome Free glyphs into the library:
+| `HbIcon` `set` | Draws |
+|---|---|
+| `auto` (default) | the stroke drawing when the set has the name, else the solid glyph |
+| `stroke` | the stroke drawing or nothing |
+| `solid` | the Font Awesome solid glyph |
+
+A Font Awesome class string (`name="fa-solid fa-gear"`) still renders: the
+baked solid glyph when there is one, else an `<i>` with those classes for the
+page's own Font Awesome.
+
+The solid set: version 1.2 bakes the real Font Awesome Free glyphs into the library:
 the solid icons covering everything the shipped pages actually used
 (undo, redo, folder-open and floppy-disk joined in 1.3 for the bench verbs),
 plus the brand set (github, youtube, mastodon and the rest) for footers
@@ -677,7 +698,7 @@ inventing a one-off.
 - [ ] `hack` in ink, dot and `build` both pink
 - [ ] Four faces doing four jobs, no face outside its role
 - [ ] Zero border radius except `.hb-num` and nav dots
-- [ ] All shadows hard offset, no blur
+- [ ] All shadows hard offset, no blur; a gradient only in stage lighting
 - [ ] One texture, applied once, and never on a stage or a dial plate
 - [ ] One panel-head style throughout, editorial or instrument, not both
 - [ ] On-void text uses the lit set, not the paper signal colors
@@ -685,7 +706,7 @@ inventing a one-off.
 - [ ] Mobile first: base styles for a 360 px phone, wider layouts only through `min-width` queries
 - [ ] Touch targets 44 px on phones and touch screens, fields 16 px there
 - [ ] No horizontal scroll at 390 px
-- [ ] Icons are Font Awesome or inline SVG
+- [ ] Chrome and tool panel icons from the stroke set; Font Awesome solid only on marketing and prose
 - [ ] Rendered and looked at in a real browser, not counted headlessly
 - [ ] A page that opens from `file://` or runs offline loads `fonts-inline.css`, never Google Fonts
 - [ ] Every failure, missing device and refused permission names itself in words (section 10)
@@ -1434,17 +1455,18 @@ fifth, static tone for a degraded but working part.
 | `.hb-zine` | the 2 px zine values on any container |
 | `.hb-instrument` | rack density: 12.5 px base, tighter spacing, VT323 values, 26 px status rows on a fine pointer; buttons, selects and fields stay 44 px on a coarse pointer |
 | `.hb-led`, `.is-off`, `.is-load`, `.is-ok`, `.is-err` | the 8 px state light |
-| `.hb-stage-lit` | FERRULE stage: a pink glow in three hard bands over 135 degree hairlines on sunk paper. `HbStage look="lit"`, `HbViewport look="lit"` |
+| `.hb-stage-lit` | FERRULE stage: a smooth pink radial glow (`--hb-stage-glow`, the one allowed gradient) over 135 degree hairlines on sunk paper. `HbStage look="lit"`, `HbViewport look="lit"` |
 | `.hb-stage-void` | BAIL stage: the void with the 32 px pink graph rule and a 128 px major rule. `HbViewport look="graph"`. Scene colours in section 18, parts added in 0.9.3 |
 | `.hb-stage-tag` | the stage corner plate: `<b>` ink name, `<span>` pink mode |
 | `.hb-viewport-host` | the element a 3D renderer appends its canvas to inside `HbViewport`: fills the frame, the canvas follows at 100 percent with no layout shift, touch goes to orbit. Size the renderer without touching the style (three.js `setSize(w, h, false)`) from a ResizeObserver on the host. Use it instead of `.hb-split-side` |
 | `.hb-dotgrid` | dot grid paper on any surface; on `body.hb` it replaces the grain. `.hb-app` carries it and drops the grain by default |
 | `.hb-fixture`, `.is-strip` | the fixture banner: a dashed sunk strip with an ink `fixture` plate. Every demo that shows sample state carries one at its top; a fake load never names a real model |
-| `.hb-stroke` | inline SVG as 2 px lines, square caps, mitre joins |
+| `.hb-stroke` | hand drawn inline SVG as 2 px lines, square caps, mitre joins; for a drawing the stroke set does not carry |
+| `.hb-icon.is-stroke` | the stroke set: width `--hb-border` in screen px |
 | `HbMessage boxed` | FERRULE turn: VT323 who plate, each part a raised box with a 4 px shadow, your turns sunk |
 | `.hb-toolpage.is-split` | under 1024 px the stage comes first and the `.is-side` column drops below it; `.is-source-order` keeps the markup order |
 
-Icons: the baked set is Font Awesome solid, filled. FERRULE and ARBOR
-draw inline stroke icons with square caps; draw those with `.hb-stroke`
-rather than mixing a stroked glyph into the filled set.
+Icons: from 0.9.4 app chrome and tool panels draw the square cap stroke
+set (section 7), FERRULE's and ARBOR's line icons. The marketing blocks
+above keep Font Awesome solid (`set="solid"`).
 

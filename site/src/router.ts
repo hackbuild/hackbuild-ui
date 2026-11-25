@@ -12,6 +12,7 @@ export const router = createRouter({
     },
     { path: '/tokens', component: () => import('./pages/TokensPage.vue') },
     { path: '/brand', component: () => import('./pages/BrandPage.vue') },
+    { path: '/icons', component: () => import('./pages/IconsPage.vue') },
     { path: '/look', component: () => import('./pages/LookPage.vue') },
     { path: '/demos', component: () => import('./pages/DemosPage.vue') },
     { path: '/demos/bench', component: () => import('./pages/DemoBench.vue'), meta: { bare: true } },

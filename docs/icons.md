@@ -1,9 +1,27 @@
 # Icons
 
-The icon language is Font Awesome 6 solid. It always has been: the resume,
-the mockups and the app all speak it. The library bakes the real glyphs in
-as path data, so `HbIcon` renders the exact same chunky filled icons with
-no CDN and no runtime dependency.
+App chrome and tool panels draw the square cap stroke set: lines on a 24
+grid, `stroke: currentColor`, square caps, mitre joins, one width from
+`--hb-border`. Sixteen drawings are FERRULE's and ARBOR's own. Marketing
+and prose surfaces keep Font Awesome 6 solid, baked in as path data, with
+no CDN and no runtime dependency. Every icon is on the docs page `#/icons`.
+
+```vue
+<HbIcon name="trash" />                <!-- stroke set -->
+<HbIcon name="trophy" set="solid" />   <!-- Font Awesome solid -->
+<HbIcon name="fa-solid fa-house" />    <!-- a Font Awesome class still renders -->
+```
+
+```js
+import { strokeIcon, strokeIconEl } from '@virgilvox/hackbuild-ui/vanilla'
+button.innerHTML = strokeIcon('gear', { size: 16 }) + 'settings'
+button.prepend(strokeIconEl('x', { label: 'close' }))
+```
+
+`set` is `auto` by default: the stroke drawing when the set has the name,
+else the solid glyph. `stroke` draws the stroke drawing or nothing; `solid`
+keeps Font Awesome. A class string draws the baked solid glyph when there is
+one, else an `<i>` with those classes for the page's own Font Awesome.
 
 One rule above all: never emoji, and never an icon where a two-word label
 is clearer.
@@ -19,7 +37,8 @@ is clearer.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `name` | `IconName` | | required, solid or brand name |
+| `name` | `HbIconName \| string` | | required: a stroke, solid or brand name, or a Font Awesome class string |
+| `set` | `'auto' \| 'stroke' \| 'solid'` | `'auto'` | which set draws the name |
 | `size` | `number \| string` | `16` | height; width follows the glyph aspect |
 | `label` | `string` | | accessible name. Without it the icon is `aria-hidden` |
 

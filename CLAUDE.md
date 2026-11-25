@@ -36,11 +36,14 @@ generated string, including code comments, log output, and test fixtures.
 - Pink is #FE0386, paper is #f5f0e6, ink is #1a1a1a. The one-accent rule
   holds: one pink element competing for attention per view.
 - Zero border radius except .hb-num, nav dots, and the pill status dot.
-- Hard offset shadows only. No blur, no spread, no gradients.
+- Hard offset shadows only. No blur, no spread. Gradients for stage
+  lighting only (the `.hb-stage-lit` glow); nowhere else.
 - Four faces, four jobs. Never set a face outside its role.
 - The mark is the verbatim two-path favicon artwork placed through viewBox
   117 103 800 800. Never redraw, trace, or approximate it.
-- Icons are Font Awesome 6 solid or inline SVG. Never emoji.
+- App chrome and tool panels use the square cap stroke set (`HbIcon`,
+  vanilla `strokeIcon`). Marketing and prose surfaces may keep Font
+  Awesome 6 solid. Never emoji.
 - No horizontal scroll at 390 px. Mobile first: every new component must be
   checked at 390 px before it ships.
 

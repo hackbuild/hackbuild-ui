@@ -58,6 +58,6 @@ const style = computed(() => {
   <!-- Identity plate: a solid palette color with a big paper icon, the way
        the magazine and resume cards do it. Same seed, same face. -->
   <div class="hb-cover" :class="{ 'is-ghost': props.ghost, 'is-graph': props.graph }" :style="style" aria-hidden="true">
-    <HbIcon :name="picked" :size="props.ghost ? Math.min(props.size, 52) : props.size" />
+    <HbIcon set="solid" :name="picked" :size="props.ghost ? Math.min(props.size, 52) : props.size" />
   </div>
 </template>

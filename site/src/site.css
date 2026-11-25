@@ -97,3 +97,14 @@
 .look-chat{ display:flex; flex-direction:column; gap:12px; min-width:0 }
 .look-table{ overflow-x:auto; max-width:100% }
 .look-page .hb-statusbar{ margin-top:12px }
+
+/* icons page */
+.icons-lede{ margin-top:8px }
+.icons-h{ margin:28px 0 10px }
+.icons-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); gap:8px }
+.icons-cell{ position:relative; display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 4px 8px; background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); min-width:0 }
+.icons-cell.is-ported::after{ content:""; position:absolute; top:0; right:0; border-style:solid; border-width:0 10px 10px 0; border-color:transparent var(--hb-pink) transparent transparent }
+.icons-pair{ display:inline-flex; align-items:center; gap:10px; min-height:20px }
+.icons-name{ font-family:var(--hb-utility); font-size:10px; color:var(--hb-ink-3); overflow-wrap:anywhere; text-align:center }
+.icons-row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center }
+.icons-zine{ display:inline-flex; align-items:center; gap:8px; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3); background:transparent }

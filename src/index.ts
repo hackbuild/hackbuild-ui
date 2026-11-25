@@ -13,6 +13,8 @@ export * from './brand/mark'
 export { default as HbIcon } from './components/HbIcon.vue'
 export { icons, brandIcons, iconNames, brandIconNames, iconDef } from './icons'
 export type { IconName, SolidIconName, BrandIconName, IconDef } from './icons'
+export { strokeIcons, strokeIconNames, strokePortedNames, strokeIconDef, strokeIcon, strokeIconEl, faClassName } from './icons/stroke'
+export type { HbIconName, StrokeIconName, StrokeIconDef, StrokeIconOptions } from './icons/stroke'
 
 // chrome
 export { default as HbHeader } from './components/HbHeader.vue'

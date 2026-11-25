@@ -5,7 +5,7 @@ import { splitParts, statsText, autosize, type MessageStats } from '../vanilla/c
 import HbThink from './HbThink.vue'
 import HbToolCall from './HbToolCall.vue'
 import HbIcon from './HbIcon.vue'
-import type { IconName } from '../icons'
+import type { HbIconName as IconName } from '../icons/stroke'
 import type { ToolState } from '../vanilla/chat'
 
 export type HbMessageAction = 'speak' | 'retry' | 'remember' | 'copy' | 'remove' | 'edit'
@@ -148,7 +148,7 @@ function onEditKey(e: KeyboardEvent) {
 }
 defineExpose({ startEdit })
 
-const ICON: Record<HbMessageAction, IconName> = { speak: 'wave', retry: 'redo', remember: 'brain', copy: 'copy', remove: 'trash', edit: 'pen' }
+const ICON: Record<HbMessageAction, IconName> = { speak: 'volume', retry: 'redo', remember: 'brain', copy: 'copy', remove: 'trash', edit: 'pen' }
 function label(a: HbMessageAction): string {
   if (a === 'copy') return copyState.value === 'copied' ? 'copied' : copyState.value === 'failed' ? 'copy failed' : 'copy'
   if (a === 'remove') return armed.value ? 'delete?' : 'delete'

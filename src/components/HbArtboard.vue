@@ -422,7 +422,7 @@ const strokePts = computed(() => (drag.value?.mode === 'paint' ? drag.value : nu
         <button type="button" class="hb-iconbtn" aria-label="zoom out" title="zoom out (-)" @click="zoomBy(0.8)"><HbIcon name="minus" :size="14" /></button>
         <button type="button" class="hb-ab-pct" :aria-label="`zoom ${zoomText}, show board pixels at 100 percent`" title="100 percent (1)" @click="actual">{{ zoomText }}</button>
         <button type="button" class="hb-iconbtn" aria-label="zoom in" title="zoom in (+)" @click="zoomBy(1.25)"><HbIcon name="plus" :size="14" /></button>
-        <button type="button" class="hb-iconbtn" aria-label="fit to view" title="fit (0)" @click="fitView"><HbIcon name="crosshairs" :size="14" /></button>
+        <button type="button" class="hb-iconbtn" aria-label="fit to view" title="fit (0)" @click="fitView"><HbIcon name="frame" :size="14" /></button>
       </div>
     </div>
     <p :id="helpId" class="hb-ab-help">

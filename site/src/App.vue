@@ -11,6 +11,7 @@ const nav = [
   { label: 'components', to: '/components' },
   { label: 'tokens', to: '/tokens' },
   { label: 'look', to: '/look' },
+  { label: 'icons', to: '/icons' },
   { label: 'brand', to: '/brand' },
   { label: 'demos', to: '/demos' },
 ]

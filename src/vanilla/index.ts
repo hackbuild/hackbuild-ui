@@ -3,6 +3,8 @@
 // and composables call the same functions. Each returns a handle with
 // dispose(), which removes every listener it added.
 export { tabs } from './tabs'
+export { strokeIcon, strokeIconEl, strokeIcons, strokeIconNames, strokePortedNames, strokeIconDef, faClassName } from '../icons/stroke'
+export type { HbIconName, StrokeIconName, StrokeIconDef, StrokeIconOptions } from '../icons/stroke'
 export type { TabsHandle, TabsOptions } from './tabs'
 export { modal, drawer } from './overlay'
 export type { CloseReason, DrawerOptions, OverlayHandle, OverlayOptions } from './overlay'

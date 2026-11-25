@@ -126,6 +126,7 @@
 
   /* ---- paper dot grid. FERRULE and ARBOR page: 1 px ink dots at 7 px. -- */
   --hb-dot:      rgba(26,26,26,.07);
+  --hb-stage-glow: rgba(254,3,134,.16); /* FERRULE stage light: the one gradient, stage lighting only */
   --hb-dot-step: 7px;
 
   /* ---- spacing. 4 px base. ---------------------------------------------- */
