@@ -12,6 +12,8 @@ interface Props {
   wrapToggle?: boolean
   /** Accessible name of the block. */
   label?: string
+  /** Ink text on raised paper, for a source or an example inside a light panel. */
+  paper?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,6 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   copy: true,
   wrapToggle: true,
   label: undefined,
+  paper: false,
 })
 
 /** Long lines wrap instead of scrolling sideways. */
@@ -37,7 +40,7 @@ onBeforeUnmount(() => handle?.dispose())
 <template>
   <!-- Code as plain text on ink, the language in the head, copy and wrap.
        The pre takes focus so arrow keys scroll a long line. -->
-  <div ref="el" class="hb-codeblock">
+  <div ref="el" class="hb-codeblock" :class="{ 'is-paper': props.paper }">
     <div v-if="props.lang || props.copy || props.wrapToggle" class="hb-codeblock-head">
       <span class="hb-codeblock-lang">{{ props.lang }}</span>
       <button v-if="props.wrapToggle" type="button" class="hb-codeblock-btn" data-wrap aria-pressed="false">wrap</button>

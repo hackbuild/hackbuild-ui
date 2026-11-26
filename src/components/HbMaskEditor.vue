@@ -41,7 +41,7 @@ const st = ref<MaskEditorState | null>(null)
 const failed = ref('')
 let handle: MaskEditorHandle | null = null
 
-const rail = computed<HbRailTool[]>(() => MASK_TOOLS.map((t) => ({ id: t.id, label: t.label, icon: t.icon, key: t.key, hint: t.hint })))
+const rail = computed<HbRailTool[]>(() => MASK_TOOLS.map((t) => ({ id: t.id, label: t.label, icon: t.icon, key: t.key, hint: t.hint, group: t.group })))
 const hint = computed(() => maskHint(tool.value, mode.value))
 const ratio = computed(() => (st.value?.width && st.value.height ? st.value.width / st.value.height : 4 / 3))
 const pct = computed(() => Math.round((st.value?.coverage ?? 0) * 100))
