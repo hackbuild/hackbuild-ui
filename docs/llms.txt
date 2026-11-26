@@ -1,0 +1,30 @@
+# hackbuild-ui
+
+> hackbuild-ui is the hack.build design system as one ESM package: design tokens as CSS custom properties, one stylesheet that styles every part as plain classes, Vue 3 components that add behaviour to those classes and carry no styles, and the same behaviour as vanilla functions for pages without Vue or opened from file://. Tool screens take one of six layouts (stage and rack, canvas and rail, drop first, conversation, gate, form and frame): one 52 px bar, one subject that fills, one 380 px rack, one pink action. GUIDELINES.md is the design law.
+
+Installs from npm as @virgilvox/hackbuild-ui, ESM only, types included, MIT. llms.md lists every export with its signature, minimal examples and the mistakes to avoid. Code: https://github.com/hackbuild/hackbuild-ui
+
+## Packages
+
+- [@virgilvox/hackbuild-ui](https://hackbuild.github.io/hackbuild-ui/llms.md): The hack.build design system: tokens, one stylesheet, Vue 3 parts and vanilla behaviour for tool screens in paper, ink and one pink.
+
+## Quick starts
+
+- [quick start](https://hackbuild.github.io/hackbuild-ui/quick.ts): the smallest Vue page with the stylesheet and three parts, typechecked in CI
+
+## Docs
+
+- [guidelines](https://hackbuild.github.io/hackbuild-ui/#/guidelines): the design law: colour, type, structure, the six layouts, the screen shape, copy rules and the gates
+- [catalogue](https://hackbuild.github.io/hackbuild-ui/#/components): every part grouped by layout, with when to use it, its props, events, slots and a live demo
+- [tokens](https://hackbuild.github.io/hackbuild-ui/#/tokens): every design value as a CSS custom property
+- [stage rack layout](https://hackbuild.github.io/hackbuild-ui/#/layouts/stage-rack): a live screen in that layout
+- [canvas rail layout](https://hackbuild.github.io/hackbuild-ui/#/layouts/canvas-rail): a live screen in that layout
+- [drop first layout](https://hackbuild.github.io/hackbuild-ui/#/layouts/drop-first): a live screen in that layout
+- [conversation layout](https://hackbuild.github.io/hackbuild-ui/#/layouts/conversation): a live screen in that layout
+- [gate layout](https://hackbuild.github.io/hackbuild-ui/#/layouts/gate): a live screen in that layout
+- [form frame layout](https://hackbuild.github.io/hackbuild-ui/#/layouts/form-frame): a live screen in that layout
+
+## Optional
+
+- [llms-full.txt](https://hackbuild.github.io/hackbuild-ui/llms-full.txt): this file and llms.md in one file
+- [vanilla gallery](https://hackbuild.github.io/hackbuild-ui/vanilla.html): the class layer and vanilla behaviour without Vue

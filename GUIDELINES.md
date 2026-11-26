@@ -127,8 +127,9 @@ render the mark must sit inside a counter-flipped wrapper or it prints mirrored.
 
 ## 2. Color
 
-The favicon values are the record. Older files carrying `#ff3366`, `#ff2d7b` or
-`#f5f2eb` are wrong and should be corrected wherever found.
+The favicon values are the record. Older files carrying a redder or a
+softer pink, or a greyer paper, are wrong and should be corrected wherever
+found. tools/lint-voice.mjs blocks the known wrong values by name.
 
 ```css
 --hb-pink:        #FE0386   /* the one accent */
@@ -1725,3 +1726,71 @@ site sits in HbBarPage and its tool name switches between them.
 | HbAppShell recipes rack, bench, transcript | HbStageRack, HbFormFrame, HbDropFirst |
 | HbButton `variant="primary"` | light now; `variant="go"` for the one pink action |
 
+
+---
+
+## 21. The screen, the words and the gates
+
+This section is the shape every tool screen takes, the rules its words
+follow, and the checks a screen has to pass. Section 20 names the six
+layouts that carry it.
+
+### The shape of a screen
+
+1. One thin bar, 52 px and light: the mark, the tool name (press it to
+   switch tool), one model chip and a menu. Nothing else is fixed on screen.
+2. One subject that fills: the frame, canvas, room, conversation or
+   transcript takes at least 60 percent of the viewport on desktop and the
+   top of the screen on a phone.
+3. The empty state lives in the subject. "drop an image", a sample, or a
+   scripted reply works before any model is loaded.
+4. One rack, a fixed 380 px with three to five tabs. The first tab is the
+   live result, never settings. On a phone it becomes a bottom sheet and
+   the input stays visible.
+5. One pink action, the next thing to do. Everything else is light.
+6. Verbs on the subject: the few repeated actions sit as a row on the stage.
+7. A control appears when it can act. No disabled export before there is
+   output, no undo before there is a change.
+8. Model facts at the point of choice: size and licence show in the
+   selector and on the load button ("load, 1.7 gb"), never as page text.
+9. At most 15 controls in first view outside the rack.
+10. Type: IBM Plex Mono 13 to 14 px, sentence case, for the interface;
+    VT323 for numbers and block heads; Permanent Marker for one name per
+    screen; Special Elite for notes only; uppercase tracked 11 px only for
+    small readout labels.
+11. Words a stranger understands. Internal terms stay out of first view and
+    live in a detail fold or an expert tab (the `detail` marker, section 20).
+
+### Copy
+
+| Rule | Example |
+|---|---|
+| Tool names are plain verbs or nouns a stranger knows | chat, transcribe, cut out, make an image |
+| UI copy is lowercase and terse, second person for instructions | drop an image |
+| A failure names itself | microphone blocked. allow it in the address bar |
+| No emoji, no em or en dashes, no exclamation marks in chrome | |
+| No marketing words, no filler openers | |
+| Every number carries measured, computed, vendor, inferred or unknown, in the detail pane, not on the page | load time 2.1 s, measured |
+| In world dialogue may keep its original punctuation | |
+
+### Gates
+
+A screen ships when the screen gate passes at 1440 by 900 and 390 by 844.
+The gate reads the `data-ux` markers of section 20.
+
+| Check | Pass |
+|---|---|
+| Bar | one bar, 52 px or less |
+| Controls in first view outside the rack | 15 or fewer, visible and enabled |
+| Disabled controls in first view | none |
+| Pink controls in view | exactly one |
+| Subject | at least 60 percent of the viewport at 1440; starts above the fold at 390 |
+| Rack | 380 px at 1440, the same width on every tab |
+| Layout | no horizontal scroll; bar items do not overlap |
+| First view words | none of organ, tier, provider, rung, phase, inferred, measured, computed, unverified outside folds and detail panes |
+| Contact sheet | each screen beside the original it was taken from, looked at by a reviewer |
+
+The repository checks run in CI on every push: `npm test`, `npm run
+typecheck`, `npm run build`, `npm run build:site`, `npm run docs:check`
+(the README template, the part catalogue and the llms files are current)
+and `npm run lint:voice`.

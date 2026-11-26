@@ -38,7 +38,7 @@ a color. The void is reserved: it is where the machine draws, never chrome.
 
 The pink is punctuation, not paint. One competing pink element per view.
 `#FE0386` is the favicon value and the only correct pink. Older files
-carrying `#ff3366`, `#ff2d7b` or `#E91E8C` are wrong.
+carry other pinks; they are wrong, and tools/lint-voice.mjs blocks them.
 
 ## Signal colors
 

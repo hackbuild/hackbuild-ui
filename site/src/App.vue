@@ -9,6 +9,7 @@ const bare = computed(() => Boolean(route.meta.bare))
 const nav = [
   { label: 'home', to: '/' },
   { label: 'components', to: '/components' },
+  { label: 'guidelines', to: '/guidelines' },
   { label: 'tokens', to: '/tokens' },
   { label: 'look', to: '/look' },
   { label: 'icons', to: '/icons' },

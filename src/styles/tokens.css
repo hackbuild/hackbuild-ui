@@ -6,8 +6,8 @@
    in hackbuild.css and the Tailwind bridge in tailwind.css both read from
    here. If a value in any other file disagrees with this one, this one wins.
 
-   The favicon values are the record. Older files carrying #ff3366, #ff2d7b,
-   #E91E8C or #f5f2eb are wrong and should be corrected wherever found.
+   The favicon values are the record. Older files carrying other pinks or a
+   greyer paper are wrong; tools/lint-voice.mjs blocks the known ones.
    ========================================================================== */
 
 :root{

@@ -10,6 +10,7 @@ export const router = createRouter({
       path: '/components/:name',
       component: () => import('./pages/ComponentPage.vue'),
     },
+    { path: '/guidelines', component: () => import('./pages/GuidelinesPage.vue') },
     { path: '/tokens', component: () => import('./pages/TokensPage.vue') },
     { path: '/brand', component: () => import('./pages/BrandPage.vue') },
     { path: '/icons', component: () => import('./pages/IconsPage.vue') },

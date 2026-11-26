@@ -17,7 +17,8 @@
     "noEmit": true,
     "paths": {
       "@hackbuild/ui/vanilla": ["./src/vanilla/index.ts"],
-      "@hackbuild/ui": ["./src/index.ts"]
+      "@hackbuild/ui": ["./src/index.ts"],
+      "@virgilvox/hackbuild-ui": ["./src/index.ts"]
     }
   },
   "include": [
@@ -26,6 +27,7 @@
     "playground/src/**/*.ts",
     "playground/src/**/*.vue",
     "site/src/**/*.ts",
-    "site/src/**/*.vue"
+    "site/src/**/*.vue",
+    "examples/**/*.ts"
   ]
 }

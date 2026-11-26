@@ -2,14 +2,16 @@
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { HbButton, HbDrawer, HbShell } from '@hackbuild/ui'
-import { allEntries, demoLoader } from '../registry'
+import { allEntries, demoLoader, registry } from '../registry'
 import SideNav from '../components/SideNav.vue'
+import PartApi from '../components/PartApi.vue'
 
 const route = useRoute()
 const navOpen = ref(false)
 
 const name = computed(() => String(route.params.name))
 const entry = computed(() => allEntries.find((item) => item.name === name.value))
+const group = computed(() => registry.find((g) => g.entries.some((e) => e.name === name.value))?.category)
 
 const demo = computed(() => {
   const loader = demoLoader(name.value)
@@ -34,6 +36,7 @@ const demo = computed(() => {
           <div class="demo-col" style="margin-top: 20px">
             <component :is="demo" :key="name" />
           </div>
+          <PartApi :name="entry.name" :blurb="entry.blurb" :group="group" style="margin-top: 28px" />
         </template>
         <template v-else>
           <h1>not found</h1>

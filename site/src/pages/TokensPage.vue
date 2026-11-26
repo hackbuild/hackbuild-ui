@@ -173,8 +173,8 @@ const tailwind = `/* app.css */
     <CodeBlock :code="tailwind" />
 
     <HbCallout variant="warn" style="margin-top: 24px">
-      The favicon values are the record. Older files carrying #ff3366, #ff2d7b
-      or #E91E8C are wrong and should be corrected wherever found.
+      The favicon values are the record. Older files carrying any other pink
+      are wrong and should be corrected wherever found.
     </HbCallout>
   </HbShell>
 </template>

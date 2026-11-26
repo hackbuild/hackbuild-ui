@@ -20,7 +20,8 @@
   "files": [
     "dist",
     "assets/brand",
-    "GUIDELINES.md"
+    "GUIDELINES.md",
+    "llms.md"
   ],
   "sideEffects": [
     "**/*.css"
@@ -59,7 +60,10 @@
     "test": "node --test --test-force-exit --import ./tools/test/ts-hook.mjs \"tools/test/*.test.mjs\"",
     "lint:commits": "node tools/lint-commits.mjs",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true",
-    "gen:fonts": "node scripts/gen-fonts.mjs"
+    "gen:fonts": "node scripts/gen-fonts.mjs",
+    "docs": "node tools/catalogue.mjs && node tools/llms.mjs",
+    "docs:check": "node tools/check-readme.mjs && node tools/catalogue.mjs --check && node tools/llms.mjs --check",
+    "lint:voice": "git ls-files '*.md' '*.txt' 'site/src/**' 'src/**' | grep -Ev '^(CLAUDE.md|RULES.md)$|^src/styles/fonts/|\\.(svg|woff2|png)$' | xargs node tools/lint-voice.mjs"
   },
   "peerDependencies": {
     "vue": "^3.4.0"
