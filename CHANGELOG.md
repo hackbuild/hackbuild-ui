@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.4
+
+Docs:
+
+- README on the template, with css and vanilla sizes measured from dist.
+- Each component page shows when to use the part and its props, events
+  and slots; a `#/guidelines` page; GUIDELINES section 21 (screen shape,
+  copy rules, gates).
+- `llms.txt`, `llms-full.txt` and `llms.md` on the site; readme, catalogue
+  and llms staleness checks in CI.
+
 ## 0.10.3
 
 Gaps the suite rebuild hit:
