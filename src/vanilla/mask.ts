@@ -24,6 +24,8 @@ export interface MaskToolDef {
   key: string
   /** The gesture in add mode; `maskHint` gives it for either mode. */
   hint: string
+  /** Tools of one group share a place in the rail (the shapes); the rail shows six. */
+  group?: string
 }
 
 /** One table builds the rail, the letters on it and the keydown map. */
@@ -31,10 +33,10 @@ export const MASK_TOOLS: MaskToolDef[] = [
   { id: 'wand', label: 'wand', icon: 'wand', key: 'w', hint: maskHint('wand', 'add') },
   { id: 'brush', label: 'brush', icon: 'brush', key: 'b', hint: maskHint('brush', 'add') },
   { id: 'eraser', label: 'eraser', icon: 'eraser', key: 'e', hint: maskHint('eraser', 'add') },
-  { id: 'lasso', label: 'lasso', icon: 'lasso', key: 'l', hint: maskHint('lasso', 'add') },
-  { id: 'polygon', label: 'polygon', icon: 'polygon', key: 'p', hint: maskHint('polygon', 'add') },
-  { id: 'rect', label: 'rectangle', icon: 'select-rect', key: 'm', hint: maskHint('rect', 'add') },
-  { id: 'ellipse', label: 'ellipse', icon: 'select-ellipse', key: 'o', hint: maskHint('ellipse', 'add') },
+  { id: 'lasso', label: 'lasso', icon: 'lasso', key: 'l', hint: maskHint('lasso', 'add'), group: 'shape' },
+  { id: 'polygon', label: 'polygon', icon: 'polygon', key: 'p', hint: maskHint('polygon', 'add'), group: 'shape' },
+  { id: 'rect', label: 'rectangle', icon: 'select-rect', key: 'm', hint: maskHint('rect', 'add'), group: 'shape' },
+  { id: 'ellipse', label: 'ellipse', icon: 'select-ellipse', key: 'o', hint: maskHint('ellipse', 'add'), group: 'shape' },
   { id: 'flood', label: 'flood fill', icon: 'bucket', key: 'g', hint: maskHint('flood', 'add') },
   { id: 'pan', label: 'pan', icon: 'hand', key: 'h', hint: maskHint('pan', 'add') },
 ]

@@ -5225,3 +5225,150 @@ svg.hb-stroke,.hb-stroke svg{ fill:none; stroke:currentColor; stroke-width:2; st
 .hb-frameview-cap{ margin:0; font-family:var(--hb-note); font-size:14px; color:var(--hb-ink-2); text-align:center }
 /* a view's host element (a custom element or a Vue host): its parts sit in the layout region as if they were its children */
 .hb-view{ display:contents }
+
+/* ==========================================================================
+   Gaps the suite rebuild hit (0.10.3)
+   ========================================================================== */
+
+/* the bar's tool name as the switcher (hackle's mark): Permanent Marker
+   26 px, the accent pink, a small chevron; it opens a menu of tools */
+.hb-toolswitch{ flex:0 0 auto; min-width:0; max-width:60% }
+.hb-header .hb-toolswitch h1{ max-width:100%; margin:0; overflow:visible; font-size:inherit }
+.hb-toolswitch-btn{
+  display:inline-flex; align-items:center; max-width:100%; min-width:0; min-height:44px; padding:0 2px; margin:0;
+  background:none; border:0; color:var(--hb-ink); cursor:pointer;
+  font-family:var(--hb-display); font-weight:400; font-size:26px; line-height:1; letter-spacing:.5px; white-space:nowrap;
+}
+.hb-header .hb-toolswitch-btn > span{ flex:none }
+.hb-header .hb-toolswitch-btn > .hb-toolswitch-name{ flex:0 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; color:inherit; padding-bottom:2px }
+.hb-toolswitch-btn::after{
+  content:''; flex:none; width:8px; height:8px; margin:-5px 2px 0 10px;
+  border-right:2.5px solid currentColor; border-bottom:2.5px solid currentColor; transform:rotate(45deg);
+}
+.hb-toolswitch.is-open .hb-toolswitch-btn::after{ margin-top:5px; transform:rotate(-135deg) }
+@media(max-width:640px){ .hb-toolswitch-btn{ font-size:22px } }
+.hb-toolswitch-btn:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:2px }
+@media (hover:hover) and (pointer:fine){ .hb-toolswitch-btn:hover{ text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:4px } }
+.hb-header.is-ink .hb-toolswitch-btn{ color:var(--hb-paper) }
+.hb-toolswitch-menu{ top:calc(100% + 2px); min-width:220px; max-width:min(320px, calc(100vw - 2 * var(--hb-s3))); max-height:70vh; overflow:auto }
+.hb-toolswitch-item{ flex-direction:column; align-items:flex-start; justify-content:center; gap:2px; min-height:44px; font-size:13px; font-weight:500; text-transform:none; letter-spacing:0 }
+.hb-toolswitch-item-note{ font-family:var(--hb-note); font-size:12px; color:var(--hb-ink-3) }
+.hb-toolswitch-item[aria-current="true"]{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-toolswitch-item[aria-current="true"] .hb-toolswitch-item-note{ color:var(--hb-lit-label) }
+
+/* the layout body always takes the filling row, with or without its own bar */
+.hb-lay > .hb-lay-body{ grid-row:2 }
+/* a layout under an app bar: HbHeader, then any of the six layouts filling
+   the rest of the viewport. The wrapper is HbBarPage; a header followed
+   straight by a layout works too. */
+.hb-header + .hb-lay{ height:calc(100vh - 52px - env(safe-area-inset-top)); height:calc(100dvh - 52px - env(safe-area-inset-top)) }
+.hb-barpage{ display:grid; grid-template-rows:auto minmax(0,1fr); height:100vh; height:100dvh; overflow:hidden; min-width:0; background:var(--hb-paper) }
+.hb-barpage > .hb-lay,.hb-barpage > .hb-header + .hb-lay,.hb-barpage > .hb-view > .hb-lay{ height:auto; min-height:0 }
+@media(max-width:900px){
+  .hb-barpage{ height:auto; min-height:100vh; min-height:100dvh; overflow:visible }
+  .hb-header + .hb-lay,.hb-barpage > .hb-lay,.hb-barpage > .hb-header + .hb-lay,.hb-barpage > .hb-view > .hb-lay{ height:auto; min-height:calc(100svh - 52px) }
+}
+
+/* the memory inspector sized for a 380 px rack: one two line row per
+   candidate, the scorer parts in a fold */
+.hb-meminspect{ min-width:0; max-width:100% }
+.hb .hb-meminspect-line,.hb-meminspect-line,.hb .hb-meminspect-empty,.hb-meminspect-empty{ margin:0 0 var(--hb-s2); font-family:var(--hb-note); font-size:13px; line-height:1.4; color:var(--hb-ink-3); overflow-wrap:anywhere }
+.hb-meminspect-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; min-width:0 }
+.hb-meminspect-row{ min-width:0; padding:6px 8px; background:var(--hb-paper-raised); border:1px solid var(--hb-ink); border-left:4px solid var(--hb-ink-4) }
+.hb-meminspect-row.is-used{ border-left-color:var(--hb-ink) }
+.hb-meminspect-top{ display:flex; align-items:baseline; gap:8px; min-width:0 }
+.hb-meminspect-rank,.hb-meminspect-score{ font-family:var(--hb-readout); font-size:18px; line-height:1; font-variant-numeric:tabular-nums }
+.hb-meminspect-kind{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 4px; border:1px solid var(--hb-ink); font-size:11px; text-transform:uppercase; letter-spacing:.08em }
+.hb-meminspect-score{ margin-left:auto }
+.hb-meminspect-used{ flex:none; font-size:11px; color:var(--hb-ink-3) }
+.hb-meminspect-row.is-used .hb-meminspect-used{ color:var(--hb-ink); font-weight:600 }
+.hb .hb-meminspect-text,.hb-meminspect-text{ margin:4px 0 0; font-size:12.5px; line-height:1.4; overflow-wrap:anywhere }
+.hb-meminspect-parts > summary{ cursor:pointer; margin-top:4px; font-size:11px; color:var(--hb-ink-3) }
+.hb-meminspect-parts dl{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:2px 10px; margin:4px 0 0; font-size:11.5px }
+.hb-meminspect-parts dt{ color:var(--hb-ink-3) }
+.hb-meminspect-parts dd{ margin:0; font-variant-numeric:tabular-nums; overflow-wrap:anywhere }
+@media(pointer:coarse){ .hb-meminspect-parts > summary{ min-height:44px; display:flex; align-items:center } }
+
+/* code on light paper: a source or an example inside a light panel */
+.hb-codeblock.is-paper{ background:var(--hb-paper-raised) }
+.hb-codeblock.is-paper .hb-codeblock-head{ background:var(--hb-paper-sunk); border-bottom:1px solid var(--hb-ink) }
+.hb-codeblock.is-paper .hb-codeblock-lang{ color:var(--hb-ink-3) }
+.hb-codeblock.is-paper .hb-codeblock-btn{ color:var(--hb-ink); border-left-color:var(--hb-ink) }
+.hb-codeblock.is-paper .hb-codeblock-btn[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper) }
+.hb-codeblock.is-paper .hb-codeblock-btn.is-done{ color:var(--hb-ok-ink) }
+.hb-codeblock.is-paper pre,.hb .hb-codeblock.is-paper pre{ background:var(--hb-paper-raised); color:var(--hb-ink) }
+.hb pre.hb-code,pre.hb-code{
+  margin:0; padding:var(--hb-s3); overflow-x:auto; max-width:100%;
+  background:var(--hb-paper-raised); color:var(--hb-ink); border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow-sm);
+  font-family:var(--hb-utility); font-size:12.5px; line-height:1.55; white-space:pre; tab-size:2;
+}
+
+/* a rack log for a log tab: time, the line, the level at the right edge */
+.hb-racklog{
+  list-style:none; margin:0; padding:0; min-width:0; max-height:var(--hb-racklog-h, 60vh); overflow:auto;
+  background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); font-family:var(--hb-utility); font-size:12.5px;
+}
+.hb-racklog:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+.hb-racklog.is-empty::before{ content:attr(data-empty); display:block; padding:8px 10px; font-family:var(--hb-note); font-size:13px; color:var(--hb-ink-3) }
+.hb-racklog-row{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:baseline; gap:8px; padding:3px 8px; border-bottom:1px dashed var(--hb-paper-edge) }
+.hb-racklog-row:last-child{ border-bottom:0 }
+.hb-racklog-t{ font-family:var(--hb-readout); font-size:16px; line-height:1; color:var(--hb-ink-3); font-variant-numeric:tabular-nums }
+.hb-racklog-line{ min-width:0; line-height:1.35; overflow-wrap:anywhere }
+.hb-racklog-level{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3) }
+.hb-racklog-row.is-ok .hb-racklog-level{ color:var(--hb-ok-ink) }
+.hb-racklog-row.is-warn .hb-racklog-level{ color:var(--hb-warn-ink) }
+.hb-racklog-row.is-error{ box-shadow:inset 3px 0 0 var(--hb-err) }
+.hb-racklog-row.is-error .hb-racklog-line,.hb-racklog-row.is-error .hb-racklog-level{ color:var(--hb-err) }
+
+/* a waveform drawer: a head that folds, a canvas strip with the playhead
+   (pink) and the picked span; at the foot of a subject it sits over it */
+.hb-wavedraw{ min-width:0; background:var(--hb-paper-raised); border-top:var(--hb-border-em) solid var(--hb-ink) }
+.hb-lay-subject > .hb-wavedraw{ position:absolute; left:0; right:0; bottom:0; z-index:2 }
+.hb-wavedraw-head{ display:flex; align-items:center; gap:var(--hb-s2); min-width:0; padding-right:var(--hb-s2) }
+.hb-wavedraw-toggle{
+  flex:none; display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:0 var(--hb-s3);
+  background:var(--hb-ink); color:var(--hb-paper); border:0; cursor:pointer; font-family:var(--hb-readout); font-size:19px; line-height:1;
+}
+.hb-wavedraw-toggle::before{ content:'+' }
+.hb-wavedraw.is-open .hb-wavedraw-toggle::before{ content:'-' }
+.hb-wavedraw-toggle:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+@media(pointer:coarse){ .hb-wavedraw-toggle{ min-height:44px } }
+.hb-wavedraw-time{ flex:1 1 auto; min-width:0; font-family:var(--hb-readout); font-size:17px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.hb-wavedraw-body{ height:var(--hb-wave-h, 88px); padding:6px 0; background:var(--hb-paper-sunk); border-top:1px solid var(--hb-ink) }
+.hb-wavedraw-body[hidden]{ display:none }
+.hb-wavedraw-canvas{ display:block; width:100%; height:100%; cursor:text }
+.hb-wavedraw-canvas:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+
+/* a pressed button is ink, as hackle's .btn.on */
+.hb-btn[aria-pressed="true"]{ background:var(--hb-ink); color:var(--hb-paper); border-color:var(--hb-ink) }
+
+/* form and frame fits its media: an image, video, canvas or drawing is
+   contained inside the frame, never cropped or overflowing */
+.hb-lay.is-form-frame .hb-lay-subject > :is(img, video, canvas, svg, picture),.hb-lay-media{
+  position:absolute; inset:var(--hb-s3); display:block;
+  width:calc(100% - 2 * var(--hb-s3)); height:calc(100% - 2 * var(--hb-s3)); max-width:none; object-fit:contain;
+}
+
+/* tool groups in a rail (the shape tools of the earlier mask studio): the
+   rail shows one tool per group, a corner mark says more wait behind it */
+.hb-railgroup{ position:relative; display:flex; flex-direction:column }
+.hb-toolrail-wrap.is-horizontal .hb-railgroup{ flex-direction:row }
+.hb-railgroup > .hb-toolrail-btn{ border:0 }
+.hb-railgroup > .hb-toolrail-btn::after{ content:''; position:absolute; right:3px; top:3px; border-top:6px solid currentColor; border-left:6px solid transparent }
+.hb-toolrail > .hb-railgroup + *,.hb-toolrail > * + .hb-railgroup{ border-top:1px dashed var(--hb-paper-edge) }
+.hb-toolrail-wrap.is-horizontal .hb-toolrail > .hb-railgroup + *,.hb-toolrail-wrap.is-horizontal .hb-toolrail > * + .hb-railgroup{ border-top:0; border-left:1px dashed var(--hb-paper-edge) }
+.hb-railgroup-menu{ position:fixed; z-index:var(--hb-z-dropdown); min-width:170px; padding:4px 0; background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); box-shadow:var(--hb-shadow-lg) }
+.hb-railgroup-menu[hidden]{ display:none }
+.hb-railgroup-item{
+  display:flex; align-items:center; gap:var(--hb-s2); width:100%; min-height:40px; padding:6px 12px;
+  background:none; border:0; color:var(--hb-ink); cursor:pointer; text-align:left; font-family:var(--hb-utility); font-size:13px;
+}
+.hb-railgroup-item > kbd{ margin-left:auto; font-family:var(--hb-utility); font-size:10px; font-weight:700; opacity:.7 }
+.hb-railgroup-item[aria-checked="true"]{ background:var(--hb-ink); color:var(--hb-paper) }
+@media (hover:hover) and (pointer:fine){ .hb-railgroup-item:not([aria-checked="true"]):hover{ background:var(--hb-pink-10) } }
+.hb-railgroup-item:focus-visible{ outline:var(--hb-border-hd) solid var(--hb-pink); outline-offset:-3px }
+@media(pointer:coarse){ .hb-railgroup-item{ min-height:44px } }
+/* a tool rail in the canvas and rail layout sits flush in the rail column */
+.hb-lay-tools .hb-toolrail-wrap{ align-items:center }
+.hb-lay-tools .hb-toolrail{ border:0; box-shadow:none; background:transparent }
+.hb-lay-tools .hb-toolrail-hint{ display:none }

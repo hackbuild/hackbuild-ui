@@ -145,14 +145,29 @@ export interface ToolRailHandle {
  * same buttons and are bound in `registry`, so the printed key, the
  * keydown map and the key map are one table. `.hb-toolrail-hint` shows
  * the hint of the tool that is on.
+ *
+ * Tools inside a `.hb-railgroup` share one place in the rail, as the
+ * shape tools of the earlier mask studio do: the rail shows the group's
+ * last used tool, the others wait in its `.hb-railgroup-menu` as
+ * `data-pick` items. Pressing the shown tool when it is on, the cross
+ * arrow (right on a vertical rail, down on a horizontal one) or a right
+ * click opens the menu; a letter still picks any tool directly.
  */
 export function toolRail(el: HTMLElement, options: ToolRailOptions = {}): ToolRailHandle {
+  const doc = el.ownerDocument
   el.setAttribute('role', 'toolbar')
   const vertical = el.getAttribute('aria-orientation') !== 'horizontal'
   if (vertical) el.setAttribute('aria-orientation', 'vertical')
   const tools = () => [...el.querySelectorAll<HTMLElement>('[data-tool]')]
+  const groups = () => [...el.querySelectorAll<HTMLElement>('.hb-railgroup')]
+  const membersOf = (g: HTMLElement) => [...g.querySelectorAll<HTMLElement>('[data-tool]')]
+  const menuOf = (g: HTMLElement) => g.querySelector<HTMLElement>('.hb-railgroup-menu')
+  const itemsOf = (g: HTMLElement) => [...g.querySelectorAll<HTMLElement>('[data-pick]')].filter(usable)
   const hint = el.querySelector<HTMLElement>('.hb-toolrail-hint')
   let value = options.value ?? tools().find((t) => t.classList.contains('is-on'))?.dataset.tool ?? tools()[0]?.dataset.tool ?? ''
+  // the member each group shows in the rail: the tool last used from it
+  const shown = new Map<HTMLElement, string>()
+  let openGroup: HTMLElement | null = null
 
   function draw() {
     for (const t of tools()) {
@@ -161,6 +176,26 @@ export function toolRail(el: HTMLElement, options: ToolRailOptions = {}): ToolRa
       t.setAttribute('aria-pressed', String(on))
       t.tabIndex = on ? 0 : -1
       if (on && hint) hint.textContent = t.dataset.hint ?? ''
+    }
+    for (const g of groups()) {
+      const ms = membersOf(g)
+      const has = ms.find((m) => m.dataset.tool === value)
+      const id = has?.dataset.tool ?? shown.get(g) ?? ms[0]?.dataset.tool ?? ''
+      shown.set(g, id)
+      for (const m of ms) {
+        const vis = m.dataset.tool === id
+        m.hidden = !vis
+        if (vis) {
+          m.setAttribute('aria-haspopup', 'menu')
+          m.setAttribute('aria-expanded', String(openGroup === g))
+        }
+      }
+      for (const i of g.querySelectorAll<HTMLElement>('[data-pick]')) {
+        i.setAttribute('role', 'menuitemradio')
+        i.setAttribute('aria-checked', String(i.dataset.pick === value))
+        i.tabIndex = -1
+      }
+      g.classList.toggle('is-on', !!has)
     }
   }
 
@@ -171,15 +206,104 @@ export function toolRail(el: HTMLElement, options: ToolRailOptions = {}): ToolRa
     options.onChange?.(id)
   }
 
+  function place(g: HTMLElement, m: HTMLElement) {
+    const btn = membersOf(g).find((x) => !x.hidden)
+    const win = doc.defaultView
+    if (!btn || !win) return
+    const r = btn.getBoundingClientRect()
+    const mw = m.offsetWidth || 180
+    const mh = m.offsetHeight || 0
+    let left = vertical ? r.right + 6 : r.left
+    let top = vertical ? r.top : r.bottom + 6
+    left = Math.max(6, Math.min(left, win.innerWidth - mw - 6))
+    top = Math.max(6, Math.min(top, win.innerHeight - mh - 6))
+    m.style.left = `${left}px`
+    m.style.top = `${top}px`
+  }
+
+  function openMenu(g: HTMLElement, focus = true) {
+    const m = menuOf(g)
+    if (!m) return
+    if (openGroup && openGroup !== g) closeMenu(false)
+    openGroup = g
+    m.hidden = false
+    g.classList.add('is-open')
+    place(g, m)
+    draw()
+    doc.addEventListener('pointerdown', onOutside)
+    if (focus) (itemsOf(g).find((i) => i.dataset.pick === value) ?? itemsOf(g)[0])?.focus()
+  }
+
+  function closeMenu(returnFocus = true) {
+    const g = openGroup
+    if (!g) return
+    openGroup = null
+    const m = menuOf(g)
+    if (m) m.hidden = true
+    g.classList.remove('is-open')
+    doc.removeEventListener('pointerdown', onOutside)
+    draw()
+    if (returnFocus) membersOf(g).find((x) => !x.hidden)?.focus()
+  }
+
+  function onOutside(e: Event) {
+    if (openGroup && !openGroup.contains(e.target as Node)) closeMenu(false)
+  }
+
   function onClick(e: Event) {
-    const t = (e.target as Element).closest<HTMLElement>('[data-tool]')
-    if (t && el.contains(t) && usable(t)) choose(t.dataset.tool!)
+    const target = e.target as Element
+    const item = target.closest<HTMLElement>('[data-pick]')
+    if (item && el.contains(item)) {
+      if (!usable(item)) return
+      choose(item.dataset.pick!)
+      closeMenu()
+      return
+    }
+    const t = target.closest<HTMLElement>('[data-tool]')
+    if (!t || !el.contains(t) || !usable(t)) return
+    const g = t.closest<HTMLElement>('.hb-railgroup')
+    // a group's button opens its menu when its tool is already on
+    if (g && el.contains(g) && t.dataset.tool === value) {
+      if (openGroup === g) closeMenu()
+      else openMenu(g)
+      return
+    }
+    choose(t.dataset.tool!)
+  }
+
+  function onContext(e: Event) {
+    const g = (e.target as Element).closest<HTMLElement>('.hb-railgroup')
+    if (!g || !el.contains(g)) return
+    e.preventDefault()
+    openMenu(g)
   }
 
   function onKey(e: KeyboardEvent) {
-    const list = tools().filter(usable)
-    const at = list.indexOf(e.target as HTMLElement)
+    const target = e.target as HTMLElement
+    if (openGroup && openGroup.contains(target) && target.dataset.pick !== undefined) {
+      const list = itemsOf(openGroup)
+      const at = list.indexOf(target)
+      let to = -1
+      if (e.key === 'ArrowDown') to = (at + 1) % list.length
+      else if (e.key === 'ArrowUp') to = (at - 1 + list.length) % list.length
+      else if (e.key === 'Home') to = 0
+      else if (e.key === 'End') to = list.length - 1
+      else if (e.key === 'Escape' || (vertical && e.key === 'ArrowLeft')) { e.preventDefault(); closeMenu(); return }
+      else if (e.key === 'Tab') { closeMenu(false); return }
+      else return
+      e.preventDefault()
+      list[to]?.focus()
+      return
+    }
+    const list = tools().filter((t) => usable(t) && !t.hidden)
+    const at = list.indexOf(target)
     if (at < 0) return
+    const g = target.closest<HTMLElement>('.hb-railgroup')
+    if (g && e.key === (vertical ? 'ArrowRight' : 'ArrowDown')) {
+      e.preventDefault()
+      openMenu(g)
+      return
+    }
     const next = vertical ? 'ArrowDown' : 'ArrowRight'
     const prev = vertical ? 'ArrowUp' : 'ArrowLeft'
     let to = -1
@@ -190,7 +314,9 @@ export function toolRail(el: HTMLElement, options: ToolRailOptions = {}): ToolRa
     else return
     e.preventDefault()
     choose(list[to]!.dataset.tool!)
-    list[to]!.focus()
+    // a group may have swapped the button it shows
+    const now = tools().find((t) => t.dataset.tool === list[to]!.dataset.tool && !t.hidden) ?? list[to]!
+    now.focus()
   }
 
   let unbind: (() => void) | null = null
@@ -207,6 +333,8 @@ export function toolRail(el: HTMLElement, options: ToolRailOptions = {}): ToolRa
 
   el.addEventListener('click', onClick)
   el.addEventListener('keydown', onKey)
+  el.addEventListener('contextmenu', onContext)
+  for (const g of groups()) { const m = menuOf(g); if (m) { m.hidden = true; m.setAttribute('role', 'menu') } }
   draw()
 
   return {
@@ -219,8 +347,10 @@ export function toolRail(el: HTMLElement, options: ToolRailOptions = {}): ToolRa
     },
     dispose() {
       unbind?.()
+      closeMenu(false)
       el.removeEventListener('click', onClick)
       el.removeEventListener('keydown', onKey)
+      el.removeEventListener('contextmenu', onContext)
     },
   }
 }
