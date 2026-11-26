@@ -1,0 +1,15 @@
+{
+  "mistakes": [
+    "Import @virgilvox/hackbuild-ui/styles.css once at the app entry. The Vue parts carry no styles; without the stylesheet they render unstyled.",
+    "Put class=\"hb\" on the body or a root wrapper, or the paper surface, prose defaults and grain are missing.",
+    "Never add a style block, inline hex or raw px to a part or a page. Every value is a token in tokens.css; a missing look is a missing class in hackbuild.css.",
+    "One pink action per view: HbButton variant=\"go\". variant=\"primary\" is light since 0.10.0.",
+    "Import from the package root or /vanilla only, never from dist paths.",
+    "Vue is an optional peer. A page without Vue uses the classes and @virgilvox/hackbuild-ui/vanilla.",
+    "A page opened from file:// or offline loads fonts-inline.css; fonts-local.css needs http and fonts.css needs the network.",
+    "Rack tabs are three to five and the first is the live result, never settings.",
+    "HbModelSelect and HbModelSheet are pure views: rows in, a choice out. They never fetch or load a model; the app passes rows and acts on the choice.",
+    "Parts deprecated in 0.10.0 (HbCard, HbActions, HbReadouts, HbSegMeter, HbPresetChips, HbStageOverlay, HbWakeGate, HbEngineBar, HbModelSlot, HbModelRack, HbTierCards, HbModelList, HbModelManager, HbCustomModelForm, HbMethodCard, HbLoader, HbHash, HbReasons, HbCapabilities, HbStatusBar, HbNum) go in 0.11.0; use the part their console note names.",
+    "UI copy is lowercase and terse with no emoji, dashes or exclamation marks; a failure names itself in words."
+  ]
+}
