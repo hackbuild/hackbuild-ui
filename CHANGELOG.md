@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.6
+
+- A type floor: no Plex under 11 px, no VT323 under 15 px (84 rules moved
+  from 9 to 10.5 px up to 11 px; 11 VT323 rules from 13 or 14 px to 15 px).
+- Bench steps read again: Plex 12 px capitals with the number badge
+  (0.10.0 moved tabs to VT323 and left the steps at 11 px).
+- Icons inside parts at 14 px at least (30 icons were 10 to 13 px).
+- Tile names in Plex 15 px; Permanent Marker stays one name per screen.
+
 ## 0.10.5
 
 - Any `.hb` root sets the interface type and ink, so a part mounted
