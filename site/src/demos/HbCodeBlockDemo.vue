@@ -22,6 +22,11 @@ const code = `<HbCodeBlock :code="sample" lang="ts" />`
     </div>
   </DemoSection>
 
+  <DemoSection title="On paper" note="paper: ink text on raised paper, for a source or an example inside a light panel. A bare pre.hb-code reads the same with no head.">
+    <HbCodeBlock :code="sample" lang="ts" paper />
+    <pre class="hb-code" style="margin-top: 12px">npm i @hackbuild/chat</pre>
+  </DemoSection>
+
   <PropsTable
     :rows="[
       { prop: 'code', type: 'string' },
@@ -29,6 +34,7 @@ const code = `<HbCodeBlock :code="sample" lang="ts" />`
       { prop: 'copy', type: 'boolean', default: 'true' },
       { prop: 'wrapToggle', type: 'boolean', default: 'true' },
       { prop: 'v-model:wrap', type: 'boolean', default: 'false' },
+      { prop: 'paper', type: 'boolean', default: 'false', notes: '.is-paper, ink on raised paper' },
     ]"
   />
 </template>

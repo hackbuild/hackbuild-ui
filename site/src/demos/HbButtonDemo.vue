@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { HbButton } from '@hackbuild/ui'
 import DemoSection from '../components/DemoSection.vue'
 import PropsTable from '../components/PropsTable.vue'
@@ -8,6 +9,8 @@ const code = `<HbButton>connect</HbButton>
 <HbButton variant="danger">arm laser</HbButton>
 <HbButton loading>saving</HbButton>
 <HbButton as="a" href="/docs">read the docs</HbButton>`
+const follow = ref(true)
+const mute = ref(false)
 </script>
 
 <template>
@@ -26,6 +29,13 @@ const code = `<HbButton>connect</HbButton>
         <HbButton variant="ghost">ghost on void</HbButton>
         <HbButton variant="ghost" disabled>ghost, off</HbButton>
       </span>
+    </div>
+  </DemoSection>
+
+  <DemoSection title="Pressed" note="A toggle button with aria-pressed true is ink filled, as hackle's on buttons. Press to flip.">
+    <div class="demo-row">
+      <HbButton :aria-pressed="follow" @click="follow = !follow">follow</HbButton>
+      <HbButton :aria-pressed="mute" @click="mute = !mute">mute</HbButton>
     </div>
   </DemoSection>
 
