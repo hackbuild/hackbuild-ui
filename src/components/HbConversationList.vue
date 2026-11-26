@@ -137,8 +137,8 @@ function onKey(e: KeyboardEvent, c: HbConversation) {
           <span class="hb-convs-meta">{{ when(c) }}</span>
         </button>
         <span class="hb-convs-acts">
-          <button type="button" class="hb-convs-act" :aria-label="`rename ${c.title}`" title="rename" @click="startRename(c)"><HbIcon name="pen" :size="13" /></button>
-          <button v-if="props.duplicable" type="button" class="hb-convs-act" :aria-label="`duplicate ${c.title}`" title="duplicate" @click="emit('duplicate', c.id)"><HbIcon name="copy" :size="13" /></button>
+          <button type="button" class="hb-convs-act" :aria-label="`rename ${c.title}`" title="rename" @click="startRename(c)"><HbIcon name="pen" :size="14" /></button>
+          <button v-if="props.duplicable" type="button" class="hb-convs-act" :aria-label="`duplicate ${c.title}`" title="duplicate" @click="emit('duplicate', c.id)"><HbIcon name="copy" :size="14" /></button>
           <button
             type="button"
             class="hb-convs-act is-del"
@@ -146,7 +146,7 @@ function onKey(e: KeyboardEvent, c: HbConversation) {
             :aria-label="armed === c.id ? `press again to delete ${c.title}` : `delete ${c.title}`"
             :disabled="props.busy && c.id === props.current"
             @click="onRemove(c.id)"
-          ><template v-if="armed === c.id">delete?</template><HbIcon v-else name="trash" :size="13" /></button>
+          ><template v-if="armed === c.id">delete?</template><HbIcon v-else name="trash" :size="14" /></button>
         </span>
       </li>
     </ul>

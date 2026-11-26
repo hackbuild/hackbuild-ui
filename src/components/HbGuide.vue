@@ -59,7 +59,7 @@ const emit = defineEmits<{
         :disabled="verb.disabled"
         @click="emit('verb', verb.id)"
       >
-        <HbIcon :name="verb.icon" :size="12" />
+        <HbIcon :name="verb.icon" :size="14" />
         <span class="hb-guide-verb-label">{{ verb.label }}</span>
       </button>
     </div>

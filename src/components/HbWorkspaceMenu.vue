@@ -91,7 +91,7 @@ onBeforeUnmount(() => handle?.dispose())
     <div ref="wrap" class="hb-menu-wrap hb-wsmenu-wide">
       <button type="button" class="hb-wsmenu-btn" :aria-label="`workspace ${props.name}`">
         <span class="hb-wsmenu-name">{{ props.name }}</span>
-        <HbIcon name="arrow-down" :size="11" />
+        <HbIcon name="arrow-down" :size="14" />
       </button>
       <div ref="panel" class="hb-menu hb-wsmenu-menu" hidden>
         <p v-if="props.busy" class="hb-wsmenu-busy"><slot name="reason">saving, the actions wait</slot></p>

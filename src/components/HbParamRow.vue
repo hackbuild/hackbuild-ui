@@ -119,7 +119,7 @@ function reset() {
         :disabled="props.disabled"
         @click="reset"
       >
-        <HbIcon name="undo" :size="11" />
+        <HbIcon name="undo" :size="14" />
       </button>
     </span>
     <div class="hb-prow-ctl">

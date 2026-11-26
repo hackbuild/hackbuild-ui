@@ -32,6 +32,6 @@ const words = computed(() => (state.value === 'copied' ? 'copied' : state.value 
       :aria-label="words"
       :title="words"
       @click="copy(text)"
-    ><HbIcon :name="state === 'copied' ? 'check' : state === 'failed' ? 'x' : 'copy'" :size="12" /></button>
+    ><HbIcon :name="state === 'copied' ? 'check' : state === 'failed' ? 'x' : 'copy'" :size="14" /></button>
   </div>
 </template>

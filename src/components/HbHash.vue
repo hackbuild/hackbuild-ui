@@ -43,7 +43,7 @@ const verdict = computed<{ status: HbVerdictStatus; text: string }>(() => {
       :aria-label="copyWords"
       :title="copyWords"
       @click="copyHex(props.hex)"
-    ><HbIcon :name="copyState === 'copied' ? 'check' : copyState === 'failed' ? 'x' : 'copy'" :size="12" /></button>
+    ><HbIcon :name="copyState === 'copied' ? 'check' : copyState === 'failed' ? 'x' : 'copy'" :size="14" /></button>
     <HbVerdict :status="verdict.status" :text="verdict.text" />
   </span>
 </template>

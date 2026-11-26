@@ -183,7 +183,7 @@ watch(() => newest.value?.id, (id, before) => {
         :class="{ 'is-on': !hidden.kinds.has(k) }"
         :aria-pressed="!hidden.kinds.has(k)"
         @click="flip(hidden.kinds, k)"
-      ><HbIcon :name="KIND_ICON[k] ?? 'circle-nodes'" :size="12" />{{ look(k).tag }}</button>
+      ><HbIcon :name="KIND_ICON[k] ?? 'circle-nodes'" :size="14" />{{ look(k).tag }}</button>
     </div>
     <div class="hb-causal-list" role="region" :aria-label="props.label" tabindex="0">
       <template v-for="g in groups" :key="g.key">
@@ -200,13 +200,13 @@ watch(() => newest.value?.id, (id, before) => {
             <div class="hb-cev-hd" aria-hidden="true">
               <span class="hb-cev-t">{{ stamp(e.t) }}</span>
               <span class="hb-cev-agent">{{ e.agent }}</span>
-              <span class="hb-cev-kind"><HbIcon :name="iconOf(e)" :size="12" />{{ look(String(e.kind)).tag }}</span>
+              <span class="hb-cev-kind"><HbIcon :name="iconOf(e)" :size="14" />{{ look(String(e.kind)).tag }}</span>
             </div>
             <p class="hb-cev-text" aria-hidden="true">{{ e.text }}</p>
             <span v-if="e.live && e.fraction !== undefined" class="hb-cev-bar" aria-hidden="true"><i :style="{ width: pct(e.fraction) }" /></span>
             <ol v-if="e.cause !== undefined && chain(e).length" class="hb-cev-chain" aria-hidden="true">
               <li v-for="p in chain(e)" :key="p.id">
-                <HbIcon :name="iconOf(p)" :size="11" />
+                <HbIcon :name="iconOf(p)" :size="14" />
                 <span class="hb-cev-t">{{ stamp(p.t) }}</span>
                 <span>{{ p.agent === e.agent ? '' : p.agent + ': ' }}{{ p.text }}</span>
               </li>

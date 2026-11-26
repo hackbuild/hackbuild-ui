@@ -218,7 +218,7 @@ function run(a: HbMessageAction) {
         @click="run(a)"
         @blur="a === 'remove' && armed ? (armed = false) : undefined"
       >
-        <HbIcon :name="ICON[a]" :size="12" />{{ label(a) }}
+        <HbIcon :name="ICON[a]" :size="14" />{{ label(a) }}
       </button>
     </div>
   </div>

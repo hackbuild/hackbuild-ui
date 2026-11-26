@@ -139,7 +139,7 @@ const searchText = (g: HbSuiteGroup, t: HbSuiteTool) => [g.label, t.label, ...(t
     <div class="hb-suitenav-phone">
       <button type="button" class="hb-suitenav-btn" aria-haspopup="dialog" :aria-expanded="sheet" @click="sheet = true">
         <span class="hb-suitenav-path">{{ group?.label }}<b>/</b>{{ tool?.label }}</span>
-        <HbIcon name="arrow-down" :size="12" />
+        <HbIcon name="arrow-down" :size="14" />
       </button>
     </div>
     <div class="hb-bar hb-suitenav-bar">

@@ -78,7 +78,7 @@ onBeforeUnmount(() => clearTimeout(timer))
        ghost forget that asks once in place. -->
   <div class="hb-mem" :class="{ 'is-used': props.used, 'is-pinned': props.pinned }">
     <div class="hb-mem-body">
-      <span v-if="props.pinned" class="hb-mem-pin"><HbIcon name="thumbtack" :size="10" />pinned</span>
+      <span v-if="props.pinned" class="hb-mem-pin"><HbIcon name="thumbtack" :size="14" />pinned</span>
       <span class="hb-mem-kind">{{ props.kind }}<b v-if="scoreText(props.score)" class="hb-mem-score">{{ scoreText(props.score) }}</b></span>
       <b v-if="props.title" class="hb-mem-title">{{ props.title }}</b>
       <span v-if="!editing" class="hb-mem-text">{{ props.text }}</span>
@@ -101,8 +101,8 @@ onBeforeUnmount(() => clearTimeout(timer))
         :aria-label="props.pinned ? 'unpin memory' : 'pin memory'"
         :title="props.pinned ? 'unpin' : 'pin'"
         @click="emit('pin', !props.pinned)"
-      ><HbIcon name="thumbtack" :size="12" /></button>
-      <button ref="editBtn" type="button" class="hb-mem-act" aria-label="edit memory" title="edit" @click="edit"><HbIcon name="pen" :size="12" /></button>
+      ><HbIcon name="thumbtack" :size="14" /></button>
+      <button ref="editBtn" type="button" class="hb-mem-act" aria-label="edit memory" title="edit" @click="edit"><HbIcon name="pen" :size="14" /></button>
       <button
         type="button"
         class="hb-mem-act is-forget"

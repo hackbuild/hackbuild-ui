@@ -198,10 +198,10 @@ watch(
         >unload<span class="hb-sr">, {{ c.name }}. the weights stay stored</span></button>
         <ul v-if="needs(c).length || c.size" class="hb-cap-needs" aria-label="needs">
           <li v-for="n in needs(c)" :key="n.kind + (n.label ?? '')" class="hb-cap-need" :class="{ 'is-missing': n.missing }">
-            <HbIcon :name="NEED[n.kind]" :size="11" />
+            <HbIcon :name="NEED[n.kind]" :size="14" />
             <span v-if="n.missing" class="hb-sr">missing: </span>{{ n.label ?? n.kind }}
           </li>
-          <li v-if="c.size" class="hb-cap-need"><HbIcon name="download" :size="11" />{{ sizeWords(c) }}</li>
+          <li v-if="c.size" class="hb-cap-need"><HbIcon name="download" :size="14" />{{ sizeWords(c) }}</li>
         </ul>
         <p v-if="note(c)" :id="`${uid}-${c.id}-w`" :class="note(c)!.cls">{{ note(c)!.text }}</p>
         <p v-if="c.ask && c.state === 'off'" class="hb-cap-ask">{{ c.ask }}</p>

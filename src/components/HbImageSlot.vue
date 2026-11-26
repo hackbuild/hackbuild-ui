@@ -175,16 +175,16 @@ const has = (s: string) => (props.sources as string[]).includes(s)
     </div>
     <div class="hb-acts hb-islot-acts">
       <label v-if="has('upload')" class="hb-btn hb-btn-sm" :class="[model || stream ? 'hb-btn-2' : '', { 'is-disabled': props.disabled }]">
-        <HbIcon name="upload" :size="12" />upload
+        <HbIcon name="upload" :size="14" />upload
         <input ref="input" type="file" class="hb-islot-file" :accept="props.accept" :disabled="props.disabled" @change="onPick">
       </label>
       <button v-if="has('camera') && !stream" type="button" class="hb-btn hb-btn-2 hb-btn-sm" :disabled="props.disabled" @click="camera">
-        <HbIcon name="camera" :size="12" />camera
+        <HbIcon name="camera" :size="14" />camera
       </button>
-      <button v-if="stream" type="button" class="hb-btn hb-btn-sm" @click="capture"><HbIcon name="record" :size="12" />capture</button>
+      <button v-if="stream" type="button" class="hb-btn hb-btn-sm" @click="capture"><HbIcon name="record" :size="14" />capture</button>
       <button v-if="stream" type="button" class="hb-btn hb-btn-2 hb-btn-sm" @click="stop">stop camera</button>
       <button v-if="has('paste') && !stream" type="button" class="hb-btn hb-btn-2 hb-btn-sm" :disabled="props.disabled" @click="paste">
-        <HbIcon name="copy" :size="12" />paste
+        <HbIcon name="copy" :size="14" />paste
       </button>
       <button v-if="has('sample') && props.sample && !stream" type="button" class="hb-btn hb-btn-2 hb-btn-sm" :disabled="props.disabled" @click="sample">sample</button>
       <button v-if="model && !stream" type="button" class="hb-btn hb-btn-2 hb-btn-sm" :disabled="props.disabled" @click="clear">clear</button>

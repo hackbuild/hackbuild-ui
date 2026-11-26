@@ -15,7 +15,7 @@
 .vd-task{ border-top:1px dashed var(--hb-ink-4); padding-top:var(--hb-s2) }
 .vd-task .hb-btn{ align-self:flex-start }
 .vd-keys > .vd-keyhead{ grid-column:1 / -1 }
-.vd-keyhead{ font-family:var(--hb-utility); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3); margin:var(--hb-s2) 0 var(--hb-s1) }
+.vd-keyhead{ font-family:var(--hb-utility); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3); margin:var(--hb-s2) 0 var(--hb-s1) }
 .vd-keys{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--hb-s1) var(--hb-s3); margin:0; align-items:center }
 .vd-keys dt{ display:flex; flex-wrap:wrap; gap:4px }
 .vd-keys dd{ margin:0; font-family:var(--hb-note); font-size:13px }

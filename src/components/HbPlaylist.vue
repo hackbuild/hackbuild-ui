@@ -68,18 +68,18 @@ function pad(value: number): string {
       <div v-if="item" class="hb-kv" style="border-bottom: 0; padding-top: 10px">
         <span style="font-family: var(--hb-display); font-size: 17px">{{ item.title }}</span>
         <span class="hb-stats">
-          <span v-if="item.duration"><HbIcon set="solid" name="clock" :size="12" />{{ item.duration }}</span>
-          <span v-if="item.date"><HbIcon set="solid" name="calendar" :size="12" />{{ item.date }}</span>
+          <span v-if="item.duration"><HbIcon set="solid" name="clock" :size="14" />{{ item.duration }}</span>
+          <span v-if="item.date"><HbIcon set="solid" name="calendar" :size="14" />{{ item.date }}</span>
         </span>
       </div>
       <div class="hb-playlist-bar">
         <HbButton size="sm" variant="secondary" :disabled="current <= 0" @click="go(current - 1)">
-          <template #icon><HbIcon set="solid" name="arrow-left" :size="12" /></template>
+          <template #icon><HbIcon set="solid" name="arrow-left" :size="14" /></template>
           prev
         </HbButton>
         <HbButton size="sm" variant="secondary" @click="go(current + 1)">
           next
-          <template #icon><HbIcon set="solid" name="arrow-right" :size="12" /></template>
+          <template #icon><HbIcon set="solid" name="arrow-right" :size="14" /></template>
         </HbButton>
         <HbChip v-model="autoplay">autoplay</HbChip>
       </div>

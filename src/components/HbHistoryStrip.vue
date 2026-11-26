@@ -82,7 +82,7 @@ const cur = () => props.items.find((x) => x.id === props.current)
           <span v-if="it.meta" class="hb-hist-meta">{{ it.meta }}</span>
         </span>
         <button v-if="props.removable" type="button" class="hb-hist-x" :aria-label="`remove ${it.label || 'run'}`" title="remove" @click="emit('remove', it)">
-          <HbIcon name="x" :size="10" />
+          <HbIcon name="x" :size="14" />
         </button>
       </li>
     </ul>

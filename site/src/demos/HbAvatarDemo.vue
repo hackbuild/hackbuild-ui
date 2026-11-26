@@ -22,7 +22,7 @@ const code = `<HbAvatar seed="virgilvox" />                    <!-- the little p
     <div class="demo-row" style="gap: 14px">
       <div v-for="seed in seeds" :key="seed" style="display: flex; flex-direction: column; align-items: center; gap: 4px">
         <HbAvatar size="lg" :seed="seed" />
-        <span style="font-family: var(--hb-utility); font-size: 9.5px; color: var(--hb-ink-3)">{{ seed }}</span>
+        <span style="font-family: var(--hb-utility); font-size:11px; color: var(--hb-ink-3)">{{ seed }}</span>
       </div>
     </div>
   </DemoSection>
@@ -34,7 +34,7 @@ const code = `<HbAvatar seed="virgilvox" />                    <!-- the little p
     <div class="demo-row" style="gap: 14px">
       <div v-for="seed in seeds" :key="seed" style="display: flex; flex-direction: column; align-items: center; gap: 4px">
         <HbAvatar size="lg" :seed="seed" variant="critter" />
-        <span style="font-family: var(--hb-utility); font-size: 9.5px; color: var(--hb-ink-3)">{{ seed }}</span>
+        <span style="font-family: var(--hb-utility); font-size:11px; color: var(--hb-ink-3)">{{ seed }}</span>
       </div>
     </div>
   </DemoSection>

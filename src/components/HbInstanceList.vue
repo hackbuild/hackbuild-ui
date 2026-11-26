@@ -66,8 +66,8 @@ function key(e: KeyboardEvent, i: number) {
           <span class="hb-inst-name">{{ name(it, i) }}</span>
           <span v-if="scorePct(it.score)" class="hb-inst-score">{{ scorePct(it.score) }}<span class="hb-sr"> score</span></span>
         </button>
-        <button type="button" class="hb-inst-act" :aria-pressed="!it.hidden" :aria-label="`show ${name(it, i)}`" :title="it.hidden ? 'show' : 'hide'" @click="emit('toggle', it)"><HbIcon name="eye" :size="12" /></button>
-        <button type="button" class="hb-inst-act is-del" :aria-label="`delete ${name(it, i)}`" title="delete" @click="emit('remove', it)"><HbIcon name="trash" :size="12" /></button>
+        <button type="button" class="hb-inst-act" :aria-pressed="!it.hidden" :aria-label="`show ${name(it, i)}`" :title="it.hidden ? 'show' : 'hide'" @click="emit('toggle', it)"><HbIcon name="eye" :size="14" /></button>
+        <button type="button" class="hb-inst-act is-del" :aria-label="`delete ${name(it, i)}`" title="delete" @click="emit('remove', it)"><HbIcon name="trash" :size="14" /></button>
       </li>
     </ul>
     <div v-if="!props.bare" class="hb-acts hb-inst-foot">

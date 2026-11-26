@@ -13,7 +13,7 @@
 }
 
 .site-side h4{
-  font-family:var(--hb-utility); font-size:10px; font-weight:700;
+  font-family:var(--hb-utility); font-size:11px; font-weight:700;
   text-transform:uppercase; letter-spacing:.1em; color:var(--hb-ink-3);
   margin:var(--hb-s4) 0 var(--hb-s1);
 }
@@ -62,7 +62,7 @@
 .tok-swatch .chip{ height:56px; border-bottom:var(--hb-border) solid var(--hb-ink) }
 .tok-swatch .meta{ padding:7px 9px }
 .tok-swatch .meta b{ display:block; font-family:var(--hb-utility); font-size:11px; font-weight:700 }
-.tok-swatch .meta span{ font-family:var(--hb-utility); font-size:10px; color:var(--hb-ink-3) }
+.tok-swatch .meta span{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3) }
 
 /* brand grid */
 .brand-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:var(--hb-s4) }
@@ -105,6 +105,6 @@
 .icons-cell{ position:relative; display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 4px 8px; background:var(--hb-paper-raised); border:var(--hb-border) solid var(--hb-ink); min-width:0 }
 .icons-cell.is-ported::after{ content:""; position:absolute; top:0; right:0; border-style:solid; border-width:0 10px 10px 0; border-color:transparent var(--hb-pink) transparent transparent }
 .icons-pair{ display:inline-flex; align-items:center; gap:10px; min-height:20px }
-.icons-name{ font-family:var(--hb-utility); font-size:10px; color:var(--hb-ink-3); overflow-wrap:anywhere; text-align:center }
+.icons-name{ font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3); overflow-wrap:anywhere; text-align:center }
 .icons-row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center }
 .icons-zine{ display:inline-flex; align-items:center; gap:8px; font-family:var(--hb-utility); font-size:11px; color:var(--hb-ink-3); background:transparent }

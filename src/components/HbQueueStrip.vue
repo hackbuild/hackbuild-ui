@@ -85,7 +85,7 @@ function move(i: number, e: KeyboardEvent) {
           <span v-if="busy(it)" class="hb-qstrip-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" :aria-valuenow="Math.round(it.pct ?? 0)" :aria-label="`${it.name} progress`"><i :style="{ '--hb-v': (it.pct ?? 0) / 100 }" /></span>
         </span>
       </button>
-      <button v-if="!props.locked" type="button" class="hb-qstrip-x" :aria-label="`remove ${it.name}`" title="remove" @click="emit('remove', it.id)"><HbIcon name="x" :size="13" /></button>
+      <button v-if="!props.locked" type="button" class="hb-qstrip-x" :aria-label="`remove ${it.name}`" title="remove" @click="emit('remove', it.id)"><HbIcon name="x" :size="14" /></button>
     </li>
     <li v-if="!props.items.length" class="hb-qstrip-empty">{{ props.empty }}</li>
   </ol>

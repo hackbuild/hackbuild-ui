@@ -27,7 +27,7 @@ const code = `<HbIcon name="trash" />          <!-- stroke set, app chrome -->
         style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; background: var(--hb-paper-raised); border: 1px solid var(--hb-ink)"
       >
         <HbIcon :name="name" set="solid" :size="20" />
-        <span style="font-family: var(--hb-utility); font-size: 9.5px; color: var(--hb-ink-3)">{{ name }}</span>
+        <span style="font-family: var(--hb-utility); font-size:11px; color: var(--hb-ink-3)">{{ name }}</span>
       </div>
     </div>
   </DemoSection>
@@ -40,7 +40,7 @@ const code = `<HbIcon name="trash" />          <!-- stroke set, app chrome -->
         style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; background: var(--hb-paper-raised); border: 1px solid var(--hb-ink)"
       >
         <HbIcon :name="name" :size="20" />
-        <span style="font-family: var(--hb-utility); font-size: 9.5px; color: var(--hb-ink-3)">{{ name }}</span>
+        <span style="font-family: var(--hb-utility); font-size:11px; color: var(--hb-ink-3)">{{ name }}</span>
       </div>
     </div>
   </DemoSection>
