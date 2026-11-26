@@ -33,6 +33,12 @@ body.hb{
   line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
+/* Any .hb root carries the interface type, so a part mounted outside
+   body.hb never falls back to the browser serif. Form controls take the
+   page type, never the browser's (Arial 13.3 px). Zero specificity: every
+   part's own font rule wins. */
+:where(.hb){ font-family:var(--hb-utility); color:var(--hb-ink) }
+:where(.hb) :where(button, input, select, textarea, optgroup){ font-family:inherit; font-size:inherit; line-height:inherit; letter-spacing:inherit; color:inherit }
 
 /* Grain. One fixed overlay, never per element. 0.05 on paper, 0.07 on ink. */
 body.hb::before{

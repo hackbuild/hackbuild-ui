@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.5
+
+- Any `.hb` root sets the interface type and ink, so a part mounted
+  outside `body.hb` no longer falls back to the browser serif.
+- Buttons, inputs, selects and textareas inside `.hb` take the page type
+  instead of the browser default (Arial 13.3 px). Both rules have zero
+  specificity; every part's own font rule still wins.
+
 ## 0.10.4
 
 Docs:
