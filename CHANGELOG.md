@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.10.3
+
+Gaps the suite rebuild hit:
+
+- The bar's tool name as the switcher: HbHeader `tools`, `current`,
+  `@switch` and a `tool` slot; `.hb-toolswitch` (Permanent Marker 26 px
+  and a chevron, as hackle's mark); vanilla `toolSwitch`.
+- A layout under an app bar: HbBarPage (`.hb-barpage`) and
+  `.hb-header + .hb-lay`. Every layout demo now sits under the bar.
+- HbMemoryInspector (`.hb-meminspect`), sized for the 380 px rack;
+  vanilla `memoryInspector`.
+- Code on paper: HbCodeBlock `paper` (`.hb-codeblock.is-paper`) and
+  `pre.hb-code`.
+- HbRackLog (`.hb-racklog`): time, line, level; vanilla `rackLog`.
+- HbWaveDrawer (`.hb-wavedraw`): a canvas strip with a playhead and a
+  picked span; vanilla `waveDrawer`, `wavePeaks`.
+- `.hb-btn[aria-pressed="true"]` is ink.
+- Form and frame contains its media (`.hb-lay-media`).
+- Tool groups in a rail (`.hb-railgroup`, HbRailTool `group`):
+  `MASK_TOOLS` groups the four shapes, so the mask rail shows six.
+
 ## 0.10.2
 
 - Mask editor: eraser, polygon, rectangle, ellipse, flood fill and pan

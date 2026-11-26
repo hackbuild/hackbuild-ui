@@ -1679,6 +1679,34 @@ pure `rectFill`, `ellipseFill`, `morphMask` and `smoothMask` sit beside
 and draws the "your own" forms as HbModelSheet does, and counts the rows
 the filters hide.
 
+### Suite gaps (0.10.3)
+
+| Class | Use |
+|---|---|
+| `.hb-toolswitch`, `-btn`, `-menu`, `-item`, `-item-note`, `.is-open` | the bar's tool name as the switcher, as hackle's mark: Permanent Marker 26 px, the accent pink, a small chevron; it opens a `.hb-menu` of tools and the one on screen is ink (`aria-current`) |
+| `.hb-barpage` | an app bar over a layout: HbHeader, then any of the six layouts filling the rest of the viewport. `.hb-header + .hb-lay` does the same with no wrapper. The header is the one bar; the layout keeps its markers |
+| `.hb-meminspect`, `-line`, `-row.is-used`, `-top`, `-text`, `-parts` | what a recall found, sized for the 380 px rack: rank, kind and score on one line, the text under it, the scorer parts in a closed fold (`data-ux="detail"`) |
+| `.hb-codeblock.is-paper`, `pre.hb-code` | code in ink on raised paper, for a source or an example inside a light panel |
+| `.hb-racklog`, `-row.is-<level>`, `-t`, `-line`, `-level` | a log tab: the time in VT323, the line, the level at the right edge; an error has a red rule; `data-empty` shows while empty |
+| `.hb-wavedraw`, `-head`, `-toggle`, `-time`, `-body`, `-canvas` | a waveform drawer for audio: a pink playhead and the picked span on a canvas strip; the head folds it; at the foot of a subject it sits over the subject |
+| `.hb-btn[aria-pressed="true"]` | a pressed toggle button is ink, as hackle's `.btn.on` |
+| `.hb-lay-media` | form and frame contains its image, video, canvas or drawing (direct children too): `object-fit: contain`, no crop, no overflow at 1440 or 390 |
+| `.hb-railgroup`, `-menu`, `-item` | tools of one group share a place in a rail, as the earlier mask studio groups its shapes; the rail shows the last used, a corner mark says more wait behind it |
+
+| Part | Vanilla | Behaviour |
+|---|---|---|
+| HbHeader `tools`, `current`, `@switch`, slot `tool` | `toolSwitch(wrap, options)`, `switchItemsHtml` | the name opens the menu; keys and outside press are the menu's; an item with href is a link; picking the tool on screen only closes |
+| `HbBarPage` | none | slots `bar` and default |
+| `HbMemoryInspector` | `memoryInspector(host, recall)`, `memoryInspectorHtml`, `inspectLine` | rows in as display text (rank, kind, text, score, used, parts); a view builds them from its store |
+| HbCodeBlock `paper` | `codeBlock` | as before, on paper |
+| `HbRackLog` | `rackLog(el, options)`, `logLines`, `logTime` | follows the foot while you have not scrolled up; keeps the newest 500 |
+| `HbWaveDrawer` | `waveDrawer(root, options)`, `wavePeaks`, `waveSel`, `waveLine` | a press seeks, a drag picks a span; arrows move, shift arrows grow the span, Home and End jump, Escape drops it |
+| HbToolRail `group` on a tool | `toolRail` | the shown tool opens its group when pressed while on, on the cross arrow or a right click; up, down and Enter pick in the menu, Escape closes; a letter picks any tool |
+
+`MASK_TOOLS` puts lasso, polygon, rectangle and ellipse in the group
+`shape`, so the mask rail shows six places. Every layout demo of the docs
+site sits in HbBarPage and its tool name switches between them.
+
 ### Deprecated in 0.10.0, gone in 0.11.0
 
 | Part | Use instead |
